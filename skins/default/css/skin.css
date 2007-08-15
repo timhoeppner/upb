@@ -1,0 +1,142 @@
+<?
+$font_s="1";
+$font_m="1";
+$font_l="1";
+$font_face="verdana";
+$font_color_main="#000000";
+$font_color_header="#FFFFFF";
+$font_color_category="#FFFFFF";
+$bgcolor="#000000";
+$link="#000020";
+$vlink="#000020";
+$alink="#000020";
+$header="#24374A";
+$divider="#18284c";
+$category="#24374A";
+$table1="#eff1f3";
+$font1="#18284c";
+$table2="#FFFFFF";
+$font2="#18284c";
+$border="#000000";
+$alternatingcolor1="#eff1f3";
+$alternatingcolor2="#FFFFFF";
+$statscolor="#eff1f3";
+$statscolor1="#eff1f3";
+$statscolor2="#FFFFFF";
+$hovercolor1="#eff1f3";
+$hovercolor2="#FFFFFF";
+$outsideborder="#eef0f5";
+$insideborder="#FFFFFF";
+$css="<STYLE>
+body {
+
+scrollbar-arrow-color:white;
+scrollbar-3dlight-color:#334259;
+scrollbar-highlight-color:white;
+scrollbar-face-color:#334259;
+scrollbar-shadow-color:white;
+scrollbar-darkshadow-color:#334259;
+scrollbar-track-color:white; 
+scrollbar-base-color:white;
+
+}
+A
+{
+	color : #9d865e;
+	font-weight : bold;
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	text-decoration : none;
+}
+
+	A:Hover
+{
+	color : #0066CC;
+	font-weight : bold;
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	text-decoration : underline;
+}
+
+.speciallink
+{
+	color : #FFFFFF;
+	font-weight : bold;
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	text-decoration : none;
+}
+
+	.speciallink:Hover
+{
+	color : #CCCCCC;
+	font-weight : bold;
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	text-decoration : underline;
+}
+
+
+
+INPUT {
+
+	BORDER-RIGHT: rgb(50,50,50) 1px outset; 
+	BORDER-TOP: rgb(50,50,50) 1px outset; 
+	BORDER-LEFT: rgb(50,50,50) 1px outset; 
+	BORDER-BOTTOM: rgb(50,50,50) 1px outset;
+	FONT-WEIGHT: ; FONT-SIZE: 11px; COLOR:#0066CC; ;
+
+}
+textarea {
+
+	BORDER-RIGHT: rgb(50,50,50) 1px outset; 
+	BORDER-TOP: rgb(50,50,50) 1px outset; 
+	BORDER-LEFT: rgb(50,50,50) 1px outset; 
+	BORDER-BOTTOM: rgb(50,50,50) 1px outset;
+	FONT-WEIGHT: ; FONT-SIZE: 11px; COLOR:#0066CC; ;
+
+}
+Select {
+
+	BORDER-RIGHT: rgb(50,50,50) 1px outset; 
+	BORDER-TOP: rgb(50,50,50) 1px outset; 
+	BORDER-LEFT: rgb(50,50,50) 1px outset; 
+	BORDER-BOTTOM: rgb(50,50,50) 1px outset;
+	FONT-WEIGHT: ; FONT-SIZE: 11px; COLOR:#0066CC; ;
+
+}
+
+
+P
+{
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 11px;
+}
+
+TD
+{
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 11px;
+}
+
+.header
+{
+	color : #330099;
+	font-weight : bolder;
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 13px;
+	text-decoration : none;
+}
+
+.pagenumstatic { BORDER-RIGHT: #000000 1px solid; PADDING-RIGHT: 4px; BORDER-TOP: #000000 1px solid; PADDING-LEFT: 4px; PADDING-BOTTOM: 1px; MARGIN: 0px; BORDER-LEFT: #000000 1px solid; WIDTH: 1em; COLOR: #000000; PADDING-TOP: 1px; BORDER-BOTTOM: #000000 1px solid; BACKGROUND-COLOR: #CCCCCC; TEXT-DECORATION: none }
+.pagenum A:link { BORDER-RIGHT: #000000 1px solid; PADDING-RIGHT: 4px; BORDER-TOP: #000000 1px solid; PADDING-LEFT: 4px; PADDING-BOTTOM: 1px; MARGIN: 0px; BORDER-LEFT: #000000 1px solid; WIDTH: 1em; COLOR: #000000; PADDING-TOP: 1px; BORDER-BOTTOM: #000000 1px solid; BACKGROUND-COLOR: #CCCCCC; TEXT-DECORATION: none }
+.pagenum A:visited { BORDER-RIGHT: #000000 1px solid; PADDING-RIGHT: 4px; BORDER-TOP: #000000 1px solid; PADDING-LEFT: 4px; PADDING-BOTTOM: 1px; MARGIN: 0px; BORDER-LEFT: #000000 1px solid; WIDTH: 1em; COLOR: #000000; PADDING-TOP: 1px; BORDER-BOTTOM: #000000 1px solid; BACKGROUND-COLOR: #CCCCCC; TEXT-DECORATION: none }
+.pagenum A:active { BORDER-RIGHT: #000000 1px solid; PADDING-RIGHT: 4px; BORDER-TOP: #000000 1px solid; PADDING-LEFT: 4px; PADDING-BOTTOM: 1px; MARGIN: 0px; BORDER-LEFT: #000000 1px solid; WIDTH: 1em; COLOR: #000000; PADDING-TOP: 1px; BORDER-BOTTOM: #000000 1px solid; BACKGROUND-COLOR: #CCCCCC; TEXT-DECORATION: none }
+.pagenum A:hover { BORDER-RIGHT: #000000 1px solid; PADDING-RIGHT: 4px; BORDER-TOP: #000000 1px solid; PADDING-LEFT: 4px; PADDING-BOTTOM: 1px; MARGIN: 0px; BORDER-LEFT: #000000 1px solid; WIDTH: 1em; COLOR: #000000; PADDING-TOP: 1px; BORDER-BOTTOM: #000000 1px solid; BACKGROUND-COLOR: #FFFFFF; TEXT-DECORATION: none }
+.signature { BORDER: #CCCCFF 1px dashed; FONT-SIZE: 9px; FONT-FAMILY: Verdana; Padding: 4px; }
+.txtBox {  font-family: Verdana; color: #000000; font-size : 11px; background-color: #FFFFFF; border: 3px #888888 Double}
+.txtBox2 {  font-family: Verdana; font-size: 11px; color: #000000; background-color: #FFFFFF; border: 3px #888888 double}
+
+</style>";
+
+?>
