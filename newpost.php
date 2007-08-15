@@ -7,6 +7,7 @@
 
 require_once('./includes/class/func.class.php');
 require_once('./includes/inc/post.inc.php');
+require_once("./includes/class/upload.class.php");
 $fRec = $tdb->get("forums", $_GET["id"]);
 
 $posts_tdb = new functions(DB_DIR."/", "posts.tdb");
@@ -44,45 +45,14 @@ if ($_POST["a"] == "1") {
     //FILE UPLOAD BEGIN
     $uploadText = '';
     if(trim($_FILES["file"]["name"]) != "") {
-        $file_types = array(
-        "jpg" => "image/pjpeg",
-        "gif" => "image/gif",
-        "zip" => "application/x-zip-compressed",
-        "txt" => "text/plain");
+        $upload = new upload(DB_DIR, $_CONFIG["fileupload_location"], $_CONFIG["fileupload_size"]);
+        $uploadId = $upload->storeFile($_FILES["file"]);
 
-        //isolate file extention...
-        //isolate file extention...
-        $filen = explode('.', $_FILES["file"]["name"]);
-        $extention = $filen[(count($filen) - 1)];
-        unset($filen[(count($filen) - 1)]);
-        $filen = implode(".", $filen);
-
-        //check if this file already exists
-        $file_number = 1;
-        if(file_exists($_CONFIG["fileupload_location"]."/".$filen.$extention)) {
-            //get a new filename
-            while(file_exists($_CONFIG["fileupload_location"]."/".$filen.$file_number.".".$extention)) {
-                $file_number++;
-            }
-            $filen = $filen.$file_number;
+        if(FALSE !== $uploadId) {
+            // Upload was a success
+            $uploadText = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]".$_FILES["file"]["name"]."[/url]\n\n";
         }
 
-        $filen = $filen.".".$extention;
-
-        //Validating the File Type only.
-        //if(in_array($_FILES["file"]["type"], $file_types)) {
-        //Validating the extention *WITH* the File Type (Dependantly)
-        if(isset($file_types[$extention]) && $_FILES["file"]["type"] == $file_types[$extention]) {
-            if($_FILES["file"]["size"] <= (1024 * $_CONFIG["fileupload_size"])) {
-                // successful file upload
-                if (move_uploaded_file($_FILES["file"]["tmp_name"], $_CONFIG["fileupload_location"]."/".$filen)) {
-                    $uploadText = "[img]images/attachment.gif[/img] Attachment: [url=".$_CONFIG["fileupload_location"]."/".$filen."]".$filen."[/url]\n\n";
-                } else {
-                    echo "<p><b>Alert:</b> Unable to upload the file ".$filen.", probable cause: ".$_CONFIG['fileupload_location']." is not writable.";
-                }
-            }
-        }
-        //$uploadText added when the Post is added.
     }
     //END
 
@@ -125,6 +95,8 @@ if ($_POST["a"] == "1") {
     clearstatcache();
     $p_id = $posts_tdb->add("posts", array("icon" => $_POST["icon"], "user_name" => $_COOKIE["user_env"], "date" => mkdate(), "message" => $uploadText.$_POST["message"], "user_id" => $_COOKIE["id_env"], "t_id" => $_GET["t_id"]));
     $posts_tdb->edit("topics", $_GET["t_id"], array("p_ids" => $pre.$p_id));
+    //$tdb->setFp('rss', 'rssfeed');
+    //if($fRec[0]['view'] == 0) $tdb->add('rss', array('subject' => ((isset($_POST['subject'])) ? $_POST['subject'] : 'RE: ' . $rec[0]['subject']), 'user_name' => $_COOKIE['user_env'], 'date' => mkdate(), 'message' => $_POST['message'], 'f_id' => $_GET['id'], 't_id' => $_GET['t_id']));
 
     if($_COOKIE["power_env"] != "0") {
         $user = $tdb->get("users", $_COOKIE["id_env"]);
