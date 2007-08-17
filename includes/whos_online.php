@@ -30,7 +30,7 @@ if(strlen($now) > 14) $now = substr($now, 0, 14);
 else $now = $now.str_repeat(' ', 14 - strlen($now));
 $wRaw .= $now."\n";
 
-if(file_exists(DB.'/whos_online.dat')) $whos_online_log = file_get_contents(DB_DIR.'/whos_online.dat');
+if(file_exists(DB_DIR.'/whos_online.dat')) $whos_online_log = file_get_contents(DB_DIR.'/whos_online.dat');
 else $whos_online_log = '';
 if(FALSE !== ($you_pos = strpos($whos_online_log, $wSearch))) {
 	//update timestamp

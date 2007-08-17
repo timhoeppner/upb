@@ -1,5 +1,5 @@
 *************************
-UPB 2.0 BETA 1 RELEASE
+UPB 2.0.2b RELEASE
 *************************
 
 Getting Started:
@@ -10,7 +10,15 @@ Getting Started:
   CHMOD the root UPB directory and the config.php back to 644
   DELETE update1.x-2.0.php and install.php, they are a security risk
 
-== UPGRADES ==
+== UPGRADES 2.0 B1 - 2.0.2b ==
+  Backup everything in your forum directory by downloading it to your harddrive
+  Upload all the files found in the zip file and overwrite any changed files
+  Execute the install-uploads.php
+  It should have no errors, if there is then please report them to myupb.com
+  DELETE update1.x-2.0.php, install.php, and install-uploads.php
+  
+  
+== UPGRADES 1.x - 2.0 ==
     It is hightly recommended that you backup your db folder before running the upgrade file
   CHMOD the config.php in root UPB directory to 777
   CHMOD the db folder (and all files and folders inside, including files inside folders) in the root UPB directory to 777

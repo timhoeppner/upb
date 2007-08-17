@@ -22,9 +22,6 @@
  *      upload_id       references back to the upload table to gather information about the file
  */
 
-// Remember to update UPB_VERSION in config.php
-// Remember to add this installscript into install.php
-
 // Since this might take some time to execute we should modify the timeout
 set_time_limit(0);
 
@@ -59,7 +56,7 @@ foreach($tableList as $table) {
     $table = str_replace("posts_", "", $table);
     
     // Make sure we don't get any topic tables
-    if(substr($table, -6) != "topics" && is_int($table)) {
+    if(substr($table, -6) != "topics" && is_numeric($table)) {
         echo "Adding <b>upload_id</b> to table <b>{$table}</b>...";
         flush();
         
@@ -76,6 +73,28 @@ foreach($tableList as $table) {
         flush();
     }
 }
+
+// Update the UPB_VERSION
+$f = fopen("./config.php", "r+");
+$data = fread($f, filesize("./config.php"));
+
+$data = explode("\n", $data);
+
+for($i=0;$i<count($data);$i++) {
+    if(trim(strlen($data[$i])) == 0) {
+        unset($data[$i]);
+        continue;
+    }
+    
+    if(strpos($data[$i], "UPB_VERSION") !== false) {
+        $data[$i] = "define(\"UPB_VERSION\", \"2.0.2b\", true);";
+    }
+}
+
+ftruncate($f, 0);
+fwrite($f, implode("\n", $data));
+
+fclose($f);
 
 echo "<br/>\nPlease note any errors that occurred and report them to <a href=\"http://www.myupb.com\">MyUPB</a>. ";
 echo "Otherwise enjoy the new attachment system!";

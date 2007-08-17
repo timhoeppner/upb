@@ -27,7 +27,7 @@ if($_POST["add"] == "" || !isset($_POST["add"])) {
     if(!defined('DB_DIR')) {
         define('DB_DIR', './'.uniqid('data_', true), true);
         $f = fopen('config.php', 'w');
-        fwrite($f, "<?php\ndefine('INSTALLATION_MODE', true, true);\ndefine('UPB_VERSION', '2.0B1.4', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
+        fwrite($f, "<?php\ndefine('INSTALLATION_MODE', true, true);\ndefine('UPB_VERSION', '2.0.2b', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
         fclose($f);
     }
     if(!is_dir(DB_DIR)) {
@@ -338,8 +338,18 @@ $files_name = array("action-smiley-035.gif","action-smiley-073.gif","anti-old.gi
     $tdb->createTable('trackforums', array(array('fId', 'number', 7), array('uId', 'number', 7), array('lastvisit', 'number', 14), array('id', 'id')));
     $tdb->createTable('tracktopics', array(array('fId', 'number', 7), array('tId', 'number', 7), array('uId', 'number', 7), array('old', 'number', 1), array('id', 'id')));
 
-    $tdb->tdb(DB_DIR.'/', 'privmsg.tdb');
-    $tdb->createTable('1', array(array("box", "string", 6), array("from", "number", 7), array("to", "number", 7), array("icon", "string", 10), array("subject", "memo"), array("date", "number", 14), array("message", "memo"), array("id", "id")));
+    //$tdb->tdb(DB_DIR.'/', 'privmsg.tdb');
+    //$tdb->createTable('1', array(array("box", "string", 6), array("from", "number", 7), array("to", "number", 7), array("icon", "string", 10), array("subject", "memo"), array("date", "number", 14), array("message", "memo"), array("id", "id")));
+    
+    // Add the new table to main.tdb
+    $tdb->tdb(DB_DIR, "main.tdb");
+    $tdb->createTable("uploads", array(
+        array("name", "string", 80),
+        array("size", "number", 9),
+        array("downloads", "number", 10),
+        array("data", "memo"),
+        array("id", "id")
+    ), 2048);
 
     if(!headers_sent()) {
         echo "<html><head><title>UPB v2.0 Installation</title></head><body>Thank you for choosing Ultimate PHP Board v2.0.  This script will guide you through the process of installing your brand-new UPB version 2.0!  Just follow the instructions through the very end.<br><br>";

@@ -116,7 +116,8 @@ if (isset($_GET["action"])) {
             array('edited_by', 'string', 20),
             array('edited_by_id', 'number', 7),
             array('edited_date', 'number', 14),
-            array("id", "id")
+            array("id", "id"),
+            array("upload_id", "number", 10)
             ));
             //chown(DB_DIR."/".$_GET["id"].".memo", "nobody");
             //chown(DB_DIR."/".$_GET["id"].".ref", "nobody");
