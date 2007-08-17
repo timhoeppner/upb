@@ -27,7 +27,7 @@ if($_POST["add"] == "" || !isset($_POST["add"])) {
     if(!defined('DB_DIR')) {
         define('DB_DIR', './'.uniqid('data_', true), true);
         $f = fopen('config.php', 'w');
-        fwrite($f, "<?php\ndefine('INSTALLATION_MODE', true, true);\ndefine('UPB_VERSION', '2.0.2b', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
+        fwrite($f, "<?php\ndefine('INSTALLATION_MODE', true, true);\ndefine('UPB_VERSION', '2.1.1b', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
         fclose($f);
     }
     if(!is_dir(DB_DIR)) {

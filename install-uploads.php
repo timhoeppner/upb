@@ -87,7 +87,7 @@ for($i=0;$i<count($data);$i++) {
     }
     
     if(strpos($data[$i], "UPB_VERSION") !== false) {
-        $data[$i] = "define(\"UPB_VERSION\", \"2.0.2b\", true);";
+        $data[$i] = "define(\"UPB_VERSION\", \"2.1.1b\", true);";
     }
 }
 
