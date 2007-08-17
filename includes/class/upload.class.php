@@ -9,7 +9,6 @@
 class upload extends tdb {
     var $initialized=false;
     var $file=array();
-    var $uploadDir;
     var $maxSize;
     
     /**
@@ -18,7 +17,7 @@ class upload extends tdb {
      * @param String $dir
      * @return bool, true on success
      */
-    function upload($dir, $upDir, $maxSize) {
+    function upload($dir, $maxSize) {
         // Make sure we start fresh
         $this->initialized = false;
         
@@ -30,7 +29,6 @@ class upload extends tdb {
         else {
             // Set this file pointer
             $this->setFp("uploads", "uploads");
-            $this->uploadDir = $upDir;
             $this->maxSize = $maxSize * 1024; // Maxsize is given in KB we want bytes
             
             $this->initialized = true;
@@ -52,13 +50,14 @@ class upload extends tdb {
         if($file["error"] != UPLOAD_ERR_OK) return false;
         
         // Create a temporary location to store the data before putting it in the database
-        $tmpName = $this->uploadDir."/".md5(uniqid(rand(), true));
+        //$tmpName = $this->uploadDir."/".md5(uniqid(rand(), true));
         
         if($this->maxSize < $file["size"]) return false;
         
-        if(move_uploaded_file($file["tmp_name"], $tmpName)) {
+        if(is_uploaded_file($file["tmp_name"])) {
             // Read the temp file into the database
             clearstatcache();
+            $tmpName = $file["tmp_name"];
             
             $f = fopen($tmpName, "rb");
             $data = fread($f, filesize($tmpName));
@@ -68,10 +67,8 @@ class upload extends tdb {
             
             $id = $this->add("uploads", array(
                     "name" => $file["name"],
-                    "mime" => $file["type"],
                     "size" => $file["size"],
                     "downloads" => 0,
-                    "description" => "",         // Going to implement later
                     "data" => $data
                 ));
             

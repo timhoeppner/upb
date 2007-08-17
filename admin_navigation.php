@@ -15,8 +15,7 @@ echo "
                 <br><a href='admin_iplog.php' target = '_parent'>Ip Address Log</a>
                 <br><a href='admin_banuser.php' target = '_parent'>Manage Banned users</a>
                 <br><a href='admin_badwords.php' target = '_parent'>Manage Bad Words</a>
-                <br><a href='admin_cleanup.php' target = '_parent'>Clean up (old search files)</a>
-                <br><a href='admin_chatconfig.php' target = '_parent'>Manage the Chatroom</a></td></tr>
+                <br><a href='admin_cleanup.php' target = '_parent'>Clean up (old search files)</a></td></tr>
                 </table>";
 
     }

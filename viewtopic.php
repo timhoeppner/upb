@@ -125,6 +125,24 @@ foreach($pRecs as $pRec) {
 
     if((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $quote = "<a href='newpost.php?id=".$_GET["id"]."&t=0&quote=1&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."&page=".$_GET["page"]."'><img src='".$_CONFIG["skin_dir"]."/icons/pb_quote.JPG' border='0' alt='Quote'></a>";
     else $quote = "";
+    
+    // Find out if there is an attachment for this post
+    $uploadId = (int) $pRec["upload_id"];
+    
+    if($uploadId > 0) {
+        // We have an attachment, query the database for the info
+        $tdb->setFp("uploads", "uploads");
+        
+        $q = $tdb->get("uploads", $uploadId, array("name", "downloads"));
+        
+        // Make sure the attachment exists
+        if($q !== false) {
+            $attachName = $q[0]["name"];
+            $attachDownloads = $q[0]["downloads"];
+            
+            $msg = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n" . $msg;
+        }
+    }
 
     $msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG["censor"]));
 

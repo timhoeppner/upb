@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("./includes/class/func.class.php");
 $where = "Frequently Asked Questions - FAQ";
 require_once("./includes/header.php");

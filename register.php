@@ -1,4 +1,4 @@
-<?
+<?php
 // Ultimate PHP Board
 // Author: Tim Hoeppner aka RR_Pilot, FixITguy
 // Website: http://www.myupb.com

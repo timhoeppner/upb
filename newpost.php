@@ -44,14 +44,12 @@ if ($_POST["a"] == "1") {
 
     //FILE UPLOAD BEGIN
     $uploadText = '';
+    $uploadId = 0;
     if(trim($_FILES["file"]["name"]) != "") {
-        $upload = new upload(DB_DIR, $_CONFIG["fileupload_location"], $_CONFIG["fileupload_size"]);
+        $upload = new upload(DB_DIR, $_CONFIG["fileupload_size"]);
         $uploadId = $upload->storeFile($_FILES["file"]);
 
-        if(FALSE !== $uploadId) {
-            // Upload was a success
-            $uploadText = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]".$_FILES["file"]["name"]."[/url]\n\n";
-        }
+        if($uploadId === false) $uploadId = 0;
 
     }
     //END
@@ -61,7 +59,20 @@ if ($_POST["a"] == "1") {
         if(!isset($_POST["locked"])) $_POST["locked"] = "0";
         $_POST["subject"] = trim($_POST["subject"], $_CONFIG['stick_note']);
         if(trim($_POST["subject"]) == "")  exitPage("You must enter a subject!");
-        $_GET["t_id"] = $posts_tdb->add("topics", array("icon" => $_POST["icon"], "subject" => $_POST["subject"], "topic_starter" => $_COOKIE["user_env"], "sticky" => $_POST["sticky"], "replies" => "0", "views" => "0", "locked" => $_POST["locked"], "last_post" => mkdate(), "user_name" => $_COOKIE["user_env"], "user_id" => $_COOKIE["id_env"]));
+        
+        $_GET["t_id"] = $posts_tdb->add("topics", array(
+            "icon" => $_POST["icon"], 
+            "subject" => $_POST["subject"], 
+            "topic_starter" => $_COOKIE["user_env"], 
+            "sticky" => $_POST["sticky"], 
+            "replies" => "0", 
+            "views" => "0", 
+            "locked" => $_POST["locked"], 
+            "last_post" => mkdate(), 
+            "user_name" => $_COOKIE["user_env"], 
+            "user_id" => $_COOKIE["id_env"]
+        ));
+        
         echo "Making new topic... ";
 
         $tdb->edit("forums", $_GET["id"], array("topics" => ((int)$fRec[0]["topics"] + 1), "posts" => ((int)$fRec[0]["posts"] + 1)));
@@ -93,7 +104,17 @@ if ($_POST["a"] == "1") {
     clearstatcache();
     $posts_tdb->sortAndBuild("topics", "last_post", "DESC");
     clearstatcache();
-    $p_id = $posts_tdb->add("posts", array("icon" => $_POST["icon"], "user_name" => $_COOKIE["user_env"], "date" => mkdate(), "message" => $uploadText.$_POST["message"], "user_id" => $_COOKIE["id_env"], "t_id" => $_GET["t_id"]));
+    
+    $p_id = $posts_tdb->add("posts", array(
+        "icon" => $_POST["icon"], 
+        "user_name" => $_COOKIE["user_env"], 
+        "date" => mkdate(), 
+        "message" => $uploadText.$_POST["message"], 
+        "user_id" => $_COOKIE["id_env"], 
+        "t_id" => $_GET["t_id"], 
+        "upload_id" => $uploadId
+    ));
+    
     $posts_tdb->edit("topics", $_GET["t_id"], array("p_ids" => $pre.$p_id));
     //$tdb->setFp('rss', 'rssfeed');
     //if($fRec[0]['view'] == 0) $tdb->add('rss', array('subject' => ((isset($_POST['subject'])) ? $_POST['subject'] : 'RE: ' . $rec[0]['subject']), 'user_name' => $_COOKIE['user_env'], 'date' => mkdate(), 'message' => $_POST['message'], 'f_id' => $_GET['id'], 't_id' => $_GET['t_id']));

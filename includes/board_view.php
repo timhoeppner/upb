@@ -1,4 +1,4 @@
-<?
+<?php
 echo "<table width='90%' cellspacing='1' cellpadding='3' bgcolor='$border' align='left'>
       <tr>
         <td bgcolor='$header' align=left valign=center width=15%><font size='$font_m' face='$font_face' color='$font_color_header'>

@@ -1,4 +1,4 @@
-<?
+<?php
 require_once('./includes/class/func.class.php');
 $where = "<b>></b> More Smilies";
 require_once(DB_DIR.'/smilies.dat');

@@ -1,4 +1,4 @@
-<?
+<?php
 // Ultimate PHP Board
 // Author: Tim Hoeppner aka RR_Pilot, FixITguy
 // Website: http://www.myupb.com
@@ -50,7 +50,7 @@ if(!isset($script_end_time)) {
                 <tr> 
                   <td width='33%'><b><font face=Verdana color=#a9b3ba size='1'>&nbsp;</font><font face='Verdana' color='#CCCCCC' size='1'>Powered by UPB Version : <?php echo $_CONFIG["ver"]; ?></font></b></td>
                   <td align=center  width='34%'><b><font face='Verdana' color='#CCCCCC' size='1'>Rendered in <i><?php echo round($script_end_time - $script_start_time, 5); ?> seconds</i></font></b></td>
-                  <td align=right width='33%'><b><font face=verdana color=#000000 size='1'><a href='http://www.myupb.com/'><font color='#CCCCCC'>PHP Outburst</font></a></font><font face='verdana,arial,helvetica' color='#CCCCCC' size='1'> ©2002 - <?php echo date('Y'); ?></font></b></td>
+                  <td align=right width='33%'><b><font face=verdana color=#000000 size='1'><a href='http://www.myupb.com/'><font color='#CCCCCC'>PHP Outburst</font></a></font><font face='verdana,arial,helvetica' color='#CCCCCC' size='1'> ï¿½2002 - <?php echo date('Y'); ?></font></b></td>
                 </tr>
                 </tbody> 
               </table>

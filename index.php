@@ -28,10 +28,6 @@ if ($_CONFIG["servicemessage"] != "") {
 
 $posts = new tdb(DB_DIR, "posts.tdb");
 
-//require_once("chat/func.php");
-//$users_in_chat = count(file("chat/".$list_file));
-$user_in_chat = 0;
-    
 $cRecs = $tdb->listRec("cats", 1);
 //$cRecs = $tdb->query("cats", "view<'".($_COOKIE["power_env"] + 1)."'");
 
@@ -180,7 +176,6 @@ echo "
      <br>Total Posts: <B>$t_p</B>
      <br>Total Members: <B>$mem_total</B>
      <br>Newest Member: <B><a href='profile.php?action=get&id=".$mem_last[0]["id"]."'>".$mem_last[0]["user_name"]."</a></B>
-     <br>Users in Chatroom: <b>$users_in_chat</b>
      <br>Forum Page Views: <B>$hits_today</B>
      <br>Page Rendering Time: <B>
 <font face=verdana size=1>".round($script_end_time - $script_start_time, 5)." seconds</font>

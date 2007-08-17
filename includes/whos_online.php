@@ -1,4 +1,4 @@
-<?
+<?php
 // Ultimate PHP Board
 // Whos online System
 
