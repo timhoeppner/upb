@@ -12,7 +12,7 @@ Getting Started:
 
 == UPGRADES 2.0 B1 - 2.0.2b ==
   Backup everything in your forum directory by downloading it to your harddrive
-  Upload all the files found in the zip file and overwrite any changed files
+  Upload all the files found in the zip file and overwrite any changed files EXCEPT config.php
   Execute the install-uploads.php
   It should have no errors, if there is then please report them to myupb.com
   DELETE update1.x-2.0.php, install.php, and install-uploads.php
