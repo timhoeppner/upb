@@ -979,7 +979,7 @@ if(DEBUGGING_MODE) fwrite($debug_to_file_resource, "Updated topic/post count in 
     foreach($tables1 as $table) {
         if(substr($table, -7) == "_topics") {
             $posts->setFp("topic", $table);
-            $posts->sortAndBuild("topic", "last_post", "DESC");
+            $posts->sort("topic", "last_post", "DESC");
         }
     }
 
@@ -987,7 +987,7 @@ if(DEBUGGING_MODE) fwrite($debug_to_file_resource, "Updated topic/post count in 
     $tables2 = $privmsg->getTableList();
     foreach($tables2 as $table) {
         $privmsg->setFp("pm", $table);
-        $privmsg->sortAndBuild("pm", "date", "DESC");
+        $privmsg->sort("pm", "date", "DESC");
     }
     if($errorHandler->return_howmany() != 0) $error_finish = "<b>Unable to Sort Topics...</b>";
     else $finish = "Sorting Topics and Private Messages to be used...Done!";

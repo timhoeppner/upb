@@ -102,7 +102,7 @@ if ($_POST["a"] == "1") {
         $pre = $rec[0]["p_ids"].",";
     }
     clearstatcache();
-    $posts_tdb->sortAndBuild("topics", "last_post", "DESC");
+    $posts_tdb->sort("topics", "last_post", "DESC");
     clearstatcache();
     
     $p_id = $posts_tdb->add("posts", array(

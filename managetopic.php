@@ -124,7 +124,7 @@ if($_GET["action"] == "watch") {
                 echo "Successfully moved topic";
             }
             $posts_tdb->edit("newTopics", $newT_id, array("p_ids" => implode(",", $newSort)));
-            $posts_tdb->sortAndBuild("newTopics", "last_post", "DESC");
+            $posts_tdb->sort("newTopics", "last_post", "DESC");
             $tdb->edit("forums", $_POST["newId"], array("topics" => $fNRec[0]["topics"], "posts" => $fNRec[0]["posts"]));
 
             require_once("./includes/footer.php");
