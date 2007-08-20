@@ -136,7 +136,7 @@ if(isset($_POST["u_edit"])) {
         if($_GET["id"] == $_COOKIE["id_env"]) {
             echo "You cannot send yourself a Private Msg";
         } elseif($_COOKIE["id_env"] == "" || $_COOKIE["id_env"] == "0") {
-            echo "You must login before you can sent this user a PM";
+            echo "You must login before you can send this user a PM";
         } elseif(in_array($_COOKIE["id_env"], $blockedList)) {
             echo "You are Blocked";
         } else {
