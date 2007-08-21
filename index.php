@@ -159,7 +159,7 @@ echo "      <table width='".$_CONFIG["table_width_main"]."' border='0' cellspaci
      <tr>  
 <td bgColor='$table2' valign='middle' width='49'><div align='center'><font face=verdana size=1><img src='icon/user.gif' width='23' height='20'></font></div></td>
 <td colspan='2' width='95%' bgcolor='$table1'><font size='$font_s' face='$font_face' color='$font_color_main'>";
-//<i>Whos Online System Offline</i></font></td>";
+//<i>Who's Online System Offline</i></font></td>";
 echo "
      Users online in the last 15 minutes: <b>$whos_t</b>
      <br><b>".$whos["users"]."</b> member(s) and <b>".$whos["guests"]."</b> guest(s).
