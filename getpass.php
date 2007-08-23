@@ -2,8 +2,8 @@
 // Ultimate PHP Board
 // Author: Tim Hoeppner aka RR_Pilot, FixITguy
 // Website: http://www.myupb.com
-// Version: 2.0
-// Using textdb Version: 4.3.2
+// Version: 2.1
+// Using textdb Version: 4.4.3
 
 if(!isset($_GET["ref"])) $ref = "index.php";
 else $ref = $_GET["ref"];

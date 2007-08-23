@@ -1,4 +1,10 @@
 <?php
+// Ultimate PHP Board
+// Author: Tim Hoeppner aka RR_Pilot, FixITguy
+// Website: http://www.myupb.com
+// Version: 2.1
+// Using textdb Version: 4.4.3
+
 include "./includes/class/tdb.class.php";
 include "./includes/class/upload.class.php";
 include "./config.php";
