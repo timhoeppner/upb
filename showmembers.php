@@ -12,7 +12,7 @@ require_once('./includes/header.php');
 if($tdb->is_logged_in()) {
     if($_GET["page"] == "") $_GET["page"] = 1;
     $users = $tdb->listRec("users", ($_GET["page"] * $_CONFIG["topics_per_page"] - $_CONFIG["topics_per_page"] + 1), $_CONFIG["topics_per_page"]);
-    
+
     $c = $tdb->getNumberOfRecords("users");
     if ($c <= $_CONFIG["topics_per_page"]) {
         $num_pages = 1;
@@ -22,12 +22,12 @@ if($tdb->is_logged_in()) {
         $num_pages = ($c / $_CONFIG["topics_per_page"]) + 1;
     }
     $num_pages = (int) $num_pages;
-    
+
     if($num_pages == 1) {
         $pageStr = "<font face='$font_face' size='$font_s'><span class=pagenumstatic>$num_pages</span></font>";
     } else {
         //$pageStr = "<font face='$font_face' size='$font_s'><span class=pagenumstatic>";
-        
+
         for($i=1;$i<=$num_pages;$i++) {
             if($_GET["page"] == $i){
                 $pageStr .= $i."</span> ";
@@ -38,7 +38,7 @@ if($tdb->is_logged_in()) {
         //$pageStr .= "</font></span>";
         unset($num_pages);
     }
-    
+
     echo "<table border='0' cellspacing='0' cellpadding='4' width='".$_CONFIG["table_width_main"]."' align='center'><tr>
     <td><font size='$font_m' face='$font_face' color='$font_color_main'>".$pageStr."</font></td></tr></table><center>";
     echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
@@ -61,7 +61,7 @@ if($tdb->is_logged_in()) {
             if($user["level"] == "2") $userColor = $_STATUS["moderatcolor"];
             elseif($user["level"] == "3") $userColor = $_STATUS["admcolor"];
             else $userColor = $_STATUS["membercolor"];
-/* location, # of posts, aim, msn, yahoo, icq */
+			/* location, # of posts, aim, msn, yahoo, icq */
           echo "<tr>
             <td bgcolor='$table1' width='3%'><p align='center'><font size='$font_m' face='$font_face' color='$userColor'><b>".$user["id"]."</b></font></td>
             <td bgcolor='$table1' width='15%'><p align='center'><font size='$font_m' face='$font_face' color='$userColor'><a href='profile.php?action=get&id=".$user["id"]."'>".$user["user_name"]."</a></font></td>
@@ -83,7 +83,7 @@ if($tdb->is_logged_in()) {
     echo "<table border='0' cellspacing='0' cellpadding='4' width='".$_CONFIG["table_width_main"]."' align='center'><tr>
     <td><font size='$font_m' face='$font_face' color='$font_color_main'>".$pageStr."</font></td></tr></table><center>";
 } else {
-    echo "you are not authorized to be here.  Please <a href='login.php?ref='>log in</a> to view the list";
+    echo "You are not authorized to be here.  Please <a href='login.php?ref='>log in</a> to view the list";
 }
 
 require_once('./includes/footer.php');
