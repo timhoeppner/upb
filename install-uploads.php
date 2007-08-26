@@ -75,7 +75,7 @@ foreach($tableList as $table) {
 }
 
 // Update the UPB_VERSION
-$f = fopen("./config.php", "r+");
+$f = fopen("./config.php", "r");
 $data = fread($f, filesize("./config.php"));
 
 $data = explode("\n", $data);
@@ -91,9 +91,10 @@ for($i=0;$i<count($data);$i++) {
     }
 }
 
-ftruncate($f, 0);
-fwrite($f, implode("\n", $data));
+fclose($f);
 
+$f = fopen("./config.php", "w");
+fwrite($f, implode("\n", $data));
 fclose($f);
 
 echo "<br/>\nPlease note any errors that occurred and report them to <a href=\"http://www.myupb.com\">MyUPB</a>. ";
