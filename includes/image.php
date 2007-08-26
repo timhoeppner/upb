@@ -1,13 +1,12 @@
 <?php 
-// Private Messaging System
-// Add on to Ultimate PHP Board V2.0
-// Original PM Version (before _MANUAL_ upgrades): 2.0
-// File Created by fraser
-// Using textdb Version: 4.2.3
+/**
+ * Registration sucurity image verification
+ * Mod By: Fraser
+ */
 
 require_once('./inc/encode.inc.php');
-$decid = urldecode(md5_decrypt($_REQUEST['id'], $_REQUEST['key'])); 
-header("Content-type: image/png"); 
+$decid = urldecode(md5_decrypt($_GET['id'], $_GET['key'])); 
+
 $img = imagecreatetruecolor(80, 20); 
 
 for($i = 0; $i < 3; $i++) { 
@@ -25,6 +24,20 @@ for($i = 0; $i < 3; $i++) {
     //$font = 'LucidaConsole.ttf'; 
     imagestring($img, 5, 10, $i, $decid, $darkcolor); 
 } 
-imagepng($img, '', 75); 
-imagedestroy($img); 
+
+// Call a valid image exporter
+if(function_exists("imagegif")) {
+    header("Content-type: image/gif");
+    imagegif($img);
+} elseif(function_exists("imagejpeg")) {
+    header("Content-type: image/jpeg");
+    imagejpeg($img, "", 0.5);
+} elseif(function_exists("imagepng")) {
+    header("Content-type: image/png");
+    imagepng($img);
+} else {
+    die("No image support on this server");
+}
+
+imagedestroy($img);
 ?>
