@@ -34,7 +34,7 @@ if($_GET["section"] == "inbox") {
         fclose($f);
     }
 
-    if($action == "Delete PMs") {
+    if(isset($_POST['action']) && $_POST['action'] == "Delete PMs") {
         $num = 0;
         $delete = array();
         for($i=0;$i<$count;$i++) {
@@ -77,7 +77,7 @@ if($_GET["section"] == "inbox") {
                 <td bgcolor='$table1' width=4%><font face='$font_face' size='$font_s' color='red'>$new</font></td>
                 <td bgcolor='$table1' width=12%><center><input type='checkbox' name='".$pmRec["id"]."_del' value='CHECKED'></center></td>
                 <td bgcolor='$table1' width=12% align='center'><p align='center'><font size='$font_m' color='$font_color_main'>$ban_text</font></p></td>
-                <td bgcolor='$table1' width=34%><font face='$font_face' size='$font_m' color='$font_color_main'><img src='./icon/".$pmRec["icon"]."'> <a href='viewpm.php?section=".$_GET["section"]."&id=".$pmRec["id"]."'>".$pmRec["subject"]."</a></font></td> 
+                <td bgcolor='$table1' width=34%><font face='$font_face' size='$font_m' color='$font_color_main'><img src='./icon/".$pmRec["icon"]."'> <a href='viewpm.php?section=".$_GET["section"]."&id=".$pmRec["id"]."'>".$pmRec["subject"]."</a></font></td>
                 <td bgcolor='$table1' width=40%><font face='$font_face' size='$font_m' color='$font_color_main'>Sent by <a href='profile.php?action=get&id=".$pmRec["from"]."'>".$user[0]["user_name"]."</a> on ".gmdate("M d, Y g:i:s a", user_date($pmRec["date"]))."</font></td>
                 </tr>";
             unset($new, $ban_text);
@@ -119,7 +119,7 @@ if($_GET["section"] == "inbox") {
         if($pmRec["id"] != "") {
             $user = $tdb->get("users", $pmRec["to"]);
             echo "<tr>
-                <td bgcolor='$table1' width=40%><font face='$font_face' size='$font_m' color='$font_color_main'><img src='./icon/".$pmRec["icon"]."'> <a href='viewpm.php?section=".$_GET["section"]."&id=".$pmRec["id"]."'>".$pmRec["subject"]."</a></font></td> 
+                <td bgcolor='$table1' width=40%><font face='$font_face' size='$font_m' color='$font_color_main'><img src='./icon/".$pmRec["icon"]."'> <a href='viewpm.php?section=".$_GET["section"]."&id=".$pmRec["id"]."'>".$pmRec["subject"]."</a></font></td>
                 <td bgcolor='$table1' width=60%><font face='$font_face' size='$font_m' color='$font_color_main'>Sent to <a href='profile.php?action=get&id=".$pmRec["to_id"]."'>".$user[0]["user_name"]."</a> on ".gmdate("M d, Y g:i:s a", user_date($pmRec["date"]))."</font></td>
                 </tr>";
             unset($pmRec);
@@ -144,7 +144,7 @@ if($_GET["section"] == "inbox") {
         <br><a href='pmsystem.php?section=outbox'>View Outbox</a>
         <br><a href='pmblocklist.php'>Manage Blocked Users</a>
         <br><a href='pmblocklist.php?action=adduser'>Block a User</a>
-        </tr></td></table>$skin_tablefooter"; 
+        </tr></td></table>$skin_tablefooter";
 }
 require_once("./includes/footer.php");
 ?>

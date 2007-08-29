@@ -4,7 +4,7 @@ $where = "<b>></b> More Smilies";
 require_once(DB_DIR.'/smilies.dat');
 
 sort($files_name);
-$count = count($files_name); 
+$count = count($files_name);
 $cols_n = 6; //how many columns per row of the table
 require_once('./includes/header_simple.php');
 echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
@@ -42,5 +42,5 @@ for ($i=0;$i<$count;$i++){
 }
 
 echo "</tr></table></tr></td></table>$skin_tablefooter</body></html>";
-includes_once('./includes/footer_simple.php');
+include_once('./includes/footer_simple.php');
 ?>
