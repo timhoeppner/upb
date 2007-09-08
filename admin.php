@@ -1,9 +1,7 @@
 <?php
 // Ultimate PHP Board
-// Author: Tim Hoeppner aka RR_Pilot, FixITguy
+// Author: MyUPB Team
 // Website: http://www.myupb.com
-// Version: 2.0
-// Using textdb Version: 4.3.2
 
 require_once("./includes/class/func.class.php");
 $where = "Admin Panel";
