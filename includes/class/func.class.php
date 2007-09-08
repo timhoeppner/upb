@@ -46,12 +46,12 @@ class functions extends tdb {
             $return = TRUE;
             reset($requireArray);
             while (list ($field, $value) = each ($requireArray)) {
-                if(strtolower($CuRec[0][$field]) != strtolower($value)) {
+                if(strtolower($rec[0][$field]) != strtolower($value)) {
                     $return = false;
                     break 1;
                 }
             }
-            if($return) return $CuRec;
+            if($return) return $rec;
         }
         return false;
     }
@@ -63,12 +63,12 @@ class functions extends tdb {
             $return = TRUE;
             reset($requireArray);
             while (list ($field, $value) = each ($requireArray)) {
-                if(strtolower($CuRec[0][$field]) != strtolower($value)) {
+                if(strtolower($rec[0][$field]) != strtolower($value)) {
                     $return = false;
                     break 1;
                 }
             }
-            if($return) return $CuRec;
+            if($return) return $rec;
         }
         return false;
     }
