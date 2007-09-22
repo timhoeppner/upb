@@ -116,9 +116,8 @@ function setsmilies_nav( Tag , areaId ) {
 	return;
 }
 
-function addsmilies(Tag,areaId)
+function addsmilies(Tag)
 {
-//var txtArea = opener.document.getElementById( areaId );
 var offset = opener.document.newentry.message.selectionStart;
 		var preString = (opener.document.newentry.message.value).substring(0,offset);
 		var newString = '[img]' + Tag+ '[/img]';

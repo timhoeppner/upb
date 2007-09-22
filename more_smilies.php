@@ -31,8 +31,8 @@ for ($i=0;$i<$count;$i++){
     }
     $cols++;
     if ($files_name[$i] != "zzz.gif"){
-    echo "<td><table><tr><td><A HREF=\"javascript:AddSmilie('smilies/moresmilies/$files_name[$i]')\" ONFOCUS=\"filter:blur()\">
-              <img src=smilies/moresmilies/$files_name[$i] border=0></a></td></tr><tr><td>$files_name[$i]</td></tr></table>
+    echo "<td><table><tr><td><A HREF=\"javascript:addsmilies('smilies/moresmilies/$files_name[$i]')\" ONFOCUS=\"filter:blur()\">
+              <img src='smilies/moresmilies/$files_name[$i]' border='0'></a></td></tr><tr><td>$files_name[$i]</td></tr></table>
           </td>";
     }
     else {

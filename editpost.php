@@ -54,9 +54,9 @@ if(isset($_POST["message"])) {
 <tr><td bgcolor='$table1' valign='top'>
     
     <br><br><br><br><center>";		
-    //<table border=1><tr><td valign=top>
+    echo "<table border=1><tr><td valign=top>";
 toolMapImage();
-    //</tr></td></table>
+    echo "</tr></td></table>";
     echo "</center>
             
     </td><td bgcolor='$table1'><textarea id=\"message\" name=\"message\" cols=\"60\" rows=\"18\">".$pRec[0]["message"]."</textarea>
@@ -67,69 +67,7 @@ toolMapImage();
     <td valign='top' bgcolor='$table1' >
     <table border='0' width='100%'><tr><td><font size='$font_m' face='$font_face' color='$font_color_main'>Smilies:</font></td><td align='right'><font size='$font_m' face='$font_face' color='$font_color_main'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></font></td></tr>
 <tr><td colspan='2' bgcolor='$table1'>
-<font size='$font_m' face='$font_face' color='$font_color_main'>
-<A HREF=\"javascript:SetSmiley(':)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/smile.gif BORDER=0 ALT=:)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley(':(')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/frown.gif BORDER=0 ALT=:(></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley(';)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/wink.gif BORDER=0 ALT=;)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley(':P')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/tongue.gif BORDER=0 ALT=:P></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley(':o')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/eek.gif BORDER=0 ALT=:o></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley(':D')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/biggrin.gif BORDER=0 ALT=:D></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(C)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/cool.gif BORDER=0 ALT=(C)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(M)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/mad.gif BORDER=0 ALT=(M)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(R)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/redface.gif BORDER=0 ALT=(R)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(E)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/rolleyes.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('LOL')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/lol.gif BORDER=0 ALT=LOL></A>
-&nbsp;&nbsp;&nbsp;&nbsp;<br>
-
-<A HREF=\"javascript:SetSmiley('(offtopic)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/offtopic.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(rofl)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/rofl.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(confused)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/confused.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(crazy)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/crazy.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(hm)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/hm.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(hmmlaugh)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/hmmlaugh.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(blink)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/blink.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(wallbash)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/wallbash.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(noteeth)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/noteeth.gif BORDER=0 ALT=(E)></A>
-
-</td></tr></table></td></tr></table>
+<font size='$font_m' face='$font_face' color='$font_color_main'>".getSmilies()."</td></tr></table></td></tr></table>
             
             <tr><td bgcolor='$table1' colspan=2><input type=submit value='Edit'></td></tr>
             </table>$skin_tablefooter

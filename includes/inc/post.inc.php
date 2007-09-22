@@ -130,7 +130,7 @@ function toolMapImage() {
 
 function getSmilies()
 {
-echo "<A HREF=\"javascript:setsmilies(':)','message')\" ONFOCUS=\"filter:blur()\">
+$smilies = "<A HREF=\"javascript:setsmilies(':)','message')\" ONFOCUS=\"filter:blur()\">
         <IMG SRC=smilies/smile.gif BORDER=0 ALT=:)></A>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <A HREF=\"javascript:setsmilies(':(','message')\" ONFOCUS=\"filter:blur()\">
@@ -190,5 +190,6 @@ echo "<A HREF=\"javascript:setsmilies(':)','message')\" ONFOCUS=\"filter:blur()\
 &nbsp;&nbsp;&nbsp;&nbsp;
 <A HREF=\"javascript:setsmilies('(noteeth)','message')\" ONFOCUS=\"filter:blur()\">
         <IMG SRC=smilies/noteeth.gif BORDER=0 ALT=(E)></A>";
+return $smilies;
 }
 ?>
