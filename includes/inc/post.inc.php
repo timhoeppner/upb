@@ -107,24 +107,88 @@ function UPBcoding($text) {
 function toolMapImage() {
     echo "<img src='images/font_buttons.gif' width='100' height='125' border='0' usemap='#tool_image_map'>
 	<map name='tool_image_map'>
-	<area shape='rect' coords='4,53,24,73' href=\"javascript:SetSmiley('[img] [/img]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='4,79,48,99' href=\"javascript:SetSmiley('[move] [/move]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='29,54,73,74' href=\"javascript:SetSmiley('[quote] [/quote]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='4,29,25,49' href=\"javascript:SetSmiley('[small] [/small]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='75,5,97,25' href=\"javascript:SetSmiley('[center] [/center]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='83,107,94,117' href=\"javascript:SetSmiley('[white] [/white]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='67,107,78,117' href=\"javascript:SetSmiley('[yellow] [/yellow]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='52,107,61,116' href=\"javascript:SetSmiley('[green] [/green]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='36,107,46,117' href=\"javascript:SetSmiley('[purple] [/purple]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='6,106,16,117' href=\"javascript:SetSmiley('[red] [/red]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='21,107,30,116' href=\"javascript:SetSmiley('[blue] [/blue]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='28,5,48,23' href=\"javascript:SetSmiley('[i] [/i]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='3,4,25,24' href=\"javascript:SetSmiley('[b] [/b]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='52,4,73,24' href=\"javascript:SetSmiley('[u] [/u]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='28,28,72,49' href=\"javascript:SetSmiley('[url] [/url]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='75,28,97,49' href=\"javascript:SetSmiley('[email] [/email]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='75,54,97,74' href=\"javascript:SetSmiley('[bullet] [/bullet]')\" ONFOCUS=\"filter:blur()\">
-	<area shape='rect' coords='52,79,96,99' href=\"javascript:SetSmiley('[offtopic] [/offtopic]')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='4,53,24,73' href=\"javascript:createBBtag('[img]','[/img]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='4,79,48,99' href=\"javascript:createBBtag('[move]','[/move]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='29,54,73,74' href=\"javascript:createBBtag('[quote]','[/quote]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='4,29,25,49' href=\"javascript:createBBtag('[small]','[/small]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='75,5,97,25' href=\"javascript:createBBtag('[center]','[/center]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='83,107,94,117' href=\"javascript:createBBtag('[white]','[/white]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='67,107,78,117' href=\"javascript:createBBtag('[yellow]','[/yellow]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='52,107,61,116' href=\"javascript:createBBtag('[green]','[/green]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='36,107,46,117' href=\"javascript:createBBtag('[purple]','[/purple]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='6,106,16,117' href=\"javascript:createBBtag('[red]','[/red]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='21,107,30,116' href=\"javascript:createBBtag('[blue]','[/blue]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='28,5,48,23' href=\"javascript:createBBtag('[i]','[/i]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='3,4,25,24' href=\"javascript:createBBtag('[b]','[/b]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='52,4,73,24' href=\"javascript:createBBtag('[u]','[/u]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='28,28,72,49' href=\"javascript:createBBtag('[url]','[/url]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='75,28,97,49' href=\"javascript:createBBtag('[email]','[/email]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='75,54,97,74' href=\"javascript:createBBtag('[bullet]','[/bullet]','message')\" ONFOCUS=\"filter:blur()\">
+	<area shape='rect' coords='52,79,96,99' href=\"javascript:createBBtag('[offtopic]','[/offtopic]','message')\" ONFOCUS=\"filter:blur()\">
         </map>";
+}
+
+function getSmilies()
+{
+echo "<A HREF=\"javascript:setsmilies(':)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/smile.gif BORDER=0 ALT=:)></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies(':(','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/frown.gif BORDER=0 ALT=:(></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies(';)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/wink.gif BORDER=0 ALT=;)></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies(':P','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/tongue.gif BORDER=0 ALT=:P></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies(':o','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/eek.gif BORDER=0 ALT=:o></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies(':D','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/biggrin.gif BORDER=0 ALT=:D></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies('(C)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/cool.gif BORDER=0 ALT=(C)></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies('(M)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/mad.gif BORDER=0 ALT=(M)></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies('(R)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/redface.gif BORDER=0 ALT=(R)></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies('(E)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/rolleyes.gif BORDER=0 ALT=(E)></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies('LOL','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/lol.gif BORDER=0 ALT=LOL></A>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+
+<A HREF=\"javascript:setsmilies('(offtopic)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/offtopic.gif BORDER=0 ALT=(E)></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies('(rofl)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/rofl.gif BORDER=0 ALT=(E)></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies('(confused)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/confused.gif BORDER=0 ALT=(E)></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies('(crazy)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/crazy.gif BORDER=0 ALT=(E)></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies('(hm)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/hm.gif BORDER=0 ALT=(E)></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies('(hmmlaugh)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/hmmlaugh.gif BORDER=0 ALT=(E)></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies('(blink)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/blink.gif BORDER=0 ALT=(E)></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies('(wallbash)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/wallbash.gif BORDER=0 ALT=(E)></A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF=\"javascript:setsmilies('(noteeth)','message')\" ONFOCUS=\"filter:blur()\">
+        <IMG SRC=smilies/noteeth.gif BORDER=0 ALT=(E)></A>";
 }
 ?>

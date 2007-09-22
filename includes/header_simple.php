@@ -63,6 +63,7 @@ return false;
 }
 -->
 </script>
+<script language=\"Javascript\" src=\"./includes/bbcode.js\"></script>
 </head>
 
 <body leftmargin='0' topmargin='0' rightmargin='0'>

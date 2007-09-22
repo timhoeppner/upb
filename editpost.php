@@ -59,7 +59,7 @@ toolMapImage();
     //</tr></td></table>
     echo "</center>
             
-    </td><td bgcolor='$table1'><textarea name=message cols=60 rows=18>".$pRec[0]["message"]."</textarea>
+    </td><td bgcolor='$table1'><textarea id=\"message\" name=\"message\" cols=\"60\" rows=\"18\">".$pRec[0]["message"]."</textarea>
     
     <br><br>
         <table cellspacing=1 cellpadding=3 border=0 bgcolor='$border' align='left'>

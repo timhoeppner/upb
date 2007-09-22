@@ -189,7 +189,7 @@ tempobj.disabled=true
     toolMapImage();
     echo "</tr></td></table></center>
 
-		</td><td bgcolor='$table1'><textarea name=message cols=60 rows=18>".$message."</textarea>
+		</td><td bgcolor='$table1'><textarea id=\"message\" name=\"message\" cols=\"60\" rows=\"18\">".$message."</textarea>
         <br><br>
         <table border=1>
         <tr>
