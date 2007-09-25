@@ -136,7 +136,7 @@ if ($_POST["a"] == "1") {
         if($_GET['quote'] == 1) {
             $hed = "Reply Quote";
             $reply = $posts_tdb->get("posts", $_GET['p_id']);
-            $message = "[quote]".$reply[0]["message"]."[/quote]";
+            $message = "[quote=".$reply[0]["user_name"]."]".$reply[0]["message"]."[/quote]";
         } else $hed = "Reply";
         $tpc = "";
         if($_COOKIE["power_env"] == 3) $sticky = "<tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>Un-Sticky:</font></td><td bgcolor='$table1'><input type=checkbox name=unstick size=40 value=\"1\"></td></tr>";
