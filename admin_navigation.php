@@ -9,13 +9,11 @@ echo "
                 <br><a href='admin_forum.php' target = '_parent'>Manage Forums</a>
                 <br><a href='admin_config.php' target = '_parent'>Config Settings</a>
                 <br><a href='admin_restore.php' target = '_parent'>Backup/Restore the database</a>
-                <br>
-		      <br><a href='admin_checkupdate.php' target = '_parent'>Check for UPDATES</a>
-                </td><td bgcolor='$table1' valign=top><font size='$font_m' face='$font_face' color='$font_color_main'><a href='admin_members.php' target = '_parent'>Manage Members</a>
+		            <br><a href='admin_checkupdate.php' target = '_parent'>Check for UPDATES</a>
+              </td><td bgcolor='$table1' valign=top><font size='$font_m' face='$font_face' color='$font_color_main'><a href='admin_members.php' target = '_parent'>Manage Members</a>
                 <br><a href='admin_iplog.php' target = '_parent'>Ip Address Log</a>
                 <br><a href='admin_banuser.php' target = '_parent'>Manage Banned users</a>
-                <br><a href='admin_badwords.php' target = '_parent'>Manage Bad Words</a>
-                <br><a href='admin_cleanup.php' target = '_parent'>Clean up (old search files)</a></td></tr>
+                <br><a href='admin_badwords.php' target = '_parent'>Manage Bad Words</a></td></tr>
                 </table>";
 
     }
