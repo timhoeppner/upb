@@ -31,7 +31,7 @@ if (isset($_POST["u_name"])) {
                 
             } else $url = $_SERVER['REQUEST_URI'];
                 
-            mail($user[0]["email"], "Lost Password Confirmation", "The IP Address: ".$_SERVER['REMOTE_ADDR']." has requested a password retrieval from an account linked to this e-mail address.  If you did request this, visit here to confirm that you would like to change your password for ".$user[0]["user_name"]."\n\nhttp://".$HTTP_HOST.$url."?request_ID=".$request_ID."&passcode=".$passcode."\n\nBut you did not request a Password Retrieval, please alert an administrator, and give them the IP Address provided.", "From: ".$_REGIST['admin_email']); 
+            mail($user[0]["email"], "Lost Password Confirmation", "The IP Address: ".$_SERVER['REMOTE_ADDR']." has requested a password retrieval from an account linked to this e-mail address.  If you did request this, visit here to confirm that you would like to change your password for ".$user[0]["user_name"]."\n\nhttp://".$_SERVER['HTTP_HOST'].$url."?request_ID=".$request_ID."&passcode=".$passcode."\n\nBut you did not request a Password Retrieval, please alert an administrator, and give them the IP Address provided.", "From: ".$_REGIST['admin_email']); 
             $error = "A confirmation e-mail has been sent to the e-mail address attached to the username.";
             $e = true;
         } else $error = "Unable to send: A confirmation e-mail has already been sent to the e-mail address attched to the username with in the last 48 hours.";
