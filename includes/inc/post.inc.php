@@ -160,6 +160,10 @@ function bbcodebuttons() {
     $bb_buttons .= "<img src='./images/bbcode/separator.gif' border='0'>";
     $bb_buttons .= "<a href=\"javascript:add_list('ul','message')\"><img src='./images/bbcode/ul.gif' border='0'></a> ";
     $bb_buttons .= "<a href=\"javascript:add_list('ol','message')\"><img src='./images/bbcode/ol.gif' border='0'></a> ";
+    $bb_buttons .= "<img src='./images/bbcode/separator.gif' border='0'>";
+    $bb_buttons .= "<a href=\"javascript:createBBtag('[move]','[/move]','message')\"><img src='./images/bbcode/move.gif' border='0'></a> ";
+    $bb_buttons .= "<a href=\"javascript:createBBtag('[quote]','[/quote]','message')\"><img src='./images/bbcode/quote.gif' border='0'></a> ";
+    $bb_buttons .= "<a href=\"javascript:createBBtag('[offtopic]','[/offtopic]','message')\"><img src='./images/bbcode/offtopic.gif' border='0'></a> ";
   return $bb_buttons."<br>";
 }
 
