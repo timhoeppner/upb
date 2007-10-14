@@ -207,7 +207,7 @@ function add_link_IE(type,areaId) {
 		var closerTag = '[/'+type+']';
 		select = aSelection;
     //alert('Hello');
-    alert('Selection='+select);
+    //alert('Selection='+select);
     if (type == 'url' || type == 'img')
 		{
       found = select.indexOf("http://")
@@ -220,7 +220,7 @@ function add_link_IE(type,areaId) {
     }
     else
       url = select;
-    alert('url='+select)
+    //alert('url='+select)
     document.selection.createRange().text = openerTag + url + closerTag;
     txtArea.focus();
 		range.move('textedit');
