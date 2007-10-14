@@ -154,9 +154,9 @@ function bbcodebuttons() {
     $bb_buttons .= "<a href=\"javascript:createBBtag('[right]','[/right]','message')\"><img src='./images/bbcode/right.gif' border='0'></a> ";
     $bb_buttons .= "<a href=\"javascript:createBBtag('[justify]','[/justify]','message')\"><img src='./images/bbcode/justify.gif' border='0'></a>";
     $bb_buttons .= "<img src='./images/bbcode/separator.gif' border='0'>";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[img]','[/img]','message')\"><img src='./images/bbcode/img.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:add_url_email('url','message')\"><img src='./images/bbcode/url.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:add_url_email('email','message')\"><img src='./images/bbcode/email.gif' border='0'></a> ";
+    $bb_buttons .= "<a href=\"javascript:add_link('img','message')\"><img src='./images/bbcode/img.gif' border='0'></a> ";
+    $bb_buttons .= "<a href=\"javascript:add_link('url','message')\"><img src='./images/bbcode/url.gif' border='0'></a> ";
+    $bb_buttons .= "<a href=\"javascript:add_link('email','message')\"><img src='./images/bbcode/email.gif' border='0'></a> ";
     $bb_buttons .= "<img src='./images/bbcode/separator.gif' border='0'>";
     $bb_buttons .= "<a href=\"javascript:add_list('ul','message')\"><img src='./images/bbcode/ul.gif' border='0'></a> ";
     $bb_buttons .= "<a href=\"javascript:add_list('ol','message')\"><img src='./images/bbcode/ol.gif' border='0'></a> ";
