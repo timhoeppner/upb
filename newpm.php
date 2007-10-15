@@ -25,7 +25,7 @@ if($_GET["action"] == "ClearOutBox") {
         $PrivMsg->reBuild("CuBox");
     }
 
-    echo "PM Sucessfully Sent!";
+    echo "PM Successfully Sent!";
     require_once("./includes/footer.php");
     if($_GET["ref"] != "" && $_GET["section"] != "" && $_GET["r"] != "") redirect($_POST["ref"]."?section=".$_GET["section"]."&id=".$_GET["r"], "2");
     else redirect("pmsystem.php", "2");
@@ -149,78 +149,16 @@ echo "<table width=".$_CONFIG["table_width_main"]." cellspacing=1 cellpadding=3 
     <tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>Send to:</font></td><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>".$send_to."</td></tr>
     <tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>Subject:</font></td><td bgcolor='$table1'><input type='text' name='subject' size='40' value='".$sbj."'></td></tr>
     <tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>Message Icon:</font></td><td bgcolor='$table1'><input type='radio' name='icon' value='icon1.gif' CHECKED><img src='./icon/icon1.gif'> $icons</td></tr>
-    <tr><td bgcolor='$table1' valign='top'><font size='$font_m' face='$font_face' color='$font_color_main'>Message:</font><p>
-    
-<center>		
-<table border=1><tr><td valign=top>";
-toolMapImage();
-echo "</tr></td></table></center>
-
-    </td><td bgcolor='$table1'><textarea name='message' cols='60' rows='18'>".$msg."</textarea>
+    <tr><td bgcolor='$table1' valign='top'><font size='$font_m' face='$font_face' color='$font_color_main'>Message:</font>";
+echo "</td><td bgcolor='$table1'>".bbcodebuttons()."<textarea id='message' name='message' cols='60' rows='18'>".$msg."</textarea>
     
         <br><br>
         <table border=1>
         <tr>
         <td valign=top>
         <font size='$font_m' face='$font_face' color='$font_color_main'>
-        Smilies:<br>
-<A HREF=\"javascript:SetSmiley(':)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/smile.gif BORDER=0 ALT=:)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley(':(')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/frown.gif BORDER=0 ALT=:(></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley(';)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/wink.gif BORDER=0 ALT=;)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley(':P')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/tongue.gif BORDER=0 ALT=:P></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley(':o')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/eek.gif BORDER=0 ALT=:o></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley(':D')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/biggrin.gif BORDER=0 ALT=:D></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(C)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/cool.gif BORDER=0 ALT=(C)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(M)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/mad.gif BORDER=0 ALT=(M)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(R)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/redface.gif BORDER=0 ALT=(R)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(E)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/rolleyes.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;<br>
-
-<A HREF=\"javascript:SetSmiley('(offtopic)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/offtopic.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(rofl)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/rofl.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(confused)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/confused.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(crazy)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/crazy.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(hm)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/hm.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(hmmlaugh)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/hmmlaugh.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(blink)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/blink.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(wallbash)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/wallbash.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:SetSmiley('(noteeth)')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/noteeth.gif BORDER=0 ALT=(E)></A></tr></td></table>
+        Smilies: <br>".getSmilies()."
+</tr></td></table>
 &nbsp;&nbsp;&nbsp;&nbsp;
 
 <br><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a>
