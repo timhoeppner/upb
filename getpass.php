@@ -63,31 +63,35 @@ if(isset($_POST['passcode']) && isset($_POST['request_ID'])) {
 if(isset($_GET['passcode']) && isset($_GET['request_ID'])) {
     $_GET['passcode'] = trim($_GET['passcode']);
     $results = $tdb->get('getpass', $_GET['request_ID']);
-    $expire = alterDate($results[0]['time'], 2, 'days');
-    if(mkdate() < $expire) {
-        $passcode_HASH = generateHash($_GET['passcode'], $results[0]['passcode_HASH']);
-        if($passcode_HASH == $results[0]['passcode_HASH']) {
-            
-            $where = "Lost Password ".$_CONFIG["where_sep"]." Create New";
-            require_once('./includes/header.php');
-            echo '<form action="'.basename(__FILE__).'" method="POST"><center><input type="hidden" name="passcode" value="'.$_GET['passcode'].'"><input type="hidden" name="request_ID" value="'.$_GET["request_ID"].'">';
-            echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
-            echo "<table cellspacing=1 bgcolor='#000000' WIDTH='".$_CONFIG["table_width_main"]."'><tr><td colspan='2' bgcolor='white'> 
-            <center><table width=".$_CONFIG["table_width_main"]." cellspacing=1 cellpadding=3 border=0 bgcolor='$border'> 
-            <tr><td colspan='2' bgcolor='$header'><B><font size='$font_l' face='$font_face' color='$font_color_header'>Set new password</font></b></td></tr> 
-            <tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>New Password:</font></td><td bgcolor='$table1'><input type=password name='pass1' size=30></td></tr> 
-            <tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>New Password:</font></td><td bgcolor='$table1'><input type=password name='pass2' size=30></td></tr> 
-            <tr><td bgcolor='$table1' colspan='2'><input type=submit value='Submit'></td></tr> 
-            </table></form></tr></td></table>$skin_tablefooter"; 
-            require_once('includes/footer.php');
-            exit;
+    if($results !== FALSE) {
+        $expire = alterDate($results[0]['time'], 2, 'days');
+        if(mkdate() < $expire) {
+            $passcode_HASH = generateHash($_GET['passcode'], $results[0]['passcode_HASH']);
+            if($passcode_HASH == $results[0]['passcode_HASH']) {
+                
+                $where = "Lost Password ".$_CONFIG["where_sep"]." Create New";
+                require_once('./includes/header.php');
+                echo '<form action="'.basename(__FILE__).'" method="POST"><center><input type="hidden" name="passcode" value="'.$_GET['passcode'].'"><input type="hidden" name="request_ID" value="'.$_GET["request_ID"].'">';
+                echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
+                echo "<table cellspacing=1 bgcolor='#000000' WIDTH='".$_CONFIG["table_width_main"]."'><tr><td colspan='2' bgcolor='white'> 
+                <center><table width=".$_CONFIG["table_width_main"]." cellspacing=1 cellpadding=3 border=0 bgcolor='$border'> 
+                <tr><td colspan='2' bgcolor='$header'><B><font size='$font_l' face='$font_face' color='$font_color_header'>Set new password</font></b></td></tr> 
+                <tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>New Password:</font></td><td bgcolor='$table1'><input type=password name='pass1' size=30></td></tr> 
+                <tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>New Password:</font></td><td bgcolor='$table1'><input type=password name='pass2' size=30></td></tr> 
+                <tr><td bgcolor='$table1' colspan='2'><input type=submit value='Submit'></td></tr> 
+                </table></form></tr></td></table>$skin_tablefooter"; 
+                require_once('includes/footer.php');
+                exit;
+            } else {
+                $error = "Unable to confirm: Unvalid Passcode";
+                $e = true;
+            }
         } else {
-            $error = "Unable to confirm: Unvalid Passcode";
-            $e = true;
+            $tdb->delete('getpass', $_GET['request_ID']);
+            $error = "Unable to confirm: The request expired.  Please request again";
         }
     } else {
-        $tdb->delete('getpass', $_GET['request_ID']);
-        $error = "Unable to confirm: The request expired.  Please request again";
+        $error = "Unable to confirm: The request no longer exists.  Please request again";
     }
 }
 $where = "Lost Password ".$_CONFIG["where_sep"]." Request";
