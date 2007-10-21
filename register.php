@@ -74,7 +74,7 @@ if($_POST["submit"] == "Submit") {
     fclose($f);
     $register_msg = str_replace("<login>", $_POST['u_login'], $_REGISTER["register_msg"]);
     $register_msg = str_replace("<password>", $u_pass, $register_msg);
-    if(!@mail($_POST["u_email"], $register_sbj, $register_msg, "From: ".$_REGISTER["admin_email"])) error_log ("Unable to send register email conformation to user: ".$_POST["u_login"], 3, "./logs/error.log");
+    if(!@mail($_POST["u_email"], $_REGISTER['register_sbj'], $register_msg, "From: ".$_REGISTER["admin_email"])) error_log ("Unable to send register email conformation to user: ".$_POST["u_login"], 3, "./logs/error.log");
 
     require_once('./includes/header.php');
     print "You are now registered!<BR><BR>An email has been sent to your email account with a random password, <br>which you can change at any time. It should arrive within 2 - 5 minutes. <br><br>Thank you for registering!";
