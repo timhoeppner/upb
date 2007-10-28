@@ -7,7 +7,7 @@
 
 require_once("./includes/class/func.class.php");
 $where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_cat.php'>Manage Categories</a>";
-echo $where;
+
 require_once('./includes/header.php');
 
 if($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
