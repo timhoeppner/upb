@@ -37,7 +37,9 @@ if(function_exists("imagegif")) {
     imagepng($img);
 } elseif (function_exists("imagewbmp")) { 	 
 	     header("Content-type: image/vnd.wap.wbmp"); 	 
-	     imagewbmp($img);else {
+	     imagewbmp($img);
+}
+else {
     die("No image support on this server");
 }
 
