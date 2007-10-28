@@ -25,41 +25,32 @@ if(!($tdb->is_logged_in())) exitPage("You are not logged in, therefore unable to
 
 if($pRec[0]["user_id"] != $_COOKIE["id_env"] && $_COOKIE["power_env"] < 2) exitPage("You are not authorized to edit this post.");
 
-if(isset($_POST["message"])) {
+if(!empty($_POST) and $_POST["submit"] == "Edit") {
     $posts_tdb->edit("posts", $_GET["p_id"], array("message" => htmlentities(stripslashes($_POST["message"])), "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate()));
     echo "Successfully edited post, redirecting...";
     require_once("./includes/footer.php");
     redirect("viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"], 2);
     exit;
 } else {
-    echo "
-    <SCRIPT>
-    <!--
-    function SetSmiley(Which) {
-    if (document.newentry.message.createTextRange) {
-    document.newentry.message.focus();
-    document.selection.createRange().duplicate().text = Which;
-     } else {
-    document.newentry.message.value += Which;
-     }
-    }
-    //-->
-    </SCRIPT>
-    
-    <form action='editpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$_GET["p_id"]."' METHOD=POST name='newentry'>";
+    $message = $pRec[0]["message"];
+    if (!empty($_POST) and $_POST['submit'] == "Go Advanced")  
+      $message = $_POST['newentry'];
+    echo "   
+    <form action='editpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$_GET["p_id"]."' METHOD='POST' name='newentry'>";
     echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
     echo "<table width=".$_CONFIG["table_width_main"]." cellspacing=1 cellpadding=3 border=0 bgcolor='$border' align='center'>";
     //<tr><td colspan='2' bgcolor='$header'><B><font size='$font_l' face='$font_face' color='$font_color_header'>Edit Post</font></b></td></tr>
     echo "<tr><td colspan='2' bgcolor='$header'><B><font size='$font_l' face='$font_face' color='$font_color_header'>Message:</font></b></td></tr>
-<tr><td bgcolor='$table1' valign='top'>
+<tr>";//<td bgcolor='$table1' valign='top'>
     
-    <br><br><br><br><center>";		
-    echo "<table border=1><tr><td valign=top>";
-toolMapImage();
-    echo "</tr></td></table>";
-    echo "</center>
+   // <br><br><br><br><center>";		
+    //echo "<table border=1><tr><td valign=top>";
+//toolMapImage();
+    //echo "</tr></td></table>";
+    //echo "</center>
             
-    </td><td bgcolor='$table1'><textarea id=\"message\" name=\"message\" cols=\"60\" rows=\"18\">".$pRec[0]["message"]."</textarea>
+    //</td>
+    echo "<td bgcolor='$table1'>".bbcodebuttons()."<textarea id=\"message\" name=\"message\" cols=\"60\" rows=\"18\">".$message."</textarea>
     
     <br><br>
         <table cellspacing=1 cellpadding=3 border=0 bgcolor='$border' align='left'>
@@ -69,7 +60,7 @@ toolMapImage();
 <tr><td colspan='2' bgcolor='$table1'>
 <font size='$font_m' face='$font_face' color='$font_color_main'>".getSmilies()."</td></tr></table></td></tr></table>
             
-            <tr><td bgcolor='$table1' colspan=2><input type=submit value='Edit'></td></tr>
+            <tr><td bgcolor='$table1' colspan=2><input type='submit' name='submit' value='Edit'></td></tr>
             </table>$skin_tablefooter
             </form>";
         }

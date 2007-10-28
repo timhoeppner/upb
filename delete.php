@@ -42,12 +42,12 @@ if($_GET["t"] == 1) {
 			$tdb->edit("forums", $_GET["id"], array("topics" => ((int)$fRec[0]["topics"] - 1), "posts" => ((int)$fRec[0]["posts"] - ($tRec[0]["replies"] + 1))));
 
 			echo "<font size='$font_m' face='$font_face' color='green'>Successfully deleted \"".$tRec[0]["subject"]."\"(T_ID:".$_GET["t_id"].")<br>from ".$fRec[0]["forum"]." (F_ID:".$_GET["id"].").<br>redirecting...";
-			redirect("viewforum.php?id=".$_GET["id"], "2");
+			redirect("viewforum.php?id=".$_GET["id"]."&page=".$_GET["page"], "2");
 			exit;
 		}
 	} elseif($_POST["verify"] == "Cancel") {
 		if($_GET["ref"] == "") $_GET["ref"] = "viewtopic.php";
-		redirect($_GET["ref"]."?id=".$_GET["id"]."&t_id=".$_GET["t_id"], "0");
+		redirect($_GET["ref"]."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"], "0");
 	} else {
 		ok_cancel($_SERVER['PHP_SELF']."?action=".$_GET['action']."&t=".$_GET["t"]."&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&ref=".$_GET["ref"], "Are you sure you want to delete a topic?");
 	}
@@ -82,10 +82,10 @@ if($_GET["t"] == 1) {
 
 			echo "Successfully deleted post, redirecting...";
 			require_once("./includes/footer.php");
-			redirect("viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"], "2");
+			redirect("viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"], "2");
 			exit;
 		} else echo '<b><font color="red">Fatal Error: </font></b> $p_id not found in the topic record.  The topic was not deleted';
-	} elseif($_POST["verify"] == "Cancel") redirect("viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"], 0);
+	} elseif($_POST["verify"] == "Cancel") redirect("viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"], 0);
 	else {
 		echo "<center>Are you Sure you want to delete this post?</center>";
 		echoTableHeading("Post:", $_CONFIG);
@@ -186,7 +186,7 @@ if($_GET["t"] == 1) {
 
 		echo "</table>$skin_tablefooter";
 
-		ok_cancel("delete.php?action=".$_GET["action"]."&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$_GET["p_id"], "Delete Post?");
+		ok_cancel("delete.php?action=".$_GET["action"]."&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$_GET["p_id"]."&page=".$_GET["page"], "Delete Post?");
 	}
 } else {
 	echo "Corrupt Information.  Seek Administrative Help.";

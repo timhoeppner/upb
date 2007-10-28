@@ -35,9 +35,6 @@ if(function_exists("imagegif")) {
 } elseif(function_exists("imagepng")) {
     header("Content-type: image/png");
     imagepng($img);
-} elseif (function_exists("imagewbmp")) { 
-    header("Content-type: image/vnd.wap.wbmp"); 
-    imagewbmp($img);
 } else {
     die("No image support on this server");
 }

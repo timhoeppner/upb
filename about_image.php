@@ -13,5 +13,5 @@ You can add an image to your profile. If you have space on a webserver somewhere
 The image will be automatically resized to <?php echo $_CONFIG['avatar_width']; ?> pixels by <?php echo $_CONFIG['avatar_height']; ?> pixels, so when you create your image, make sure it is already this size, otherwise 
 your image may look distorted or warped. Please try to 
 keep your file size below 10 to 15K, so as not to slow down the board.
-<br><br><br><br><a href=\"javascript: window.close();\">Close Window</a></font>
+<br><br><br><br><a href="javascript: window.close();">Close Window</a></font>
 <?php require_once("./includes/footer_simple.php"); ?>

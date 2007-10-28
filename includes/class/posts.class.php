@@ -84,22 +84,38 @@ class posts extends tdb {
         echo "</p></td></tr></table>";
         return true;
     }
-
+    
     function d_posting($page_string) {
         if(!$this->check_topic() || !$this->check_forum() || !$this->check_user_info()) return false;
-        
         echo "<table border='0' cellspacing='0' cellpadding='4' width='".TABLE_WIDTH_MAIN."' align='center'>
         <tr><td><font>$page_string</font></td>
         <td align='right'><p align=right>";
-        if((int)$this->user["power"] > 0) echo "<a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."'><img src='".SKIN_DIR."/icons/monitor.gif' border='0'></a>";
+        if((int)$this->user["power"] > 0) echo "<a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET['page']."'><img src='".SKIN_DIR."/icons/monitor.gif' border='0'></a>";
         if((int)$this->user["power"] >= (int)$this->fRec[0]["post"]) echo "<a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id='><img src='".SKIN_DIR."/icons/topic.gif' border='0'></a>";
         else echo"&nbsp;";
         if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"]) {
-            if(!(bool)$this->tRec[0]["locked"]) echo "<a href='newpost.php?id=".$this->fRec[0]["id"]."&t=0&t_id=".$this->tRec[0]["id"]."&page=$page'><img src='".SKIN_DIR."/icons/reply.gif' border='0'></a>";
+            if(!(bool)$this->tRec[0]["locked"]) echo "<a href='newpost.php?id=".$this->fRec[0]["id"]."&t=0&t_id=".$this->tRec[0]["id"]."&page=".$_GET['page']."'><img src='".SKIN_DIR."/icons/reply.gif' border='0'></a>";
             else echo "&nbsp;<img src='".SKIN_DIR."/icons/replylocked.gif' border='0'>";
         } else echo"&nbsp;";
         echo "</font></td></tr></table>";
         return true;
+    }
+
+    //this function is a duplicate of the one above but returns the string rather than echoes it so that the element can be replaced on the page when using quick reply.
+    function d_posting_qr($page_string,$current) {
+        if(!$this->check_topic() || !$this->check_forum() || !$this->check_user_info()) return false;
+        $output = "<table border='0' cellspacing='0' cellpadding='4' width='".TABLE_WIDTH_MAIN."' align='center'>
+        <tr><td><font>$page_string</font></td>
+        <td align='right'><p align=right>";
+        if((int)$this->user["power"] > 0) $output .= "<a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$current."'><img src='".SKIN_DIR."/icons/monitor.gif' border='0'></a>";
+        if((int)$this->user["power"] >= (int)$this->fRec[0]["post"]) $output .= "<a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id='><img src='".SKIN_DIR."/icons/topic.gif' border='0'></a>";
+        else $output .= "&nbsp;";
+        if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"]) {
+            if(!(bool)$this->tRec[0]["locked"]) $output .= "<a href='newpost.php?id=".$this->fRec[0]["id"]."&t=0&t_id=".$this->tRec[0]["id"]."&page=".$current."'><img src='".SKIN_DIR."/icons/reply.gif' border='0'></a>";
+            else $output .= "&nbsp;<img src='".SKIN_DIR."/icons/replylocked.gif' border='0'>";
+        } else $output .= "&nbsp;";
+        $output .= "</font></td></tr></table>";
+        return $output;
     }
 
     function getPosts($fp, $start=0, $howmany=-1) {

@@ -100,7 +100,8 @@ function UPBcoding($text) {
     $msg = preg_replace("/\[img\](.*?)\[\/img\]/si", "<img src=\"\\1\" border=\"0\">", $msg);
     $msg = preg_replace("/\[offtopic\](.*?)\[\/offtopic\]/si", "<font color='blue' size='$font_s' face='$font_face'>Offtopic: \\1</font>", $msg);
     $msg = preg_replace("/\[small\](.*?)\[\/small\]/si", "<small>\\1</small>", $msg);
-    $msg = preg_replace("/\[quote\](.*?)\[\/quote\]/si", "<blockquote><font size='1' face='tahoma'>quote:</font><hr>\\1<br><hr></blockquote>", $msg);
+    $msg = preg_replace("/\[quote\](.*?)\[\/quote\]/si", "<blockquote><font size='1' face='tahoma'>Quote:</font><hr>\\1<br><hr></blockquote>", $msg);
+    $msg = preg_replace("/\[quote=(.*?)\](.*?)\[\/quote\]/si", "<blockquote><font size='1' face='tahoma'>Quote: \\1</font><hr>\\2<br><hr></blockquote>", $msg);
     $msg = preg_replace("/\[code\](.*?)\[\/code\]/si", "<font color='red'>Code:<hr><pre>\\1<hr></pre></font>", $msg);
     
     while (true)

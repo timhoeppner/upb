@@ -178,7 +178,9 @@ function ok_cancel($action, $text) {
     </form>";
 }
 
-function createPageNumbers($current_page, $total_number_of_pages, $url_string='') {
+//ADDED $qr parameter to check for quick reply so $pageStr can be configured correctly
+function createPageNumbers($current_page, $total_number_of_pages, $url_string='',$qr = false) {
+    global $font_face,$font_s;
     if($current_page == '') $current_page = '1';
     $num_pages = (int) $total_number_of_pages;
     $url_string = str_replace('page='.$_GET['page'], '', $url_string);
@@ -186,12 +188,21 @@ function createPageNumbers($current_page, $total_number_of_pages, $url_string=''
     else $url_string = '?';
     $url_string = str_replace('&&', '&', $url_string);
         
-    if($num_pages == 1) $pageStr = "<font face='$font_face' size='$font_s'><span class=pagenumstatic>$num_pages</span></font>";
+    if($num_pages == 1) $pageStr = "<font face='$font_face' size='$font_s'><span class='pagenumstatic'>$num_pages</span></font>";
     else {
         //$pageStr = "<font face='$font_face' size='$font_s'><span class=pagenumstatic>";
         for($i=1;$i<=$num_pages;$i++) {
-            if($current_page == $i) $pageStr .= $i."</span> ";
-            else $pageStr .= "<font face='$font_face' size='$font_s'><span class=pagenum><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=".$i."'>".$i."</a></span> ";
+            if($current_page == $i) 
+              $pageStr .= $i."</span> ";
+            else 
+            {
+              $pageStr .= "<font face='$font_face' size='$font_s'><span class='pagenum'><a href='";
+              if ($qr === false)
+                $pageStr .= basename($_SERVER['PHP_SELF']);
+              else
+                $pageStr .= "viewtopic.php";
+              $pageStr .= $url_string."page=".$i."'>".$i."</a></span> ";
+            }
         }
         //$pageStr .= "</font></span>";
     }

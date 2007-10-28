@@ -9,7 +9,6 @@ require_once('./includes/class/func.class.php');
 require_once('./includes/inc/post.inc.php');
 require_once("./includes/class/upload.class.php");
 $fRec = $tdb->get("forums", $_GET["id"]);
-
 $posts_tdb = new functions(DB_DIR."/", "posts.tdb");
 $posts_tdb->setFp("topics", $_GET["id"]."_topics");
 $posts_tdb->setFp("posts", $_GET["id"]);
@@ -126,6 +125,12 @@ if ($_POST["a"] == "1") {
     redirect($redirect, 1);
 } else {
     $message = "";
+    foreach ($_POST as $key => $value)
+    {
+      $message .= "$key :: $value\n";
+    }
+    if (!empty($_POST) and $_POST['submit'] == "Go Advanced")
+      $message = $_POST['newentry'];
     if(!isset($_GET["page"])) $_GET["page"] = 1;
     if($_GET["t"] == 1) {
         $tpc = "<tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>Subject:</font></td><td bgcolor='$table1'><input type=text name=subject size=40></td></tr>";
@@ -137,27 +142,17 @@ if ($_POST["a"] == "1") {
             $hed = "Reply Quote";
             $reply = $posts_tdb->get("posts", $_GET['p_id']);
             $message = "[quote=".$reply[0]["user_name"]."]".$reply[0]["message"]."[/quote]";
-        } else $hed = "Reply";
+        } else 
+        {
+        $hed = "Reply";
+        }
         $tpc = "";
         if($_COOKIE["power_env"] == 3) $sticky = "<tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>Un-Sticky:</font></td><td bgcolor='$table1'><input type=checkbox name=unstick size=40 value=\"1\"></td></tr>";
         $iframe = "<br><br><B><font size='$font_m' face='$font_face' color='$font_color_main'>Topic overview:<br></font></B>
                 <IFRAME SRC='viewtopic_simple.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."' WIDTH=".$_CONFIG["table_width_main"]." HEIGHT='300'></IFRAME>";
     }
     $icons = message_icons();
-    echo "<SCRIPT LANGUAGE='JavaScript'>
-	<!--
-	function SetSmiley(Which) {
-  	if (document.newentry.message.createTextRange) {
-  		document.newentry.message.focus();
-  		document.selection.createRange().duplicate().text = Which;
-   	} else {
-  		document.newentry.message.value += Which;
-   	}
-  }
-
-
-	//-->
-	</SCRIPT>
+    echo "
 
 <script language='JavaScript'>
 function submitonce(theform){
@@ -183,13 +178,8 @@ tempobj.disabled=true
         $sticky
 		<tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>Message Icon:</font></td><td bgcolor='$table1'><input type=radio name=icon value='icon1.gif' CHECKED><img src='./icon/icon1.gif'> $icons</td></tr>
 		<tr><td bgcolor='$table1' valign='top'><font size='$font_m' face='$font_face' color='$font_color_main'>Message:</font>
-<br><br><br>
-<center>
-<table border=1><tr><td valign=top>";
-    toolMapImage();
-    echo "</tr></td></table></center>
-
-		</td><td bgcolor='$table1'><textarea id=\"message\" name=\"message\" cols=\"60\" rows=\"18\">".$message."</textarea>
+		</td><td bgcolor='$table1'>
+    ".bbcodebuttons()."<textarea id=\"message\" name=\"message\" cols=\"60\" rows=\"18\">".$message."</textarea>
         <br><br>
         <table border=1>
         <tr>

@@ -225,6 +225,8 @@ document.body.addEventListener('keyup', function(event) { countlimit(thelimit,ev
 
 </script>
 <script language=\"Javascript\" src=\"./includes/bbcode.js\"></script>
+<script language=\"Javascript\" src=\"./includes/ajax.js\"></script>
+
 </head>
 
 <body bgcolor='$bgcolor' text='$font_color_main' link='$link' alink='$alink' vlink='$vlink' leftmargin='0' topmargin='0' rightmargin='0'>
