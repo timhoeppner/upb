@@ -235,7 +235,6 @@ if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["p
   echo "<input type='hidden' id='user_id' name='user_id' value='{$_COOKIE['id_env']}'>\n";
   echo "<input type='hidden' id='icon' name='icon' value='icon1.gif'>\n";
   echo "<input type='hidden' id='username' name='username' value='{$_COOKIE["user_env"]}'>\n";
-  echo "<input type='hidden' id='page' name='page' value='{$_GET['page']}'>\n";
 	echo "<tr><td colspan='2' bgcolor='$header'><B><font size='$font_l' face='$font_face' color='$font_color_header'>$hed</font></b></td></tr>\n
 		<tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>User Name:</font></td><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>".$_COOKIE["user_env"]."</td></tr>\n
 		<tr><td bgcolor='$table1' valign='top'><font size='$font_m' face='$font_face' color='$font_color_main'>Message:</font>\n
@@ -253,6 +252,13 @@ echo "<div id='pagelink2' name='pagelink2'>";
 $posts_tdb->d_posting($p);
 echo "</div>";
 
+if((int)$_COOKIE["power_env"] >= 2) {
+    echo "<p align=center><font size='$font_m' face='$font_face' color='$font_color_main'>
+    <a href='delete.php?action=delete&t=1&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><img src='".$_CONFIG["skin_dir"]."/icons/deletetopic.gif' border='0'></a>";
+    if($tRec[0]["locked"] == "0") echo "<a href='managetopic.php?action=CloseTopic&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><img src='".$_CONFIG["skin_dir"]."/icons/closetopic.gif' border='0'></a>";
+    else echo "<a href='managetopic.php?action=OpenTopic&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><img src='".$_CONFIG["skin_dir"]."/icons/opentopic.gif' border='0'></a>";
+    echo "<a href='managetopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><img src='".$_CONFIG["skin_dir"]."/icons/manage.gif' border='0'></a></p>";
+}
 $tdb->cleanup();
 unset($tdb);
 require('./includes/footer.php');

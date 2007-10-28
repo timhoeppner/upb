@@ -1,10 +1,11 @@
-// JavaScript Document
-/**
-*
-*  UTF-8 data encode / decode
-*  http://www.webtoolkit.info/
-*
-**/
+// Ultimate PHP Board AJAX System
+// Author: Chris Kent aka Clark for Ultimate PHP Board by Tim Hoeppner aka RR_Pilot, FixITguy
+// Website: http://www.myupb.com
+// Version: 1.0
+// Using textdb Version: 4.3.2
+// UTF-8 data encode / decode by http://www.webtoolkit.info/
+
+
 var div="";
 var isIE = ( clientInfo.indexOf("msie") != -1 );
 var isWin = ( (clientInfo.indexOf("win")!=-1) || (clientInfo.indexOf("16bit") != -1) );
@@ -84,7 +85,7 @@ function changediv(userid,threadid,postid,divname)
   output += '<input type=\'hidden\' id=\'threadid\' name=\'threadid\' value=\''+threadid+'\'>';
   output += '<input type=\'hidden\' id=\'postid\' name=\'postid\' value=\''+postid+'\'>';
   output += '<input type=\'hidden\' id=\'divid\' name=\'divid\' value=\''+hiddendiv+'\'>';
-  output += '<textarea name=\'newentry\' id=\'newentry\' cols=\"60\" rows=\"18\">'+message+'</textarea><br>';
+  output += '<textarea name=\'newedit\' id=\'newedit\' cols=\"60\" rows=\"18\">'+message+'</textarea><br>';
   output += "\n<input type=\'button\' onclick=\'javascript:getEdit(document.getElementById(\"quickedit\"),\""+divname+"\");'\' name=\'qedit\' value=\'Save Edit\'>";
   output += "\n<input type=\'submit\' name=\'submit\' value=\'Go Advanced\'>";
   output += '</form>';
@@ -133,7 +134,7 @@ var http_request = false;
       if (http_request.readyState == 4) {
          if (http_request.status == 200) {
             result = http_request.responseText;
-            alert(result)
+            //alert(result)
             result_array = result.split("<!--divider-->");
             var hiddendiv = div+'h';
             var editdiv = "edit"+div;
@@ -175,12 +176,13 @@ var http_request = false;
    function getEdit(obj,divname) {
       div = divname
       //alert(div)
-      var poststr = "message=" + escape(Utf8.encode( document.getElementById("newentry").value ));
-      poststr += "&id="+escape(Utf8.encode( document.getElementById("userid").value ));
-      poststr += "&t_id="+escape(Utf8.encode( document.getElementById("threadid").value ));
-      poststr += "&p_id="+escape(Utf8.encode( document.getElementById("postid").value ));
+      var poststr = "newedit=" + escape(Utf8.encode( document.getElementById("newedit").value ));
+      poststr += "&userid="+escape(Utf8.encode( document.getElementById("userid").value ));
+      poststr += "&threadid="+escape(Utf8.encode( document.getElementById("threadid").value ));
+      poststr += "&postid="+escape(Utf8.encode( document.getElementById("postid").value ));
       poststr += "&divid="+escape(Utf8.encode( document.getElementById("divid").value ));
-      
+      //alert(poststr);
+           
       makePOSTRequest('quickedit.php', poststr,'edit');
       
    }

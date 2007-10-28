@@ -1,6 +1,9 @@
-// JavaScript Document
+// Ultimate PHP Board BBcode System
+// Author: Chris Kent aka Clark for Ultimate PHP Board by Tim Hoeppner aka RR_Pilot, FixITguy
+// Website: http://www.myupb.com
+// Version: 1.0
+// Using textdb Version: 4.3.2
 
-// new javascript code for inserting smilies and bbcode
 
 <!--
 var clientInfo = navigator.userAgent.toLowerCase();

@@ -4,13 +4,14 @@
 // Website: http://www.myupb.com
 // Version: 2.0
 // Using textdb Version: 4.3.2
-
+if(basename($_SERVER['PHP_SELF']) == 'quickreply.php') die('This is a wrapper script!');
 require_once('./includes/class/func.class.php');
 require_once('./includes/inc/post.inc.php');
 require_once("./includes/class/upload.class.php");
 require_once("./includes/class/posts.class.php");
 include $_CONFIG["skin_dir"]."/css/skin.css";
 include $_CONFIG["skin_dir"]."/coding.php";
+
 $fRec = $tdb->get("forums", $_POST["id"]);
 $posts_tdb = new posts(DB_DIR."/", "posts.tdb");
 $posts_tdb->setFp("topics", $_POST["id"]."_topics");
