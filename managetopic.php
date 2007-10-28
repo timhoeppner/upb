@@ -106,7 +106,7 @@ if($_GET["action"] == "watch") {
                 }
                 if($_POST["action"] == "move") {
                     $fORec[0]["posts"]--;
-                    $posts_tdb->delete("posts", $pRecs[0]["id"], false);
+                    $posts_tdb->delete("posts", $pRec[0]["id"], false);
                 }
                 $pRec[0]["t_id"] = $newT_id;
                 $newSort[] = $posts_tdb->add("newPosts", $pRec[0]);
@@ -268,7 +268,17 @@ if($_GET["action"] == "watch") {
             $options =  "Move Topic To: <select name=newId>";
 
             $cRecs = $tdb->listRec("cats", 1);
-            $cat_sort = explode(",", $_CONFIG["admin_catagory_sorting"]);
+
+            if ($_CONFIG["admin_catagory_sorting"] != "")
+            {
+              $cat_sort = explode(",", $_CONFIG["admin_catagory_sorting"]);
+            }
+            else
+            {
+              foreach ($cRecs as $value)
+                $cat_sort[] = $value['id'];
+            }
+            
             $index = 0;
             $sorted = array();
             $i = 0;
@@ -281,7 +291,7 @@ if($_GET["action"] == "watch") {
                 } else $i++;
             }
             $cRecs = $sorted;
-
+            
             reset($cRecs);
             $fRecs = $tdb->listRec("forums", 1);
 

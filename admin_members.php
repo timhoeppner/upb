@@ -166,8 +166,16 @@ if($_GET["action"] == "edit") {
             if($user['view_email']) echo "<td bgcolor='$table1' width=18%><font size='$font_m' face='$font_face' color='$font_color_main'>".$user["email"]."</font></td>";
             else echo "<td bgcolor='$table1' width=18%><font size='$font_m' face='$font_face' color='$font_color_main'><i>".$user["email"]."</i></font></td>";
             echo "<td bgcolor='$table1' width=7%><font size='$font_m' face='$font_face' color='$font_color_main'>".$user["posts"]."</font></td>
-                <td bgcolor='$table1' width=10%><font size='$font_m' face='$font_face' color='$font_color_main'>".(gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d') ? '<i>today</i>' : (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y'))) ? '<i>yesterday</i>' : gmdate("Y-m-d", user_date($lastvisit)))) ."</font></td>
-                <td bgcolor='$table1' width=10%><font size='$font_m' face='$font_face' color='$font_color_main'>".gmdate("Y-m-d", user_date($user["date_added"]))."</font></td>";
+                <td bgcolor='$table1' width=10%><font size='$font_m' face='$font_face' color='$font_color_main'>";
+                
+            if (gmdate('Y-m-d', user_date($lastvisit)) == gmdate('Y-m-d')) 
+              echo '<i>today</i>'; 
+            elseif (gmdate('Y-m-d', user_date($lastvisit)) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y'))))
+              echo '<i>yesterday</i>';
+            else 
+              echo gmdate("Y-m-d", user_date($lastvisit))."</font></td>";
+            echo "<td bgcolor='$table1' width=10%><font size='$font_m' face='$font_face' color='$font_color_main'>".gmdate("Y-m-d", user_date($user["date_added"]))."</font></td>";
+
 
             echo "<td bgcolor='$table1' width=7%><font size='$font_m' face='$font_face' color='$font_color_main'><a href='admin_banuser.php?ref=admin_members.php?page=".$_GET["page"]."&action=";
             if(!in_array($user["user_name"], $bList)) echo 'addnew&newword='.$user["user_name"]."'>"; else echo 'delete&word='.$user["user_name"]."'><b>Un</b>";

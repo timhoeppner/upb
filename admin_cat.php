@@ -7,6 +7,7 @@
 
 require_once("./includes/class/func.class.php");
 $where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_cat.php'>Manage Categories</a>";
+echo $where;
 require_once('./includes/header.php');
 
 if($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
@@ -76,7 +77,7 @@ if($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
         $cats = $tdb->listRec("cats", 1);
         if(empty($cats)) redirect('admin_cat.php?action=addnew', 0);
         $c = count($cats);
-        echoTableHeading(str_replace("<b>></b>", "<b>::</b>", substr($where, 9)), $_CONFIG);
+        echoTableHeading(str_replace("<b>></b>", "<b>::</b>", substr($where, 20)), $_CONFIG);
         echo "<table width='".$_CONFIG["table_width_main"]."' cellspacing=1 cellpadding=3 border=0 bgcolor='$border'>
 
         <tr><td background=".$_CONFIG["skin_dir"]."/images/title_bg.gif colspan='4' bgcolor='$header'><B><font size='$font_l' face='$font_face' color='$font_color_header'><center>Admin Panel Navigation</center></font></b></td></tr>";
