@@ -17,7 +17,7 @@ require_once('./includes/inc/encode.inc.php');
 session_start();
 if($_POST["submit"] == "Submit") {
     if($_POST['s_key'] !== $_SESSION["u_keycheck"]) {
-        exitPage("Please enter the secrity code <b>exactly</b> as it appears...", true);
+        exitPage("Please enter the security code <b>exactly</b> as it appears...", true);
     }
     $_SESSION = array();
     setcookie(session_name(), '', time()-42000, '/');
@@ -72,7 +72,7 @@ if($_POST["submit"] == "Submit") {
     $f = fopen(DB_DIR."/new_pm.dat", 'a');
     fwrite($f, " 0");
     fclose($f);
-    $register_msg = str_replace("<login>", $_POST['u_login'], $_REGISTER["register_msg"]);
+    $register_msg = str_replace("<user>", $_POST['u_login'], $_REGISTER["register_msg"]);
     $register_msg = str_replace("<password>", $u_pass, $register_msg);
     if(!@mail($_POST["u_email"], $_REGISTER['register_sbj'], $register_msg, "From: ".$_REGISTER["admin_email"])) error_log ("Unable to send register email conformation to user: ".$_POST["u_login"], 3, "./logs/error.log");
 
@@ -130,8 +130,44 @@ if($_POST["submit"] == "Submit") {
         <tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>Yahoo!:<br><font size='$font_s'>If you have Yahoo! messanger, please type your SN (optional)</font></font></td><td bgcolor='$table1'><input type=text name=u_yahoo size=40></td></tr>
         <tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>MSN:<br><font size='$font_s'>If you have MSN Instant messanger please type your SN (optional)</font></font></td><td bgcolor='$table1'><input type=text name=u_msn size=40></td></tr>
         <tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>Signature:<br><font size='$font_s'>Your signature is appended to each of your messages</font></font></td><td bgcolor='$table1'><textarea name=u_sig cols=45 rows=10></textarea></td></tr>
-        <tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>timezone setting<br><font size='$font_s' face='$font_face' color='$font_color_main'>Set to how many hours you are from GMT.<br>Example: The North American Pacific Coast is \"-8\", whereas the city of Rome is just \"1\", or for London, just \"0\"</font></font></td>
-            <td bgcolor='$table1'><input type='text' name='u_timezone' value='0'></td></tr>"; 
+        <tr><td bgcolor='$table1'><font size='$font_m' face='$font_face' color='$font_color_main'>Timezone Setting<br></font></td>
+            <td bgcolor='$table1'><select name='u_timezone' id='u_timezone'>
+				<option value='-12'>(GMT -12:00) Eniwetok, Kwajalein</option>
+<option value='-11'  >(GMT -11:00) Midway Island, Samoa</option>
+<option value='-10'  >(GMT -10:00) Hawaii</option>
+<option value='-9'  >(GMT -9:00) Alaska</option>
+<option value=''-8'  >(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+
+<option value='-7'  >(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+<option value='-6'  >(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+<option value='-5'  >(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+<option value='-4'  >(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
+<option value='-3.5'  >(GMT -3:30) Newfoundland</option>
+<option value='-3'  >(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+
+<option value='-2'  >(GMT -2:00) Mid-Atlantic</option>
+<option value='-1'  >(GMT -1:00 hour) Azores, Cape Verde Islands</option>
+<option value='0'  selected>(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+<option value='1'  >(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris</option>
+<option value='2'  >(GMT +2:00) Kaliningrad, South Africa</option>
+<option value='3'  >(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
+<option value='3.5'  >(GMT +3:30) Tehran</option>
+<option value='4'  >(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
+<option value='4.5'  >(GMT +4:30) Kabul</option>
+
+<option value='5'  >(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+<option value='5.5'  >(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
+<option value='6'  >(GMT +6:00) Almaty, Dhaka, Colombo</option>
+<option value='7'  >(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+<option value='8'  >(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+<option value='9'  >(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+<option value='9.5' >(GMT +9:30) Adelaide, Darwin</option>
+<option value='10'>(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
+<option value='11' >(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
+
+<option value='12' >(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+
+			</select></td></tr>"; 
 
     echo "<tr><td bgcolor='$table1' colspan=2><input type=submit name=submit value='Submit'></td></tr>
         </table>$skin_tablefooter</form>";

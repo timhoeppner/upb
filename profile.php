@@ -315,10 +315,51 @@ Add email to UPB discussion forums mailing list?</td>
     </font></td>
   </tr>
   <tr>
-    <td bgcolor='$table1' valign='top' width=80%><font size='$font_m' face='$font_face' color='$font_color_main'><B>timezone setting</b><br><font size='$font_s' face='$font_face' color='$font_color_main'>Set to how many hours you are from GMT.<br>Example: The North American Pacific Coast is \"-8\", whereas the city of Rome is just \"1\", or for London, just \"0\"</font></font></td>
+    <td bgcolor='$table1' valign='top' width=80%><font size='$font_m' face='$font_face' color='$font_color_main'><B>Timezone Setting</b></font></td>
     <td bgcolor='$table1' width=80%><font size='$font_m' face='$font_face' color='$font_color_main'>
-      <input type='text' name='u_timezone' value='".$rec[0]["timezone"]."'>
-    </font></td>
+    <select name='u_timezone' id='u_timezone'>";
+    $timezones = array();
+		$timezones["-12"] = "(GMT -12:00) Eniwetok, Kwajalein";
+$timezones["-11"] = "(GMT -11:00) Midway Island, Samoa";
+$timezones["-10"] = "(GMT -10:00) Hawaii";
+$timezones["-9"] = "(GMT -9:00) Alaska";
+$timezones["-8"] = "(GMT -8:00) Pacific Time (US &amp; Canada)";
+$timezones["-7"] = "(GMT -7:00) Mountain Time (US &amp; Canada)";
+$timezones["-6"] = "(GMT -6:00) Central Time (US &amp; Canada), Mexico City";
+$timezones["-5"] = "(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima";
+$timezones["-4"] = "(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz";
+$timezones["-3.5"] = "(GMT -3:30) Newfoundland";
+$timezones["-3"] = "(GMT -3:00) Brazil, Buenos Aires, Georgetown";
+$timezones["-2"] = "(GMT -2:00) Mid-Atlantic";
+$timezones["-1"] = "(GMT -1:00 hour) Azores, Cape Verde Islands";
+$timezones["0"] = "(GMT) Western Europe Time, London, Lisbon, Casablanca";
+$timezones["1"] = "(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris";
+$timezones["2"] = "(GMT +2:00) Kaliningrad, South Africa";
+$timezones["3"] = "(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg";
+$timezones["3.5"] = "(GMT +3:30) Tehran";
+$timezones["4"] = "(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi";
+$timezones["4.5"] = "(GMT +4:30) Kabul";
+$timezones["5"] = "(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent";
+$timezones["5.5"] = "(GMT +5:30) Bombay, Calcutta, Madras, New Delhi";
+$timezones["6"] = "(GMT +6:00) Almaty, Dhaka, Colombo";
+$timezones["7"] = "(GMT +7:00) Bangkok, Hanoi, Jakarta";
+$timezones["8"] = "(GMT +8:00) Beijing, Perth, Singapore, Hong Kong";
+$timezones["9"] = "(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk";
+$timezones["9.5"] = "(GMT +9:30) Adelaide, Darwin";
+$timezones["10"] = "(GMT +10:00) Eastern Australia, Guam, Vladivostok";
+$timezones["11"] = "(GMT +11:00) Magadan, Solomon Islands, New Caledonia";
+$timezones["12"] = "(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka";
+
+      foreach ($timezones as $key => $value)
+      {
+        echo $key;
+        echo "<option value='$key' ";
+        if ($key == $rec[0]["timezone"])
+          echo "selected";
+        echo ">$value</option>";
+      }
+      echo "</select>";
+    echo "</font></td>
   </tr>
   <tr>
     <td colspan=2 bgcolor='$table1' width=80%><font size='$font_m' face='$font_face' color='$font_color_main'>
