@@ -122,12 +122,12 @@ function bbcodebuttons() {
     $bb_buttons = "<p>";
     $bb_buttons .= "<select onChange=\"bb_dropdown(this.form.colors,'colors')\" name='colors'>";
     $bb_buttons .= "<option value='' selected>Choose color</option>";
-    $bb_buttons .= "<option value='white'>White</option>";
-    $bb_buttons .= "<option value='yellow'>Yellow</option>";
-    $bb_buttons .= "<option value='green'>Green</option>";
-    $bb_buttons .= "<option value='purple'>Purple</option>";
-    $bb_buttons .= "<option value='red'>Red</option>";
-    $bb_buttons .= "<option value='blue'>Blue</option>";
+    $bb_buttons .= "<option value='#FFFFFF'>White</option>";
+    $bb_buttons .= "<option value='#FFFF00'>Yellow</option>";
+    $bb_buttons .= "<option value='#008000'>Green</option>";
+    $bb_buttons .= "<option value='#800080'>Purple</option>";
+    $bb_buttons .= "<option value='#FF0000'>Red</option>";
+    $bb_buttons .= "<option value='#0000FF'>Blue</option>";
     $bb_buttons .= "</select> ";
     $bb_buttons .= "<select onChange=\"bb_dropdown(this.form.typeface,'typeface')\" name='typeface'>";
     $bb_buttons .= "<option value='' selected>Choose font</option>";
