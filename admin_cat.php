@@ -15,26 +15,61 @@ if($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
             //edit categories
             if(isset($_GET["id"])) {
                 if(isset($_POST["u_cat"])) {
-                    $tdb->edit("cats", $_GET["id"], array("name" => $_POST["u_cat"], "view" => $_POST["u_view"], "sort" => $_POST["u_sort"]));
+                    $newlist = explode("&list",$_POST['neworder']);
+                    array_shift($newlist);
+                    $u_sort = "";
+                    foreach ($newlist as $key => $value)
+                    {
+                      list($id,$title) = explode("=",$value);
+                      list($catid,$name) = explode("::",$title);
+                      $u_sort .= $catid;
+                      if ($key < count($newlist)-1)
+                        $u_sort .= ",";
+                    }
+                    
+                    $tdb->edit("cats", $_GET["id"], array("name" => $_POST["u_cat"], "view" => $_POST["u_view"], "sort" => $u_sort));
                     echo "Category successfully edited.";
                     redirect($_SERVER['PHP_SELF'], 2);
                 } else {
                     $cRec = $tdb->get("cats", $_GET["id"]);
-                    echo "<form action='admin_cat.php?action=edit&id=".$_GET["id"]."' method=POST>
-                    Change category id# ".$_GET["id"]." to: <input type=text name=u_cat value='".$cRec[0]["name"]."' size='40'><br>
+                    echo "<form action='admin_cat.php?action=edit&id=".$_GET["id"]."' method='POST' name='form'>
+                    <table align='center'>
+                    <input type=\"hidden\" name=\"neworder\" value=\"\">
+                    <tr><td>Change category id# ".$_GET["id"]." to:</td><td> <input type=text name=u_cat value='".$cRec[0]["name"]."' size='40'></td></tr>
                     
-                    Who can see this category?<select size='1' name='u_view'>";
+                    <tr><td>Who can see this category? </td><td><select size='1' name='u_view'>";
                     echo createUserPowerMisc($cRec[0]["view"], 1);
-                    echo "</select><br>Sort the Forums in this category by their id: (ex. 1,2,3) <input type='text' name='u_sort' value='".$cRec[0]["sort"]."' size='40'>
-                    <br><input type=submit value='Edit'>
-                    </form>
-                    
-                    <br>Available Forums and  their ids:<br><table border='0'>";
+                    echo "</select></td>";
                     $fRecs = $tdb->query("forums", "cat='".$_GET["id"]."'");
-                    foreach($fRecs as $fRec) {
-                        echo "<tr><td>".$fRec["forum"]."</td><td>".$fRec["id"]."</td></tr>";
+                    if ($fRecs !== false)
+                    {
+                    echo "<tr><td valign='top'>Sort the Forums in this category</td><td>";
+                    
+                    $sort = $cRec[0]["sort"];
+                    $order = explode(",",$sort);
+                    
+                    echo "<select multiple name=\"fsort\" size=\"".count($fRecs)."\">";
+                      
+                    for ($i = 0;$i < count($order);$i++)
+                    {
+                      foreach ($fRecs as $fRec)
+                      {
+                        if ($fRec['id'] == $order[$i])
+                          echo "<option value='".$fRec['id']."'>".$fRec['id']."::".$fRec['forum']."</option>";
+                      }
                     }
-                    echo "</table>";
+                    echo "</select><br>";
+                    echo "<input type=\"button\" value=\"Move Up\" ";
+    echo "onClick=\"change_order(this.form.fsort.selectedIndex,-1,'forum')\">&nbsp;&nbsp;&nbsp;";
+    echo "<input type=\"button\" value=\"Move Down\"";
+    echo "onClick=\"change_order(this.form.fsort.selectedIndex,+1,'forum')\">";
+                    }
+                    else
+                      echo "<tr><td colspan='2'>There are no forums in this category";                    
+                    echo "</td></tr><tr><td colspan='2'><input type='button' onClick=\"submitorderform('forum')\" value='Edit'></td></tr>
+                    </table>
+                    
+                    </table></form>";
                 }
             } else {
                 echo "No id selected.";
@@ -45,6 +80,7 @@ if($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
                 if($_POST["verify"] == "Ok") {
                     $sort = explode(",", $admin_catagory_sorting);
                     if(($i = array_search($_GET["id"], $sort)) !== FALSE) unset($sort[$i]);
+                    
                     $config_tdb->editVars("config", array("admin_catagory_sorting" => implode(",", $sort)));
                     
                     $tdb->delete("cats", $_GET["id"]);
@@ -53,7 +89,8 @@ if($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
                 } elseif($_POST["verify"] == "Cancel") {
                     redirect($_SERVER['PHP_SELF'], 0);
                 } else {
-                    ok_cancel("admin_cat.php?action=delete&id=".$_GET["id"], "Are you sure you want to delete a category?");
+                    $cRec = $tdb->basicQuery("cats", "id",$_GET['id']);
+                    ok_cancel("admin_cat.php?action=delete&id=".$_GET["id"], "Are you sure you want to delete category '".$cRec[0]['name']."' ?");
                 }
             } else {
                 echo "No id selected.";
@@ -63,7 +100,14 @@ if($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
             if(isset($_GET['a'])) {
                 
                 $cat_id = $tdb->add("cats", array("name" => $_POST["u_cat"], "view" => $_POST["u_view"]));
+                $cat_sort = $config_tdb->getVars('config');
+                $cRecs = $tdb->listRec("cats", 1);
+                foreach ($cRecs as $cRec)
+                    $ids[] = $cRec['id'];  
+
+                $config_tdb->editVars("config",array("admin_catagory_sorting" => implode(",", $ids),"type"=>"addcat"));
                 echo "Successfully added new category <font color=green>".$_POST["u_cat"]."</font>";
+                
                 if($_POST['command'] == 'Add and Add another Category') redirect($_SERVER['PHP_SELF'].'?action=addnew', 2);
                 elseif ($_POST['command'] == 'Add and Add forums to this category') redirect('admin_forum.php?action=addnew&cat_id='.$cat_id, 2);
                 else redirect($_SERVER['PHP_SELF'], 2);

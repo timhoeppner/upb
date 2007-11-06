@@ -170,6 +170,7 @@ if (isset($_GET["action"])) {
     }
 } else {
     $fRecs = $tdb->listRec("forums", 1);
+    
     if(empty($fRecs)) redirect('admin_forum.php?action=addnew', 0);
     echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 
@@ -180,8 +181,8 @@ if (isset($_GET["action"])) {
 
         <tr><td colspan='10' bgcolor='$header'><table width=100% cellspacing=0 cellpadding=0><tr><td width=30%><B><font size='$font_l' face='$font_face' color='$font_color_header'>Manage Forums</font></b></td><td align=right><font size='$font_m' face='$font_face' color='$font_color_main'><a href='admin_forum.php?action=addnew'><img src='images/add.jpg' border='0'></a></font></td></tr></table></td></tr>
         <tr>
-        <td width=52% bgcolor='$header'><font size='$font_m' face='$font_face' color='$font_color_header'>Name</font></td>
-        <td width=6% bgcolor='$header'><font size='$font_m' face='$font_face' color='$font_color_header'>Cat ID</font></td>
+        <td width=43% bgcolor='$header'><font size='$font_m' face='$font_face' color='$font_color_header'>Name</font></td>
+        <td width=15% bgcolor='$header'><font size='$font_m' face='$font_face' color='$font_color_header'>Forum</font></td>
         <td width=5% bgcolor='$header'><font size='$font_m' face='$font_face' color='$font_color_header'>view</font></td>
         <td width=5% bgcolor='$header'><font size='$font_m' face='$font_face' color='$font_color_header'>post</font></td>
         <td width=5% bgcolor='$header'><font size='$font_m' face='$font_face' color='$font_color_header'>reply</font></td>
@@ -191,6 +192,7 @@ if (isset($_GET["action"])) {
         <td width=5% bgcolor='$header'><font size='$font_m' face='$font_face' color='$font_color_header'>Delete?</font></td></tr>
         ";
     foreach($fRecs as $fRec) {
+        $tdb->setFp('cats', 'categories');
         $post_tdb->setFp("topics", $fRec["id"]."_topics");
         $post_tdb->setFp("posts", $fRec["id"]);
         $t_txt = "<b>".(round(($post_tdb->getNumberOfRecords("topics")/5000), 1)-100)*(-1)."%</b>";
@@ -200,10 +202,14 @@ if (isset($_GET["action"])) {
         $whoPost = createUserPowerMisc($fRec["post"], 3);
         $whoReply = createUserPowerMisc($fRec["reply"], 3);
 
+        $cat = $tdb->basicQuery("cats","id",$fRec['cat']);
+        $cat_name = $cat[0]['name'];
+        $tdb->cleanUp();
+        
         //show each category
         echo "<tr height=10>
             <td bgcolor='$table1' width=52%><font size='$font_m' face='$font_face' color='$font_color_main'>".$fRec["forum"]."</td>
-            <td bgcolor='$table1' width=6%><font size='$font_m' face='$font_face' color='$font_color_main'>".$fRec["cat"]."</font></td>
+            <td bgcolor='$table1' width=6%><font size='$font_m' face='$font_face' color='$font_color_main'>".$cat_name."</font></td>
             <td bgcolor='$table1' width=5%><font size='$font_m' face='$font_face' color='$font_color_main'>$whoView</font></td>
             <td bgcolor='$table1' width=5%><font size='$font_m' face='$font_face' color='$font_color_main'>$whoPost</font></td>
             <td bgcolor='$table1' width=5%><font size='$font_m' face='$font_face' color='$font_color_main'>$whoReply</font></td>

@@ -6,7 +6,6 @@
 // Version: 2.0
 // Using textdb Version: 4.4.1
 ignore_user_abort();
-
 if(TRUE !== is_writable('config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
 if(filesize('config.php') > 0) {
     require_once('config.php');
@@ -196,7 +195,7 @@ $files_name = array("action-smiley-035.gif","action-smiley-073.gif","anti-old.gi
     $tdb->add("ext_config", array("name" => "homepage", "type" => "config", "title" => "Homepage URL", "description" => "can be relative or a url", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "3"));
     $tdb->add("config", array("name" => "homepage", "type" => "config"));
 
-    $tdb->add("ext_config", array("name" => "admin_catagory_sorting", "type" => "config", "title" => "Catagory Sorting", "description" => "Put the id numbers of the catagories that you want sorted; Seperate with commas. (I.E. 1,2,3,4)", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "16"));
+    $tdb->add("ext_config", array("name" => "admin_catagory_sorting", "type" => "config", "title" => "Category Sorting", "description" => "Sort the categories in the order you want them to appear on the main page", "form_object" => "list", "data_type" => "string", "minicat" => "1", "sort" => "16"));
     $tdb->add("config", array("name" => "admin_catagory_sorting", "type" => "config"));
     $tdb->add("ext_config", array("name" => "servicemessage", "type" => "config", "title" => "Service Messages", "description" => "Service Messages appear above the forum, if nothing input, Announcements will not be displayed. Html is allowed.", "form_object" => "textarea", "data_type" => "string", "minicat" => "1", "sort" => "17"));
     $tdb->add("config", array("name" => "servicemessage", "type" => "config"));

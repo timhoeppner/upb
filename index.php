@@ -29,6 +29,7 @@ if ($_CONFIG["servicemessage"] != "") {
 $posts = new tdb(DB_DIR, "posts.tdb");
 
 $cRecs = $tdb->listRec("cats", 1);
+
 //$cRecs = $tdb->query("cats", "view<'".($_COOKIE["power_env"] + 1)."'");
 
 if($cRecs[0]["id"] == "") {

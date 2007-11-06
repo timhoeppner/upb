@@ -43,7 +43,7 @@ class functions extends tdb {
 	         //$this->pulseInterval = 60 * 60 * 24 * 7; // 1 week 	 
 	         $this->pulseInterval = 60 * 60 * 24; // 1 day 	 
 	  	 
-	         $this->pulse();
+	         //$this->pulse();
     }
 
     //$requireArray is case INsensitive

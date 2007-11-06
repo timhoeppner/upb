@@ -122,8 +122,7 @@ flock($h_f, 3);
 fclose($h_f);
 
 if(!defined('SKIN_DIR')) die('The constant, SKIN_DIR has not been defined. Go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.');
-include $_CONFIG["skin_dir"]."/css/skin.css";
-include $_CONFIG["skin_dir"]."/coding.php";
+require_once $_CONFIG["skin_dir"]."/coding.php";
 
 $login = "";
 if (!$tdb->is_logged_in()) {
@@ -162,7 +161,7 @@ echo "
 <head>
 <title>".(($where == '') ? $_CONFIG['title'] : (strip_tags(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where))))."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'>
-<style type=\"text/css\">$css</style>
+<link rel=\"stylesheet\" href=\"".$_CONFIG["skin_dir"]."/css/skin.css\" type=\"text/css\">
 <script language='JavaScript'>
 <!--
 var counter=0;
@@ -226,6 +225,7 @@ document.body.addEventListener('keyup', function(event) { countlimit(thelimit,ev
 </script>
 <script language=\"Javascript\" src=\"./includes/bbcode.js\"></script>
 <script language=\"Javascript\" src=\"./includes/ajax.js\"></script>
+<script language=\"Javascript\" src=\"./includes/scripts.js\"></script>
 
 </head>
 

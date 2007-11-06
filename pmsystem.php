@@ -120,7 +120,7 @@ if($_GET["section"] == "inbox") {
             $user = $tdb->get("users", $pmRec["to"]);
             echo "<tr>
                 <td bgcolor='$table1' width=40%><font face='$font_face' size='$font_m' color='$font_color_main'><img src='./icon/".$pmRec["icon"]."'> <a href='viewpm.php?section=".$_GET["section"]."&id=".$pmRec["id"]."'>".$pmRec["subject"]."</a></font></td>
-                <td bgcolor='$table1' width=60%><font face='$font_face' size='$font_m' color='$font_color_main'>Sent to <a href='profile.php?action=get&id=".$pmRec["to_id"]."'>".$user[0]["user_name"]."</a> on ".gmdate("M d, Y g:i:s a", user_date($pmRec["date"]))."</font></td>
+                <td bgcolor='$table1' width=60%><font face='$font_face' size='$font_m' color='$font_color_main'>Sent to <a href='profile.php?action=get&id=".$user[0]["id"]."'>".$user[0]["user_name"]."</a> on ".gmdate("M d, Y g:i:s a", user_date($pmRec["date"]))."</font></td>
                 </tr>";
             unset($pmRec);
         } else {

@@ -18,6 +18,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
             else echo "<font color='red'><b>Edit Failed</b></font>";
             require_once("./includes/footer.php");
             redirect($PHP_SELF."?action=".$_POST["action"], 2);
+            die();
         }
         
         echo "<center>";
@@ -47,8 +48,9 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
         } elseif($_GET["action"] != "") {
             $raws2 = explode(chr(31), $raws[1]);
             $configVars = $config_tdb->getVars($_GET["action"], true);
-            echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method=POST><input type='hidden' name='action' value='".$_GET["action"]."'>";
-            
+            echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'>
+            <input type='hidden' name='action' value='".$_GET["action"]."'>";
+            echo "<input type=\"hidden\" name=\"neworder\" value=\"\">";
             foreach($raws2 as $raw) {
                 $rec = explode(chr(30), $raw);
                 if($rec[0] == $_GET["action"]) {
@@ -82,6 +84,33 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
                                 else $target = "";
                                 echo "<a href=\"".$configVars[$i]["value"]."\"".$target.">".$configVars[$i]["name"]."</a>";
                                 break 1;
+                                case "list":
+                                $sort = $_CONFIG['admin_catagory_sorting'];
+                                $order = explode(",",$sort);
+                                $cRecs = $tdb->listRec("cats", 1);
+                                
+                                //var_dump($sort);
+                                
+                                echo "<select multiple name=\"".$configVars[$i]["name"]."\" size=\"".count($cRecs)."\">";
+                                for ($i = 0;$i < count($order);$i++)
+                                {
+                                  foreach ($cRecs as $cRec)
+                                  {
+                                    if ($cRec['id'] == $order[$i])
+                                    {
+                                      echo "<option value='".$cRec['id']."'>".$cRec['id']."::".$cRec['name']."</option>";
+                                      $added[] = $cRec['id'];
+                                    }
+                                  }
+                                }
+                                
+                                echo "</select><br>";
+                               
+                                echo "<input type=\"button\" value=\"Move Up\" ";
+                                echo "onClick=\"change_order(this.form.admin_catagory_sorting.selectedIndex,-1,'category')\">&nbsp;&nbsp;&nbsp;";
+                                echo "<input type=\"button\" value=\"Move Down\"";
+                                echo "onClick=\"change_order(this.form.admin_catagory_sorting.selectedIndex,+1,'category')\">";
+                                break 1;
                             }
                             echo "</td></tr>";
                             $i = -1;
@@ -92,7 +121,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
                 echo "</tr>
                 ";
             }
-            echo "<tr><td bgcolor='$table1' width=80% colspan=2><input type=submit value='Edit'></form></td></tr>";
+            echo "<tr><td bgcolor='$table1' width=80% colspan=2><input type=button onClick=\"submitorderform('category')\" value='Edit'></form></td></tr>";
 
 /*
 print '<pre>'; print_r($configVars);

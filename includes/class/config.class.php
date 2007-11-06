@@ -46,6 +46,9 @@
        - INI switch
          - FALSE === unchecked
          - TRUE === checked
+      - list
+        - name
+        - INI val
    - textarea
      - rows
      - cols
@@ -116,7 +119,12 @@ class configSettings extends tdb {
                     else $varArr[$oriVar["name"]] = 0;
                 } */
             }
-            
+            //only go through the sort function if the category is not being added
+            elseif ($oriVar["form_object"] == "list" and $varArr['type'] != "addcat")
+            {
+              $varArr[$oriVar["name"]] = $this->sortCats($varArr['neworder']);
+            }
+                       
             if($editOptionalData) {
                 if(is_array($nameRef[$oriVar["name"]])) {
                     $this->edit("ext_config", $oriVar["id"], array_diff_assoc($nameRef[$oriVar["name"]], $oriVar), false);
@@ -130,9 +138,30 @@ class configSettings extends tdb {
                 }
             }
         }
+        
         //$this->defragMemo("ext_config");
         //$this->defragMemo("config");
         return true;
     }
+    
+    //changes the sort list into comma delimited string for entry into the database
+    function sortCats($orderlist)
+    {
+      //use $array['neworder']
+      //var_dump($array);
+      $newlist = explode("&list",$orderlist);
+      array_shift($newlist);
+      $u_sort = "";
+      foreach ($newlist as $key => $value)
+      {
+        list($id,$title) = explode("=",$value);
+        list($catid,$name) = explode("::",$title);
+        $u_sort .= $catid;
+        if ($key < count($newlist)-1)
+          $u_sort .= ",";
+      }
+      return $u_sort;
+    }
+    
 }
 ?>

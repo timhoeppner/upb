@@ -1,4 +1,34 @@
 <?php
+$font_s="1";
+$font_m="1";
+$font_l="1";
+$font_face="verdana";
+$font_color_main="#000000";
+$font_color_header="#FFFFFF";
+$font_color_category="#FFFFFF";
+$bgcolor="#000000";
+$link="#000020";
+$vlink="#000020";
+$alink="#000020";
+$header="#24374A";
+$divider="#18284c";
+$category="#24374A";
+$table1="#eff1f3";
+$font1="#18284c";
+$table2="#FFFFFF";
+$font2="#18284c";
+$border="#000000";
+$alternatingcolor1="#eff1f3";
+$alternatingcolor2="#FFFFFF";
+$statscolor="#eff1f3";
+$statscolor1="#eff1f3";
+$statscolor2="#FFFFFF";
+$hovercolor1="#eff1f3";
+$hovercolor2="#FFFFFF";
+$outsideborder="#eef0f5";
+$insideborder="#FFFFFF";
+
+
 function echoTableHeading($display, $_CONFIG) { //set $display to 85
     echo "<table cellspacing=0 cellpadding=0 width='".$_CONFIG["table_width_main"]."' align=center>
                   	<tbody>
