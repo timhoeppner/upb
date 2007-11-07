@@ -57,17 +57,10 @@ $script_start_time = $mt[0] + $mt[1];
 if($tdb->is_logged_in() && INSTALLATION_MODE === FALSE) {
     $refresh = false;
     if (!isset($_COOKIE["lastvisit"])) {
-        $v_date = mkdate();
-
-        $v_file = fopen(DB_DIR."/lastvisit.dat", 'r+');
-        fseek($v_file, (($_COOKIE["id_env"] - 1) * 14));
-        $ses_info = trim(fread($v_file, 14));
-        if($ses_info == '') $ses_info = $v_date;
-
-        fseek($v_file, -14, SEEK_CUR);
-        fwrite($v_file, $v_date);
-	    fclose($v_file);
-
+        $now = mkdate();
+        $ses_info = lastvisit();
+        if($ses_info == '') $ses_info = $now;
+        
         if(!headers_sent()) {
             $uniquekey = generateUniqueKey();
             $tdb->edit('users', $_COOKIE['id_env'], array('uniquekey' => $uniquekey));

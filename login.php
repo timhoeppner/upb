@@ -17,16 +17,10 @@ if(isset($_POST["u_name"]) && isset($_POST["u_pass"])) {
     if(($r = $tdb->login_user($_POST["u_name"], $_POST["u_pass"], $key)) === FALSE) {
         $error = "Either your Username or your Password was incorrect.";
     } else {
-        //lastvisit info
-        $v_date = mkdate();
-        $v_file = fopen(DB_DIR."/lastvisit.dat", 'r+');
-        fseek($v_file, (($_COOKIE["id_env"] - 1) * 14));
-        $ses_info = trim(fread($v_file, 14));
-        if($ses_info == '') $ses_info = $v_date;
-
-        fseek($v_file, -14, SEEK_CUR);
-        fwrite($v_file, $v_date);
-        fclose($v_file);
+        
+        $now = mkdate();
+        $ses_info = lastvisit($r['id']);
+        if($ses_info == '') $ses_info = $now;
 
         if(headers_sent()) $error_msg = 'Could not login: headers sent.';
         else {

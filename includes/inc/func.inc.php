@@ -225,4 +225,63 @@ function generateUniqueKey() {
     }
     return $key; */
 }
+
+function getlastvisit($id)
+{
+  $file = file(DB_DIR."/lastvisit.dat");
+ 
+  if ($file[0] != "")
+  {
+    foreach ($file as $value)
+    {
+      list($userid,$timestamp) = explode("|",trim($value));
+      $lines[$userid] = $timestamp;
+    }
+  }
+  
+  if (array_key_exists($id,$lines))
+    $lv = $lines[$id];
+  return $lv;
+}
+
+function lastvisit($id='')
+{ 
+  if ($id == '')
+    $id = $_COOKIE['id_env'];
+  
+  $now = mkdate();
+  $lv = $string = '';
+  $lines = array();
+  $file = file(DB_DIR."/lastvisit.dat");
+ 
+  //var_dump($file);
+ 
+  if ($file[0] != "")
+  {
+    foreach ($file as $value)
+    {
+      list($userid,$timestamp) = explode("|",trim($value));
+      $lines[$userid] = $timestamp;
+    }
+  }
+  
+  if (array_key_exists($id,$lines))
+    $lv = $lines[$id];
+  
+  $lines[$id] = $now;
+  
+  ksort($lines);
+  
+  //var_dump($lines);
+  
+  foreach ($lines as $key => $value)
+  {
+    $string .= $key."|".$value."\n"; 
+  }
+  
+  $f = fopen(DB_DIR.'/lastvisit.dat', 'w');
+  fwrite($f, $string);
+  fclose($f);
+  return $lv;
+}
 ?>

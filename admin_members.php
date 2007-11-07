@@ -57,10 +57,8 @@ if($_GET["action"] == "edit") {
         $tmp_new_pm = fread($f, 2);
         fclose($f);
 
-        $fLastvisit = fopen(DB_DIR.'/lastvisit.dat', 'r');
-        fseek($fLastvisit, (14 * ((int)$rec[0]["id"] - 1)));
-        $lastvisit = fread($fLastvisit, 14);
-        fclose($fLastvisit);
+        $lastvisit = getlastvisit($_GET['id']);
+        
         echo "</font></td></tr>
     <tr><td bgcolor='$table1' width=80%><font size='$font_m' face='$font_face' color='$font_color_main'><b>No. of Unread Private Messages</b></font></td>
     <td bgcolor='$table1' bgcolor='$table1' width=80%><font size='$font_m' face='$font_face' color='$font_color_main'>".$tmp_new_pm."</font></td></tr>
@@ -151,11 +149,11 @@ if($_GET["action"] == "edit") {
     if($users[0] == "") {
         echo "<tr><td bgcolor='$table1' colspan='3'><font size='$font_m' face='$font_face' color='$font_color_main'>No records found</font></td></tr>";
     } else {
-        $fLastvisit = fopen(DB_DIR.'/lastvisit.dat', 'r');
+        
         $bList = file(DB_DIR."/banneduser.dat");
         foreach($users as $user) {
-            fseek($fLastvisit, (14 * ((int)$user["id"] - 1)), SEEK_SET);
-            $lastvisit = fread($fLastvisit, 14);
+            
+            $lastvisit = getlastvisit($user['id']);
             //if(gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d')) $lastvisit =
             //(gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d') ? '<i>today</i>' : (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y'))) ? '<i>yesterday</i>' : gmdate("Y-m-d", user_date($lastvisit))))
 
@@ -183,7 +181,7 @@ if($_GET["action"] == "edit") {
                 <td bgcolor='$table1' width=7%><font size='$font_m' face='$font_face' color='$font_color_main'><a href='admin_members.php?action=edit&id=".$user["id"]."&page=".$_GET["page"]."'>Edit</a></font></td>
                 <td bgcolor='$table1' width=7%><font size='$font_m' face='$font_face' color='$font_color_main'><a href='admin_members.php?action=delete&id=".$user["id"]."'>Delete</a></font></td></tr>";
         }
-        fclose($fLastvisit);
+        
     }
     echo "</table>$skin_tablefooter";
 
