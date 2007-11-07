@@ -78,10 +78,10 @@ if($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
             //delete categories
             if(isset($_GET["id"])) {
                 if($_POST["verify"] == "Ok") {
-                    $sort = explode(",", $admin_catagory_sorting);
+                    $sort = explode(",", $_CONFIG['admin_catagory_sorting']);
                     if(($i = array_search($_GET["id"], $sort)) !== FALSE) unset($sort[$i]);
-                    
-                    $config_tdb->editVars("config", array("admin_catagory_sorting" => implode(",", $sort)));
+                    //var_dump($sort);
+                    $config_tdb->editVars("config", array("admin_catagory_sorting" => implode(",", $sort),"type"=>"delcat"));
                     
                     $tdb->delete("cats", $_GET["id"]);
                     echo "Successfully deleted category.";

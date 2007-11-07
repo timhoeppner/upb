@@ -120,7 +120,7 @@ class configSettings extends tdb {
                 } */
             }
             //only go through the sort function if the category is not being added
-            elseif ($oriVar["form_object"] == "list" and $varArr['type'] != "addcat")
+            elseif ($oriVar["form_object"] == "list" and $varArr['type'] != "addcat" and $varArr['type'] != "delcat")
             {
               $varArr[$oriVar["name"]] = $this->sortCats($varArr['neworder']);
             }
