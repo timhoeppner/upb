@@ -44,7 +44,7 @@ if($_GET["section"] == "inbox") {
                 $delete[] = $i;
             }
         }
-        $PrivMsg->reBuild("CuBox");
+        //$PrivMsg->reBuild("CuBox");  Function is obsolete
         if($num > 0) {
             echo "<p align='center'>Successfully Deleted $num Private Msg(s)</p>";
             $count -= $num;
