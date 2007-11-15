@@ -4,14 +4,14 @@
 // Website: http://www.myupb.com
 // Version: 2.0
 // Using textdb Version: 4.3.2
-if(basename($_SERVER['PHP_SELF']) == 'quickreply.php') die('This is a wrapper script!');
 require_once('./includes/class/func.class.php');
 require_once('./includes/inc/post.inc.php');
 require_once("./includes/class/upload.class.php");
 require_once("./includes/class/posts.class.php");
-include $_CONFIG["skin_dir"]."/css/skin.css";
+//include $_CONFIG["skin_dir"]."/css/skin.css";
 include $_CONFIG["skin_dir"]."/coding.php";
 
+$output = "<link rel=\"stylesheet\" href=\"".$_CONFIG["skin_dir"]."/css/skin.css\" type=\"text/css\">";
 $fRec = $tdb->get("forums", $_POST["id"]);
 $posts_tdb = new posts(DB_DIR."/", "posts.tdb");
 $posts_tdb->setFp("topics", $_POST["id"]."_topics");
@@ -44,7 +44,7 @@ if(!($tdb->is_logged_in())) {
         "icon" => $_POST["icon"], 
         "user_name" => $_COOKIE["user_env"], 
         "date" => mkdate(), 
-        "message" => $_POST["newentry"], 
+        "message" => $msg, 
         "user_id" => $_COOKIE["id_env"], 
         "t_id" => $_POST["t_id"], 
         "upload_id" => $uploadId
@@ -85,7 +85,7 @@ if(!($tdb->is_logged_in())) {
 $query = "id={$_POST['id']}&t_id={$_POST['t_id']}";
 $p = createPageNumbers($page, $num_pages, $query,true);
 $pagelinks = $posts_tdb->d_posting_qr($p,$page);
-$output = "<table width='".$_CONFIG["table_width_main"]."' cellspacing='1' cellpadding='3' bgcolor='$border' align='center'>";
+$output .= "<table width='".$_CONFIG["table_width_main"]."' cellspacing='1' cellpadding='3' bgcolor='$border' align='center'>";
 
 //show header of topic
 $output .= "<tr><td bgcolor='$header' align=left valign=center><font size='$font_m' face='$font_face' color='$font_color_header'>Author:</font></td>
@@ -184,7 +184,7 @@ foreach($pRecs as $key => $pRec) {
         }
     }
 
-    $msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG["censor"]));
+    $msg = format_text(filterLanguage(UPBcoding(stripslashes($pRec["message"])), $_CONFIG["censor"]));
     $originalmsg = $pRec["message"];
     //echo $_SERVER['HTTP_USER_AGENT'];
     if (substr_count($_SERVER['HTTP_USER_AGENT'],"MSIE") > 0)

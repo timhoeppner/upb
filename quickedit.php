@@ -5,7 +5,6 @@
 // Version: 2.1
 // Using textdb Version: 4.4.3
 // Quick Reply Script for using AJAX by Clark
-if(basename($_SERVER['PHP_SELF']) == 'quickedit.php') die('This is a wrapper script!');
 require_once("./includes/class/func.class.php");
 require_once("./includes/class/posts.class.php");
 $posts_tdb = new posts(DB_DIR, "posts.tdb");
@@ -25,7 +24,7 @@ if(!($tdb->is_logged_in())) exitPage("You are not logged in, therefore unable to
 
 if($pRec[0]["user_id"] != $_COOKIE["id_env"] && $_COOKIE["power_env"] < 2) exitPage("You are not authorized to edit this post.");
 
-$msg = format_text(filterLanguage(UPBcoding(utf8_decode($_POST["newedit"])), $_CONFIG["censor"]));
+$msg = format_text(filterLanguage(UPBcoding(utf8_decode(stripslashes($_POST["newedit"]))), $_CONFIG["censor"]));
 $dbmsg = htmlentities(stripslashes(utf8_decode($_POST["newedit"])));
 
 $posts_tdb->edit("posts", $_POST["postid"], array("message" => $dbmsg, "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate()));
