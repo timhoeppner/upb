@@ -43,7 +43,7 @@ if($_GET['page'] != 1) {
     for($i=0;$i<($start - 1);$i++) {
         unset($tRecs1[$i]);
     }
-
+    if ($tRecs1 !== false)
     $tRecs1 = array_merge(array(), $tRecs1); //reindex
 }
 

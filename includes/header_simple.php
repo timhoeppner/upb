@@ -29,7 +29,6 @@ $h_f = fopen(DB_DIR."/hits.dat", "w");
 fwrite($h_f, $hits);
 fclose($h_f);
 
-include $_CONFIG["skin_dir"]."/css/skin.css";
 include $_CONFIG["skin_dir"]."/coding.php";
 
 header ("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
@@ -38,13 +37,12 @@ header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
 header ("Pragma: no-cache");
 
-
 echo "
 <html>
 <head>
 <title>".$_CONFIG["title"]."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'>
-$css
+<link rel='stylesheet' type='text/css' href='".$_CONFIG["skin_dir"]."/css/skin.css'>
 <script language='JavaScript'>
 function PopUp(where)
 {

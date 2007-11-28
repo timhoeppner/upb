@@ -83,5 +83,5 @@ if(!isset($script_end_time)) {
       </td>
     </tr>
   </table>
-<img src='http://www.myupb.com/forum/images/upbmember.gif' border=0></body>
+</body>
 </html>

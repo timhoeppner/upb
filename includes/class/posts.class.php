@@ -44,7 +44,7 @@ class posts extends tdb {
         var_dump($this->tRec);
         echo '<br><br><b>$fRec:</b><br>';
         var_dump($this->fRec);
-        echo '<br><br><b>\$user:</b><br>';
+        echo '<br><br><b>$user:</b><br>';
         var_dump($this->user);
         echo '</pre>';
     }
@@ -78,7 +78,7 @@ class posts extends tdb {
     function d_topic($page_string) {
         if(!$this->check_user_info()) return false;
         echo "<table border='0' cellspacing='0' cellpadding='4' width='".TABLE_WIDTH_MAIN."' align='center'><tr>
-        <td><font>".$page_string."</font></td>
+        <td><font>".$page_string."</font> <a href='xml.php?type=forum&id={$_GET['id']}'><img src='images/rss.gif' border='0'></a></td>
         <td align='right'><p align=right>";
         if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"]) echo "<a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id='><img src='".SKIN_DIR."/icons/topic.gif' border='0'></a>";
         echo "</p></td></tr></table>";
@@ -88,7 +88,7 @@ class posts extends tdb {
     function d_posting($page_string) {
         if(!$this->check_topic() || !$this->check_forum() || !$this->check_user_info()) return false;
         echo "<table border='0' cellspacing='0' cellpadding='4' width='".TABLE_WIDTH_MAIN."' align='center'>
-        <tr><td><font>$page_string</font></td>
+        <tr><td><font>$page_string</font><a href='xml.php?type=topic&id={$_GET['id']}&t_id={$_GET['t_id']}'><img src='images/rss.gif' border='0'></a></td>
         <td align='right'><p align=right>";
         if((int)$this->user["power"] > 0) echo "<a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET['page']."'><img src='".SKIN_DIR."/icons/monitor.gif' border='0'></a>";
         if((int)$this->user["power"] >= (int)$this->fRec[0]["post"]) echo "<a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id='><img src='".SKIN_DIR."/icons/topic.gif' border='0'></a>";

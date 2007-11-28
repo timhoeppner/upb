@@ -170,7 +170,7 @@ foreach($pRecs as $key => $pRec) {
     }
     
     echo "<tr><td bgcolor='$table_color' valign=top width=15%><font size='$font_m' face='$font_face' color='$table_font'>&nbsp;";
-    if($pRec["user_id"] != "0") echo "<b><a href='profile.php?action=get&id=".$pRec["user_id"]."'>".$pRec["user_name"]."</a></b>";
+    if($pRec["user_id"] != "0") echo "<a name='".$pRec['id']."'><b><a href='profile.php?action=get&id=".$pRec["user_id"]."'>".$pRec["user_name"]."</a></b>";
     else echo $pRec["user_name"];
     echo "</font><br>&nbsp;<font color=".$statuscolor.">".$status."</font>";
 
@@ -190,7 +190,7 @@ foreach($pRecs as $key => $pRec) {
       echo '<table width="95%" border="1" cellspacing="0" cellpadding="3"><tr><td>Last edited by:<br> <a href="profile.php?action=get&id='.$pRec['edited_by_id'].'" target="_new">'.$pRec['edited_by'].'</a> on '.gmdate("M d, Y g:i:s a", user_date($pRec['edited_date'])).'</td></tr></table>';
     echo "</div>";
     
-    echo "</td><td bgcolor='$table_color' valign=top>
+    echo "</a></td><td bgcolor='$table_color' valign=top>
     <font size='$font_m' face='$font_face' color='$table_font'>
 
     <table width='100%' border='0' cellspacing='0' cellpadding='0' height='100%'>
