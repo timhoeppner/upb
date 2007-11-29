@@ -122,7 +122,7 @@ if ($_POST["a"] == "1") {
         $user = $tdb->get("users", $_COOKIE["id_env"]);
         $tdb->edit("users", $_COOKIE["id_env"], array("posts" => ((int)$user[0]["posts"] + 1)));
     }
-    redirect($redirect, 1);
+    redirect($redirect.'#'.$p_id, 1);
 } else {
     $message = "";
     foreach ($_POST as $key => $value)

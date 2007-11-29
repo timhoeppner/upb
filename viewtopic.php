@@ -131,7 +131,7 @@ foreach($pRecs as $key => $pRec) {
     if(($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) 
     {
      
-      $edit = "<a href=\"javascript:changediv('{$_GET["id"]}','{$_GET["t_id"]}','{$pRec["id"]}','{$_GET["t_id"]}-{$pRec["id"]}');\"><img src='".$_CONFIG["skin_dir"]."/icons/pb_edit.JPG' alt='Edit Post' border='0'></a>";
+      $edit = "<a href=\"javascript:getPost('{$pRec["id"]}','{$_GET["t_id"]}','{$pRec["user_id"]}','{$_GET["t_id"]}-{$pRec["id"]}');\"><img src='".$_CONFIG["skin_dir"]."/icons/pb_edit.JPG' alt='Edit Post' border='0'></a>";
     }
     else $edit = "";
 
@@ -205,13 +205,8 @@ foreach($pRecs as $key => $pRec) {
     echo "</font></div></td>
     </tr></table>
 
-    <table width=100% cellspacing=0 cellpadding=0><tr><td height=1 bgcolor='$divider'></td></tr></table><br>";
-    //The first div contains the filtered and bbcode formatted post as it would appear on the page.
-    //The second div (which is hidden) contains the post as stored in the database with the BBtags.
-    //This allows the textarea to be populated with the original text as it is stored in the database and also allows changes to be made to the edited post immediately without reload if a subsequent quick edit is needed
-    
+    <table width=100% cellspacing=0 cellpadding=0><tr><td height=1 bgcolor='$divider'></td></tr></table><br>";    
     echo "<div id='{$_GET['t_id']}-{$pRec['id']}' name='{$_GET['t_id']}-{$pRec['id']}'>$msg</div>
-    <div style='display:none;' id='{$_GET['t_id']}-{$pRec['id']}h' name='{$_GET['t_id']}-{$pRec['id']}h'>$originalmsg</div>
     </td></tr><tr valign='bottom'>
     <td height='1%'><p> &nbsp; </p>".$sig."</td>
     </tr>

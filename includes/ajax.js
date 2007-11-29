@@ -73,23 +73,8 @@ var Utf8 = {
 
 function changediv(userid,threadid,postid,divname)
 {
-  var hiddendiv = divname+'h';
-  var message = document.getElementById(hiddendiv).innerHTML;
-  //alert(message)
-  
   if (isIE && isWin)
     message = message.replace(/<BR>/g,'\n');
-    
-  var output = "<form action='editpost.php?id="+userid+"&t_id="+threadid+"&p_id="+postid+"' method='POST' id='quickedit' name='quickedit'>";
-  output += '<input type=\'hidden\' id=\'userid\' name=\'userid\' value=\''+userid+'\'>';
-  output += '<input type=\'hidden\' id=\'threadid\' name=\'threadid\' value=\''+threadid+'\'>';
-  output += '<input type=\'hidden\' id=\'postid\' name=\'postid\' value=\''+postid+'\'>';
-  output += '<input type=\'hidden\' id=\'divid\' name=\'divid\' value=\''+hiddendiv+'\'>';
-  output += '<textarea name=\'newedit\' id=\'newedit\' cols=\"60\" rows=\"18\">'+message+'</textarea><br>';
-  output += "\n<input type=\'button\' onclick=\'javascript:getEdit(document.getElementById(\"quickedit\"),\""+divname+"\");'\' name=\'qedit\' value=\'Save Edit\'>";
-  output += "\n<input type=\'submit\' name=\'submit\' value=\'Go Advanced\'>";
-  output += '</form>';
-  document.getElementById(divname).innerHTML = output;
 }
 
 var http_request = false;
@@ -119,6 +104,8 @@ var http_request = false;
       
       if (type == 'edit')
         http_request.onreadystatechange = EditContents;
+      else if (type == 'getpost')
+        http_request.onreadystatechange = GetPost;
       else
         http_request.onreadystatechange = ReplyContents;
       http_request.open('POST', url, true);
@@ -128,9 +115,24 @@ var http_request = false;
       http_request.send(parameters);
    }
 
+   function GetPost() {
+      if (http_request.readyState == 3)
+        document.getElementById(div).innerHTML = "Getting Post from Database....Please Wait";
+      if (http_request.readyState == 4) {
+         if (http_request.status == 200) {
+            result = http_request.responseText;
+            //alert(result)
+            document.getElementById(div).innerHTML = result;       
+         } else {
+            alert(http_request.status)
+            alert('There was a problem with the request.');
+         }
+      }
+   }
+   
    function EditContents() {
       if (http_request.readyState == 3)
-        document.getElementById('div').innerHTML = "Editing Post....Please Wait";
+        document.getElementById(div).innerHTML = "Editing Post....Please Wait";
       if (http_request.readyState == 4) {
          if (http_request.status == 200) {
             result = http_request.responseText;
@@ -138,10 +140,9 @@ var http_request = false;
             result_array = result.split("<!--divider-->");
             var hiddendiv = div+'h';
             var editdiv = "edit"+div;
-            document.getElementById(div).innerHTML = result_array[0];
-            document.getElementById(hiddendiv).innerHTML = result_array[1]; 
+            document.getElementById(div).innerHTML = result_array[0]; 
             //alert(result_array[2])
-            document.getElementById(editdiv).innerHTML = result_array[2];       
+            document.getElementById(editdiv).innerHTML = result_array[1];       
          } else {
             alert(http_request.status)
             alert('There was a problem with the request.');
@@ -174,17 +175,16 @@ var http_request = false;
    }
    
    function getEdit(obj,divname) {
-      div = divname
+      div = divname;
       //alert(div)
       var poststr = "newedit=" + escape(Utf8.encode( document.getElementById("newedit").value ));
       poststr += "&userid="+escape(Utf8.encode( document.getElementById("userid").value ));
       poststr += "&threadid="+escape(Utf8.encode( document.getElementById("threadid").value ));
       poststr += "&postid="+escape(Utf8.encode( document.getElementById("postid").value ));
-      poststr += "&divid="+escape(Utf8.encode( document.getElementById("divid").value ));
+      //poststr += "&divid="+escape(Utf8.encode( document.getElementById("divid").value ));
       //alert(poststr);
            
       makePOSTRequest('quickedit.php', poststr,'edit');
-      
    }
    
    function getReply(obj) {
@@ -199,5 +199,17 @@ var http_request = false;
       
       //alert(poststr)
       makePOSTRequest('quickreply.php', poststr,'reply');
+   }
+   
+   function getPost(postid,threadid,userid,divname)
+   {  
+      div = divname;
+      var poststr = "postid="+escape(Utf8.encode(postid));
+      poststr += "&userid="+escape(Utf8.encode(userid));
+      poststr += "&threadid="+escape(Utf8.encode(threadid));
+      poststr += "&divname="+escape(Utf8.encode(divname));
+      poststr += "&type=getpost";
+      //alert(poststr)
+      makePOSTRequest('quickedit.php', poststr,'getpost'); 
    }
    
