@@ -4,7 +4,7 @@
 // Website: http://www.myupb.com
 // Version: 2.0
 // Using textdb Version: 4.3.2
-
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
 if(!defined('DB_DIR')) die('The constant, DB_DIR has not been defined.  Go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.');
 $banned_addresses = file(DB_DIR.'/banneduser.dat');
 foreach($banned_addresses as $address) 

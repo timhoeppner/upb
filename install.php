@@ -5,6 +5,7 @@
 // Website: http://www.myupb.com
 // Version: 2.0
 // Using textdb Version: 4.4.1
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
 ignore_user_abort();
 if(TRUE !== is_writable('config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
 if(filesize('config.php') > 0) {
@@ -463,7 +464,7 @@ if($_POST["add"] == "1" || $add == 1) {
     if($homepage == "") $homepage = "http://";
     if($avatar == "") $avatar = "http://";
     echo "$error</center>";
-    echo "<br><b>1. Setting up an Administraction account</b>
+    echo "<br><b>1. Setting up an Administration account</b>
     <form method='POST' action='".$_SERVER['PHP_SELF']."'><center>";
     echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
     echo "<table width='".$_CONFIG["table_width_main"]."' cellspacing=1 cellpadding=3 bgcolor='$table2' align='center'>

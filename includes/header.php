@@ -4,7 +4,7 @@
 // Website: http://www.myupb.com
 // Version: 2.0
 // Using textdb Version: 4.3.2
-
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
 if(!headers_sent()) {
     switch (basename($_SERVER['PHP_SELF'])) {
         case 'register.php':

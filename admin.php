@@ -2,7 +2,7 @@
 // Ultimate PHP Board
 // Author: MyUPB Team
 // Website: http://www.myupb.com
-
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
 require_once("./includes/class/func.class.php");
 $where = "Admin Panel";
 require_once('./includes/header.php');

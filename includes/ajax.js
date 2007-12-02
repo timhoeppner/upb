@@ -71,13 +71,8 @@ var Utf8 = {
 
 }
 
-function changediv(userid,threadid,postid,divname)
-{
-  if (isIE && isWin)
-    message = message.replace(/<BR>/g,'\n');
-}
-
 var http_request = false;
+   
    function makePOSTRequest(url, parameters,type){
       http_request = false;
 
@@ -138,10 +133,9 @@ var http_request = false;
             result = http_request.responseText;
             //alert(result)
             result_array = result.split("<!--divider-->");
-            var hiddendiv = div+'h';
             var editdiv = "edit"+div;
             document.getElementById(div).innerHTML = result_array[0]; 
-            //alert(result_array[2])
+            //alert(result_array[1])
             document.getElementById(editdiv).innerHTML = result_array[1];       
          } else {
             alert(http_request.status)
