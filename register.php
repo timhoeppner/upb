@@ -7,6 +7,26 @@
 
 // Ultimate PHP Board Register
 require_once('./includes/class/func.class.php');
+if(!function_exists('checkdnsrr'))
+{
+    function checkdnsrr($hostName, $recType = '')
+    {
+     if(!empty($hostName)) {
+       if( $recType == '' ) $recType = "MX";
+       exec("nslookup -type=$recType $hostName", $result);
+       // check each line to find the one that starts with the host
+       // name. If it exists then the function succeeded.
+       foreach ($result as $line) {
+         if(eregi("^$hostName",$line)) {
+           return true;
+         }
+       }
+       // otherwise there was no mail handler for the domain
+       return false;
+     }
+     return false;
+    }
+}
 $where = "Register";
 if($tdb->is_logged_in()) exitPage('You\'re already logged in.', true);
 if(empty($_POST["show_email"])) $_POST["show_email"] = "";
@@ -74,12 +94,24 @@ if($_POST["submit"] == "Submit") {
     fclose($f);
     $register_msg = str_replace("<user>", $_POST['u_login'], $_REGISTER["register_msg"]);
     $register_msg = str_replace("<password>", $u_pass, $register_msg);
-    if(!@mail($_POST["u_email"], $_REGISTER['register_sbj'], $register_msg, "From: ".$_REGISTER["admin_email"])) error_log ("Unable to send register email conformation to user: ".$_POST["u_login"], 3, "./logs/error.log");
-
     require_once('./includes/header.php');
-    print "You are now registered!<BR><BR>An email has been sent to your email account with a random password, <br>which you can change at any time. It should arrive within 2 - 5 minutes. <br><br>Thank you for registering!";
+    if (ini_get('sendmail_path') != "")
+    {
+      if(!@mail($_POST["u_email"], $_REGISTER['register_sbj'], $register_msg, "From: ".$_REGISTER["admin_email"])) error_log ("Unable to send register email conformation to user: ".$_POST["u_login"], 3, "./logs/error.log");
+      print "You are now registered!<BR><BR>An email has been sent to your email account with a random password, <br>which you can change at any time. It should arrive within 2 - 5 minutes. <br><br>Thank you for registering!";
+      redirect("login.php", "10");
+    }
+    else
+    {
+      print "You are now registered!<p>
+      Your username is ".$_POST['u_login']."<br>
+      Your temporary password is $u_pass<p>
+      Please change this password using the user control panel as soon as you log in for the first time
+      <br><br>Thank you for registering!<p><p>
+      Click <a href='login.php'>here</a> to login";
+    }
     require_once('./includes/footer.php');
-    redirect("login.php", "5");
+    
     exit;
 } else {
     require_once('./includes/header.php');
@@ -91,7 +123,6 @@ if($_POST["submit"] == "Submit") {
 
     // rather than the hidden field we have
     $_SESSION['u_keycheck'] = $verify_string;
-
     echo "<form action='register.php' method=POST>";
     echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
     echo "<table width=".$_CONFIG["table_width_main"]." cellspacing=1 cellpadding=3 border=0 bgcolor='$border'>

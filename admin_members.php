@@ -92,8 +92,10 @@ if($_GET["action"] == "edit") {
         $tdb->edit("users", $_GET["id"], array("password" => generateHash($_POST["pass"])));
         $msg = "You Password was changed by ".$_COOKIE["user_env"]." on the website ".$_CONFIG["homepage"]." to \"".$_POST["pass"]."\"";
         if(isset($_POST["reason"])) $msg .= "\n\n".$_COOKIE["user_env"]."'s reason was this:\n".$_POST["reason"];
-        mail($user[0]["email"], "Password Change Notification", "Password Changed by :".$_COOKIE["user_env"]."\n\n".$msg, "From: ".$_REGISTER["admin_email"]);
-        echo "You sucessfully changed ".$user[0]["user_name"]."'s password to ".$_POST["pass"];
+        if (ini_get('sendmail_path') != "")
+          mail($user[0]["email"], "Password Change Notification", "Password Changed by :".$_COOKIE["user_env"]."\n\n".$msg, "From: ".$_REGISTER["admin_email"]);
+        echo "You successfully changed ".$user[0]["user_name"]."'s password to ".$_POST["pass"];
+        redirect('admin_members.php',5);
     } else {
         echo "<form method='POST' action=".$PHP_SELF."?action=pass&id=".$_GET["id"]."><input type='hidden' name='a' value='1'>";
         echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
@@ -102,7 +104,11 @@ if($_GET["action"] == "edit") {
     <tr><td bgcolor='$table1' width=80%><font size='$font_m' face='$font_face' color='$font_color_main'>New Password:</font></td><td bgcolor='$table1'><input type='password' name='pass'></td></tr>
   <tr><td bgcolor='$table1' width=80%><font size='$font_m' face='$font_face' color='$font_color_main'>Confirm Password:</font></td><td bgcolor='$table1'><input type='password' name='pass2'></td></tr>
   <tr><td bgcolor='$table1' width=80%><font size='$font_m' face='$font_face' color='$font_color_main'>Reason:</font></td><td bgcolor='$table1'><textarea name=reason></textarea></td></tr>
-  <tr><td bgcolor='$table1' colspan='2'><input type='submit' value='Change Password'></td></tr></table></form><p align='center'>An E-mail will be sent, notifying the user of the change of password by <i>".$_COOKIE["user_env"]."</i></p>";
+  <tr><td bgcolor='$table1' colspan='2'><input type='submit' value='Change Password'></td></tr></table></form>";
+  if (ini_get('sendmail_path') != "")
+    echo "<p align='center'>An E-mail will be sent, notifying the user of the change of password by <i>".$_COOKIE["user_env"]."</i></p>";
+  else
+    echo "<p align='center'>Please do not forget to inform the user of the change of password by <i>".$_COOKIE["user_env"]."</i></p>";
     }
 } elseif($_GET["action"] == "delete") {
     if(!isset($_GET["id"])) exitPage("No id selected.");
@@ -170,7 +176,9 @@ if($_GET["action"] == "edit") {
               echo '<i>today</i>'; 
             elseif (gmdate('Y-m-d', user_date($lastvisit)) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y'))))
               echo '<i>yesterday</i>';
-            else 
+            elseif ($lastvisit == "")
+              echo '<i>never</i>';
+            else
               echo gmdate("Y-m-d", user_date($lastvisit))."</font></td>";
             echo "<td bgcolor='$table1' width=10%><font size='$font_m' face='$font_face' color='$font_color_main'>".gmdate("Y-m-d", user_date($user["date_added"]))."</font></td>";
 
