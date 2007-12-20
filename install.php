@@ -5,7 +5,6 @@
 // Website: http://www.myupb.com
 // Version: 2.0
 // Using textdb Version: 4.4.1
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
 ignore_user_abort();
 if(TRUE !== is_writable('config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
 if(filesize('config.php') > 0) {
@@ -17,17 +16,17 @@ if(filesize('config.php') > 0) {
         if(isset($_COOKIE['id_env'])) $msg .= '(User ID:'.$_COOKIE['id_env'].')';
         if(isset($_SERVER['REMOTE_ADDR'])) $msg .= 'with the IP Address "'.$_SERVER['REMOTE_ADDR'].'"';
         $msg .= 'tried to initiate an installation or upgrade file.  Since the installation and upgrade files pose a risk, this could be an attempted hack.  The administrator, you, were notified.  It is advised you delete installation and upgrade files, which are no long use, and ban the IP Address and username, if given.';
-        mail(ADMIN_EMAIL, 'SECURITY ALERT on your forum', $msg);
+        @mail(ADMIN_EMAIL, 'SECURITY ALERT on your forum', $msg);
         die('<b>Security Risk</b>:  Unable to initiate installation. An Administrater must put the forum in Installation Mode.  You\'re IP Address has been sent to the administrater aswell as login information.');
     }
 }
 
-if($_POST["add"] == "" || !isset($_POST["add"])) {
+if(@$_POST["add"] == "" || !isset($_POST["add"])) {
     //define and create the new database folder
     if(!defined('DB_DIR')) {
         define('DB_DIR', './'.uniqid('data_', true), true);
         $f = fopen('config.php', 'w');
-        fwrite($f, "<?php\ndefine('INSTALLATION_MODE', true, true);\ndefine('UPB_VERSION', '2.1.1b', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
+        fwrite($f, "<?php\ndefine('INSTALLATION_MODE', true, true);\ndefine('UPB_VERSION', '2.1.1b', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");?><?php //the open and close makes it syntax highlighter friendly
         fclose($f);
     }
     if(!is_dir(DB_DIR)) {
@@ -70,12 +69,6 @@ Deny from all');
     fwrite($f, "configMain Configuration SettingsstatusMembers' Statuses SettingsregistNewly Registered Members Settingsconfig1Main Forum Configstatus2Member statusstatus3Moderator statusstatus4Admin Statusstatus5Member status Colorsstatus6Who's Online User Colorsregist7New Users' Confirmation E-mailregist8Users' Avatars");
     fclose($f);
 
-    $f = fopen(DB_DIR.'/smilies.dat', 'w');
-    fwrite($f, '<?php
-$files_name = array("action-smiley-035.gif","action-smiley-073.gif","anti-old.gif","blamesheep.gif","bump.gif","chainsaw.gif","closed.gif","enforcer.gif","ernaehrung004.gif","flour.gif","google.gif","gramps4.gif","gunner.gif","hatespammers.gif","headshot.gif","hug.gif","imo.gif","inq.gif","jackhammer.gif","jk.gif","laser.gif","laser2.gif","laser3.gif","blahblah.gif","machine_Gun.gif","moo.gif","newbie.gif","offtopic.gif","old.gif","owned.gif","ripper.gif","rocker2.gif","rocket3.gif","smash.gif","sniper.gif","soon.gif","spam1.gif","stupid.gif","transporter.gif","ttidead.gif","twocents.gif","w00t.gif","weirdo.gif","whenitsdone.gif","yeahthat.gif","zap.gif","paranoid.gif","worthy.gif","signs_word.gif","wacko.gif","censored.gif","drunk.gif","finger.gif","zzz.gif");
-?>');
-    fclose($f);
-
     $f = fopen(DB_DIR.'/whos_online.dat', 'w');
     fwrite($f, '');
     fclose($f);
@@ -91,6 +84,7 @@ $files_name = array("action-smiley-035.gif","action-smiley-073.gif","anti-old.gi
     $tdb->createDatabase(DB_DIR."/", "main.tdb");
     $tdb->createDatabase(DB_DIR."/", "posts.tdb");
     $tdb->createDatabase(DB_DIR."/", "privmsg.tdb");
+    //$tdb->createDatabase(DB_DIR."/", "smilies.tdb");
     $tdb->tdb(DB_DIR."/", "main.tdb");
     $tdb->createTable("members", array(
       array("user_name", "string", 20),
@@ -161,7 +155,7 @@ $files_name = array("action-smiley-035.gif","action-smiley-073.gif","anti-old.gi
       array("sort", "number", 2),
       array("id", "id")
     ), 20);
-
+    
     $tdb->setFp("config", "config");
     $tdb->setFp("ext_config", "ext_config");
 
@@ -229,12 +223,12 @@ $files_name = array("action-smiley-035.gif","action-smiley-073.gif","anti-old.gi
     $tdb->add("config", array("name" => "Create List", "value" => "more_smilies_create_list.php", "type" => "config"));
 
     //$_REGISTER
-    $tdb->add("ext_config", array("name" => "register_sbj", "value" => $register_sbj, "type" => "regist", "title" => "Register Email Subject", "description" => "this is the subject for confirmation of registration", "form_object" => "text", "data_type" => "string", "minicat" => "7", "sort" => "2"));
-    $tdb->add("config", array("name" => "register_sbj", "value" => $register_sbj, "type" => "regist"));
-    $tdb->add("ext_config", array("name" => "register_msg", "value" => $register_msg, "type" => "regist", "title" => "Register Email Message", "description" => "this is the message for confirmation of registration (options: &lt;login&gt; &lt;password&gt;)", "form_object" => "textarea", "data_type" => "string", "minicat" => "7", "sort" => "3"));
-    $tdb->add("config", array("name" => "register_msg", "value" => $register_msg, "type" => "regist"));
-    $tdb->add("ext_config", array("name" => "admin_email", "value" => $admin_email, "type" => "regist", "title" => "Admin E-mail", "description" => "this is the return address for confirmation of registration", "form_object" => "text", "data_type" => "string", "minicat" => "7", "sort" => "1"));
-    $tdb->add("config", array("name" => "admin_email", "value" => $admin_email, "type" => "regist"));
+    @$tdb->add("ext_config", array("name" => "register_sbj", "value" => $register_sbj, "type" => "regist", "title" => "Register Email Subject", "description" => "this is the subject for confirmation of registration", "form_object" => "text", "data_type" => "string", "minicat" => "7", "sort" => "2"));
+    @$tdb->add("config", array("name" => "register_sbj", "value" => $register_sbj, "type" => "regist"));
+    @$tdb->add("ext_config", array("name" => "register_msg", "value" => $register_msg, "type" => "regist", "title" => "Register Email Message", "description" => "this is the message for confirmation of registration (options: &lt;login&gt; &lt;password&gt;)", "form_object" => "textarea", "data_type" => "string", "minicat" => "7", "sort" => "3"));
+    @$tdb->add("config", array("name" => "register_msg", "value" => $register_msg, "type" => "regist"));
+    @$tdb->add("ext_config", array("name" => "admin_email", "value" => $admin_email, "type" => "regist", "title" => "Admin E-mail", "description" => "this is the return address for confirmation of registration", "form_object" => "text", "data_type" => "string", "minicat" => "7", "sort" => "1"));
+    @$tdb->add("config", array("name" => "admin_email", "value" => $admin_email, "type" => "regist"));
     $tdb->add("ext_config", array("name" => "avatar1", "value" => "dome.jpg", "type" => "regist", "title" => "Avatar 1", "description" => "The first avatar on the selection menu for new users", "form_object" => "text", "data_type" => "string", "minicat" => "8", "sort" => "2"));
     $tdb->add("config", array("name" => "avatar1", "value" => "dome.jpg", "type" => "regist"));
     $tdb->add("ext_config", array("name" => "avatar2", "value" => "chic.jpg", "type" => "regist", "title" => "Avatar 2", "description" => "The second avatar on the selection menu for new users", "form_object" => "text", "data_type" => "string", "minicat" => "8", "sort" => "3"));
@@ -331,9 +325,86 @@ $files_name = array("action-smiley-035.gif","action-smiley-073.gif","anti-old.gi
     $tdb->add("config", array("name" => "modColor", "value" => "006699", "type" => "status"));
     $tdb->add("ext_config", array("name" => "adminColor", "value" => "BB0000", "type" => "status", "title" => "Admin Color", "description" => "The color of usernames of administrators in the who's online box", "form_object" => "text", "data_type" => "string", "minicat" => "6", "sort" => "3"));
     $tdb->add("config", array("name" => "adminColor", "value" => "BB0000", "type" => "status"));
-
+    
     //$tdb->sortAndBuild("ext_config", "sort", "ASC");
-
+    
+    /*SMILIES
+    $tdb->add('smilies',array("bbcode"=>" :)","replace"=> " <img src='smilies/smile.gif' border='0' alt=':)'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" :(", "replace"=>" <img src='smilies/frown.gif' border='0' alt=':('> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" ;)","replace"=> " <img src='smilies/wink.gif' border='0' alt=';)'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" :P","replace"=> " <img src='smilies/tongue.gif' border='0' alt=':P'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" :o","replace"=> " <img src='smilies/eek.gif' border='0' alt=':o'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" :D","replace"=> " <img src='smilies/biggrin.gif' border='0' alt=':D'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" (C)","replace"=> " <img src='smilies/cool.gif' border='0' alt='(C)'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" (M)","replace"=> " <img src='smilies/mad.gif' border='0' alt='(M)'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" (confused)","replace"=> " <img src='smilies/confused.gif' border='0' alt='(confused)'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" (crazy)","replace"=> " <img src='smilies/crazy.gif' border='0' alt='(crazy)'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" (hm)","replace"=> " <img src='smilies/hm.gif' border='0' alt='(hm)'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" (hmmlaugh)","replace"=> " <img src='smilies/hmmlaugh.gif' border='0' alt='(hmmlaugh)'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" (offtopic)","replace"=> " <img src='smilies/offtopic.gif' border='0' alt='(offtopic)'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" (blink)","replace"=> " <img src='smilies/blink.gif' border='0' alt='(blink)'> ","type" => "main")); 
+    $tdb->add('smilies',array("bbcode"=>" (rofl)","replace"=> " <img src='smilies/rofl.gif' border='0' alt='(rofl)'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" (R)","replace"=> " <img src='smilies/redface.gif' border='0' alt='(R)'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" (E)","replace"=> " <img src='smilies/rolleyes.gif' border='0' alt='(E)'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" (wallbash)","replace"=> " <img src='smilies/wallbash.gif' border='0' alt='(wallbash)'> ","type" => "main"));
+    $tdb->add('smilies',array("bbcode"=>" (noteeth)","replace"=> " <img src='smilies/noteeth.gif' border='0' alt='(noteeth)'> ","type" => "main"));
+    
+    //MORE SMILIES (more smilies page)
+    $tdb->add('smilies',array("bbcode"=>" LOL","replace"=> " <img src='smilies/lol.gif' border='0' alt='LOL'> ","type" => "main"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/action-smiley-035.gif[/img]","replace"=>"<img src='smilies/action-smiley-035.gif' border='0' alt='action-smiley-035.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/action-smiley-073.gif[/img]","replace"=>"<img src='smilies/action-smiley-073.gif' border='0' alt='action-smiley-073.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/anti-old.gif[/img]","replace"=>"<img src='smilies/anti-old.gif' border='0' alt='anti-old.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/blamesheep.gif[/img]","replace"=>"<img src='smilies/blamesheep.gif' border='0' alt='blamesheep.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/bump.gif[/img]","replace"=>"<img src='smilies/bump.gif' border='0' alt='bump.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/chainsaw.gif[/img]","replace"=>"<img src='smilies/chainsaw.gif' border='0' alt='chainsaw.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/closed.gif[/img]","replace"=>"<img src='smilies/closed.gif' border='0' alt='closed.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/enforcer.gif[/img]","replace"=>"<img src='smilies/enforcer.gif' border='0' alt='enforcer.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/ernaehrung004.gif[/img]","replace"=>"<img src='smilies/ernaehrung004.gif' border='0' alt='ernaehrung004.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/flour.gif[/img]","replace"=>"<img src='smilies/flour.gif' border='0' alt='flour.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/google.gif[/img]","replace"=>"<img src='smilies/google.gif' border='0' alt='google.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/gramps4.gif[/img]","replace"=>"<img src='smilies/gramps4.gif' border='0' alt='gramps4.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/gunner.gif[/img]","replace"=>"<img src='smilies/gunner.gif' border='0' alt='gunner.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/hatespammers.gif[/img]","replace"=>"<img src='smilies/hatespammers.gif' border='0' alt='hatespammers.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/headshot.gif[/img]","replace"=>"<img src='smilies/headshot.gif' border='0' alt='headshot.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/hug.gif[/img]","replace"=>"<img src='smilies/hug.gif' border='0' alt='hug.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/imo.gif[/img]","replace"=>"<img src='smilies/imo.gif' border='0' alt='imo.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/inq.gif[/img]","replace"=>"<img src='smilies/inq.gif' border='0' alt='inq.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/jackhammer.gif[/img]","replace"=>"<img src='smilies/jackhammer.gif' border='0' alt='jackhammer.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/jk.gif[/img]","replace"=>"<img src='smilies/jk.gif' border='0' alt='jk.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/laser.gif[/img]","replace"=>"<img src='smilies/laser.gif' border='0' alt='laser.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/laser2.gif[/img]","replace"=>"<img src='smilies/laser2.gif' border='0' alt='laser2.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/laser3.gif[/img]","replace"=>"<img src='smilies/laser3.gif' border='0' alt='laser3.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/blahblah.gif[/img]","replace"=>"<img src='smilies/blahblah.gif' border='0' alt='blahblah.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/machine_Gun.gif[/img]","replace"=>"<img src='smilies/machine_Gun.gif' border='0' alt='machine_Gun.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/moo.gif[/img]","replace"=>"<img src='smilies/moo.gif' border='0' alt='moo.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/newbie.gif[/img]","replace"=>"<img src='smilies/newbie.gif' border='0' alt='newbie.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/offtopic.gif[/img]","replace"=>"<img src='smilies/offtopic.gif' border='0' alt='offtopic.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/old.gif[/img]","replace"=>"<img src='smilies/old.gif' border='0' alt='old.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/owned.gif[/img]","replace"=>"<img src='smilies/owned.gif' border='0' alt='owned.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/ripper.gif[/img]","replace"=>"<img src='smilies/ripper.gif' border='0' alt='ripper.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/rocker2.gif[/img]","replace"=>"<img src='smilies/rocker2.gif' border='0' alt='rocker2.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/rocket3.gif[/img]","replace"=>"<img src='smilies/rocket3.gif' border='0' alt='rocket3.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/smash.gif[/img]","replace"=>"<img src='smilies/smash.gif' border='0' alt='smash.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/sniper.gif[/img]","replace"=>"<img src='smilies/sniper.gif' border='0' alt='sniper.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/soon.gif[/img]","replace"=>"<img src='smilies/soon.gif' border='0' alt='soon.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/spam1.gif[/img]","replace"=>"<img src='smilies/spam1.gif' border='0' alt='spam1.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/stupid.gif[/img]","replace"=>"<img src='smilies/stupid.gif' border='0' alt='stupid.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/transporter.gif[/img]","replace"=>"<img src='smilies/transporter.gif' border='0' alt='transporter.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/ttidead.gif[/img]","replace"=>"<img src='smilies/ttidead.gif' border='0' alt='ttidead.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/twocents.gif[/img]","replace"=>"<img src='smilies/twocents.gif' border='0' alt='twocents.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/w00t.gif[/img]","replace"=>"<img src='smilies/w00t.gif' border='0' alt='w00t.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/weirdo.gif[/img]","replace"=>"<img src='smilies/weirdo.gif' border='0' alt='weirdo.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/whenitsdone.gif[/img]","replace"=>"<img src='smilies/whenitsdone.gif' border='0' alt='whenitsdone.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/yeahthat.gif[/img]","replace"=>"<img src='smilies/yeahthat.gif' border='0' alt='yeahthat.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/zap.gif[/img]","replace"=>"<img src='smilies/zap.gif' border='0' alt='zap.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/paranoid.gif[/img]","replace"=>"<img src='smilies/paranoid.gif' border='0' alt='paranoid.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/worthy.gif[/img]","replace"=>"<img src='smilies/worthy.gif' border='0' alt='worthy.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/signs_word.gif[/img]","replace"=>"<img src='smilies/signs_word.gif' border='0' alt='signs_word.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/wacko.gif[/img]","replace"=>"<img src='smilies/wacko.gif' border='0' alt='wacko.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/censored.gif[/img]","replace"=>"<img src='smilies/censored.gif' border='0' alt='censored.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/drunk.gif[/img]","replace"=>"<img src='smilies/drunk.gif' border='0' alt='drunk.gif'>","type"=>"more"));
+    $tdb->add("smilies",array("bbcode"=>"[img]smilies/finger.gif[/img]","replace"=>"<img src='smilies/finger.gif' border='0' alt='finger.gif'>","type"=>"more"));
+    */
     $tdb->tdb(DB_DIR.'/', 'posts.tdb');
     $tdb->createTable('trackforums', array(array('fId', 'number', 7), array('uId', 'number', 7), array('lastvisit', 'number', 14), array('id', 'id')));
     $tdb->createTable('tracktopics', array(array('fId', 'number', 7), array('tId', 'number', 7), array('uId', 'number', 7), array('old', 'number', 1), array('id', 'id')));
@@ -361,7 +432,7 @@ $files_name = array("action-smiley-035.gif","action-smiley-073.gif","anti-old.gi
     require_once('./includes/class/func.class.php');
 }
 
-if($_POST["add"] == "2") {
+if(@$_POST["add"] == "2") {
     //Verify admin account
 
     $error = "";
@@ -373,10 +444,10 @@ if($_POST["add"] == "2") {
     else $_POST["view_email"] = "0";
     if(strlen($_POST["sig"]) > 200) $error .= "Your signature is too long (max 200 chars)<br>";
     if($error != "") {
-        $_POST["add"] = 1;
+        @$_POST["add"] = 1;
         $add = 1;
     } else {
-        $_POST["add"] = "3";
+        @$_POST["add"] = "3";
         $add = 3;
         $admin = array("user_name" => $_POST["username"], "password" => generateHash($_POST["pass1"]), "level" => 3, "email" => $_POST["email"], "view_email" => $_POST["view_email"], "mail_list" => $_POST["mail_list"], "location" => $_POST["location"], "url" => $_POST["url"], "avatar" => $_POST["avatar"], "icq" => $_POST["icq"], "aim" => $_POST["aim"], "msn" => $_POST["msn"], "sig" => $_POST["sig"], "posts" => 0, "date_added" => mkdate());
         $f = fopen(DB_DIR."/lastvisit.dat", 'w');
@@ -391,7 +462,7 @@ if($_POST["add"] == "2") {
         $config_file = file('config.php');
         unset($config_file[count($config_file) - 1]);
         $config_file[] = "define('ADMIN_EMAIL', '".$_POST["email"]."', true);";
-        $config_file[] = '?>';
+        $config_file[] = '?>';?><?php //makes it syntax highlighter friendly
         $config_file = implode("\n", $config_file);
         $f = fopen('config.php', 'w');
         fwrite($f, $config_file);
@@ -400,7 +471,7 @@ if($_POST["add"] == "2") {
     }
 }
 
-if($_POST['add'] == "4") {
+if(@$_POST['add'] == "4") {
     //
     $where = "Installation ".$_CONFIG["where_sep"]." Complete";
     require_once('./includes/header.php');
@@ -423,14 +494,14 @@ if($_POST['add'] == "4") {
         unset($config_file);
 
         echo "<br>Installation Complete!  If you had any errors or you find that your forum is not working correctly, Visit UPB's support forums at <a href='http://forum.myupb.com/' target='_blank'>forum.myupb.com</a>";
-        echo "<br><b>Delete the install.php and update1.x-2.0.php NOW, as it is a security risk to leave it in your server.</b>";
+        echo "<br><b>Delete the install.php and update2.1.1b.php NOW, as it is a security risk to leave it in your server.</b>";
         echo "<br><a href='javascript:window.close()'>Close Window</a> -or- <a href='index.php'>Go To Forum</a> -or- <a href='login.php?ref=admin_cat.php?action=addnew'>Login and add categories</a>";
     } else {
         echo "Step Five Failed.  Please seek help from myupb.com.";
     }
 }
 
-if($_POST["add"] == "3" || $add == 3) {
+if(@$_POST["add"] == "3" || @$add == 3) {
     $where = "Installation ".$_CONFIG["where_sep"]." Initial Config Setup";
     require_once('./includes/header.php');
     echo "<form method='POST' action='".$_SERVER['PHP_SELF']."'><center>";
@@ -456,7 +527,7 @@ if($_POST["add"] == "3" || $add == 3) {
 
 }
 
-if($_POST["add"] == "1" || $add == 1) {
+if(@$_POST["add"] == "1" || @$add == 1) {
     //Set up admin acccount
 
     $where = "Installation ".$_CONFIG["where_sep"]." Setup Admin Account";
@@ -495,6 +566,6 @@ if($_POST["add"] == "1" || $add == 1) {
     <tr><td width='100%' colspan='2'><input type='submit' value='Submit' name='B1'><input type='reset' value='Reset' name='B2'></td></tr>
     <input type='hidden' name='add' value='2'></form></table>$skin_tablefooter</center>";
 }
-echo "<p><font size='$font_s' face='$font_face' color='$font_main_color'>If you have any problems, please seek support at <a href='http://forum.myupb.com/' target='_blank'>myupb.com's forums!</a></font></p>";
-if($_POST["add"] >= 1) require_once('./includes/footer.php');
+echo "<p>If you have any problems, please seek support at <a href='http://forum.myupb.com/' target='_blank'>myupb.com's forums!</a></font></p>";
+if(@$_POST["add"] >= 1) require_once('./includes/footer.php');
 ?>

@@ -27,7 +27,9 @@ list.options[i] = new Option(items[i], values[i]);
 list.focus();
 }
 
-function submitorderform(type) {
+function submitorderform(type,status) {
+if (status == 'full')
+{
 if (type == "category")
   var list = document.form.admin_catagory_sorting;
 else
@@ -40,5 +42,13 @@ theList += "list" + list.options[i].value + "=" + list.options[i].text;
 if (i != list.options.length-1) theList += "&";
 }
 document.form.neworder.value = theList;
+}
 document.form.submit();
 }
+
+function swap(source) {
+    if (document.images) {
+        document.images['myImage'].src = source;
+    }
+}
+

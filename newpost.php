@@ -184,7 +184,13 @@ tempobj.disabled=true
         <table border=1>
         <tr>
         <td valign=top>
-    <table border='0' width='100%'><tr><td><font size='$font_m' face='$font_face' color='$font_color_main'>Smilies:</font></td><td align='right'><font size='$font_m' face='$font_face' color='$font_color_main'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></font></td></tr>
+    <table border='0' width='100%'><tr><td><font size='$font_m' face='$font_face' color='$font_color_main'>Smilies:</font></td>";
+    $bdb = new tdb(DB_DIR.'/','bbcode.tdb');
+    $bdb->setFp("smilies","smilies");
+    $smilies = $bdb->query("smilies","id>'0'&&type='more'");
+    if ($smilies)
+    echo "<td align='right'><font size='$font_m' face='$font_face' color='$font_color_main'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></font></td>";
+    echo "</tr>
 <tr><td colspan='2' bgcolor='$table1'>".getSmilies()."</td></tr></table></table></tr></td>";
     if(!(($_CONFIG["fileupload_size"] == "0" || $_CONFIG["fileupload_size"] == "") && $_CONFIG["fileupload_location"] == "")) {
         echo "<tr><td bgcolor='$table1' colspan=2><font size='$font_m' face='$font_face' color='$font_color_main'>

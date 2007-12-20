@@ -172,6 +172,7 @@ var http_request = false;
       div = divname;
       //alert(div)
       var poststr = "newedit=" + escape(Utf8.encode( document.getElementById("newedit").value ));
+      poststr += "&forumid="+escape(Utf8.encode(document.getElementById("forumid").value));
       poststr += "&userid="+escape(Utf8.encode( document.getElementById("userid").value ));
       poststr += "&threadid="+escape(Utf8.encode( document.getElementById("threadid").value ));
       poststr += "&postid="+escape(Utf8.encode( document.getElementById("postid").value ));
@@ -195,10 +196,12 @@ var http_request = false;
       makePOSTRequest('quickreply.php', poststr,'reply');
    }
    
-   function getPost(postid,threadid,userid,divname)
+   function getPost(forumid,postid,threadid,userid,divname)
    {  
       div = divname;
-      var poststr = "postid="+escape(Utf8.encode(postid));
+      
+      var poststr = "forumid="+escape(Utf8.encode(forumid));
+      poststr += "&postid="+escape(Utf8.encode(postid));
       poststr += "&userid="+escape(Utf8.encode(userid));
       poststr += "&threadid="+escape(Utf8.encode(threadid));
       poststr += "&divname="+escape(Utf8.encode(divname));

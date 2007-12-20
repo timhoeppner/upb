@@ -63,11 +63,14 @@ if($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
     echo "onClick=\"change_order(this.form.fsort.selectedIndex,-1,'forum')\">&nbsp;&nbsp;&nbsp;";
     echo "<input type=\"button\" value=\"Move Down\"";
     echo "onClick=\"change_order(this.form.fsort.selectedIndex,+1,'forum')\">";
+                    echo "</td></tr><tr><td colspan='2'><input type='button' onClick=\"submitorderform('forum','full')\" value='Edit'></td></tr>";
                     }
                     else
-                      echo "<tr><td colspan='2'>There are no forums in this category";                    
-                    echo "</td></tr><tr><td colspan='2'><input type='button' onClick=\"submitorderform('forum')\" value='Edit'></td></tr>
-                    </table>
+                    {  
+                    echo "<tr><td colspan='2'>There are no forums in this category";                    
+                    echo "</td></tr><tr><td colspan='2'><input type='button' onClick=\"submitorderform('forum','empty')\" value='Edit'></td></tr>";
+                    }
+                    echo "</table>
                     
                     </table></form>";
                 }

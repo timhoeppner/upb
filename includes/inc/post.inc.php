@@ -5,7 +5,6 @@
 // Version: 2.0
 
 //Special Posting Functions
-
 function message_icons() {
     $dir = opendir("./icon");
     $r = "";
@@ -16,7 +15,7 @@ function message_icons() {
             $fileext = end($fileext);
             if ($fileext == "gif" or $fileext =="jpg") {
                 if($file != "icon1.gif"){
-                $r .= "<input type=radio name=icon value='$file'><img src='./icon/$file'>";
+                $r .= "<input type=radio name=icon value='$file'><img src='./icon/$file' border='0'>";
                 }
             }
         }
@@ -44,32 +43,25 @@ function filterLanguage($text, $censor) {
 }
 
 function UPBcoding($text) {
+    
+    $tdb = new tdb(DB_DIR.'/', 'bbcode.tdb');
+    
+    $tdb->setFP("smilies","smilies");
     $msg = $text;
+    
+    $smilies = array();
     //start emoticons
-    $msg = str_replace(" :)", " <img src='smilies/smile.gif'> ", $msg);
-    $msg = str_replace(" :(", " <img src='smilies/frown.gif'> ", $msg);
-    $msg = str_replace("&quot;", "\"", $msg);
-    $msg = str_replace(" ;)", " <img src='smilies/wink.gif'> ", $msg);
-    $msg = str_replace("\"", "&quot;", $msg);
-    $msg = str_replace(" :P", " <img src='smilies/tongue.gif'> ", $msg);
-    $msg = str_replace(" :o", " <img src='smilies/eek.gif'> ", $msg);
-    $msg = str_replace(" :D", " <img src='smilies/biggrin.gif'> ", $msg);
-    $msg = str_replace(" (C)", " <img src='smilies/cool.gif'> ", $msg);
-    $msg = str_replace(" (M)", " <img src='smilies/mad.gif'> ", $msg);
-    $msg = str_replace(" (confused)", " <img src='smilies/confused.gif'> ", $msg);
-    $msg = str_replace(" (crazy)", " <img src='smilies/crazy.gif'> ", $msg);
-    $msg = str_replace(" (hm)", " <img src='smilies/hm.gif'> ", $msg);
-    $msg = str_replace(" (hmmlaugh)", " <img src='smilies/hmmlaugh.gif'> ", $msg);
-    $msg = str_replace(" (offtopic)", " <img src='smilies/offtopic.gif'> ", $msg);
-    $msg = str_replace(" (blink)", " <img src='smilies/blink.gif'> ", $msg);
-    $msg = str_replace(" (rofl)", " <img src='smilies/rofl.gif'> ", $msg);
-    $msg = str_replace(" (R)", " <img src='smilies/redface.gif'> ", $msg);
-    $msg = str_replace(" (E)", " <img src='smilies/rolleyes.gif'> ", $msg);
-    $msg = str_replace(" (wallbash)", " <img src='smilies/wallbash.gif'> ", $msg);
-    $msg = str_replace(" (noteeth)", " <img src='smilies/noteeth.gif'> ", $msg);
-    $msg = str_replace(" LOL", " <img src='smilies/lol.gif'> ", $msg);
-    //end emoticons
+    $smilies = $tdb->query("smilies","id>'0'");
 
+    foreach ($smilies as $smiley)
+    {
+      $msg = str_replace($smiley['bbcode'],$smiley['replace'],$msg);
+    }
+        
+    //escape characters to prevent data injection
+    //$msg = str_replace("&quot;", "\"", $msg);
+    //$msg = str_replace("\"", "&quot;", $msg);
+    
     //bullet points
     $msg = str_replace("[ul]", "<ul>", $msg);
     $msg = str_replace("[/ul]", "</ul>", $msg);
@@ -170,66 +162,16 @@ function bbcodebuttons() {
 
 function getSmilies()
 {
-$smilies = "<A HREF=\"javascript:setsmilies(' :) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/smile.gif BORDER=0 ALT=:)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' :( ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/frown.gif BORDER=0 ALT=:(></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' ;) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/wink.gif BORDER=0 ALT=;)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' :P ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/tongue.gif BORDER=0 ALT=:P></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' :o ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/eek.gif BORDER=0 ALT=:o></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' :D ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/biggrin.gif BORDER=0 ALT=:D></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' (C) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/cool.gif BORDER=0 ALT=(C)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' (M) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/mad.gif BORDER=0 ALT=(M)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' (R) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/redface.gif BORDER=0 ALT=(R)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' (E) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/rolleyes.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' LOL ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/lol.gif BORDER=0 ALT=LOL></A>
-&nbsp;&nbsp;&nbsp;&nbsp;<br>
-
-<A HREF=\"javascript:setsmilies(' (offtopic) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/offtopic.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' (rofl) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/rofl.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' (confused) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/confused.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' (crazy) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/crazy.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' (hm) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/hm.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' (hmmlaugh) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/hmmlaugh.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' (blink) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/blink.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' (wallbash) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/wallbash.gif BORDER=0 ALT=(E)></A>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF=\"javascript:setsmilies(' (noteeth) ','message')\" ONFOCUS=\"filter:blur()\">
-        <IMG SRC=smilies/noteeth.gif BORDER=0 ALT=(E)></A>";
-return $smilies;
+  $tdb = new tdb(DB_DIR.'/', 'bbcode.tdb');
+  $tdb->setFP("smilies","smilies");
+  $smilies = $tdb->query("smilies","id>'0'&&type='main'");
+  //var_dump($smilies);
+  foreach ($smilies as $key => $smiley)
+  {
+    $output .= "<A HREF=\"javascript:setsmilies(' ".$smiley['bbcode']." ','message')\" ONFOCUS=\"filter:blur()\">".$smiley['replace']."</A>&nbsp;&nbsp;&nbsp;&nbsp;";
+    if ($key%10 == 9)
+      $output .= "<br>";
+  }   
+  return $output;
 }
 ?>

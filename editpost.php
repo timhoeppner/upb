@@ -56,7 +56,13 @@ if(!empty($_POST) and $_POST["submit"] == "Edit") {
         <table cellspacing=1 cellpadding=3 border=0 bgcolor='$border' align='left'>
     <tr>
     <td valign='top' bgcolor='$table1' >
-    <table border='0' width='100%'><tr><td><font size='$font_m' face='$font_face' color='$font_color_main'>Smilies:</font></td><td align='right'><font size='$font_m' face='$font_face' color='$font_color_main'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></font></td></tr>
+    <table border='0' width='100%'><tr><td><font size='$font_m' face='$font_face' color='$font_color_main'>Smilies:</font></td>";
+    $bdb = new tdb(DB_DIR.'/','bbcode.tdb');
+    $bdb->setFp("smilies","smilies");
+    $smilies = $bdb->query("smilies","id>'0'&&type='more'");
+    if ($smilies)
+    echo "<td align='right'><font size='$font_m' face='$font_face' color='$font_color_main'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></font></td>";
+    echo "</tr>
 <tr><td colspan='2' bgcolor='$table1'>
 <font size='$font_m' face='$font_face' color='$font_color_main'>".getSmilies()."</td></tr></table></td></tr></table>
             

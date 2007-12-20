@@ -266,8 +266,8 @@ Add email to UPB discussion forums mailing list?</td>
       <input type='text' name='u_loca' value='".$rec[0]["location"]."'></font>
     </td>
   </tr>
-
- <tr>
+";
+ /*<tr>
     <td bgcolor='$table1' width=80% valign='top'><font size='$font_m' face='$font_face' color='$font_color_main'><b>avatar</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <a href=\"javascript: window.open('about_image.php','','status=no, width=400,height=300'); void('');\">
 <font size='1' face='$font_face'>read this for avatar info!</a></font></td>
@@ -276,9 +276,52 @@ Add email to UPB discussion forums mailing list?</td>
         if(@$rec[0]["avatar"] != "") echo "<img src=\"".$rec[0]["avatar"]."\" border='0' width='".$rec[0]['avatar_width']."' height='".$rec[0]['avatar_height']."'><br>";
 
         echo "
-    </td></tr>
+    </td></tr>";
+*/
+//START RIPPER
+echo "
+<tr>
+	
 
-  <tr>
+		<td bgcolor='$table1' width=80% valign='top'><font size='$font_m' face='$font_face' color='$font_color_main'>Current avatar<br>Select a new avatar";
+
+		if(@$rec[0]["avatar"] != "") echo "<img src=\"".$rec[0]["avatar"]."\" border='0' width='".$rec[0]['avatar_width']."' height='".$rec[0]['avatar_height']."'><br />";
+	else echo "<img src='images/avatars/noavatar.gif' alt='' title='' />";
+
+		echo "</td>
+		<td bgcolor='$table1' width=20% valign='top'><table cellspacing='0px' style='width:100%;'>
+			<tr>
+				<td style='text-align:center;width:50%;'>
+
+<img src='images/avatars/blank.gif' name='myImage' alt='' title='' /></td>
+<td>
+
+
+<select size='5' name='avatar' onChange='swap(this.options[selectedIndex].value)'>";
+
+function returnimages($dirname="images/avatars/") {
+$pattern="\.(jpg|jpeg|png|gif|bmp)$";
+$files = array();
+$curimage=0;
+if($handle = opendir($dirname)) {
+	while(false !== ($file = readdir($handle))){
+			if(eregi($pattern, $file)){
+				echo "<option value ='images/avatars/".$file."'>".$file."</option>";
+				$curimage++;
+			}
+	}
+
+	closedir($handle);
+}
+return($files);
+}
+
+echo "" . "\n";
+returnimages();
+
+	echo "</select></td></tr></table></td>
+	</tr>";//END RIPPER
+  echo "<tr>
     <td bgcolor='$table1' width=80%><font size='$font_m' face='$font_face' color='$font_color_main'><b>homepage</b></font></td>
     <td bgcolor='$table1' width=80%><font size='$font_m' face='$font_face' color='$font_color_main'>
       <input type='text' name='u_site' value='".$rec[0]["url"]."'></font>

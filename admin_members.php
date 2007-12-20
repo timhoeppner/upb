@@ -141,7 +141,7 @@ if($_GET["action"] == "edit") {
     echo "<tr><td colspan='3' bgcolor='$header' bgcolor='$header'><B><font size='$font_l' face='$font_face' color='$font_color_header'><center>";  require_once("admin_navigation.php");  echo"</center></font></b></td></tr>
     </table><table width='".$_CONFIG["table_width_main"]."' cellspacing=1 cellpadding=3 border=0 bgcolor='$border'>
 
-    <tr><td colspan='8' bgcolor='$header'><B><font size='$font_l' face='$font_face' color='$font_color_header'>Manage Members</font></b></td></tr>
+    <tr><td colspan='10' bgcolor='$header'><B><font size='$font_l' face='$font_face' color='$font_color_header'>Manage Members</font></b></td></tr>
     <tr><th bgcolor='$table1' width=5%><font size='$font_m' face='$font_face' color='$font_color_main'>ID</font></td>
         <th bgcolor='$table1' width=20%><font size='$font_m' face='$font_face' color='$font_color_main'>Username</font></td>
         <th bgcolor='$table1' width=15%><font size='$font_m' face='$font_face' color='$font_color_main'>User Power</font></td>

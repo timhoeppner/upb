@@ -131,10 +131,12 @@ class configSettings extends tdb {
                     if($nameRef[$oriVar["name"]]["value"] != $oriVar["value"]) $this->edit("config", $oriVar["id"], $nameRef[$oriVar["name"]], false);
                 }
             } else {
-                if($varArr[$oriVar["name"]] != "" && $varArr[$oriVar["name"]] != $oriVar["value"]) {
+                if($varArr[$oriVar["name"]] != "" || ($oriVar["name"] == "servicemessage")) {
+                if ($varArr[$oriVar["name"]] != $oriVar["value"]) {
 //echo "Changing Value of ".$oriVar["name"]." from \"<i>".htmlentities($oriVar["value"])."</i>\" to \"<i>".htmlentities($varArr[$oriVar["name"]])."</i>\"<br>";
                     $this->edit("config", $oriVar["id"], array("value" => $varArr[$oriVar["name"]]), false);
                     $this->edit("ext_config", $oriVar["id"], array("value" => $varArr[$oriVar["name"]]), false);
+                    }
                 }
             }
         }

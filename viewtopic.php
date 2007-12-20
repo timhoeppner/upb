@@ -131,7 +131,7 @@ foreach($pRecs as $key => $pRec) {
     if(($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) 
     {
      
-      $edit = "<a href=\"javascript:getPost('{$pRec["id"]}','{$_GET["t_id"]}','{$pRec["user_id"]}','{$_GET["t_id"]}-{$pRec["id"]}');\"><img src='".$_CONFIG["skin_dir"]."/icons/pb_edit.JPG' alt='Edit Post' border='0'></a>";
+      $edit = "<a href=\"javascript:getPost('{$_GET["id"]}','{$pRec["id"]}','{$_GET["t_id"]}','{$pRec["user_id"]}','{$_GET["id"]}-{$_GET["t_id"]}-{$pRec["id"]}');\"><img src='".$_CONFIG["skin_dir"]."/icons/pb_edit.JPG' alt='Edit Post' border='0'></a>";
     }
     else $edit = "";
 
@@ -185,7 +185,7 @@ foreach($pRecs as $key => $pRec) {
     if($user[0]["icq"] != "") echo "&nbsp;<a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$user[0]["icq"]."&action=message'><img src='images/icq.gif' border='0' alt='ICQ: ".$user[0]["icq"]."'></a>&nbsp;&nbsp;";
     if($user[0]["yahoo"] != "") echo "&nbsp;<a href='http://edit.yahoo.com/config/send_webmesg?.target=".$user[0]["yahoo"]."&.src=pg'><img border=0 src='http://opi.yahoo.com/online?u=".$user[0]["yahoo"]."&m=g&t=0' alt='Y!: ".$user[0]["yahoo"]."'></a>";
     echo "</p></font></font>";
-    echo "<div name='edit{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['t_id']}-{$pRec['id']}'>";
+    echo "<div name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>";
     if(!empty($pRec['edited_by']) && !empty($pRec['edited_by_id']) && !empty($pRec['edited_date'])) 
       echo '<table width="95%" border="1" cellspacing="0" cellpadding="3"><tr><td>Last edited by:<br> <a href="profile.php?action=get&id='.$pRec['edited_by_id'].'" target="_new">'.$pRec['edited_by'].'</a> on '.gmdate("M d, Y g:i:s a", user_date($pRec['edited_date'])).'</td></tr></table>';
     echo "</div>";
@@ -206,7 +206,7 @@ foreach($pRecs as $key => $pRec) {
     </tr></table>
 
     <table width=100% cellspacing=0 cellpadding=0><tr><td height=1 bgcolor='$divider'></td></tr></table><br>";    
-    echo "<div id='{$_GET['t_id']}-{$pRec['id']}' name='{$_GET['t_id']}-{$pRec['id']}'>$msg</div>
+    echo "<div id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' name='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>$msg</div>
     </td></tr><tr valign='bottom'>
     <td height='1%'><p> &nbsp; </p>".$sig."</td>
     </tr>

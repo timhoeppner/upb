@@ -84,7 +84,6 @@ function createBBtag_nav( openerTag , closerTag , areaId ) {
 
     txtArea.value = preString + newString + postString;
 		txtArea.focus();
-		return;
 	}
 	else {
 		var offset = txtArea.selectionStart;
@@ -95,91 +94,51 @@ function createBBtag_nav( openerTag , closerTag , areaId ) {
 		txtArea.selectionStart = offset + openerTag.length;
 		txtArea.selectionEnd = offset + openerTag.length;
 		txtArea.focus();
-		return;
-	}
+	}	
+  return;
 }
 
-//function setsmilies chooses the correct function for the browser to enter the smilie tag
-//Tag is the smilie code, areaID is the name of the textarea
 //This function is only used for smilies that appear under the textbox
 
-function setsmilies(Tag,areaId)
+function setsmilies(Tag,areaId) 
 {
-	if(isIE && isWin) {
-		setsmilies_IE( Tag , areaId );
-	}
-	else {
-		setsmilies_nav( Tag ,areaId );
-	}
-	return;
+  var pos = document.getElementById(areaId).selectionStart;
+  var scrollPos = document.getElementById(areaId).scrollTop
+  if(document.selection) 
+  {
+    if( !document.getElementById(areaId).focus() )
+      document.getElementById(areaId).focus();
+    document.selection.createRange().text=Tag;
+  }
+  else 
+  {
+    document.getElementById(areaId).value =
+    document.getElementById(areaId).value.substr(0, pos) + Tag + document.getElementById(areaId).value.substr(pos);
+    document.getElementById(areaId).selectionStart = pos + Tag.length;
+    document.getElementById(areaId).selectionEnd = pos + Tag.length;
+  }
+  document.getElementById(areaId).scrollTop = scrollPos;
 }
 
-//function setsmilies_nav enters the smilie tag for IE browsers
-//Tag is the smilie code, areaID is the name of the textarea
-//This function is only used for smilies that appear under the textbox
+//This function is used for smilies that appear on the 'more smilies' page
 
-function setsmilies_IE( Tag ,areaId ) {
-	var txtArea = document.getElementById(areaId);
-	var aSelection = document.selection.createRange().text;
-	var range = txtArea.createTextRange();
-
-	if(aSelection) {
-		document.selection.createRange().text = Tag + aSelection;
-		txtArea.focus();
-		range.move('textedit');
-		range.select();
-	}
-	else {
-		var oldStringLength = range.text.length + Tag.length;
-		txtArea.value += Tag;
-		txtArea.focus();
-		range.move('character',oldStringLength);
-		range.collapse(false);
-		range.select();
-	}
-	return;
-}
-
-//function setsmilies_nav enters the smilie tag for non-IE browsers
-//Tag is the smilie code, areaID is the name of the textarea
-//This function is only used for smilies that appear under the textbox
-
-function setsmilies_nav( Tag , areaId ) {
-	var txtArea = document.getElementById(areaId);
-	if (txtArea.selectionEnd && (txtArea.selectionEnd - txtArea.selectionStart > 0) ) {
-		var preString = (txtArea.value).substring(0,txtArea.selectionStart);
-		var newString = Tag + (txtArea.value).substring(txtArea.selectionStart,txtArea.selectionEnd);
-		var postString = (txtArea.value).substring(txtArea.selectionEnd);
-		txtArea.value = preString + newString + postString;
-		txtArea.focus();
-	}
-	else {
-		var offset = txtArea.selectionStart;
-		var preString = (txtArea.value).substring(0,offset);
-		var newString = Tag;
-		var postString = (txtArea.value).substring(offset);
-		txtArea.value = preString + newString + postString;
-		txtArea.selectionStart = offset + Tag.length;
-		txtArea.selectionEnd = offset + Tag.length;
-		txtArea.focus();
-	}
-	return;
-}
-
-//function addsmilies enters the smilie tag for non-IE browsers
-//Tag is the smilie code
-//This function is only used for smilies that appear on the 'more smilies' page
-
-function addsmilies(Tag)
+function moresmilies(Tag)
 {
-  var offset = opener.document.newentry.message.selectionStart;
-	var preString = (opener.document.newentry.message.value).substring(0,offset);
-	var newString = '[img]' + Tag+ '[/img]';
-	var postString = (opener.document.newentry.message.value).substring(offset);
-	opener.document.newentry.message.value = preString + newString + postString;
-	opener.document.newentry.message.selectionStart = offset + Tag.length;
-	opener.document.newentry.message.selectionEnd = offset + Tag.length;
-	opener.document.newentry.message.focus();
+  var pos = opener.document.newentry.message.selectionStart;
+  var scrollPos = opener.document.newentry.message.scrollTop
+  if(document.selection) 
+  {
+    if( !opener.document.newentry.message.focus() )
+      opener.document.newentry.message.focus();
+    opener.document.selection.createRange().text=Tag;
+  }
+  else 
+  {
+    opener.document.newentry.message.value = opener.document.newentry.message.value.substr(0, pos) + Tag +      opener.document.newentry.message.value.substr(pos);
+    opener.document.newentry.message.selectionStart = pos + Tag.length;
+    opener.document.newentry.message.selectionEnd = pos + Tag.length;
+  }
+  opener.document.newentry.message.scrollTop = scrollPos;
 }
 
 //function add_link adds urls, images or emails to the textbox

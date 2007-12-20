@@ -75,7 +75,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
                                 echo "<input type=\"checkbox\" name=\"".$configVars[$i]["name"]."\" value=\"1\" size='40'".$checked.">";
                                 break 1;
                                 case "textarea":
-                                echo "<textarea cols=30 rows=10 name=\"".$configVars[$i]["name"]."\">".$configVars[$i]["value"]."</textarea>";
+                                echo "<textarea cols=30 rows=10 name=\"".$configVars[$i]["name"]."\"></textarea>";
                                 break 1;
                                 case "link":
                                 case "url":
@@ -121,7 +121,10 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
                 echo "</tr>
                 ";
             }
-            echo "<tr><td bgcolor='$table1' width=80% colspan=2><input type=button onClick=\"submitorderform('category')\" value='Edit'></form></td></tr>";
+            if ($_GET['action'] == "config")
+            echo "<tr><td bgcolor='$table1' width=80% colspan=2><input type=button onClick=\"submitorderform('category','full')\" value='Edit'></form></td></tr>";
+            else
+            echo "<tr><td bgcolor='$table1' width=80% colspan=2><input type=submit value='Edit'></form></td></tr>";
 
 /*
 print '<pre>'; print_r($configVars);

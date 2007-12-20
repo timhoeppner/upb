@@ -101,7 +101,9 @@ class upload extends tdb {
         if(headers_sent()) { $this->sendError(E_USER_NOTICE, "Headers have already been sent, unable to dump file", __LINE__); return false; }
         
         // Dump the file to the browser
+        
         header("Content-type: application/octet-stream");
+        header('Content-Length: ' . $this->file["size"]);
         header("Content-disposition: attachment; filename=".$this->file["name"]);
         echo $this->file["data"];
     }
