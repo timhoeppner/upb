@@ -284,4 +284,22 @@ function lastvisit($id='')
   fclose($f);
   return $lv;
 }
+
+function strstr_after($haystack, $needle, $case_insensitive = false) {
+    $strpos = ($case_insensitive) ? 'stripos' : 'strpos';
+    $pos = $strpos($haystack, $needle);
+    if (is_int($pos)) {
+        return substr($haystack, $pos + strlen($needle));
+    }
+    // Most likely false or null
+    return $pos;
+}
+
+function strmstr($haystack, $needle, $before_needle=FALSE) {
+ //Find position of $needle or abort
+ if(($pos=strpos($haystack,$needle))===FALSE) return FALSE;
+
+ if($before_needle) return substr($haystack,0,($pos-1)+strlen($needle));
+ else return substr($haystack,$pos);
+}
 ?>

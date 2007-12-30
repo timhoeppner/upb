@@ -152,6 +152,8 @@ $mem_last = $tdb->listRec("users", $mem_total, 1);
 $mt = explode(' ', microtime()); 
 $script_end_time = $mt[0] + $mt[1]; 
 
+require_once('./shoutbox.php');
+
 echoTableHeading("Forum Statistics", $_CONFIG);
 echo "      <table width='".$_CONFIG["table_width_main"]."' border='0' cellspacing='1' cellpadding='4' align='center' bgcolor=#14213f>
      <tr>

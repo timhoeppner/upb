@@ -283,7 +283,7 @@ echo "
 <tr>
 	
 
-		<td bgcolor='$table1' width=80% valign='top'><font size='$font_m' face='$font_face' color='$font_color_main'>Current avatar<br>Select a new avatar";
+		<td bgcolor='$table1' width=80% valign='top'><font size='$font_m' face='$font_face' color='$font_color_main'>Current avatar<br>Select a new avatar<br>Posts:{$rec[0]["posts"]}";
 
 		if(@$rec[0]["avatar"] != "") echo "<img src=\"".$rec[0]["avatar"]."\" border='0' width='".$rec[0]['avatar_width']."' height='".$rec[0]['avatar_height']."'><br />";
 	else echo "<img src='images/avatars/noavatar.gif' alt='' title='' />";

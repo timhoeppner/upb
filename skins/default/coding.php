@@ -39,7 +39,8 @@ function echoTableHeading($display, $_CONFIG) { //set $display to 85
     	           	</tr>
     		   	</tbody>
     		   	</table>";
-}$skin_tablefooter="<table cellspacing=0 cellpadding=0 width='".$_CONFIG["table_width_main"]."' align=center border=0>
+}
+$skin_tablefooter="<table cellspacing=0 cellpadding=0 width='".$_CONFIG["table_width_main"]."' align=center border=0>
 
                    <tbody> 
 
