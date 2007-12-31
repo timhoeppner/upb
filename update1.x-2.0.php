@@ -979,7 +979,7 @@ if(DEBUGGING_MODE) fwrite($debug_to_file_resource, "Updated topic/post count in 
     foreach($tables1 as $table) {
         if(substr($table, -7) == "_topics") {
             $posts->setFp("topic", $table);
-            $posts->sort("topic", "last_post", "DESC");
+            $posts->sortAndBuild("topic", "last_post", "DESC");
         }
     }
 
@@ -987,7 +987,7 @@ if(DEBUGGING_MODE) fwrite($debug_to_file_resource, "Updated topic/post count in 
     $tables2 = $privmsg->getTableList();
     foreach($tables2 as $table) {
         $privmsg->setFp("pm", $table);
-        $privmsg->sort("pm", "date", "DESC");
+        $privmsg->sortAndBuild("pm", "date", "DESC");
     }
     if($errorHandler->return_howmany() != 0) $error_finish = "<b>Unable to Sort Topics...</b>";
     else $finish = "Sorting Topics and Private Messages to be used...Done!";
@@ -1072,19 +1072,21 @@ function echoTableHeading($display) { //set $display to 85
       "badwords.dat",
       "banneduser.dat",
       "blockedlist.dat",
+      "chatconfig.dat",
       "config2.php",
       "config_org.dat",
       "constants.php",
       "hits.dat",
       "hits_record.dat",
       "hits_today.dat",
-      "ip.log",
+      "iplog",
       "lastvisit.dat",
       "main.tdb",
       "new_pm.dat",
       "paid.dat",
       "posts.tdb",
       "privmsg.tdb",
+      "search.def",
       "smilies.dat",
       "rssdata.dat",
       "rssdata.id",

@@ -1,177 +1,122 @@
 <?php
-// Ultimate PHP Board
-// Author: PHP Outburst
-// Website: http://www.myupb.com
-// Version: 2.0
-
-//Special Posting Functions
-function message_icons() {
-    $dir = opendir("./icon");
-    $r = "";
-    while($file = readdir($dir)) {
-        $str = strpos($file, "con", 0);
-        if ($str == "1") {
-            $fileext = explode(".", $file);
-            $fileext = end($fileext);
-            if ($fileext == "gif" or $fileext =="jpg") {
-                if($file != "icon1.gif"){
-                $r .= "<input type=radio name=icon value='$file'><img src='./icon/$file' border='0'>";
-                }
-            }
-        }
-    }
-    return $r;
-}
-
-function format_text($text) {
-    $text = str_replace("\n", "<br>", $text);
-    $text = str_replace("  ", "&nbsp; ", $text);
-    return $text;
-}
-
-function filterLanguage($text, $censor) {
-    $msg = $text;
-    //start bad words filter
-    $words = file(DB_DIR."/badwords.dat");
-    deleteWhiteIndex($words);
-    for($pp=0;$pp<count($words);$pp++) {
-        $msg = eregi_replace(" ".$words[$pp]." ", " ".$censor." ", $msg);
-        //$msg = eregi_replace($words[$pp]." ", $censor." ", $msg);
-    }
-    //end bad words filter
-    return $msg;
-}
-
-function UPBcoding($text) {
-    
-    $tdb = new tdb(DB_DIR.'/', 'bbcode.tdb');
-    
-    $tdb->setFP("smilies","smilies");
-    $msg = $text;
-    
-    $smilies = array();
-    //start emoticons
-    $smilies = $tdb->query("smilies","id>'0'");
-
-    foreach ($smilies as $smiley)
-    {
-      $msg = str_replace($smiley['bbcode'],$smiley['replace'],$msg);
-    }
-        
-    //escape characters to prevent data injection
-    //$msg = str_replace("&quot;", "\"", $msg);
-    //$msg = str_replace("\"", "&quot;", $msg);
-    
-    //bullet points
-    $msg = str_replace("[ul]", "<ul>", $msg);
-    $msg = str_replace("[/ul]", "</ul>", $msg);
-    $msg = str_replace("[ol]", "<ol>", $msg);
-    $msg = str_replace("[/ol]", "</ol>", $msg);
-    $msg = str_replace("[*]", "<li>", $msg);
-    //$msg = str_replace("[/*]", "</li>", $msg);
-
-    //start script for delete.php
-    $msg = str_replace("(emailadmin)", "<a href='email.php?id=$adminid' target='_blank'><img src='images/email.gif' border='0'></a>", $msg);
-    //end script for delete.php
-    //start upb code
-    $msg = preg_replace("/\[center\](.*?)\[\/center\]/si", "<div align='center'>\\1</div>", $msg);
-    $msg = preg_replace("/\[left\](.*?)\[\/left\]/si", "<div align='left'>\\1</div>", $msg);
-    $msg = preg_replace("/\[right\](.*?)\[\/right\]/si", "<div align='right'>\\1</div>", $msg);
-    $msg = preg_replace("/\[justify\](.*?)\[\/justify\]/si", "<div align='justify'>\\1</div>", $msg);
-    $msg = preg_replace("/\[move\](.*?)\[\/move\]/si", "<marquee>\\1</marquee>", $msg);
-    $msg = preg_replace("/\[color=(.*?)\](.*?)\[\/color\]/si", "<span style='color:\\1;'>\\2</span>", $msg);
-    $msg = preg_replace("/\[font=(.*?)\](.*?)\[\/font\]/si", "<span style='font-family:\\1;'>\\2</span>", $msg);
-    $msg = preg_replace("/\[size=(.*?)\](.*?)\[\/size\]/si", "<span style='font-size:\\1px;'>\\2</span>", $msg);
-    $msg = preg_replace("/\[b\](.*?)\[\/b\]/si", "<span style='font-weight:bold;'>\\1</span>", $msg);
-    $msg = preg_replace("/\[u\](.*?)\[\/u\]/si", "<span style='text-decoration:underline;'>\\1</span>", $msg);
-    $msg = preg_replace("/\[i\](.*?)\[\/i\]/si", "<span style='font-style: italic;'>\\1</span>", $msg);
-    $msg = preg_replace("/\[url\](http:\/\/)?(.*?)\[\/url\]/si", "<a href=\"\\1\\2\" target='_blank'>\\2</a>", $msg);
-    $msg = preg_replace("/\[url=(http:\/\/)?(.*?)\](.*?)\[\/url\]/si", "<a href=\"\\1\\2\" target='_blank'>\\3</a>", $msg);
-    $msg = preg_replace("/\[email\](.*?)\[\/email\]/si", "<a href=\"mailto:\\1\">\\1</a>", $msg);
-    $msg = preg_replace("/\[email=(.*?)\](.*?)\[\/email\]/si", "<a href=\"mailto:\\1\">\\2</a>", $msg);
-    $msg = preg_replace("/\[img\](.*?)\[\/img\]/si", "<img src=\"\\1\" border=\"0\">", $msg);
-    $msg = preg_replace("/\[offtopic\](.*?)\[\/offtopic\]/si", "<font color='blue' size='$font_s' face='$font_face'>Offtopic: \\1</font>", $msg);
-    $msg = preg_replace("/\[small\](.*?)\[\/small\]/si", "<small>\\1</small>", $msg);
-    $msg = preg_replace("/\[quote\](.*?)\[\/quote\]/si", "<blockquote><font size='1' face='tahoma'>Quote:</font><hr>\\1<br><hr></blockquote>", $msg);
-    $msg = preg_replace("/\[quote=(.*?)\](.*?)\[\/quote\]/si", "<blockquote><font size='1' face='tahoma'>Quote: \\1</font><hr>\\2<br><hr></blockquote>", $msg);
-    $msg = preg_replace("/\[code\](.*?)\[\/code\]/si", "<font color='red'>Code:<hr><pre>\\1<hr></pre></font>", $msg);
-    
-    while (true)
-    {
-      $tmp_msg = $msg;
-      $search = array('#<span(\s[^>]*)><span(\s[^>]*)>#i','#</span></span>#i');
-      $replace = array('<span\\1\\2>','</span>');
-      $msg = preg_replace($search, $replace, $msg);
-      $msg = preg_replace("/style='(.*?)\' style='(.*?)\'/si","style='\\1\\2'",$msg); 
-      if ($msg == $tmp_msg)
-        break;
-    }
-    return $msg;
-    //end upb code
-}
-
-function bbcodebuttons() {
-    $bb_buttons = "<p>";
-    $bb_buttons .= "<select onChange=\"bb_dropdown(this.form.colors,'colors')\" name='colors'>";
-    $bb_buttons .= "<option value='' selected>Choose color</option>";
-    $bb_buttons .= "<option value='#FFFFFF'>White</option>";
-    $bb_buttons .= "<option value='#FFFF00'>Yellow</option>";
-    $bb_buttons .= "<option value='#008000'>Green</option>";
-    $bb_buttons .= "<option value='#800080'>Purple</option>";
-    $bb_buttons .= "<option value='#FF0000'>Red</option>";
-    $bb_buttons .= "<option value='#0000FF'>Blue</option>";
-    $bb_buttons .= "</select> ";
-    $bb_buttons .= "<select onChange=\"bb_dropdown(this.form.typeface,'typeface')\" name='typeface'>";
-    $bb_buttons .= "<option value='' selected>Choose font</option>";
-    $bb_buttons .= "<option value='arial'>Arial</option>";
-    $bb_buttons .= "<option value='Times New Roman'>Times New Roman</option>";
-    $bb_buttons .= "<option value='Helvetica'>Helvetica</option>";
-    $bb_buttons .= "<option value='Garamond'>Garamond</option>";
-    $bb_buttons .= "<option value='Courier'>Courier</option>";
-    $bb_buttons .= "<option value='Verdana'>Verdana</option>";
-    $bb_buttons .= "</select> ";
-    $bb_buttons .= "<select onChange=\"bb_dropdown(this.form.size,'size')\" name='size'>";
-    $bb_buttons .= "<option value='' selected>Choose font size</option>";
-    $bb_buttons .= "<option value='6'>6px</option>";
-    $bb_buttons .= "<option value='12'>12px</option>";
-    $bb_buttons .= "<option value='18'>18px</option>";
-    $bb_buttons .= "<option value='24'>24px</option>";
-    $bb_buttons .= "</select> ";
-    $bb_buttons .= "<p>";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[b]','[/b]','message')\"><img src='./images/bbcode/bold.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[i]','[/i]','message')\"><img src='./images/bbcode/italic.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[u]','[/u]','message')\"><img src='./images/bbcode/underline.gif' border='0'></a>";
-    $bb_buttons .= "<img src='./images/bbcode/separator.gif' border='0'>";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[left]','[/left]','message')\"><img src='./images/bbcode/left.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[center]','[/center]','message')\"><img src='./images/bbcode/center.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[right]','[/right]','message')\"><img src='./images/bbcode/right.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[justify]','[/justify]','message')\"><img src='./images/bbcode/justify.gif' border='0'></a>";
-    $bb_buttons .= "<img src='./images/bbcode/separator.gif' border='0'>";
-    $bb_buttons .= "<a href=\"javascript:add_link('img','message')\"><img src='./images/bbcode/img.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:add_link('url','message')\"><img src='./images/bbcode/url.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:add_link('email','message')\"><img src='./images/bbcode/email.gif' border='0'></a> ";
-    $bb_buttons .= "<img src='./images/bbcode/separator.gif' border='0'>";
-    $bb_buttons .= "<a href=\"javascript:add_list('ul','message')\"><img src='./images/bbcode/ul.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:add_list('ol','message')\"><img src='./images/bbcode/ol.gif' border='0'></a> ";
-    $bb_buttons .= "<img src='./images/bbcode/separator.gif' border='0'>";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[move]','[/move]','message')\"><img src='./images/bbcode/move.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[quote]','[/quote]','message')\"><img src='./images/bbcode/quote.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[offtopic]','[/offtopic]','message')\"><img src='./images/bbcode/offtopic.gif' border='0'></a> ";
-  return $bb_buttons."<br>";
-}
-
-function getSmilies()
-{
-  $tdb = new tdb(DB_DIR.'/', 'bbcode.tdb');
-  $tdb->setFP("smilies","smilies");
-  $smilies = $tdb->query("smilies","id>'0'&&type='main'");
-  //var_dump($smilies);
-  foreach ($smilies as $key => $smiley)
-  {
-    $output .= "<A HREF=\"javascript:setsmilies(' ".$smiley['bbcode']." ','message')\" ONFOCUS=\"filter:blur()\">".$smiley['replace']."</A>&nbsp;&nbsp;&nbsp;&nbsp;";
-    if ($key%10 == 9)
-      $output .= "<br>";
-  }   
-  return $output;
-}
+	// Ultimate PHP Board
+	// Author: PHP Outburst
+	// Website: http://www.myupb.com
+	// Version: 2.0
+	//Special Posting Functions
+	function message_icons() {
+		$dir = opendir("./icon");
+		$r = "";
+		while ($file = readdir($dir)) {
+			$str = strpos($file, "con", 0);
+			if ($str == "1") {
+				$fileext = explode(".", $file);
+				$fileext = end($fileext);
+				if ($fileext == "gif" or $fileext == "jpg") {
+					if ($file != "icon1.gif") {
+						$r .= "<input type=radio name=icon value='$file'><img src='./icon/$file'>";
+					}
+				}
+			}
+		}
+		return $r;
+	}
+	function format_text($text) {
+		$text = str_replace("\n", "<br>", $text);
+		$text = str_replace("  ", "&nbsp; ", $text);
+		return $text;
+	}
+	function filterLanguage($text, $censor) {
+		$msg = $text;
+		//start bad words filter
+		$words = file(DB_DIR."/badwords.dat");
+		deleteWhiteIndex($words);
+		for($pp = 0; $pp < count($words); $pp++) {
+			$msg = eregi_replace(" ".$words[$pp], " ".$censor, $msg);
+			$msg = eregi_replace($words[$pp]." ", $censor." ", $msg);
+		}
+		//end bad words filter
+		return $msg;
+	}
+	function UPBcoding($text) {
+		$msg = $text;
+		//start emoticons
+		$msg = str_replace(":)", "<img src='smilies/smile.gif' alt='' title='' />", $msg);
+		$msg = str_replace(":(", "<img src='smilies/frown.gif' alt='' title='' />", $msg);
+		$msg = str_replace("&quot;", "\"", $msg);
+		$msg = str_replace(";)", "<img src='smilies/wink.gif' alt='' title='' />", $msg);
+		$msg = str_replace("\"", "&quot;", $msg);
+		$msg = str_replace(":P", "<img src='smilies/tongue.gif' alt='' title='' />", $msg);
+		$msg = str_replace(":o", "<img src='smilies/eek.gif' alt='' title='' />", $msg);
+		$msg = str_replace(":D", "<img src='smilies/biggrin.gif' alt='' title='' />", $msg);
+		$msg = str_replace("(C)", "<img src='smilies/cool.gif' alt='' title='' />", $msg);
+		$msg = str_replace("(M)", "<img src='smilies/mad.gif' alt='' title='' />", $msg);
+		$msg = str_replace("(confused)", "<img src='smilies/confused.gif' alt='' title='' />", $msg);
+		$msg = str_replace("(crazy)", "<img src='smilies/crazy.gif' alt='' title='' />", $msg);
+		$msg = str_replace("(hm)", "<img src='smilies/hm.gif' alt='' title='' />", $msg);
+		$msg = str_replace("(hmmlaugh)", "<img src='smilies/hmmlaugh.gif' alt='' title='' />", $msg);
+		$msg = str_replace("(offtopic)", "<img src='smilies/offtopic.gif' alt='' title='' />", $msg);
+		$msg = str_replace("(blink)", "<img src='smilies/blink.gif' alt='' title='' />", $msg);
+		$msg = str_replace("(rofl)", "<img src='smilies/rofl.gif' alt='' title='' />", $msg);
+		$msg = str_replace("(R)", "<img src='smilies/redface.gif' alt='' title='' />", $msg);
+		$msg = str_replace("(E)", "<img src='smilies/rolleyes.gif' alt='' title='' />", $msg);
+		$msg = str_replace("(wallbash)", "<img src='smilies/wallbash.gif' alt='' title='' />", $msg);
+		$msg = str_replace("(noteeth)", "<img src='smilies/noteeth.gif' alt='' title='' />", $msg);
+		$msg = str_replace("LOL", "<img src='smilies/lol.gif' alt='' title='' />", $msg);
+		//end emoticons
+		//bullet points
+		$msg = str_replace("[list]", "<ul>", $msg);
+		$msg = str_replace("[/list]", "</ul>", $msg);
+		$msg = str_replace("[bullet]", "<li>", $msg);
+		$msg = str_replace("[/bullet]", "</li>", $msg);
+		//start script for delete.php
+		$msg = str_replace("(emailadmin)", "<a href='email.php?id=$adminid' target='_blank'><img src='images/email.gif' border='0'></a>", $msg);
+		//end script for delete.php
+		//start upb code
+		$msg = preg_replace("/\[center\](.*?)\[\/center\]/si", "<center>\\1</center>", $msg);
+		$msg = preg_replace("/\[move\](.*?)\[\/move\]/si", "<marquee>\\1</marquee>", $msg);
+		$msg = preg_replace("/\[white\](.*?)\[\/white\]/si", "<font color='white'>\\1</font>", $msg);
+		$msg = preg_replace("/\[yellow\](.*?)\[\/yellow\]/si", "<font color='yellow'>\\1</font>", $msg);
+		$msg = preg_replace("/\[green\](.*?)\[\/green\]/si", "<font color='lime'>\\1</font>", $msg);
+		$msg = preg_replace("/\[purple\](.*?)\[\/purple\]/si", "<font color='fuchsia'>\\1</font>", $msg);
+		$msg = preg_replace("/\[blue\](.*?)\[\/blue\]/si", "<font color='blue'>\\1</font>", $msg);
+		$msg = preg_replace("/\[red\](.*?)\[\/red\]/si", "<font color='red'>\\1</font>", $msg);
+		$msg = preg_replace("/\[b\](.*?)\[\/b\]/si", "<b>\\1</b>", $msg);
+		$msg = preg_replace("/\[u\](.*?)\[\/u\]/si", "<u>\\1</u>", $msg);
+		$msg = preg_replace("/\[i\](.*?)\[\/i\]/si", "<i>\\1</i>", $msg);
+		$msg = preg_replace("/\[url\](http:\/\/)?(.*?)\[\/url\]/si", "<a href=\"\\1\\2\" target='_blank'>\\2</a>", $msg);
+		$msg = preg_replace("/\[url=(http:\/\/)?(.*?)\](.*?)\[\/url\]/si", "<a href=\"\\1\\2\" target='_blank'>\\3</a>", $msg);
+		$msg = preg_replace("/\[email\](.*?)\[\/email\]/si", "<a href=\"mailto:\\1\">\\1</a>", $msg);
+		$msg = preg_replace("/\[email=(.*?)\](.*?)\[\/email\]/si", "<a href=\"mailto:\\1\">\\2</a>", $msg);
+		$msg = preg_replace("/\[img\](.*?)\[\/img\]/si", "<img src=\"\\1\" border=\"0\">", $msg);
+		$msg = preg_replace("/\[offtopic\](.*?)\[\/offtopic\]/si", "<font color='blue' size='$font_s' face='$font_face'>Offtopic: \\1</font>", $msg);
+		$msg = preg_replace("/\[small\](.*?)\[\/small\]/si", "<small>\\1</small>", $msg);
+		$msg = preg_replace("/\[quote\](.*?)\[\/quote\]/si", "<blockquote><font size='1' face='tahoma'>quote:</font><hr>\\1<br><hr></blockquote>", $msg);
+		$msg = preg_replace("/\[code\](.*?)\[\/code\]/si", "<font color='red'>Code:<hr><pre>\\1<hr></pre></font>", $msg);
+		//end upb code
+		return $msg;
+	}
+	function toolMapImage() {
+		echo "<img src='skins/default/images/font_buttons.gif' width='100' height='125' usemap='#tool_image_map' alt='' title='' />
+			<map name='tool_image_map'>
+			<area shape='rect' coords='4,53,24,73' href=\"javascript:SetSmiley('[img] [/img]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='4,79,48,99' href=\"javascript:SetSmiley('[move] [/move]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='29,54,73,74' href=\"javascript:SetSmiley('[quote] [/quote]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='4,29,25,49' href=\"javascript:SetSmiley('[small] [/small]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='75,5,97,25' href=\"javascript:SetSmiley('[center] [/center]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='83,107,94,117' href=\"javascript:SetSmiley('[white] [/white]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='67,107,78,117' href=\"javascript:SetSmiley('[yellow] [/yellow]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='52,107,61,116' href=\"javascript:SetSmiley('[green] [/green]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='36,107,46,117' href=\"javascript:SetSmiley('[purple] [/purple]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='6,106,16,117' href=\"javascript:SetSmiley('[red] [/red]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='21,107,30,116' href=\"javascript:SetSmiley('[blue] [/blue]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='28,5,48,23' href=\"javascript:SetSmiley('[i] [/i]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='3,4,25,24' href=\"javascript:SetSmiley('[b] [/b]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='52,4,73,24' href=\"javascript:SetSmiley('[u] [/u]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='28,28,72,49' href=\"javascript:SetSmiley('[url] [/url]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='75,28,97,49' href=\"javascript:SetSmiley('[email] [/email]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='75,54,97,74' href=\"javascript:SetSmiley('[bullet] [/bullet]')\" ONFOCUS=\"filter:blur()\">
+			<area shape='rect' coords='52,79,96,99' href=\"javascript:SetSmiley('[offtopic] [/offtopic]')\" ONFOCUS=\"filter:blur()\">
+			</map>";
+	}
 ?>

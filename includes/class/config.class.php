@@ -46,9 +46,6 @@
        - INI switch
          - FALSE === unchecked
          - TRUE === checked
-      - list
-        - name
-        - INI val
    - textarea
      - rows
      - cols
@@ -70,7 +67,7 @@ class configSettings extends tdb {
         $this->setFp("config", "config");
         $this->setFp("ext_config", "ext_config");
     }
-    
+
     function clearcache() {
     	$this->_cache = array();
     	$this->_cache_ext = array();
@@ -115,55 +112,28 @@ class configSettings extends tdb {
                 if($editOptionalData && $nameRef[$oriVar["name"]] != "1") $nameRef[$oriVar["name"]]["value"] = 0;
                 elseif($varArr[$oriVar["name"]] != "1") $varArr[$oriVar["name"]] = "0";
                 /*if($nameRef[$oriVar["name"]] != "1") {
-                    if($editOptionalData) 
+                    if($editOptionalData)
                     else $varArr[$oriVar["name"]] = 0;
                 } */
             }
-            //only go through the sort function if the category is not being added
-            elseif ($oriVar["form_object"] == "list" and $varArr['type'] != "addcat" and $varArr['type'] != "delcat")
-            {
-              $varArr[$oriVar["name"]] = $this->sortCats($varArr['neworder']);
-            }
-                       
+
             if($editOptionalData) {
                 if(is_array($nameRef[$oriVar["name"]])) {
                     $this->edit("ext_config", $oriVar["id"], array_diff_assoc($nameRef[$oriVar["name"]], $oriVar), false);
                     if($nameRef[$oriVar["name"]]["value"] != $oriVar["value"]) $this->edit("config", $oriVar["id"], $nameRef[$oriVar["name"]], false);
                 }
             } else {
-                if($varArr[$oriVar["name"]] != "" || ($oriVar["name"] == "servicemessage")) {
-                if ($varArr[$oriVar["name"]] != $oriVar["value"]) {
+                //if($varArr[$oriVar["name"]] != "" && $varArr[$oriVar["name"]] != $oriVar["value"]) {
+                if($varArr[$oriVar["name"]] != $oriVar["value"]) { // Allow entries to be blank, otherwise how set blank announcement?
 //echo "Changing Value of ".$oriVar["name"]." from \"<i>".htmlentities($oriVar["value"])."</i>\" to \"<i>".htmlentities($varArr[$oriVar["name"]])."</i>\"<br>";
                     $this->edit("config", $oriVar["id"], array("value" => $varArr[$oriVar["name"]]), false);
                     $this->edit("ext_config", $oriVar["id"], array("value" => $varArr[$oriVar["name"]]), false);
-                    }
                 }
             }
         }
-        
         //$this->defragMemo("ext_config");
         //$this->defragMemo("config");
         return true;
     }
-    
-    //changes the sort list into comma delimited string for entry into the database
-    function sortCats($orderlist)
-    {
-      //use $array['neworder']
-      //var_dump($array);
-      $newlist = explode("&list",$orderlist);
-      array_shift($newlist);
-      $u_sort = "";
-      foreach ($newlist as $key => $value)
-      {
-        list($id,$title) = explode("=",$value);
-        list($catid,$name) = explode("::",$title);
-        $u_sort .= $catid;
-        if ($key < count($newlist)-1)
-          $u_sort .= ",";
-      }
-      return $u_sort;
-    }
-    
 }
 ?>

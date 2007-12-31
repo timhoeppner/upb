@@ -421,7 +421,7 @@ class tdb {
     }
 
     /**
-     * Clears cached information on tables as well as filepoints ($fp)
+     * Clears cached information on tables aswell as filepoints ($fp)
      *
      */
     function cleanUp() {

@@ -33,17 +33,10 @@ eval(file_get_contents(DB_DIR.'/constants.php'));
 
 class functions extends tdb {
     var $_cache = array();
-    var $pulseInterval;
 
     function functions($dir, $db) {
         $this->cleanup();
         $this->tdb($dir, $db);
-        
-        // Set the pulse interval 	 
-	         //$this->pulseInterval = 60 * 60 * 24 * 7; // 1 week 	 
-	         $this->pulseInterval = 60 * 60 * 24; // 1 day 	 
-	  	 
-	         //$this->pulse();
     }
 
     //$requireArray is case INsensitive
@@ -53,12 +46,12 @@ class functions extends tdb {
             $return = TRUE;
             reset($requireArray);
             while (list ($field, $value) = each ($requireArray)) {
-                if(strtolower($rec[0][$field]) != strtolower($value)) {
+                if(strtolower($CuRec[0][$field]) != strtolower($value)) {
                     $return = false;
                     break 1;
                 }
             }
-            if($return) return $rec;
+            if($return) return $CuRec;
         }
         return false;
     }
@@ -70,12 +63,12 @@ class functions extends tdb {
             $return = TRUE;
             reset($requireArray);
             while (list ($field, $value) = each ($requireArray)) {
-                if(strtolower($rec[0][$field]) != strtolower($value)) {
+                if(strtolower($CuRec[0][$field]) != strtolower($value)) {
                     $return = false;
                     break 1;
                 }
             }
-            if($return) return $rec;
+            if($return) return $CuRec;
         }
         return false;
     }
@@ -123,67 +116,7 @@ class functions extends tdb {
         $this->readHeader($fp, $header);
         return $header["curId"];
     }
-    
-    /** 	 
-	      * Sends a pulse to let myupb get some statistical data 	 
-	      * 	 
-	      */ 	 
-	     function pulse() { 	 
-	         // If the pulse file doesn't exist create it 	 
-	         if(!file_exists(DB_DIR."/pulse.dat")) { 	 
-	             $f = fopen(DB_DIR."/pulse.dat", "w"); 	 
-	             fwrite($f, "0"); 	 
-	             fclose($f); 	 
-	  	 
-	             clearstatcache(); 	 
-	         } 	 
-	  	 
-	         // Open up the pulse file and find out when the last pulse was sent 	 
-	         $f = fopen(DB_DIR."/pulse.dat", "r+"); 	 
-	  	 
-	         flock($f, LOCK_SH); 	 
-	  	 
-	         // Retrieve the last pulse time 	 
-	         $lastPulse = (float) fread($f, 256); 	 
-	  	 
-	         if(($lastPulse + $this->pulseInterval) < fcn::gmtime()) { 	 
-	             // Need to send out another pulse 	 
-	             $url = "http://".$_SERVER["HTTP_HOST"].$_SERVER["PHP_SELF"]; 	 
-	             $ver = UPB_VERSION; 	 
-	  	 
-	             // Get the total number of posts 	 
-	             // TODO only grab the required fields, need the TDB update 	 
-	             $fList = $this->tdb_listRec("forums", 1); 	 
-	             $post_count = 0; 	 
-	  	 
-	             foreach($fList as $forum) { 	 
-	                 $post_count += (int) $forum["posts"]; 	 
-	             } 	 
-	  	 
-	             // Cleanup 	 
-	             $fList = null; 	 
-	  	 
-	             $r = @fopen("http://www.myupb.com/UPBpulse.php?url={$url}&ver={$ver}&post_count={$post_count}", "r"); 	 
-	             //$response = @fread($r, 10000); 	 
-	             //echo $response; 	 
-	             @fclose($r); 	 
-	  	 
-	             $lastPulse = fcn::gmtime(); 	 
-	  	 
-	             flock($f, LOCK_EX); 	 
-	  	 
-	             ftruncate($f, 0); 	 
-	             rewind($f); 	 
-	             fwrite($f, $lastPulse); 	 
-	         } 	 
-	  	 
-	         flock($f, LOCK_UN); 	 
-	  	 
-	         fclose($f); 	 
-	     }
 }
-
-
 
 //installation precausion
 //globalize resource $tdb to prevent multiple occurances

@@ -170,17 +170,15 @@ function createUserPowerMisc($user_power, $list_format, $exclude_guests=false) {
 function ok_cancel($action, $text) {
     //global $font_m, $font_face, $font_color_main;
 
-    echo "<form action='$action' METHOD=POST>
-    <font size='$font_m' face='$font_face' color='$font_color_main'>
-    $text
-    <input type=submit name='verify' value='Ok'> <input type=submit name='verify' value='Cancel'>
-    </font>
-    </form>";
+    echo "
+<form action='$action' METHOD=POST>
+<div class='alert'><div class='alert_text'>
+<strong>$text</strong></div><div style='padding:4px;'><input type=submit name='verify' value='Ok'> <input type=submit name='verify' value='Cancel'>
+</div></div>
+</form>";
 }
 
-//ADDED $qr parameter to check for quick reply so $pageStr can be configured correctly
-function createPageNumbers($current_page, $total_number_of_pages, $url_string='',$qr = false) {
-    global $font_face,$font_s;
+function createPageNumbers($current_page, $total_number_of_pages, $url_string='') {
     if($current_page == '') $current_page = '1';
     $num_pages = (int) $total_number_of_pages;
     $url_string = str_replace('page='.$_GET['page'], '', $url_string);
@@ -188,21 +186,12 @@ function createPageNumbers($current_page, $total_number_of_pages, $url_string=''
     else $url_string = '?';
     $url_string = str_replace('&&', '&', $url_string);
         
-    if($num_pages == 1) $pageStr = "<font face='$font_face' size='$font_s'><span class='pagenumstatic'>$num_pages</span></font>";
+    if($num_pages == 1) $pageStr = "<span class='pagination_current'>$num_pages</span>";
     else {
         //$pageStr = "<font face='$font_face' size='$font_s'><span class=pagenumstatic>";
         for($i=1;$i<=$num_pages;$i++) {
-            if($current_page == $i) 
-              $pageStr .= $i."</span> ";
-            else 
-            {
-              $pageStr .= "<font face='$font_face' size='$font_s'><span class='pagenum'><a href='";
-              if ($qr === false)
-                $pageStr .= basename($_SERVER['PHP_SELF']);
-              else
-                $pageStr .= "viewtopic.php";
-              $pageStr .= $url_string."page=".$i."'>".$i."</a></span> ";
-            }
+            if($current_page == $i) $pageStr .= "<span class='pagination_current'>".$i."</span>";
+            else $pageStr .= "<span class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=".$i."'>".$i."</a></span> ";
         }
         //$pageStr .= "</font></span>";
     }
@@ -224,82 +213,5 @@ function generateUniqueKey() {
         $key .= chr(rand(33,126));
     }
     return $key; */
-}
-
-function getlastvisit($id)
-{
-  $file = file(DB_DIR."/lastvisit.dat");
- 
-  if ($file[0] != "")
-  {
-    foreach ($file as $value)
-    {
-      list($userid,$timestamp) = explode("|",trim($value));
-      $lines[$userid] = $timestamp;
-    }
-  }
-  
-  if (array_key_exists($id,$lines))
-    $lv = $lines[$id];
-  return $lv;
-}
-
-function lastvisit($id='')
-{ 
-  if ($id == '')
-    $id = $_COOKIE['id_env'];
-  
-  $now = mkdate();
-  $lv = $string = '';
-  $lines = array();
-  $file = file(DB_DIR."/lastvisit.dat");
- 
-  //var_dump($file);
- 
-  if ($file[0] != "")
-  {
-    foreach ($file as $value)
-    {
-      list($userid,$timestamp) = explode("|",trim($value));
-      $lines[$userid] = $timestamp;
-    }
-  }
-  
-  if (array_key_exists($id,$lines))
-    $lv = $lines[$id];
-  
-  $lines[$id] = $now;
-  
-  ksort($lines);
-  
-  //var_dump($lines);
-  
-  foreach ($lines as $key => $value)
-  {
-    $string .= $key."|".$value."\n"; 
-  }
-  
-  $f = fopen(DB_DIR.'/lastvisit.dat', 'w');
-  fwrite($f, $string);
-  fclose($f);
-  return $lv;
-}
-
-function strstr_after($haystack, $needle, $case_insensitive = false) {
-    $strpos = ($case_insensitive) ? 'stripos' : 'strpos';
-    $pos = $strpos($haystack, $needle);
-    if (is_int($pos)) {
-        return substr($haystack, $pos + strlen($needle));
-    }
-    // Most likely false or null
-    return $pos;
-}
-
-function strmstr($haystack, $needle, $before_needle=FALSE) {
- //Find position of $needle or abort
- if(($pos=strpos($haystack,$needle))===FALSE) return FALSE;
-
- if($before_needle) return substr($haystack,0,($pos-1)+strlen($needle));
- else return substr($haystack,$pos);
 }
 ?>
