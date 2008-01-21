@@ -146,6 +146,9 @@
 <script type='text/javascript' src='".$_CONFIG["skin_dir"]."/scripts/form_field_limiter.js'></script>
 <script type='text/javascript' src='".$_CONFIG["skin_dir"]."/scripts/hover.js'></script>
 <script type='text/javascript' src='".$_CONFIG["skin_dir"]."/scripts/images_switch.js'></script>
+<script language=\"Javascript\" src=\"./includes/bbcode.js\"></script>
+<script language=\"Javascript\" src=\"./includes/ajax.js\"></script>
+<script language=\"Javascript\" src=\"./includes/scripts.js\"></script>
 </head>
 <body>
 <div id='upb_container'>
@@ -208,7 +211,7 @@
 	}
 	echo "
 
-	<div class='breadcrumb'><img src='".$_CONFIG["skin_dir"]."/icons/nav.gif' alt='' title='' />&nbsp;&nbsp;<span class='breadcrumb_home'><a href='index.php'>".$_CONFIG["title"]."</a></span>";
+	<div class='breadcrumb'><span class='breadcrumb_home'><a href='index.php'>".$_CONFIG["title"]."</a></span>";
 	if (isset($where)) echo "&nbsp;<span class='breadcrumb_page'>".$_CONFIG["where_sep"]." ".$where."</span>";
 	echo "
 	</div>";

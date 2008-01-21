@@ -75,6 +75,32 @@ textarea#look1 {
 	padding: 5px;
 }
 
+/* This controls the way that the quick edit post box looks on posting screens */
+textarea#newedit {
+	font-family: Tahoma, sans-serif;
+	font-size: 11px;
+	width: 600px;
+	height: 200px;
+	background-image: url(bg.gif);
+	background-position: bottom right;
+	background-repeat: no-repeat;
+	border: 3px solid #cccccc;
+	padding: 5px;
+}
+
+/* This controls the way that the quick reply post box looks on posting screens */
+textarea#newentry {
+	font-family: Tahoma, sans-serif;
+	font-size: 11px;
+	width: 600px;
+	height: 200px;
+	background-image: url(bg.gif);
+	background-position: bottom right;
+	background-repeat: no-repeat;
+	border: 3px solid #cccccc;
+	padding: 5px;
+}
+
 /* This is the main board container where the overall width is controlled */
 #upb_container {
 	margin : 0 auto 0 auto;
@@ -1197,7 +1223,7 @@ th a:hover {
 
 /* This contains and wraps the signature area when viewing a members profile */
 .pro_sig_area {
-	background-color : #transparent;
+	background-color : transparent;
 	border : 1px solid #c7cddb;
 	text-align:center;
 }

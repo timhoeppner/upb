@@ -12,24 +12,24 @@ var isWin = ( (clientInfo.indexOf("win")!=-1) || (clientInfo.indexOf("16bit") !=
 
 // function bb_dropdown creates the bbcode for the value selected from the dropdown
 // field is the document object containing the selected value, selectname is the name of the dropdown box
-function bb_dropdown(field,selectname)
+function bb_dropdown(field,selectname,txtArea)
 {
 val = field.options[field.selectedIndex].value;
 
 if (selectname == 'colors')
 {
   document.newentry.colors.selectedIndex = 0;
-  createBBtag('[color='+val+']','[/color]','message');
+  createBBtag('[color='+val+']','[/color]',txtArea);
 }
 if (selectname == 'typeface')
 {
   document.newentry.typeface.selectedIndex = 0;
-  createBBtag('[font='+val+']','[/font]','message');
+  createBBtag('[font='+val+']','[/font]',txtArea);
 }
 if (selectname == 'size')
 {
 document.newentry.size.selectedIndex = 0;
-createBBtag('[size='+val+']','[/size]','message');
+createBBtag('[size='+val+']','[/size]',txtArea);
 }
 }
 

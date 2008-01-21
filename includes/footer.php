@@ -12,7 +12,7 @@
 	}
 	echo "
 	<div class='copy'>Powered by myUPB&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href='http://www.myupb.com/'>PHP Outburst</a>
-	&nbsp;&nbsp;&copy;2002 - 2007</div>
+	&nbsp;&nbsp;&copy;2002 - ".date("Y",time())."</div>
 </div>
 </body>
 </html>";

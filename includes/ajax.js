@@ -96,7 +96,7 @@ var http_request = false;
          alert('Cannot create XMLHTTP instance');
          return false;
       }
-      
+      alert(div);
       if (type == 'edit')
         http_request.onreadystatechange = EditContents;
       else if (type == 'getpost')
@@ -148,17 +148,18 @@ var http_request = false;
       //alert(div)
       if (http_request.readyState == 3)
       {
-        document.getElementById('posts').innerHTML = "Adding Quick Reply....Please Wait";
+        html = "<div class='main_cat_wrapper'><div class='cat_area_1'>Quick Reply</div><table class='main_table' cellspacing='1'><tbody><td class='area_2' style='text-align:center'><img src='images/spinner.gif' alt='' title='' style='vertical-align: middle;'>&nbsp;<strong>Adding Quick Reply....Please Wait</strong></td></tr></tbody></table><div class='footer'></div></div>";
+        document.getElementById('quickreplyform').innerHTML = html;
       }
       if (http_request.readyState == 4) {
          if (http_request.status == 200) {
             result = http_request.responseText;
             //alert(result);
             result_array = result.split("<!--divider-->");
-            document.getElementById('posts').innerHTML = result_array[0];
+            document.getElementById('newpost').innerHTML = result_array[0];
             //alert(result_array[1]);
             document.getElementById('pagelink1').innerHTML = result_array[1];
-            document.getElementById('pagelink2').innerHTML = result_array[1];
+            document.getElementById('quickreplyform').innerHTML = result_array[2];
             txtArea = document.getElementById('newentry');
             txtArea.value = "";
          } else {
@@ -196,14 +197,15 @@ var http_request = false;
       makePOSTRequest('quickreply.php', poststr,'reply');
    }
    
-   function getPost(forumid,postid,threadid,userid,divname)
+   function getPost(userid,divname)
    {  
       div = divname;
-      
-      var poststr = "forumid="+escape(Utf8.encode(forumid));
-      poststr += "&postid="+escape(Utf8.encode(postid));
+      splitstring = divname.split("-");
+      //alert(div);
+      var poststr = "forumid="+escape(Utf8.encode(splitstring[0]));
+      poststr += "&postid="+escape(Utf8.encode(splitstring[2]));
       poststr += "&userid="+escape(Utf8.encode(userid));
-      poststr += "&threadid="+escape(Utf8.encode(threadid));
+      poststr += "&threadid="+escape(Utf8.encode(splitstring[1]));
       poststr += "&divname="+escape(Utf8.encode(divname));
       poststr += "&type=getpost";
       //alert(poststr)

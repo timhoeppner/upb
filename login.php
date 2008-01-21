@@ -54,7 +54,7 @@
 					<div class='alert_confirm_text'>
 					<strong>Redirecting:</strong></div><div style='padding:4px;'>Logged on successfully as user:
 					<br />
-					".$r["user_name"].".
+					".$r["user_name"]."
 					</div>
 					</div>
 					<meta http-equiv='refresh' content='2;URL=".$_GET["ref"]."'>";

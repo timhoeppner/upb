@@ -51,4 +51,3 @@ function swap(source) {
         document.images['myImage'].src = source;
     }
 }
-

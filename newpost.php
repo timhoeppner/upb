@@ -123,7 +123,7 @@
 			$user = $tdb->get("users", $_COOKIE["id_env"]);
 			$tdb->edit("users", $_COOKIE["id_env"], array("posts" => ((int)$user[0]["posts"] + 1)));
 		}
-		redirect($redirect, 1);
+		redirect($redirect.'#'.$p_id, 1);
 	} else {
 		$message = "";
 		if (!isset($_GET["page"])) $_GET["page"] = 1;
@@ -167,29 +167,7 @@
 		}
 		$icons = message_icons();
 
-		echo "<SCRIPT LANGUAGE='JavaScript'>
-			<!--
-			function SetSmiley(Which) {
-			if (document.newentry.message.createTextRange) {
-			document.newentry.message.focus();
-			document.selection.createRange().duplicate().text = Which;
-			} else {
-			document.newentry.message.value += Which;
-			}
-			}
-			//-->
-			</SCRIPT>
-			<script language='JavaScript'>
-			function submitonce(theform){
-			if (document.all||document.getElementById){
-			for (i=0;i<theform.length;i++){
-			var tempobj=theform.elements[i]
-			if (tempobj.type.toLowerCase()=='submit'||tempobj.type.toLowerCase()=='reset')
-			tempobj.disabled=true
-			}
-			}
-			}
-			</script>
+		echo "
 			<form action='newpost.php?id=".$_GET["id"]."&t=".$_GET["t"]."&quote=".$_GET["quote"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."' method=POST name='newentry' onSubmit='submitonce(this)' enctype='multipart/form-data'>
 			<input type='hidden' name='a' value='1'>";
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
@@ -211,12 +189,11 @@
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='area_1' style='padding:8px;' valign='top'><strong>Message:</strong>
-					<div style='text-align:center;margin-top:20px;margin-bottom:20px;'>";
-						toolMapImage();
-		echo "</div>
+				<td class='area_1' style='padding:8px;' valign='top'><strong>Message:</strong>";			
+		echo "
 					<div style='text-align:center;'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=350,height=450,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></div></td>
-				<td class='area_2'><textarea name='message' id='look1'>".$message."</textarea>
+				<td class='area_2'>
+        ".bbcodebuttons()."<textarea name='message' id='look1'>".$message."</textarea>
 					<div style='padding:8px;'>
 						<a href=\"javascript:SetSmiley(':)')\" ONFOCUS=\"filter:blur()\"><img src='smilies/smile.gif' alt=':)' title=':)' /></a>&nbsp;&nbsp;
 						<a href=\"javascript:SetSmiley(':(')\" ONFOCUS=\"filter:blur()\"><img src='smilies/frown.gif' alt=':(' title=':(' /></a>&nbsp;&nbsp;

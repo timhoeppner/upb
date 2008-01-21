@@ -91,8 +91,8 @@
 				}
 				else $v_icon = "";
 				if ($tRec["sticky"] == "1") {
-					if ($_CONFIG["sticky_after"] == "1") $tRec["subject"] = "Important&nbsp;<a href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."'>".$tRec["subject"]."</a>";
-					else $tRec["subject"] = "Important&nbsp;<a href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."'>".$tRec["subject"]."</a>";
+					if ($_CONFIG["sticky_after"] == "1") $tRec["subject"] = "<a href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."'>".$tRec["subject"]."</a>&nbsp;".$_CONFIG["sticky_note"];
+					else $tRec["subject"] = $_CONFIG["sticky_note"]."&nbsp;<a href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."'>".$tRec["subject"]."</a>";
 				}
 				else $tRec["subject"] = "<a href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."'>".$tRec["subject"]."</a>";
 				settype($tRec["replies"], "integer");

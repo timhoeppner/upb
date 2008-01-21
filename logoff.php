@@ -10,7 +10,8 @@
 	require('./includes/inc/date.inc.php');
 	if (isset($_COOKIE['id_env'])) $user_id = $_COOKIE['id_env'];
 	else $user_id = getenv("REMOTE_ADDR");
-	$old = mkdate() - 3600;
+	$u_name = $_COOKIE['user_env'];
+  $old = mkdate() - 3600;
 	$old = $old.str_repeat(' ', 14 - strlen($old));
 	//$whos_online_array = explode("\n", substr($whos_online_log, 0, -1));
 	$whos_online_array = file(DB_DIR.'/whos_online.dat');
@@ -25,7 +26,7 @@
 	$whos_online_log = implode("\n", array_reverse($whos_online_array))."\n";
 	$f = fopen(DB_DIR.'/whos_online.dat', 'w');
 	fwrite($f, $whos_online_log);
-	setcookie("user_env", "", time() - 3600);
+  setcookie("user_env", "", time() - 3600);
 	setcookie("uniquekey_env", "", time() - 3600);
 	setcookie("power_env", "", time() - 3600);
 	setcookie("id_env", "", time() - 3600);
@@ -49,18 +50,14 @@
 	<br />
 	<br />
 	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.1.1b Installer</div>
-		<table class='main_table' cellspacing='1'>
-			<tr>
-				<th style='text-align:center;'>&nbsp;</th>
-			</tr>
-			<tr>
-				<td class='area_welcome'><div class='welcome_text'>Logging off...</div></td>
-			</tr>
-			<tr>
-				<td class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
-			</tr>
-		</table>
+		<div class='cat_area_1'>Log Off</div>
+					<div class='alert_confirm'>
+					<div class='alert_confirm_text'>
+					<strong>Redirecting:</strong></div><div style='padding:4px;'>Logging off user:
+					<br />
+					".$u_name."
+					</div>
+					</div>
 		<div class='footer'><img src='skins/default/images/spacer.gif' alt='' title='' /></div>
 	</div>
 	<br />

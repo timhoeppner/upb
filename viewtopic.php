@@ -34,8 +34,10 @@
 	if (empty($pRecs)) exitPage("Posts not found");
 	$num_pages = ceil(($tRec[0]["replies"] + 1) / $_CONFIG["posts_per_page"]);
 	$p = createPageNumbers($_GET["page"], $num_pages, $_SERVER['QUERY_STRING']);
-	$posts_tdb->d_posting($p);
-	echo "";
+	echo "<div id='pagelink1' name='pagelink1'>";
+  $posts_tdb->d_posting($p);
+	echo "</div>";
+  echo "";
 	//show header of topic
 	echo "
 		";
@@ -45,7 +47,9 @@
 	foreach($pRecs as $pRec) {
 		// display each post in the current topic
 		echo "
-			<div class='main_cat_wrapper'>
+			<a name='{$pRec['id']}'>
+      <div name='post{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='post{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>
+      <div class='main_cat_wrapper'>
 			<div class='cat_area_1' style='text-align:center;'>Posted: ".gmdate("M d, Y g:i:s a", user_date($pRec["date"]))."</div>
 			<table class='main_table' cellspacing='1'>";
 		if ($x == 0) {
@@ -105,7 +109,7 @@
 				if (TRUE !== (in_array($_COOKIE["id_env"], $user_blList))) $pm = "<div class='button_pro2'><a href='newpm.php?to=".$pRec["user_id"]."'>Send ".$pRec["user_name"]." a PM</a></div>";
 			}
 		}
-		if (($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) $edit = "<div class='button_pro1'><a href='editpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."'>Edit</a></div>";
+		if (($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) $edit = "<div class='button_pro1'><a href=\"javascript:getPost('{$pRec["user_id"]}','{$_GET["id"]}-{$_GET["t_id"]}-{$pRec["id"]}');\">Edit</a></div>";
 		else $edit = "";
 		if ((($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) && $pRec['id'] != $first_post) $delete = "<div class='button_pro1'><a href='delete.php?action=delete&t=0&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."'>X</a></div>";
 		else $delete = "";
@@ -141,26 +145,60 @@
 		if ($user[0]["msn"] != "") echo "&nbsp;<a href='http://members.msn.com/".$user[0]["msn"]."' target='_blank'><img src='images/msn.gif' border='0' alt='MSN: ".$user[0]["msn"]."'></a>&nbsp;&nbsp;";
 		if ($user[0]["icq"] != "") echo "&nbsp;<a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$user[0]["icq"]."&action=message'><img src='images/icq.gif' border='0' alt='ICQ: ".$user[0]["icq"]."'></a>&nbsp;&nbsp;";
 		if ($user[0]["yahoo"] != "") echo "&nbsp;<a href='http://edit.yahoo.com/config/send_webmesg?.target=".$user[0]["yahoo"]."&.src=pg'><img border=0 src='http://opi.yahoo.com/online?u=".$user[0]["yahoo"]."&m=g&t=0' alt='Y!: ".$user[0]["yahoo"]."'></a>";
+		
 		echo"</div>";
 		echo "</td>
 				<td class='$table_color' valign='top'>
-					<div style='padding:12px;margin-bottom:20px;'>$msg</div>
+					<div style='padding:12px;margin-bottom:20px;' id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' name='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>$msg</div>
 					<div style='padding:12px;'>".$sig."</div></td>
 			</tr>
 			<tr>
 				<td class='footer_3a' colspan='2'>";
-		if (!empty($pRec['edited_by']) && !empty($pRec['edited_by_id']) && !empty($pRec['edited_date'])) echo '
-					<div class="post_edited">Last edited by: <a href="profile.php?action=get&id='.$pRec['edited_by_id'].'" target="_new"><strong>'.$pRec['edited_by'].'</strong></a> on '.gmdate("M d, Y g:i:s a", user_date($pRec['edited_date'])).'</div>';
-		if ($pRec["user_id"] != "0") echo "";
+				if ($pRec["user_id"] != "0") echo "";
 		if ($pm != "") echo $pm."";
+		
+        //echo "<div name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' style='float: right;'>";
+		if (!empty($pRec['edited_by']) && !empty($pRec['edited_by_id']) && !empty($pRec['edited_date'])) echo "
+					<div class='post_edited' name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>Last edited by: <a href='profile.php?action=get&id=".$pRec['edited_by_id']." target='_new'><strong>".$pRec['edited_by']."</strong></a> on ".gmdate("M d, Y g:i:s a", user_date($pRec['edited_date']))."</div>";
+		else
+      	echo "<div name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' class='post_edited'></div>";
 		echo "
 					<div class='button_pro2'><a href='profile.php?action=get&id=".$pRec["user_id"]."'>Profile</a></div>
 					<div class='button_pro2'><a href='".$user[0]["url"]."' target = '_blank'>Homepage</a></div>
 					<div class='button_pro2'><a href='email.php?id=".$pRec["user_id"]."'>email ".$pRec["user_name"]."</a></div>";
-		echo "</td>
+    echo "</td>
 			</tr>
-		$skin_tablefooter";
+		$skin_tablefooter </div>";
 	}
+	
+	echo "<div name='newpost' id='newpost'></div>";
+	
+	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0))
+{
+  echo "<div id='quickreplyform' name='quickreplyform'>";
+  echo "<form name='quickreply' action='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."' method='POST' name='quickreply'>\n";
+  echoTableHeading("Quick Reply", $_CONFIG);
+  echo "<table class='main_table' cellspacing='1'>";
+  foreach ($_GET as $key => $value)
+    echo "<input type='hidden' id='$key' name='$key' value='$value'>\n"; 
+  echo "<input type='hidden' id='user_id' name='user_id' value='{$_COOKIE['id_env']}'>\n";
+  echo "<input type='hidden' id='icon' name='icon' value='icon1.gif'>\n";
+  echo "<input type='hidden' id='username' name='username' value='{$_COOKIE["user_env"]}'>\n";
+	echo "
+		<tr><td class='area_1' style='padding:8px;'><strong>User Name:</strong></td><td class='area_2'>".$_COOKIE["user_env"]."</td></tr>\n
+		<tr>
+				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+			</tr>
+		<tr><td class='area_1' style='padding:8px;' valign='top'><strong>Message:</strong></td>
+    <td class='area_2'>\n
+    <textarea id=\"newentry\" name=\"newentry\" cols=\"60\" rows=\"18\"></textarea>\n
+    </td></tr>\n";
+  echo "<tr><td class='footer_3a' style='text-align:center;' colspan='2'>\n
+    <input type='button' name='quickreply' value='Quick Reply' onclick=\"javascript:getReply(document.getElementById('quickreply'))\">\n
+    <input type='submit' name='submit' value='Go Advanced'>\n</td></tr></form></font>".$skin_tablefooter;
+  echo "</div>";
+}
+//END QUICK REPLY SEGMENT
 	//$posts_tdb->d_posting($p);
 	if ((int)$_COOKIE["power_env"] >= 2) {
 		echo "

@@ -57,6 +57,7 @@ window.open(\"where\", \"This PM has been Recieved Within the Last 5 Minutes\", 
 		}
 		-->
 </script>
+<script language=\"Javascript\" src=\"./includes/bbcode.js\"></script>
 </head>
 <body>";
 ?>

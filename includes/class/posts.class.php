@@ -119,6 +119,32 @@ class posts extends tdb {
     <div style='clear:both;'></div>";
 		return true;
 	}
+	
+	function d_posting_qr($page_string, $current)
+	{
+    if(!$this->check_topic() || !$this->check_forum() || !$this->check_user_info()) return false;
+    $output = "
+	<br />
+    <div id='tabstyle_pagenum'>
+<span class='pagination_current'>Page:</span>$page_string
+</div>
+
+    <div style='clear:both;'></div>
+    <div id='tabstyle_1'>
+        <ul>";
+		if((int)$this->user["power"] > 0) $output .= "<li><a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Watch This Topic?'><span>Watch Topic</span></a></li>";
+		if((int)$this->user["power"] >= (int)$this->fRec[0]["post"]) $output .= "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=' title='Create a new topic?'><span>Create New Topic</span></a></li>";
+		else $output .= "";
+		if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"]) {
+			if(!(bool)$this->tRec[0]["locked"]) $output .= "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=0&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Add a reply?'><span>Add Reply</span></a></li>";
+			else $output .= "<li><a href='#' title='Topic Is Locked'><span>Topic Is Locked</span></a></li>";
+		} else $output .= "";
+		echo "
+        </ul>
+    </div>
+    <div style='clear:both;'></div>";
+		return $output;
+  }
 
 	function getPosts($fp, $start=0, $howmany=-1) {
 		if(!$this->check(__LINE__) || !$this->check_topic()) return false;

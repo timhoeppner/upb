@@ -42,9 +42,11 @@ else
   $posts_tdb->cleanup();
   $posts_tdb->setFp("posts", $_POST["forumid"]);
   $pRec2 = $posts_tdb->get("posts", $_POST["postid"]);
+  
+  $div = $_POST['forumid']."-".$_POST['threadid']."-".$_POST['postid'];
+  
   if(!empty($pRec2[0]['edited_by']) && !empty($pRec2[0]['edited_by_id']) && !empty($pRec2[0]['edited_date'])) 
-    $edited = '<table width="95%" border="1" cellspacing="0" cellpadding="3"><tr><td>Last edited by: <a href="profile.php?action=get&id='.$pRec2[0]['edited_by_id'].'" target="_new">'.$pRec2[0]['edited_by'].'</a> on '.gmdate("M d, Y g:i:s a", user_date($pRec2[0]['edited_date'])).'</td></tr></table>';
-
+    $edited = "Last edited by: <a href='profile.php?action=get&id=".$pRec2[0]['edited_by_id']."' target='_new'>".$pRec2[0]['edited_by']."</a> on ".gmdate("M d, Y g:i:s a", user_date($pRec2[0]['edited_date']));
   echo "$msg<!--divider-->$edited";
 }
 ?>
