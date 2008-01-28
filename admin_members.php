@@ -301,11 +301,10 @@
 				<td colspan='10'>No records found</td>
 			</tr>";
 		} else {
-			$fLastvisit = fopen(DB_DIR.'/lastvisit.dat', 'r');
+			
 			$bList = file(DB_DIR."/banneduser.dat");
 			foreach($users as $user) {
-				fseek($fLastvisit, (14 * ((int)$user["id"] - 1)), SEEK_SET);
-				$lastvisit = fread($fLastvisit, 14);
+			   $lastvisit = $user['lastvisit'];
 				//if(gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d')) $lastvisit =
 				//(gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d') ? '<i>today</i>' : (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y'))) ? '<i>yesterday</i>' : gmdate("Y-m-d", user_date($lastvisit))))
 				//show each user
@@ -320,18 +319,35 @@
 				<td class='area_2'><i>".$user["email"]."</i></td>";
 				echo "
 				<td class='area_1' style='text-align:center;'>".$user["posts"]."</td>
-				<td class='area_2' style='text-align:center;'>".(gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d') ? '<i>today</i>' : (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y'))) ? '<i>yesterday</i>' : gmdate("Y-m-d", user_date($lastvisit)))) ."</td>
-				<td class='area_1' style='text-align:center;'>".gmdate("Y-m-d", user_date($user["date_added"]))."</td>";
-				echo "
-				<td class='area_2' style='text-align:center;'><a href='admin_banuser.php?ref=admin_members.php?page=".$_GET["page"]."&action=";
-				if (!in_array($user["user_name"], $bList)) echo 'addnew&newword='.$user["user_name"]."'>";
-				else echo 'delete&word='.$user["user_name"]."'><strong>Un</strong>";
-				echo "Ban</a></td>
-				<td class='area_1' style='text-align:center;'><a href='admin_members.php?action=edit&id=".$user["id"]."&page=".$_GET["page"]."'>Edit</a></td>
-				<td class='area_2' style='text-align:center;'><a href='admin_members.php?action=delete&id=".$user["id"]."'>Delete</a></td>
+				<td class='area_2' style='text-align:center;'>";
+        if ($lastvisit == 0)
+          echo "<i>never</i>";
+        else if (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d'))
+          echo '<i>today</i>'; 
+        else if (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y')))) 
+          echo "<i>yesterday</i>";
+        else
+          echo gmdate("Y-m-d", user_date($lastvisit))."</td><td class='area_1' style='text-align:center;'>".gmdate("Y-m-d", user_date($user["date_added"]))."</td>";
+				echo "<td class='area_2' style='text-align:center;'>".gmdate("Y-m-d", user_date($user['date_added']))."</td>";
+        echo "<td class='area_2' style='text-align:center;'>";
+        if ($user['superuser'] != "Y")
+        {
+          echo "<a href='admin_banuser.php?ref=admin_members.php?page=".$_GET["page"]."&action=";
+				  if (!in_array($user["user_name"], $bList)) echo 'addnew&newword='.$user["user_name"]."'>";
+				  else echo 'delete&word='.$user["user_name"]."'><strong>Un</strong>";
+			 	  echo "Ban</a>";
+        }
+        echo "</td>";
+				echo "<td class='area_1' style='text-align:center;'>";
+        if (($user['superuser'] == "Y" and $_COOKIE['superuser']) or ($user['superuser'] != "Y"))
+          echo "<a href='admin_members.php?action=edit&id=".$user["id"]."&page=".$_GET["page"]."'>Edit</a>";
+        echo "</td>";
+				echo "<td class='area_2' style='text-align:center;'>";
+        if ($user['superuser'] != "Y")
+          echo "<a href='admin_members.php?action=delete&id=".$user["id"]."'>Delete</a>";
+        echo "</td>
 			</tr>";
 			}
-			fclose($fLastvisit);
 		}
 		echo "
 			<tr>

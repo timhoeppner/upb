@@ -52,14 +52,13 @@
 	if ($tdb->is_logged_in() && INSTALLATION_MODE === FALSE) {
 		$refresh = false;
 		if (!isset($_COOKIE["lastvisit"])) {
-			$v_date = mkdate();
-			$v_file = fopen(DB_DIR."/lastvisit.dat", 'r+');
-			fseek($v_file, (($_COOKIE["id_env"] - 1) * 14));
-			$ses_info = trim(fread($v_file, 14));
-			if ($ses_info == '') $ses_info = $v_date;
-			fseek($v_file, -14, SEEK_CUR);
-			fwrite($v_file, $v_date);
-			fclose($v_file);
+			$r = $tdb->basicQuery("users",'id',$_COOKIE['id_env']);
+      //NEW VERSION
+      $ses_info = $r['lastvisit'];
+      if ($ses_info == 0)
+        $ses_info = mkdate();
+      $tdb->edit("users",$_COOKIE["id_env"],array('lastvisit'=>mkdate()));
+      
 			if (!headers_sent()) {
 				$uniquekey = generateUniqueKey();
 				$tdb->edit('users', $_COOKIE['id_env'], array('uniquekey' => $uniquekey));
@@ -199,7 +198,8 @@
 		</tr>
 	$skin_tablefooter";
 	//login information
-	if (!$tdb->is_logged_in() && isset($_COOKIE['user_env']) && isset($_COOKIE['uniquekey_env']) && isset($_COOKIE['id_env'])) {
+	
+  if (!$tdb->is_logged_in() && isset($_COOKIE['user_env']) && isset($_COOKIE['uniquekey_env']) && isset($_COOKIE['id_env'])) {
 		$redirect = urlencode($_SERVER['REQUEST_URI']);
 		echo "
 	<div class='alert'>

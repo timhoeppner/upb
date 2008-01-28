@@ -74,7 +74,7 @@ $skin_tablefooter";
 		} elseif($_GET["action"] != "") {
 			$raws2 = explode(chr(31), $raws[1]);
 			$configVars = $config_tdb->getVars($_GET["action"], true);
-			echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method=POST><input type='hidden' name='action' value='".$_GET["action"]."'>";
+			echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
 			
 		echoTableHeading("&nbsp;", $_CONFIG);
 			foreach($raws2 as $raw) {
@@ -117,6 +117,34 @@ $skin_tablefooter";
 								else $target = "";
 								echo "<a href=\"".$configVars[$i]["value"]."\"".$target.">".$configVars[$i]["name"]."</a>";
 								break 1;
+								
+								case "list":
+                  $sort = $_CONFIG['admin_catagory_sorting'];
+                  $order = explode(",",$sort);
+                  $cRecs = $tdb->listRec("cats", 1);
+                                
+                  //var_dump($sort);
+                                
+                  echo "<select multiple name=\"".$configVars[$i]["name"]."\" size=\"".count($cRecs)."\">";
+                  for ($i = 0;$i < count($order);$i++)
+                  {
+                    foreach ($cRecs as $cRec)
+                    {
+                      if ($cRec['id'] == $order[$i])
+                      {
+                        echo "<option value='".$cRec['id']."'>".$cRec['id']."::".$cRec['name']."</option>";
+                        $added[] = $cRec['id'];
+                      }
+                    }
+                  }
+                                
+                  echo "</select><br>";
+                               
+                  echo "<input type=\"button\" value=\"Move Up\" ";
+                  echo "onClick=\"change_order(this.form.admin_catagory_sorting.selectedIndex,-1,'category')\">&nbsp;&nbsp;&nbsp;";
+                  echo "<input type=\"button\" value=\"Move Down\"";
+                  echo "onClick=\"change_order(this.form.admin_catagory_sorting.selectedIndex,+1,'category')\">";
+                  break 1;
 							}
 							echo "</td>
 			</tr>";

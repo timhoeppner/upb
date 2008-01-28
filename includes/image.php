@@ -21,6 +21,22 @@
 		//$font = 'LucidaConsole.ttf';
 		imagestring($img, 5, 10, $i, $decid, $darkcolor);
 	}
-	imagejpeg($img, '', 100);
+	// Call a valid image exporter 	 
+	 if(function_exists("imagegif")) { 	 
+	     header("Content-type: image/gif"); 	 
+	     imagegif($img); 	 
+	 } elseif(function_exists("imagejpeg")) { 	 
+	     header("Content-type: image/jpeg"); 	 
+	     imagejpeg($img, "", 100); 	 
+	 } elseif(function_exists("imagepng")) { 	 
+	     header("Content-type: image/png"); 	 
+	     imagepng($img); 	 
+	 } elseif (function_exists("imagewbmp")) { 	 
+	              header("Content-type: image/vnd.wap.wbmp"); 	 
+	              imagewbmp($img); 	 
+	 } 	 
+	 else { 	 
+	     die("No image support on this server"); 	 
+	 }
 	imagedestroy($img);
 ?>

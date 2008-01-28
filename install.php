@@ -101,7 +101,9 @@
 			array("posts", "number", 7),
 			array("date_added", "number", 14),
 			array("timezone", "string", 3),
-			array("id", "id")
+			array("id", "id"),
+			array("lastvisit","number",10),
+			array("superuser","string",1)
 		), 20);
 		$tdb->createTable("forums", array(
 		array("forum", "memo"),
@@ -396,10 +398,7 @@
 		} else {
 			$_POST["add"] = "3";
 			$add = 3;
-			$admin = array("user_name" => $_POST["username"], "password" => generateHash($_POST["pass1"]), "level" => 3, "email" => $_POST["email"], "view_email" => $_POST["view_email"], "mail_list" => $_POST["mail_list"], "location" => $_POST["location"], "url" => $_POST["url"], "avatar" => $_POST["avatar"], "icq" => $_POST["icq"], "aim" => $_POST["aim"], "msn" => $_POST["msn"], "sig" => $_POST["sig"], "posts" => 0, "date_added" => mkdate());
-			$f = fopen(DB_DIR."/lastvisit.dat", 'w');
-			fwrite($f, mkdate().str_repeat(' ', (14 - strlen(mkdate()))));
-			fclose($f);
+			$admin = array("user_name" => $_POST["username"], "password" => generateHash($_POST["pass1"]), "level" => 3, "email" => $_POST["email"], "view_email" => $_POST["view_email"], "mail_list" => $_POST["mail_list"], "location" => $_POST["location"], "url" => $_POST["url"], "avatar" => $_POST["avatar"], "icq" => $_POST["icq"], "aim" => $_POST["aim"], "msn" => $_POST["msn"], "sig" => $_POST["sig"], "posts" => 0, "date_added" => mkdate(),"lastvisit" => mkdate(),"superuser"=>"Y");
 			$tdb->add("users", $admin);
 			$f = fopen(DB_DIR."/new_pm.dat", 'w');
 			fwrite($f, " 0");

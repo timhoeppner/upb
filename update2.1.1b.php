@@ -6,13 +6,29 @@ require_once('./includes/header_simple.php');
 
 $tdb->setFp("config", "config");
 $tdb->setFp("ext_config", "ext_config");
-$tdb->setFp("smilies","smilies");
+$tdb->setFP("members","members");
+
+//move lastvisit information to the member database
+//$tdb->addField('members', array('lastvisit', 'number', 10));
+$members = $tdb->query('members',"id>'0'");
+foreach ($members as $member)
+{
+  $tdb->edit('members',$member['id'],array("lastvisit"=>0));
+}
+
+echo "Last visit information updated<p>";
+
+//create superuser
+$tdb->addField('members', array('superuser', 'string', 1));
+$tdb->edit('members',1,array("superuser"=>"Y"));
+
+echo "Super-user created<p>";
+
 $array = array("title" => "Category Sorting","description" => "Sort the categories in the order you want them to appear on the main page","form_object" => "list");
 
 if($tdb->edit('ext_config',8,$array))
   echo "Settings for Category Sorting updated<p>";
 
-//$tdb->removeTable('smilies');
 
 if (file_exists(DB_DIR."/bbcode.tdb"))
 {

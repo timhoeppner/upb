@@ -19,14 +19,13 @@
 		</div><br />";
 		} else {
 			//lastvisit info
-			$v_date = mkdate();
-			$v_file = fopen(DB_DIR."/lastvisit.dat", 'r+');
-			fseek($v_file, (($r["id"] - 1) * 14));
-			$ses_info = trim(fread($v_file, 14));
-			if ($ses_info == '') $ses_info = $v_date;
-			fseek($v_file, -14, SEEK_CUR);
-			fwrite($v_file, $v_date);
-			fclose($v_file);
+			
+			//NEW VERSION
+      $ses_info = $r['lastvisit'];
+      if ($ses_info == 0)
+        $ses_info = mkdate();
+      $tdb->edit("users",$r["id"],array('lastvisit'=>mkdate()));
+      
 			if (headers_sent()) $error_msg = 'Could not login: headers sent.';
 			else
 			{
@@ -40,12 +39,14 @@
 					setcookie("uniquekey_env", $r["uniquekey"], (time() + (60 * 60 * 24 * 7)));
 					setcookie("power_env", $r["level"], (time() + (60 * 60 * 24 * 7)));
 					setcookie("id_env", $r["id"], (time() + (60 * 60 * 24 * 7)));
+					setcookie("superuser", $r["superuser"], (time() + (60 * 60 * 24 * 7)));
 				} else {
 					setcookie("remember", '');
 					setcookie("user_env", $r["user_name"]);
 					setcookie("uniquekey_env", $r["uniquekey"]);
 					setcookie("power_env", $r["level"]);
 					setcookie("id_env", $r["id"]);
+					setcookie("superuser", $r["superuser"]);
 				}
 				setcookie("timezone", $r["timezone"], (time() + (60 * 60 * 24 * 7)));
 				if ($_GET["ref"] == "") $_GET["ref"] = "index.php";
@@ -63,7 +64,7 @@
 		}
 	}
 	require_once('./includes/header.php');
-	if (!$tdb->is_logged_in()) {
+	if (!$tdb->is_logged_in() != "") {
 		if (isset($error)) {
 			echo "$error";
 			if ($e == 1) exitPage("");

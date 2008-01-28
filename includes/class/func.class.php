@@ -78,10 +78,16 @@ class functions extends tdb {
         $rec = $this->query("users", "user_name='".$user."'", 1, 1);
         if($rec[0]["user_name"] != $user) return false;
         if($rec[0]["password"]{0} != chr(21)) {
-            if($rec[0]["password"] == generateHash($pass, $rec[0]["password"])) return $rec[0];
+            if($rec[0]["password"] == generateHash($pass, $rec[0]["password"])) 
+            {
+              $this->edit("users", $rec[0]["id"], array("lastvisit" => mkdate()));
+              $rec[0]['lastvisit'] = mkdate();
+              return $rec[0];
+            }
         } elseif(substr($rec[0]["password"], 1) == stripslashes(t_encrypt(substr($pass, 0, (HASH_LENGTH - 1)), $key))) {
             $rec[0]["password"] = generateHash($pass);
             $this->edit("users", $rec[0]["id"], array("password" => $rec[0]["password"]));
+            $this->edit("users", $rec[0]["id"], array("lastvisit" => mkdate()));
             return $rec[0];
         }
         return false;
