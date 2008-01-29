@@ -42,6 +42,7 @@ theList += "list" + list.options[i].value + "=" + list.options[i].text;
 if (i != list.options.length-1) theList += "&";
 }
 document.form.neworder.value = theList;
+alert(theList);
 }
 document.form.submit();
 }

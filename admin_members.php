@@ -74,7 +74,12 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>User group:</strong></td>
-				<td class='area_2'><select size='1' name='level'>".createUserPowerMisc($rec[0]["level"], 7, TRUE)."</td>
+				<td class='area_2'>";
+        if ($rec[0]["superuser"] == "Y")
+          echo "Administrator";
+        else 
+          echo "<select size='1' name='level'>".createUserPowerMisc($rec[0]["level"], 7, TRUE);
+        echo "</td>
 			</tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>E-mail Address:</strong></td>
@@ -99,10 +104,7 @@
 			fseek($f, (((int)$rec[0]["id"] * 2) - 2));
 			$tmp_new_pm = fread($f, 2);
 			fclose($f);
-			$fLastvisit = fopen(DB_DIR.'/lastvisit.dat', 'r');
-			fseek($fLastvisit, (14 * ((int)$rec[0]["id"] - 1)));
-			$lastvisit = fread($fLastvisit, 14);
-			fclose($fLastvisit);
+      $lastvisit = $rec[0]['lastvisit'];
 			echo "</td>
 			</tr>
 			<tr>
@@ -162,8 +164,14 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Last login:</strong></td>
-				<td class='area_2'>".(gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d') ? '<i>today</i>' : (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y'))) ? '<i>yesterday</i>' : gmdate("Y-m-d", user_date($lastvisit))))."</td>
-			</tr>
+				<td class='area_2'>";
+        if (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d'))
+          echo '<i>today</i>';
+        else if (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y'))))
+          echo '<i>yesterday</i>';
+        else 
+          echo gmdate("Y-m-d", user_date($lastvisit));
+        echo "</td></tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Registered Date:</strong></td>
 				<td class='area_2'>".gmdate("Y-m-d", user_date($rec[0]["date_added"]))."</td>
@@ -189,8 +197,17 @@
 			$tdb->edit("users", $_GET["id"], array("password" => generateHash($_POST["pass"])));
 			$msg = "You Password was changed by ".$_COOKIE["user_env"]." on the website ".$_CONFIG["homepage"]." to \"".$_POST["pass"]."\"";
 			if (isset($_POST["reason"])) $msg .= "\n\n".$_COOKIE["user_env"]."'s reason was this:\n".$_POST["reason"];
-			mail($user[0]["email"], "Password Change Notification", "Password Changed by :".$_COOKIE["user_env"]."\n\n".$msg, "From: ".$_REGISTER["admin_email"]);
-			echo "You sucessfully changed ".$user[0]["user_name"]."'s password to ".$_POST["pass"];
+			$email_fail = false;
+      if(!@mail($user[0]["email"], "Password Change Notification", "Password Changed by :".$_COOKIE["user_env"]."\n\n".$msg, "From: ".$_REGISTER["admin_email"]))
+        $email_fail = true;
+			echoTableHeading("Password changed!", $_CONFIG);
+      echo "
+		<tr>
+			<td class='area_1'><div class='description'><strong>";
+      echo "You successfully changed ".$user[0]["user_name"]."'s password to ".$_POST["pass"]."</strong>";
+			if ($email_fail === true)
+        echo "<p>The automated email was unable to be sent.<p>Please email them at ".$user[0]['email']." to inform them of the change of password";
+      echo "</div></td></tr>$skin_tablefooter";
 		} else {
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 			echo "

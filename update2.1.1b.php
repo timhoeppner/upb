@@ -8,8 +8,17 @@ $tdb->setFp("config", "config");
 $tdb->setFp("ext_config", "ext_config");
 $tdb->setFP("members","members");
 
+$tdb->add("ext_config", array("name" => "security_code", "value" => "1", "type" => "config", "title" => "Enable Security Code", "description" => "Enable/Disable the security code image for new user registration<br>Enabling this is recommended", "form_object" => "checkbox", "minicat" => "1", "sort" => "16"));
+$tdb->add("config", array("name" => "security_code", "value" => "1", "type" => "config"));
+
+$tdb->edit("config",1,array('value'=>'2.1.1b'));
+$tdb->edit("ext_config",1,array('value'=>'2.1.1b'));
+$tdb->edit("ext_config",8,array('sort'=>'17'));
+$tdb->edit("ext_config",9,array('sort'=>'18'));
+$tdb->edit("ext_config",16,array('sort'=>'19'));
+
 //move lastvisit information to the member database
-//$tdb->addField('members', array('lastvisit', 'number', 10));
+$tdb->addField('members', array('lastvisit', 'number', 10));
 $members = $tdb->query('members',"id>'0'");
 foreach ($members as $member)
 {

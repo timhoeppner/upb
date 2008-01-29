@@ -13,19 +13,23 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 	if($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
 		if($_POST["action"] != "") {
 			if(file_exists('./includes/admin/'.$_POST['action'].'.config.php')) include('./includes/admin/'.$_POST['action'].'.config.php');
-			//print_r($_POST);
-			if($config_tdb->editVars($_POST["action"], $_POST)) echo "
+      if($result = $config_tdb->editVars($_POST["action"], $_POST)) 
+      {
+        echo "
 	<div class='alert_confirm'>
 		<div class='alert_confirm_text'>
 		<strong>Redirecting:</div><div style='padding:4px;'>
 		Successfully edited.
 		</div>
 	</div>";
-			else echo "
+			
+      }
+      else echo "
 <div class='alert'><div class='alert_text'>
 <strong>Error!</strong></div><div style='padding:4px;'>Edit Failed.</div></div>";
 			require_once("./includes/footer.php");
 			redirect($PHP_SELF."?action=".$_POST["action"], 2);
+      die();
 		}
 
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
@@ -75,7 +79,7 @@ $skin_tablefooter";
 			$raws2 = explode(chr(31), $raws[1]);
 			$configVars = $config_tdb->getVars($_GET["action"], true);
 			echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
-			
+			echo "<input type=\"hidden\" name=\"neworder\" value=\"\">";
 		echoTableHeading("&nbsp;", $_CONFIG);
 			foreach($raws2 as $raw) {
 				$rec = explode(chr(30), $raw);
@@ -122,8 +126,16 @@ $skin_tablefooter";
                   $sort = $_CONFIG['admin_catagory_sorting'];
                   $order = explode(",",$sort);
                   $cRecs = $tdb->listRec("cats", 1);
-                                
-                  //var_dump($sort);
+                      
+                  var_dump($order);          
+                  if (count($sort) != count($cRecs))
+                  {
+                    foreach ($cRecs as $value)
+                    {
+                      if (!in_array($value['id'],$order))
+                        $order[] = $value['id'];
+                    }
+                  }
                                 
                   echo "<select multiple name=\"".$configVars[$i]["name"]."\" size=\"".count($cRecs)."\">";
                   for ($i = 0;$i < count($order);$i++)
@@ -137,9 +149,24 @@ $skin_tablefooter";
                       }
                     }
                   }
-                                
+                  
+                  if (count($added) < count($cRecs))
+                  {
+                    foreach ($cRecs as $value)
+                    {
+                      if (!in_array($value,$added))
+                        echo "value='".$cRec['id']."'>".$cRec['id']."::".$cRec['name'];
+                    }
+                  }            
                   echo "</select><br>";
-                               
+                     if (count($added) < count($cRecs))
+                  {
+                    foreach ($cRecs as $value)
+                    {
+                      if (!in_array($value,$added))
+                        echo "value='".$cRec['id']."'>".$cRec['id']."::".$cRec['name'];
+                    }
+                  }            
                   echo "<input type=\"button\" value=\"Move Up\" ";
                   echo "onClick=\"change_order(this.form.admin_catagory_sorting.selectedIndex,-1,'category')\">&nbsp;&nbsp;&nbsp;";
                   echo "<input type=\"button\" value=\"Move Down\"";
@@ -159,7 +186,7 @@ echo "		<tr>
 			</tr>";
 			echo "
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Edit'></td>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=button onClick=\"submitorderform('category','full')\" value='Edit'></td>
 			</tr>
 $skin_tablefooter</form>";
 

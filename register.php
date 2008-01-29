@@ -15,8 +15,11 @@
 	require_once('./includes/inc/encode.inc.php');
 	session_start();
 	if ($_POST["submit"] == "Submit") {
-		if ($_POST['s_key'] !== $_SESSION["u_keycheck"]) {
-			exitPage("Please enter the secrity code <b>exactly</b> as it appears...", true);
+		if ((bool) $_CONFIG['security_code'] === true)
+    {  
+      if ($_POST['s_key'] !== $_SESSION["u_keycheck"]) {
+			 exitPage("Please enter the security code <b>exactly</b> as it appears...", true);
+		  }
 		}
 		$_SESSION = array();
 		setcookie(session_name(), '', time()-42000, '/');
@@ -42,44 +45,73 @@
 		if (strlen($_POST["u_sig"]) > 200) exitPage("You cannot have more than 200 characters in your signature.", true);
 		if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["u_email"])) exitPage("please enter a valid email!", true);
 			$email = explode("@", $_POST["u_email"]);
-		if(function_exists('checkdnsrr')) {
-			if (!checkdnsrr($email[1], "MX")) exitPage("Please enter a valid email! No mail server seems to exist at <b>www.".$email[1]."</b>", true);
-		}
+	
+	   //call to checkdnsrr removed due to false negatives occuring. Some hosts use mail servers that use different domain names to the user email address.
+	
 		if (substr(trim(strtolower($_POST["u_site"])), 0, 7) != "http://") $_POST["u_site"] = "http://" . $_POST["u_site"];
 		if ($_POST["timezone"] {
 			0 }
 		== '+') $_POST["timezone"] = substr($_POST["timezone"], 1);
-		$id = $tdb->add("users", array("user_name" => $_POST["u_login"], "password" => generateHash($u_pass), "level" => 1, "email" => $_POST["u_email"], "view_email" => $_POST["show_email"], "mail_list" => $_POST["email_list"], "location" => $_POST["u_loca"], "url" => $_POST["u_site"], "avatar" => $_POST["avatar"], "icq" => $_POST["u_icq"], "aim" => $_POST["u_aim"], "yahoo" => $_POST["u_yahoo"], "msn" => $_POST["u_msn"], "sig" => chop($_POST["u_sig"]), "posts" => 0, "date_added" => mkdate(), "timezone" => $_POST["u_timezone"]));
+		$id = $tdb->add("users", array("user_name" => $_POST["u_login"], "password" => generateHash($u_pass), "level" => 1, "email" => $_POST["u_email"], "view_email" => $_POST["show_email"], "mail_list" => $_POST["email_list"], "location" => $_POST["u_loca"], "url" => $_POST["u_site"], "avatar" => $_POST["avatar"], "icq" => $_POST["u_icq"], "aim" => $_POST["u_aim"], "yahoo" => $_POST["u_yahoo"], "msn" => $_POST["u_msn"], "sig" => chop($_POST["u_sig"]), "posts" => 0, "date_added" => mkdate(),"lastvisit" => mkdate(), "timezone" => $_POST["u_timezone"]));
 		// If each user sends and receives one PM a day, their table will last 67.2 years
 		$temp_tdb = new tdb(DB_DIR."/", "privmsg.tdb");
 		$pmT_num = ceil($id / 100);
 		if (FALSE === $temp_tdb->isTable($pmT_num)) $temp_tdb->createTable($pmT_num, array(array("box", "string", 6), array("from", "number", 7), array("to", "number", 7), array("icon", "string", 10), array("subject", "memo"), array("date", "number", 14), array("message", "memo"), array("id", "id")));
 		$temp_tdb->cleanup();
 		unset($temp_tdb);
-		$f = fopen(DB_DIR."/lastvisit.dat", 'a');
-		fwrite($f, str_repeat(' ', 14));
-		fclose($f);
+		
 		$f = fopen(DB_DIR."/new_pm.dat", 'a');
 		fwrite($f, " 0");
 		fclose($f);
-		$register_msg = str_replace("<login>", $_POST['u_login'], $_REGISTER["register_msg"]);
+		
+		$register_msg = $_REGISTER['register_msg'];
+		$register_msg = str_replace("<login>", $_POST['u_login'], $register_msg);
 		$register_msg = str_replace("<password>", $u_pass, $register_msg);
-		if (!@mail($_POST["u_email"], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"])) error_log ("Unable to send register email conformation to user: ".$_POST["u_login"], 3, "./logs/error.log");
+		$email_fail = false;
+    if (!@mail($_POST["u_email"], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"])) 
+    $email_fail = true;
+		
 		require_once('./includes/header.php');
-		print "You are now registered!<BR><BR>An email has been sent to your email account with a random password, <br>which you can change at any time. It should arrive within 2 - 5 minutes. <br><br>Thank you for registering!";
-		require_once('./includes/footer.php');
-		redirect("login.php", "5");
+		if ($email_fail === false)
+    {
+      echoTableHeading("Thank you for registering!", $_CONFIG);
+      echo "
+		<tr>
+			<td class='area_1'><div class='description'>";
+      echo "<strong>You are now registered!</strong><p>An email has been sent to your email account with a random password which you can change at any time.<p>It should arrive within 2 - 5 minutes.<p>If you haven't received your password after a significant amount of time please contact an administrator who can provide you with a temporary password";
+      redirect("login.php", "5");
+      echo "</div></td></tr>$skin_tablefooter";
+		}
+		else
+    {
+      echoTableHeading("Thank you for registering!", $_CONFIG);
+	   echo "
+		<tr>
+			<td class='area_1'><div class='description'>";
+	echo "<strong>You are now registered</strong><p>Your login details:<p><strong>Username:</strong> ".$_POST['u_login'];
+		  echo "<p><strong>Password:</strong> $u_pass";
+		  echo "<p>Please make a note of your password and then login to change it<p>Click <a href='login.php'><strong>here</strong></a></a>";
+	echo "
+			</div></td>
+		</tr>
+	$skin_tablefooter";
+		}
+    require_once('./includes/footer.php');
+		
 		exit;
 	} else {
 		require_once('./includes/header.php');
-		// security mod
-		$string = md5(rand(0, microtime() * 1000000));
-		$verify_string = substr($string, 3, 7);
-		$key = md5(rand(0, 999));
-		$encid = urlencode(md5_encrypt($verify_string, $key));
-		// rather than the hidden field we have
-		$_SESSION['u_keycheck'] = $verify_string;
-		echo "<form action='register.php' method=POST>";
+		// security mod if enabled
+		if ((bool) $_CONFIG['security_code'] === true)
+    {
+      $string = md5(rand(0, microtime() * 1000000));
+		  $verify_string = substr($string, 3, 7);
+		  $key = md5(rand(0, 999));
+		  $encid = urlencode(md5_encrypt($verify_string, $key));
+		  // rather than the hidden field we have
+		  $_SESSION['u_keycheck'] = $verify_string;
+		}
+    echo "<form action='register.php' method=POST>";
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
 			<tr>
@@ -92,7 +124,10 @@
 			<tr>
 				<td class='area_1'>
 					<strong>E-mail Address:</strong> <span style='color:$required;'>*</span><br />
-					<span style='description'>Must be a valid email address (you@host.com). A random password is sent to the email address that you provide. If you use a hotmail email account, please be aware that there have been alot of missing activation emails. This is a hotmail problem.</span></td>
+					<span style='description'>Must be a valid email address (you@host.com).";
+          if ((bool) $_CONFIG['security_code'] === true)
+            echo "A random password is sent to the email address that you provide.<br>If you use a hotmail email account, please be aware that there have been alot of missing activation emails. This is a hotmail problem.";
+          echo "</span></td>
 				<td class='area_2'><input type=text name=u_email size=40></td>
 			</tr>
 			<tr>
@@ -106,13 +141,16 @@
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
-			</tr>
-			<tr>
+			</tr>";
+			if ((bool) $_CONFIG['security_code'] === true)
+			{
+        echo "<tr>
 				<td class='area_1'><strong>Security Code:</strong> <span style='color:$required;'>*</span><br />Please enter the code in the image: (all lower case)<br /><br />
 					<a href='register.php'>Load new image?</a> (will reset this page)</td>
 				<td class='area_2'><img src='./includes/image.php?id=$encid&key=$key'><br /><input type=text name=s_key maxlength=7 size=12></td>
-			</tr>
-			<tr>
+			</tr>";
+			}
+      echo "<tr>
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 		$skin_tablefooter";

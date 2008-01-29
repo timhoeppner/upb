@@ -12,7 +12,18 @@
 			//edit categories
 			if (isset($_GET["id"])) {
 				if (isset($_POST["u_cat"])) {
-					$tdb->edit("cats", $_GET["id"], array("name" => $_POST["u_cat"], "view" => $_POST["u_view"], "sort" => $_POST["u_sort"]));
+					$newlist = explode("&list",$_POST['neworder']);
+          array_shift($newlist);
+          $u_sort = "";
+          foreach ($newlist as $key => $value)
+          {
+            list($id,$title) = explode("=",$value);
+            list($catid,$name) = explode("::",$title);
+            $u_sort .= $catid;
+            if ($key < count($newlist)-1)
+            $u_sort .= ",";
+          }
+          $tdb->edit("cats", $_GET["id"], array("name" => $_POST["u_cat"], "view" => $_POST["u_view"], "sort" => $u_sort));
 					echo "
 						<div class='alert_confirm'>
 						<div class='alert_confirm_text'>
@@ -35,15 +46,15 @@
 					echo "</td>
 			</tr>
 		$skin_tablefooter";
-					echo "<form action='admin_cat.php?action=edit&id=".$_GET["id"]."' method=POST>";
+					echo "<form action='admin_cat.php?action=edit&id=".$_GET["id"]."' method='POST' name='form'>";
 		echoTableHeading("Editing a category", $_CONFIG);
-					echo "
+          echo "<input type=\"hidden\" name=\"neworder\" value=\"\">
 			<tr>
 				<th colspan='2'>&nbsp;</th>
 			</tr>
 			<tr>
-				<td class='area_1' style='width:35%'><strong>Change category id# ".$_GET["id"]."'s name to</strong></td>
-				<td class='area_2'><input type=text name=u_cat value='".$cRec[0]["name"]."' size='40'></td>
+				<td class='area_1' style='width:35%'><strong>Change category's name to</strong></td>
+				<td class='area_2'><input type='text' name='u_cat' value='".$cRec[0]["name"]."' size='40'></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Who can see this category?</strong></td>
@@ -54,32 +65,45 @@
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
-			<tr>
-				<td class='area_1'><strong>Sort the Forums in this category by their id#</strong><br /><br />
-					<strong>Note*</strong> (See the reference box below for the forums assigned to this category and their current ID#'s)</td>
-				<td class='area_2'><input type='text' name='u_sort' value='".$cRec[0]["sort"]."' size='40'> (ex. 1,2,3)</td>
+			<tr>";
+				
+        $fRecs = $tdb->query("forums", "cat='".$_GET["id"]."'");
+        if ($fRecs !== false)
+                      {
+                  echo "  <td class='area_1'><strong>Sort the Forums in this category</strong></td>
+				<td class='area_2'>";
+ 
+                    $sort = $cRec[0]["sort"];
+                    $order = explode(",",$sort);
+
+                    echo "<select multiple name=\"fsort\" size=\"".count($fRecs)."\">";
+ 
+                    for ($i = 0;$i < count($order);$i++)
+                    {
+                      foreach ($fRecs as $fRec)
+                       {
+                         if ($fRec['id'] == $order[$i])
+                          echo "<option value='".$fRec['id']."'>".$fRec['id']."::".$fRec['forum']."</option>";
+                       }
+                    }
+                     echo "</select><br>";
+                    echo "<input type=\"button\" value=\"Move Up\" ";
+     echo "onClick=\"change_order(this.form.fsort.selectedIndex,-1,'forum')\">&nbsp;&nbsp;&nbsp;";
+     echo "<input type=\"button\" value=\"Move Down\"";
+    echo "onClick=\"change_order(this.form.fsort.selectedIndex,+1,'forum')\">";
+        
+        echo "</td>
 			</tr>
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Edit'></td>
-			</tr>
-		$skin_tablefooter
-	</form>";
-		echoTableHeading("Forums assigned to this category", $_CONFIG);
-					echo "
-			<tr>
-				<th>Forum name</th>
-				<th>ID#</th>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='button' onClick=\"submitorderform('forum','full')\" value='Edit'></td>
 			</tr>";
-					$fRecs = $tdb->query("forums", "cat='".$_GET["id"]."'");
-					foreach($fRecs as $fRec) {
-						echo "
-			<tr>
-				<td class='area_1' style='width:35%;padding:12px;'><strong>".$fRec["forum"]."</strong></td>
-				<td class='area_2' style='padding:12px;'>".$fRec["id"]."</td>
-			</tr>";
-					}
-					echo "
-		$skin_tablefooter";
+			}
+			else
+			{
+      echo "<td class='area_1' colspan='2'>There are no forums in this category";
+      echo "</td></tr><tr><td colspan='2'><input type='button' onClick=\"submitorderform('forum','empty')\" value='Edit'></td></tr>";
+      }
+			echo "$skin_tablefooter</form>";
 				}
 			} else {
 				echo "No id selected.";
