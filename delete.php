@@ -80,7 +80,11 @@
 					$user = $tdb->get('users', $pRec[0]['user_id']);
 					$tdb->edit('users', $pRec[0]['user_id'], array('posts' => (int)$user[0]['posts'] - 1));
 				}
-				echo "Successfully deleted post, redirecting...";
+				echo "<div class='alert_confirm'>
+					<div class='alert_confirm_text'>
+					<strong>Post Successfully Deleted</strong></div><div style='padding:4px;'>Redirecting user back to thread
+					</div>
+					</div>";
 				require_once("./includes/footer.php");
 				redirect("viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"], "2");
 				exit;
@@ -120,25 +124,15 @@
 				$status = 'Member';
 				$statuscolor = $membercolor;
 			}
-			if ((($_COOKIE["id_env"] == $pRec[0]["user_id"])) || ($_COOKIE["power_env"] >= "2")) {
-				$edit = "<a href='editpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec[0]["id"]."'><img src='".$_CONFIG["skin_dir"]."/icons/pb_edit.JPG' alt='Edit Post' border='0'></a>";
-				$delete = "<a href='delete.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec[0]["id"]."'><img src='".$_CONFIG["skin_dir"]."/icons/pb_delete.JPG' border='0'></a>";
-			} else {
-				$edit = "";
-				$delete = "";
-			}
-			if ($_COOKIE["power_env"] >= "1") $quote = "<a href='quotepost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec[0]["id"]."'><img src='".$_CONFIG["skin_dir"]."/icons/pb_quote.JPG' border='0' alt='Quote'></a>";
-			else $quote = "";
-			if (isset($_COOKIE["id_env"]) && $pRec[0]["user_id"] != $_COOKIE["id_env"]) $pm = "<a href='newpm.php?to=".$pRec[0]["user_id"]."'><img src='".$_CONFIG["skin_dir"]."/icons/sendpm.jpg' border='0' alt='Send User a PM'></a>";
-			else $pm = "";
+			
 			$msg = UPBcoding(filterLanguage($pRec[0]["message"], $_CONFIG["censor"]));
 			echo "
 			<tr>
 				<th><div class='post_name'><a href='profile.php?action=get&id=".$pRec[0]["user_id"]."'>".$pRec[0]["user_name"]."</a></div></th>
-				<th><div style='float:left;'><img src='icon/".$pRec[0]["icon"]."'></div><div align='right'>$delete $edit $quote $reply</div></th>
+				<th><div style='float:left;'><img src='icon/".$pRec[0]["icon"]."'></div></th>
 			</tr>
 			<tr>
-				<td class='$table_color' valign=top width=15%>";
+				<td class='area_1' valign='top' style='width:15%;'>";
 			//add avatar
 			if (@$user[0]["avatar"] != "") {
 				$set_width = $avatar_width;
@@ -167,29 +161,20 @@
 				</div>
 				<br />
 				<div class='post_info_extra'>";
-			if ($pm != "") echo $pm."<br />";
-			if ($user[0]["aim"] != "") echo "&nbsp;<a href='aim:goim?screenname=".$user[0]["aim"]."'><img src='images/aol.gif' border='0' alt='AIM: ".$user[0]["aim"]."'></a>&nbsp;&nbsp;";
-			if ($user[0]["msn"] != "") echo "&nbsp;<a href='http://members.msn.com/".$user[0]["msn"]."' target='_blank'><img src='images/msn.gif' border='0' alt='MSN: ".$user[0]["msn"]."'>&nbsp;&nbsp;";
-			if ($user[0]["icq"] != "") echo "&nbsp;<a href='icq.php?action=get&id=".$pRec[0]["user_id"]."'><img src='images/icq.gif' border='0' alt='ICQ: ".$user[0]["icq"]."'></a>&nbsp;&nbsp;";
-			if ($user[0]["yahoo"] != "") echo "&nbsp;<a href='http://edit.yahoo.com/config/send_webmesg?.target=".$user[0]["yahoo"]."&.src=pg'><img border=0 src='http://opi.yahoo.com/online?u=".$user[0]["yahoo"]."&m=g&t=0' alt='Y!: ".$user[0]["yahoo"]."'></a>";
-			echo"
-				</font></font></td>
-				<td bgcolor='$table_color' valign=top><table width='100%' border='0' cellspacing='0' cellpadding='0' height='100%'>
+			echo "
+				</td>
+				<td class='area_1' valign='top'><table width='100%' border='0' cellspacing='0' cellpadding='0' height='100%'>
 					<tr valign='top'> <td height='99%'><table cellspacing=0 cellpadding=0 width='100%' border=0><tbody>
-					<tr>
-						<td width='45%'><font face=verdana color=#ffffff size=2><img src='icon/".$pRec[0]["icon"]."'> <font color='black' size='$font_s'>Posted: ".gmdate("M d, Y g:i:s a", user_date($pRec[0]["date"]))."&nbsp;&nbsp;&nbsp;&nbsp; </font></font></td>
-						<td width='55%' valign='middle'> <div align='right'><font face=verdana color=#ffffff size=2><font color=yellow size=1>$edit $delete $quote <a href='profile.php?action=get&id=".$pRec[0]["user_id"]."'><img src='".$_CONFIG["skin_dir"]."/icons/pb_profile.JPG' alt='Profile' border='0'></a></font> <a href='".$user[0]["url"]."' target = '_blank'><img src='".$_CONFIG["skin_dir"]."/icons/pb_www.JPG' border='0' alt='homepage'></a> <a href='email.php?id=".$pRec[0]["user_id"]."'><img src='".$_CONFIG["skin_dir"]."/icons/pb_email.JPG' border='0' alt='email ".$pRec[0]["user_name"]."'></a></font></div></td>
-					</tr>
 				</table>
 				<table width=100% cellspacing=0 cellpadding=0>
 					<tr>
-						<td height=1 bgcolor='$divider'></td>
+						<td  height=1 bgcolor='$divider'></td>
 					</tr>
-				</table><br /><font size='$font_m' face='$font_face'>$msg</font></td>
+				</table><br />$msg</td>
 			</tr>
 			<tr valign='bottom'>
 				<td height='1%'><br />".$user[0]["sig"]."</td>
-			</tr>";
+			</tr></table>";
 			echo "
 		$skin_tablefooter";
 			ok_cancel("delete.php?action=".$_GET["action"]."&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$_GET["p_id"], "Delete Post?");

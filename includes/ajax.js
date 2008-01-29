@@ -96,7 +96,7 @@ var http_request = false;
          alert('Cannot create XMLHTTP instance');
          return false;
       }
-      alert(div);
+      //alert(div);
       if (type == 'edit')
         http_request.onreadystatechange = EditContents;
       else if (type == 'getpost')
@@ -156,12 +156,11 @@ var http_request = false;
             result = http_request.responseText;
             //alert(result);
             result_array = result.split("<!--divider-->");
-            document.getElementById('newpost').innerHTML = result_array[0];
+            document.getElementById('current_posts').innerHTML = result_array[0];
             //alert(result_array[1]);
             document.getElementById('pagelink1').innerHTML = result_array[1];
-            document.getElementById('quickreplyform').innerHTML = result_array[2];
-            txtArea = document.getElementById('newentry');
-            txtArea.value = "";
+            document.getElementById('pagelink2').innerHTML = result_array[2];
+            document.getElementById('quickreplyform').innerHTML = result_array[3];
          } else {
             alert(http_request.status)
             alert('There was a problem with the request.');
@@ -191,7 +190,6 @@ var http_request = false;
       poststr += "&icon="+escape(Utf8.encode( document.getElementById("icon").value));
       poststr += "&newentry=" + escape(Utf8.encode( document.getElementById("newentry").value));
       poststr += "&username="+escape(Utf8.encode( document.getElementById("username").value));
-      poststr += "&page="+escape(Utf8.encode( document.getElementById("page").value));
       
       //alert(poststr)
       makePOSTRequest('quickreply.php', poststr,'reply');

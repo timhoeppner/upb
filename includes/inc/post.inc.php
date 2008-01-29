@@ -160,7 +160,7 @@ function bbcodebuttons($txtarea='message') {
   return $bb_buttons."<br>";
 }
 
-function getSmilies()
+function getSmilies($field = 'message')
 {
   $tdb = new tdb(DB_DIR.'/', 'bbcode.tdb');
   $tdb->setFP("smilies","smilies");
@@ -168,7 +168,7 @@ function getSmilies()
   //var_dump($smilies);
   foreach ($smilies as $key => $smiley)
   {
-    $output .= "<A HREF=\"javascript:setsmilies(' ".$smiley['bbcode']." ','message')\" ONFOCUS=\"filter:blur()\">".$smiley['replace']."</A>&nbsp;&nbsp;&nbsp;&nbsp;";
+    $output .= "<A HREF=\"javascript:setsmilies(' ".$smiley['bbcode']." ','$field')\" ONFOCUS=\"filter:blur()\">".$smiley['replace']."</A>&nbsp;&nbsp;&nbsp;&nbsp;";
     if ($key%10 == 9)
       $output .= "<br>";
   }   

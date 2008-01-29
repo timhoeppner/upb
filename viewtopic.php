@@ -31,6 +31,7 @@
 		$_GET['page'] = ceil((substr_count($tRec[0]['p_ids'], ',') + 1) / $_CONFIG['posts_per_page']);
 	}
 	$pRecs = $posts_tdb->getPosts("posts", (($_CONFIG["posts_per_page"] * $_GET["page"])-$_CONFIG["posts_per_page"]), $_CONFIG["posts_per_page"]);
+	//$pRecs = $posts_tdb->getPosts("posts", 20,20);
 	if (empty($pRecs)) exitPage("Posts not found");
 	$num_pages = ceil(($tRec[0]["replies"] + 1) / $_CONFIG["posts_per_page"]);
 	$p = createPageNumbers($_GET["page"], $num_pages, $_SERVER['QUERY_STRING']);
@@ -44,7 +45,9 @@
 	if ($_GET['page'] == 1) $first_post = $pRecs[0]['id'];
 	else $first_post = 0;
 	$x = +1;
-	foreach($pRecs as $pRec) {
+	
+  echo "<div name='current_posts' id='current_posts'>";
+  foreach($pRecs as $pRec) {
 		// display each post in the current topic
 		echo "
 			<a name='{$pRec['id']}'>
@@ -53,11 +56,11 @@
 			<div class='cat_area_1' style='text-align:center;'>Posted: ".gmdate("M d, Y g:i:s a", user_date($pRec["date"]))."</div>
 			<table class='main_table' cellspacing='1'>";
 		if ($x == 0) {
-			$table_color = area_1;
+			$table_color = 'area_1';
 			$table_font = $font1;
 			$x++;
 		} else {
-			$table_color = area_2;
+			$table_color = 'area_2';
 			$table_font = $font2;
 			$x--;
 		}
@@ -170,8 +173,12 @@
 			</tr>
 		$skin_tablefooter </div>";
 	}
+	echo "</div>";
 	
-	echo "<div name='newpost' id='newpost'></div>";
+	$p = createPageNumbers($_GET["page"], $num_pages, $_SERVER['QUERY_STRING']);
+	echo "<div id='pagelink2' name='pagelink2'>";
+  $posts_tdb->d_posting($p,"bottom");
+	echo "</div>";
 	
 	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0))
 {
