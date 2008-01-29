@@ -123,20 +123,27 @@ $skin_tablefooter";
 								break 1;
 								
 								case "list":
-                  $sort = $_CONFIG['admin_catagory_sorting'];
-                  $order = explode(",",$sort);
                   $cRecs = $tdb->listRec("cats", 1);
-                      
-                  var_dump($order);          
-                  if (count($sort) != count($cRecs))
+                  if ($cRecs === false)
                   {
-                    foreach ($cRecs as $value)
-                    {
-                      if (!in_array($value['id'],$order))
-                        $order[] = $value['id'];
-                    }
+                    echo "No categories have been added yet";
+                    break 1;
                   }
-                                
+                  else
+                  {
+                    $sort = $_CONFIG['admin_catagory_sorting'];
+                    $order = explode(",",$sort);
+                  
+                    /* UN-COMMENT IF CATEGORY SORT DATA GETS CORRUPTED DURING TESTING    
+                    if (count($sort) != count($cRecs))
+                    {
+                      foreach ($cRecs as $value)
+                      {
+                        if (!in_array($value['id'],$order))
+                          $order[] = $value['id'];
+                      }
+                    }
+                     */           
                   echo "<select multiple name=\"".$configVars[$i]["name"]."\" size=\"".count($cRecs)."\">";
                   for ($i = 0;$i < count($order);$i++)
                   {
@@ -172,6 +179,7 @@ $skin_tablefooter";
                   echo "<input type=\"button\" value=\"Move Down\"";
                   echo "onClick=\"change_order(this.form.admin_catagory_sorting.selectedIndex,+1,'category')\">";
                   break 1;
+                  }
 							}
 							echo "</td>
 			</tr>";
@@ -186,7 +194,13 @@ echo "		<tr>
 			</tr>";
 			echo "
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=button onClick=\"submitorderform('category','full')\" value='Edit'></td>
+				<td class='footer_3a' colspan='2' style='text-align:center;'>";
+      
+      if ($cRecs === false)
+        echo "<input type=button onClick=\"submitorderform('category','empty')\" value='Edit'>";
+      else
+        echo "<input type=button onClick=\"submitorderform('category','full')\" value='Edit'>";
+      echo "</td>
 			</tr>
 $skin_tablefooter</form>";
 
