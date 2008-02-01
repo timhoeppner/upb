@@ -152,28 +152,10 @@ $skin_tablefooter";
                       if ($cRec['id'] == $order[$i])
                       {
                         echo "<option value='".$cRec['id']."'>".$cRec['id']."::".$cRec['name']."</option>";
-                        $added[] = $cRec['id'];
                       }
                     }
                   }
-                  
-                  if (count($added) < count($cRecs))
-                  {
-                    foreach ($cRecs as $value)
-                    {
-                      if (!in_array($value,$added))
-                        echo "value='".$cRec['id']."'>".$cRec['id']."::".$cRec['name'];
-                    }
-                  }            
-                  echo "</select><br>";
-                     if (count($added) < count($cRecs))
-                  {
-                    foreach ($cRecs as $value)
-                    {
-                      if (!in_array($value,$added))
-                        echo "value='".$cRec['id']."'>".$cRec['id']."::".$cRec['name'];
-                    }
-                  }            
+                            
                   echo "<input type=\"button\" value=\"Move Up\" ";
                   echo "onClick=\"change_order(this.form.admin_catagory_sorting.selectedIndex,-1,'category')\">&nbsp;&nbsp;&nbsp;";
                   echo "<input type=\"button\" value=\"Move Down\"";

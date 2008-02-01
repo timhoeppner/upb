@@ -193,7 +193,7 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Message Icon:</strong></td>
-				<td class='area_2'><div style='width:610px;'><input type=radio name=icon value='icon1.gif' CHECKED><img src='./icon/icon1.gif'>$icons</div></td>
+				<td class='area_2'><div style='width:610px;'>$icons</div></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
@@ -203,7 +203,7 @@
 		echo "
 					<div style='text-align:center;'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=350,height=450,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></div></td>
 				<td class='area_2'>
-        ".bbcodebuttons()."<textarea name='message' id='look1'>".$message."</textarea>
+        ".bbcodebuttons('look1')."<textarea name='message' id='look1'>".$message."</textarea>
 					<div style='padding:8px;'>".getSmilies('look1')."</div></td>
 			</tr>
 			<tr>

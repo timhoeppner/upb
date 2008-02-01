@@ -15,7 +15,8 @@
 				<a href='admin_iplog.php' target = '_parent'>Ip Address Log</a><br />
 				<a href='admin_banuser.php' target = '_parent'>Manage Banned users</a><br />
 				<a href='admin_badwords.php' target = '_parent'>Manage Bad Words</a><br />
-				<a href='admin_smilies.php' target = '_parent'>Manage Smilies</a></span></div>";
+				<a href='admin_smilies.php' target = '_parent'>Manage Smilies</a><br />
+				<a href='admin_icons.php' target = '_parent'>Manage Post Icons</a></span></div>";
 		}
 	}
 ?>

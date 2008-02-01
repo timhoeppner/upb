@@ -38,7 +38,7 @@ if($_GET["action"] == "addnew") {
 		//ADD SMILIE GOES HERE........UPLOAD FILE FORM NEEDED
 		redirect("admin_smilies.php", 1);
 	} else {
-    echo "<form action='admin_cat.php?action=addnew' method=POST>";
+    echo "<form action='admin_smilies.php?action=addnew' method=POST>";
 		echoTableHeading("Add a new smilie", $_CONFIG);
 				echo "
 			<tr>
@@ -121,8 +121,6 @@ elseif($_GET["action"] == "edit")
   //redirect("admin_smilies.php", 3);
 }
 else {
-	$bdb = new tdb(DB_DIR.'/','bbcode.tdb');
-  $bdb->setFP('smilies','smilies');
   $smilies = $bdb->query('smilies',"id>'0'");
   //var_dump($smilies);
   

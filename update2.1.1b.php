@@ -3,7 +3,6 @@ require_once("config.php");
 require_once("./includes/class/func.class.php");
 require_once('./includes/header_simple.php');
 
-
 $tdb->setFp("config", "config");
 $tdb->setFp("ext_config", "ext_config");
 $tdb->setFP("members","members");
@@ -45,12 +44,20 @@ if (file_exists(DB_DIR."/bbcode.tdb"))
   $tdb->removeDatabase('bbcode.tdb');
 }
 //die();
+
 $tdb = new tdb('', '');
 $tdb->createDatabase(DB_DIR."/", "bbcode.tdb");
 $tdb->tdb(DB_DIR.'/', 'bbcode.tdb');
 $tdb->createTable('smilies', array(array('id', 'id'), array('bbcode', 'memo'),array('replace','memo'),array('type','string',4)));
+$tdb->createTable('icons',array(array('id','id'),array('filename','memo')));
 //$tdb->cleanUp();
 $tdb->setFp("smilies","smilies");
+$tdb->setFp("icons","icons");
+for ($i = 1;$i<22;$i++)
+{
+  $filename = 'icon'.$i.'.gif';
+  $tdb->add('icons',array("filename"=>$filename));
+}
 
 //type has three possible values
 //main is shown on main page, more is shown on more smilies page, none means is not displayed but still available to show in the database

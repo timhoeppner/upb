@@ -5,22 +5,25 @@
 // Version: 2.0
 
 //Special Posting Functions
-function message_icons() {
-    $dir = opendir("./icon");
-    $r = "";
-    while($file = readdir($dir)) {
-        $str = strpos($file, "con", 0);
-        if ($str == "1") {
-            $fileext = explode(".", $file);
-            $fileext = end($fileext);
-            if ($fileext == "gif" or $fileext =="jpg") {
-                if($file != "icon1.gif"){
-                $r .= "<input type=radio name=icon value='$file'><img src='./icon/$file' border='0'>";
-                }
-            }
-        }
-    }
-    return $r;
+function message_icons()
+{
+  $tdb = new tdb(DB_DIR.'/', 'bbcode.tdb');
+  $tdb->setFP("icons","icons");
+  $icons = $tdb->query("icons","id>'0'");
+  //var_dump($smilies);
+  $output = "";
+  $checked = "";
+  foreach ($icons as $key => $icon)
+  {
+    if ($key == 0)
+      $checked = 'checked';
+    else
+      $checked = "";
+    $output .= "<input type='radio' name='icon' value=".$icon['filename']." $checked><img src='./icon/".$icon['filename']."' border='0'>&nbsp;&nbsp;&nbsp;&nbsp;";
+    if ($key%10 == 9)
+      $output .= "<br>";
+  }   
+  return $output;
 }
 
 function format_text($text) {
