@@ -158,7 +158,7 @@
 		echoTableHeading("Community Information", $_CONFIG);
 	echo "
 			<tr>
-				<td class='sub_cat'>Users online in the last 15 minutes: $whos_t</td>
+				<th>Users online in the last 15 minutes: $whos_t</th>
 			</tr>
 			<tr>
 				<td class='area_2'>";
@@ -169,7 +169,7 @@
 					<strong>".$users_string."</strong></td>
 			</tr>
 			<tr>
-				<td class='sub_cat'>Board Statistics</td>
+				<th>Board Statistics</th>
 			</tr>
 			<tr>
 				<td class='area_1'>

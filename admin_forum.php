@@ -136,6 +136,7 @@
 						Successfully deleted forum.
 						</div>
 						</div>";
+						redirect($_SERVER['PHP_SELF'], 2);
 				} elseif($verify == "Cancel") {
 					redirect($_SERVER['PHP_SELF'], 0);
 				} else {

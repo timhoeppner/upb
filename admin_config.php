@@ -101,7 +101,7 @@ $skin_tablefooter";
 						
 							switch($configVars[$i]["form_object"]) {
 								case "text":
-								echo "<input type=\"text\" name=\"".$configVars[$i]["name"]."\" value=\"".$configVars[$i]["value"]."\" size='40'>";
+								echo "<input type=\"text\" name=\"".$configVars[$i]["name"]."\" value=\"".stripslashes($configVars[$i]["value"])."\" size='40'>";
 								break 1;
 								case "password":
 								echo "<input type=\"password\" name=\"".$configVars[$i]["name"]."\" value=\"".$configVars[$i]["value"]."\" size='40'>";
@@ -123,6 +123,7 @@ $skin_tablefooter";
 								break 1;
 								
 								case "list":
+                  
                   $cRecs = $tdb->listRec("cats", 1);
                   if ($cRecs === false)
                   {
@@ -131,35 +132,54 @@ $skin_tablefooter";
                   }
                   else
                   {
+                    
                     $sort = $_CONFIG['admin_catagory_sorting'];
                     $order = explode(",",$sort);
-                  
-                    /* UN-COMMENT IF CATEGORY SORT DATA GETS CORRUPTED DURING TESTING    
-                    if (count($sort) != count($cRecs))
+                    
+                    if ($sort == "") //check if config is set correctly if not use data from database
+                    {
+                      $order = array();
+                      foreach ($cRecs as $value)
+                      {
+                        $order[] = $value['id'];
+                      }
+                    }
+                    
+                    // UN-COMMENT IF CATEGORY SORT DATA GETS CORRUPTED DURING TESTING    
+                    //echo "cRecs ^".dump($cRecs)."<p>";
+                    
+                    //echo "order ^".dump($order)."<p>";
+                    
+                    //checks to make sure all categories are available for sorting
+                    if (count($cRecs) > count($order)) 
                     {
                       foreach ($cRecs as $value)
                       {
+                        
                         if (!in_array($value['id'],$order))
                           $order[] = $value['id'];
                       }
                     }
-                     */           
-                  echo "<select multiple name=\"".$configVars[$i]["name"]."\" size=\"".count($cRecs)."\">";
-                  for ($i = 0;$i < count($order);$i++)
+                            
+                  echo "<table border='0'>";
+                  echo "<tr><td rowspan='2'>";
+                  echo "<select id='".$configVars[$i]["name"]."' multiple name=\"".$configVars[$i]["name"]."\" size=\"".count($cRecs)."\">";
+                  for ($k = 0;$k < count($order);$k++)
                   {
                     foreach ($cRecs as $cRec)
                     {
-                      if ($cRec['id'] == $order[$i])
+                      if ($cRec['id'] == $order[$k])
                       {
-                        echo "<option value='".$cRec['id']."'>".$cRec['id']."::".$cRec['name']."</option>";
+                        echo "<option value='".$cRec['id']."'>".$cRec['name']."</option>";
                       }
                     }
                   }
-                            
-                  echo "<input type=\"button\" value=\"Move Up\" ";
-                  echo "onClick=\"change_order(this.form.admin_catagory_sorting.selectedIndex,-1,'category')\">&nbsp;&nbsp;&nbsp;";
-                  echo "<input type=\"button\" value=\"Move Down\"";
-                  echo "onClick=\"change_order(this.form.admin_catagory_sorting.selectedIndex,+1,'category')\">";
+                  echo "</select></td></tr>";
+                  //echo "<tr><td><input type=\"button\" value=\"^\" ";
+                  echo "<tr><td><img src='./images/up.gif' ";
+                  echo "onClick=\"moveOptionsUp('".$configVars[$i]["name"]."');".$configVars[$i]["name"].".focus()\"><p>";
+                  echo "<img src='./images/down.gif' ";
+                  echo "onClick=\"moveOptionsDown('".$configVars[$i]["name"]."');".$configVars[$i]["name"].".focus()\"></td></tr></table>";
                   break 1;
                   }
 							}

@@ -232,4 +232,12 @@ function strmstr($haystack, $needle, $before_needle=FALSE) {
  if($before_needle) return substr($haystack,0,($pos-1)+strlen($needle));
  else return substr($haystack,$pos);
  }
+ 
+//for debugging
+function dump($array)
+{
+  echo "<pre>";
+  var_dump($array);
+  echo "</pre>";
+}
 ?>

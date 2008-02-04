@@ -11,6 +11,7 @@ $where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin
 require_once('./includes/header.php');
 $bdb = new tdb(DB_DIR.'/','bbcode.tdb');
 $bdb->setFP('icons','icons');
+
 if(!(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_COOKIE["power_env"]) && isset($_COOKIE["id_env"]))) {
 	echo "you are not even logged in";
 	redirect("login.php?ref=admin_smilies.php", 2);
@@ -33,66 +34,133 @@ echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $wher
 if(!($tdb->is_logged_in() && $_COOKIE["power_env"] == 3)) exitPage("you are not authorized to be here.");
 if($_GET["action"] == "addnew") 
 {
-  $error = "";
-
-  if($_FILES["icon_file"]['name'] != "") 
+  $error = $success = array();
+  $x = 0;
+  if (!empty($_FILES))
   {
-    if ($_FILES["icon_file"]["type"] != "image/gif")
-      $error .= "Error: File must be a gif file ".$_FILES["icon_file"]["type"]."<br />";
-    
-    if ($_FILES['icon_file']['size'] > 3072 or ($_FILES["icon_file"]["error"] > 0 and $_FILES["icon_file"]["error"] < 3))
-      $error .= "Error: File size must be under 3KB<br />";
-    
-    if ($_FILES["icon_file"]["error"] > 2)
-      $error .= "File Upload Error: " . $_FILES["icon_file"]["error"] . "<br />";
-
-    if ($error != "")
+    foreach ($_FILES['icon_file']['name'] as $key => $value)
     {
-      echo "<div class='alert'>
-			<div class='alert_text'>
-			<strong>File Upload Error</strong></div><div style='padding:4px;'>$error<P><a href='admin_icons.php?action=addnew'>Back to upload form</a></div>
-			</div>";
-    }
-    else
-    {
-      $upload_dir = "./icon/";
-      $upload_filename = $upload_dir.basename($_FILES['icon_file']['name']);
-      if (@move_uploaded_file($_FILES['icon_file']['tmp_name'], $upload_filename)) 
+      if ($value != "")
+        $x++;
+      else
       {
-        $bdb->add('icons',array("filename"=>$_FILES['icon_file']['name']));
-        
-        echo "<div class='alert_confirm'>
-					<div class='alert_confirm_text'>
-					<strong>Post Icon Upload Successful</strong></div>
-          <div style='padding:4px;'>The Post Icon has been uploaded and is available for use.
-					</div>
-					</div>";
-          redirect("admin_icons.php", 2);
-      } 
-      else 
-      {
-        echo "<div class='alert'>
-			<div class='alert_text'>
-			<strong>File Upload Error</strong></div><div style='padding:4px;'>Post Icon was unable to be saved.<br>Please check the permissions for the 'icon' directory. It should be 777<p><a href='admin_icons.php?action=addnew'>Back to upload form</a></div>
-			</div>";
+        unset ($_FILES['icon_file']['name'][$key]);
+        unset ($_FILES['icon_file']['type'][$key]);
+        unset ($_FILES['icon_file']['tmp_name'][$key]);
+        unset ($_FILES['icon_file']['error'][$key]);
+        unset ($_FILES['icon_file']['size'][$key]);
       }
-     
     }
-  } 
+  }
+
+  if($x != 0) 
+  {
+    //this first section will be the same for smilies
+    foreach ($_FILES['icon_file']['name'] as $key => $value)
+    {
+      if ($_FILES["icon_file"]["type"][$key] != "image/gif")
+        $error[$key]['type'] .= "File must be a gif file ".$_FILES["icon_file"]["type"][$key]."<br />";
+    
+      if ($_FILES['icon_file']['size'][$key] > 3072 or ($_FILES["icon_file"]["error"][$key] > 0 and $_FILES["icon_file"]["error"][$key] < 3))
+        $error[$key]['size'] .= "File size must be under 3KB<br />";
+    
+      if ($_FILES["icon_file"]["error"][$key] > 2)
+        $error[$key]['unknown'] .= "Upload Error: " . $_FILES["icon_file"]["error"] . "<br />";
+        
+      if (!empty($error[$key]))
+        $error[$key]['name'] = $_FILES["icon_file"]["name"][$key];
+    }
+ 
+    foreach ($_FILES['icon_file']['name'] as $key => $value)
+    {
+      if (empty($error[$key]))
+      {
+        $upload_dir = "./icon/";
+        $upload_filename = $upload_dir.basename($_FILES['icon_file']['name'][$key]);
+      
+        if (!file_exists($upload_filename))
+        {  
+          if (@move_uploaded_file($_FILES['icon_file']['tmp_name'][$key], $upload_filename)) 
+          {
+            $bdb->add('icons',array("filename"=>$_FILES['icon_file']['name'][$key]));
+            $success[$key]['name'] = $_FILES['icon_file']['name'][$key]; 
+          }
+          else
+            $error[$key]['move'] = "Icon unable to be saved in the icon directory<br />"; 
+        }
+        else
+          $error[$key]['exists'] = "Icon already exists. Please delete it before uploading a new one";
+      }
+      
+      if (!empty($error[$key]))
+        $error[$key]['name'] = $_FILES['icon_file']['name'][$key];
+    }
+      
+    foreach ($success as $key => $value)
+    {
+      echo "<div class='alert_confirm'>
+					<div class='alert_confirm_text'>
+					<strong>Post Icon(s) Upload Successful</strong></div>
+          <div style='padding:4px;'>";
+      echo $success[$key]['name']." has been uploaded and is available for use.<br>";
+			echo "</div></div>";
+			
+      if (count($success) == count($_FILES["icon_file"]["name"]))
+        redirect("admin_icons.php", 2);
+    }
+    
+    dump($error);
+    
+    if (!empty($error)) 
+    {
+      echo "<div class='alert'>";
+      $permission = false; //toggle for whether to show folder permission message
+      foreach ($error as $key => $value)
+      {
+        //print out error messages
+        echo "<div class='alert_text'>Errors for ".$value['name']."</div>";
+        foreach ($value as $err_key => $msg)
+        {
+          if ($err_key != "name")
+            echo $msg;
+          if ($err_key == "move")
+            //set toggle to true if there is a problem moving from temp folder to icon folder
+            $permission = true; 
+        }
+      }
+      
+      if ($permission === true)
+        echo "An error has occurred moving one or more icons to the icon folder.<br>Please check the permissions for this folder. They should be set to 775 or 777";
+      echo "<p><a href='admin_icons.php?action=addnew'>Back to upload form</a></div></div>";
+    }
+  }
   else 
   {
-    echo "<form action='admin_icons.php?action=addnew' method='POST' enctype='multipart/form-data'>";
-		echo "<input type='hidden' name='MAX_FILE_SIZE' value='3072' />";
+    echo "<form action='admin_icons.php?action=addnew' name='icon_upload' method='POST' enctype='multipart/form-data'>";
+		echo "<input type='hidden' name='MAX_FILE_SIZE' value='15500' />";
     echoTableHeading("Add a new post icon", $_CONFIG);
 				echo "<tr><th colspan='2'>Post Icon File Requirements</th>";
-        echo "<tr><td class='area_2' style='padding:8px;' colspan='2'>Post Icons must be gif files and have a maximum filesize of 3KB</td></tr>";
+        echo "<tr><td class='area_2' style='padding:8px;' colspan='2'>Post Icons must be gif files and have a maximum filesize of 3KB each</td></tr>";
         echo "
 			<tr>
 				<th colspan='2'>&nbsp;</th>
 			</tr>
 			<tr>
-				<td class='area_1' style='width:20%'><strong>Post Icon file</strong></td>
-				<td class='area_2'><input type='file' name='icon_file'></td>
+				<td class='area_1' style='width:20%'><strong>Number of icons</strong></td>
+				<td class='area_2'><select onChange=\"addFields('files')\" name='count'>";
+      
+      for ($i = 1;$i<=5;$i++)
+      {
+        $selected = '';
+        if ($i == 1)
+          $selected = "selected";
+        echo "<option value='$i' $selected>$i</option>";
+      }
+      echo "</select></td>
+			</tr>
+			<tr>
+				<td class='area_1' style='width:20%'><strong>Post Icon files</strong></td>
+				<td class='area_2'><div id='files' name='files'><input type='file' name='icon_file[]' onChange=\"isImage('this')\"></div></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
@@ -158,7 +226,7 @@ else {
   echo "
 				<div id='tabstyle_2'>
 				<ul>
-				<li><a href='admin_icons.php?action=addnew' title='Add a new post icon?'><span>Add a new post icon?</span></a></li>
+				<li><a href='admin_icons.php?action=addnew' title='Add a new post icon?'><span>Add new post icon(s)?</span></a></li>
 				</ul>
 				</div>
 				<div style='clear:both;'></div>";
@@ -179,7 +247,7 @@ echo "<tr><th colspan='4'>Post Icon Management</th>";
     foreach ($icons as $key => $icon)
     {
       $id = $icon['id'];
-      echo "<td class='area_2' style='padding:8px;text-align:center;'><img src='./icon/".$icon['filename']."' border='0'></td>\n";
+      echo "<td class='area_2' style='padding:8px;text-align:center;'><img src='./icon/".$icon['filename']."' border='0'><br>".$icon['filename']."</td>\n";
       echo "<td class='area_1' style='padding:8px;text-align:center;'>";
       if (count($icons) > 1)
         echo "<input type='checkbox' name='{$id}_delete' value='$id'>";

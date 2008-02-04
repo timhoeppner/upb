@@ -12,18 +12,7 @@
 			//edit categories
 			if (isset($_GET["id"])) {
 				if (isset($_POST["u_cat"])) {
-					$newlist = explode("&list",$_POST['neworder']);
-          array_shift($newlist);
-          $u_sort = "";
-          foreach ($newlist as $key => $value)
-          {
-            list($id,$title) = explode("=",$value);
-            list($catid,$name) = explode("::",$title);
-            $u_sort .= $catid;
-            if ($key < count($newlist)-1)
-            $u_sort .= ",";
-          }
-          $tdb->edit("cats", $_GET["id"], array("name" => $_POST["u_cat"], "view" => $_POST["u_view"], "sort" => $u_sort));
+          $tdb->edit("cats", $_GET["id"], array("name" => $_POST["u_cat"], "view" => $_POST["u_view"], "sort" => $_POST['neworder']));
 					echo "
 						<div class='alert_confirm'>
 						<div class='alert_confirm_text'>
@@ -76,21 +65,24 @@
                     $sort = $cRec[0]["sort"];
                     $order = explode(",",$sort);
 
-                    echo "<select multiple name=\"fsort\" size=\"".count($fRecs)."\">";
+                    echo "<table><tr><td>";
+                    echo "<select id='fsort' multiple name='fsort' size='".count($fRecs)."'>";
  
                     for ($i = 0;$i < count($order);$i++)
                     {
                       foreach ($fRecs as $fRec)
                        {
                          if ($fRec['id'] == $order[$i])
-                          echo "<option value='".$fRec['id']."'>".$fRec['id']."::".$fRec['forum']."</option>";
+                          echo "<option value='".$fRec['id']."'>".$fRec['forum']."</option>";
                        }
                     }
-                     echo "</select><br>";
-                    echo "<input type=\"button\" value=\"Move Up\" ";
-     echo "onClick=\"change_order(this.form.fsort.selectedIndex,-1,'forum')\">&nbsp;&nbsp;&nbsp;";
-     echo "<input type=\"button\" value=\"Move Down\"";
-    echo "onClick=\"change_order(this.form.fsort.selectedIndex,+1,'forum')\">";
+                     echo "</select></td>";
+                    echo "<td><img src='./images/up.gif' ";
+     //echo "onClick=\"change_order(this.form.fsort.selectedIndex,-1,'forum')\">&nbsp;&nbsp;&nbsp;";
+     echo "onClick=\"moveOptionsUp('fsort');fsort.focus();\">&nbsp;&nbsp;&nbsp;";
+     echo "<p><img src='./images/down.gif' ";
+    //echo "onClick=\"change_order(this.form.fsort.selectedIndex,+1,'forum')\">";
+    echo "onClick=\"moveOptionsDown('fsort');fsort.focus();\"></td></tr></table>";
         
         echo "</td>
 			</tr>
