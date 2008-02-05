@@ -33,54 +33,184 @@ echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $wher
 if(!($tdb->is_logged_in() && $_COOKIE["power_env"] == 3)) exitPage("you are not authorized to be here.");
 if($_GET["action"] == "addnew") {
 	
-  if($_POST["replace"] != "") {
-		echo "adding new smilie...";
-		//ADD SMILIE GOES HERE........UPLOAD FILE FORM NEEDED
-		redirect("admin_smilies.php", 1);
+	$bbcodes = $bdb->query('smilies', "id>'0'",1,-1,array('bbcode'));
+  
+  foreach ($bbcodes as $value)
+    $codes[] = $value['bbcode'];
+	
+  $error = $success = array();
+  $x = 0;
+  if (!empty($_FILES))
+  {
+    foreach ($_FILES['icon_file']['name'] as $key => $value)
+    {
+      if ($value != "")
+        $x++;
+      else
+      {
+        unset ($_FILES['icon_file']['name'][$key]);
+        unset ($_FILES['icon_file']['type'][$key]);
+        unset ($_FILES['icon_file']['tmp_name'][$key]);
+        unset ($_FILES['icon_file']['error'][$key]);
+        unset ($_FILES['icon_file']['size'][$key]);
+      }
+    }
+  }
+  
+  if($x != 0) 
+  {
+    foreach ($_FILES['icon_file']['name'] as $key => $value)
+    {
+      $allowed_types = array('image/gif', 'image/jpeg', 'image/png');
+      if (!in_array($_FILES["icon_file"]["type"][$key],$allowed_types))
+        $error[$key]['type'] .= "File must be a gif, jpg or png file<br />File uploaded was of type: ".$_FILES["icon_file"]["type"][$key]."<br />";
+    
+      if ($_FILES['icon_file']['size'][$key] > 51200 or ($_FILES["icon_file"]["error"][$key] > 0 and $_FILES["icon_file"]["error"][$key] < 3))
+        $error[$key]['size'] .= "File size must be under 50KB<br />";
+    
+      if ($_FILES["icon_file"]["error"][$key] > 2)
+        $error[$key]['unknown'] .= "Upload Error: " . $_FILES["icon_file"]["error"] . "<br />";
+      
+      if (in_array($_POST['bbcode'][$key],$codes))
+        $error[$key]['bbcode'] .= "A smilie already exists for the text you entered to be replaced<br />";
+      
+      if ($_POST['bbcode'][$key] == "")
+        $error[$key]['empty'] .= "No bbcode was entered<br />";
+      
+      if (!empty($error[$key]))
+        $error[$key]['name'] = $_FILES["icon_file"]["name"][$key];
+    }
+ 
+    foreach ($_FILES['icon_file']['name'] as $key => $value)
+    { 
+      if (empty($error[$key]))
+      {
+        $upload_dir = "./smilies/";
+        $upload_filename = $upload_dir.basename($_FILES['icon_file']['name'][$key]);
+      
+        if (!file_exists($upload_filename))
+        {  
+          if (@move_uploaded_file($_FILES['icon_file']['tmp_name'][$key], $upload_filename)) 
+          {
+            $alt = $_POST['bbcode'][$key];
+            if (strlen($_POST['bbcode'][$key]) > 10)
+              $alt = basename($_FILES['icon_file']['name'][$key]);
+            
+            $replace = "<img src='./smilies/".basename($_FILES['icon_file']['name'][$key])."' border='0' alt='$alt'>";
+            $array = array('bbcode'=>$_POST['bbcode'][$key],'replace'=>$replace,'type'=>$_POST['type'][$key]);
+            $bdb->add('smilies',$array);
+            $success[$key]['name'] = $_FILES['icon_file']['name'][$key]; 
+          }
+          else
+            $error[$key]['move'] = "Smilie unable to be saved in the smilies directory<br />"; 
+        }
+        else
+          $error[$key]['exists'] = "Smilie already exists. Please delete it before uploading a new one";
+      }
+      
+      if (!empty($error[$key]))
+        $error[$key]['name'] = $_FILES['icon_file']['name'][$key];
+    }
+      
+    foreach ($success as $key => $value)
+    {
+      echo "<div class='alert_confirm'>
+					<div class='alert_confirm_text'>
+					<strong>Smilie Upload Successful</strong></div>
+          <div style='padding:4px;'>";
+      echo $success[$key]['name']." has been uploaded and is available for use.<br>";
+			echo "</div></div>";
+			
+      if (count($success) == count($_FILES["icon_file"]["name"]))
+        redirect("admin_smilies.php", 2);
+    }
+    
+    if (!empty($error)) 
+    {
+      echo "<div class='alert'>";
+      $permission = false; //toggle for whether to show folder permission message
+      foreach ($error as $key => $value)
+      {
+        //print out error messages
+        echo "<div class='alert_text'>Errors for ".$value['name']."</div>";
+        foreach ($value as $err_key => $msg)
+        {
+          if ($err_key != "name")
+            echo $msg;
+          if ($err_key == "move")
+            //set toggle to true if there is a problem moving from temp folder to icon folder
+            $permission = true; 
+        }
+      }
+      
+      if ($permission === true)
+        echo "An error has occurred moving one or more icons to the smilies folder.<br>Please check the permissions for this folder. They should be set to 755 or 777";
+      echo "<p><a href='admin_smilies.php?action=addnew'>Back to upload form</a></div>";
+    }
 	} else {
-    echo "<form action='admin_smilies.php?action=addnew' method=POST>";
-		echoTableHeading("Add a new smilie", $_CONFIG);
-				echo "
+    echo "<form action='admin_smilies.php?action=addnew' name='icon_upload' method='POST' enctype='multipart/form-data'>";
+		echo "<input type='hidden' name='MAX_FILE_SIZE' value='250000' />";
+    echoTableHeading("Add new smilie(s)", $_CONFIG);
+				echo "<tr><th colspan='6'>Smilie File Requirements</th>";
+        echo "<tr><td class='area_2' style='padding:8px;' colspan='6'>Smiles must be gif/jpg or png files and have a maximum filesize of 50KB each</td></tr>";
+        echo "
 			<tr>
-				<th colspan='2'>&nbsp;</th>
+				<th colspan='6'>&nbsp;</th>
 			</tr>
-			<tr>
-				<td class='area_1' style='width:20%'><strong>Smilie file</strong></td>
-				<td class='area_2'><input type='file' name='smilie_file'></td>
-			</tr>
-			<tr>
+      <tr>
+				<td class='area_1'><strong>Smilie File</strong></td>
+				<td class='area_2'><input type='file' name='icon_file[]'></td>
 				<td class='area_1'><strong>Text Replaced</strong></td>
-				<td class='area_2'><select size='1' name='u_view'>
-					".createUserPowerMisc(0, 1)."</select></td>
+				<td class='area_2'><input type='text' name='bbcode[]'></td>
+				<td class='area_1'><strong>Smilie Type</strong></td>
+				<td class='area_2'><input type='radio' name='type[0]' value='main'>Main <input type='radio' name='type[0]' value='more' checked>More</td>
+			</tr>
+      <tr>
+				<td class='area_1'><strong>Smilie File</strong></td>
+				<td class='area_2'><input type='file' name='icon_file[]'></td>
+				<td class='area_1'><strong>Text Replaced</strong></td>
+				<td class='area_2'><input type='text' name='bbcode[]'></td>
+				<td class='area_1'><strong>Smilie Type</strong></td>
+				<td class='area_2'><input type='radio' name='type[1]' value='main'>Main <input type='radio' name='type[1]' value='more' checked>More</td>
+			</tr>
+      <tr>
+				<td class='area_1'><strong>Smilie File</strong></td>
+				<td class='area_2'><input type='file' name='icon_file[]'></td>
+				<td class='area_1'><strong>Text Replaced</strong></td>
+				<td class='area_2'><input type='text' name='bbcode[]'></td>
+				<td class='area_1'><strong>Smilie Type</strong></td>
+				<td class='area_2'><input type='radio' name='type[2]' value='main'>Main <input type='radio' name='type[2]' value='more' checked>More</td>
+			</tr>
+      <tr>
+				<td class='area_1'><strong>Smilie File</strong></td>
+				<td class='area_2'><input type='file' name='icon_file[]'></td>
+				<td class='area_1'><strong>Text Replaced</strong></td>
+				<td class='area_2'><input type='text' name='bbcode[]'></td>
+				<td class='area_1'><strong>Smilie Type</strong></td>
+				<td class='area_2'><input type='radio' name='type[3]' value='main'>Main <input type='radio' name='type[3]' value='more' checked>More</td>
+			</tr>
+      <tr>
+				<td class='area_1'><strong>Smilie File</strong></td>
+				<td class='area_2'><input type='file' name='icon_file[]'></td>
+				<td class='area_1'><strong>Text Replaced</strong></td>
+				<td class='area_2'><input type='text' name='bbcode[]'></td>
+				<td class='area_1'><strong>Smilie Type</strong></td>
+				<td class='area_2'><input type='radio' name='type[4]' value='main'>Main <input type='radio' name='type[4]' value='more' checked>More</td>
+			</tr>
+      <tr>
+				<td class='footer_3' colspan='6'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='area_1'><strong>Display Type</strong></td>
-				<td class='area_2'><select size='1' name='disp_type'>
-        <option value='main' selected>Main</option><option value='more'>More</option></select>
-			</td></tr>
-			<tr>
-				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
-			</tr>
-			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Add'> <input type=submit name='command' value='Add and Add another Category'> <input type=submit name='command' value='Add and Add forums to this category'></td>
+				<td class='footer_3a' colspan='6' style='text-align:center;'><input type=submit value='Add Smilie(s)'></td>
 			</tr>
 		$skin_tablefooter
 	</form>";
-    //ADD SMILIE FORM
-    ?> <form action="admin_smilies.php?action=addnew" method=POST>
-                New smilie: <input type="text" name="newsmilie" size="20">
-                <input type="text" name="replace" size="30">
-                <input type="submit" value="Add">
-                </form><?php
 	}
 } 
 elseif($_GET["action"] == "edit") 
 {
   
   $tmp = $tmp2 = $tmp3 = array();
-  echo "<pre>";
-  var_dump($_POST);
-  echo "<pre>";
   
   //process the data for each id to get an array of values for each id
   foreach ($_POST as $key=>$value)
@@ -107,16 +237,17 @@ elseif($_GET["action"] == "edit")
     //$tmp2[$result[0]['id']] = array('bbcode'=>$result[0]['bbcode'],'type'=>$result[0]['type']);
     $tmp2 = array('bbcode'=>$result[0]['bbcode'],'type'=>$result[0]['type']);
     $diff = array_diff_assoc($value,$tmp2);
-    var_dump($diff);
+    
     if (count($diff) == 0)
       continue;
     else
-    {
       $bdb->edit('smilies',$key,$diff);
-      echo "\$bdb->edit('smilies',$key,$diff)<br>";
-    }
   }
-  echo "Smilie database edited....";
+  echo "<div class='alert_confirm'>
+					<div class='alert_confirm_text'>
+					<strong>Smilie Database Edit Successful</strong></div>
+          <div style='padding:4px;'>Returning to Smilie Management</div></div>";
+  redirect('./admin_smilies.php',2);
   require_once('./includes/footer.php');
   //redirect("admin_smilies.php", 3);
 }
@@ -128,7 +259,7 @@ else {
   echo "
 				<div id='tabstyle_2'>
 				<ul>
-				<li><a href='admin_smilies.php?action=addnew' title='Add a new smilie?'><span>Add a new smilie?</span></a></li>
+				<li><a href='admin_smilies.php?action=addnew' title='Add new smilie(s)?'><span>Add new smilie(s)?</span></a></li>
 				</ul>
 				</div>
 				<div style='clear:both;'></div>";

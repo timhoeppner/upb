@@ -59,51 +59,8 @@ function submitorderform(type,status)
 document.form.submit();
 }
 
-/*function submitorderform(type,status) {
-if (status == 'full')
-{
-if (type == "category")
-  var list = document.form.admin_catagory_sorting;
-else
-  var list = document.form.fsort;
-var theList = "&";
-// start with a "?" to make it look like a real query-string
-for (i = 0; i <= list.options.length-1; i++) { 
-theList += "list" + list.options[i].value + "=" + list.options[i].text;
-// a "&" only BETWEEN the items, so not at the end
-if (i != list.options.length-1) theList += "&";
-}
-document.form.neworder.value = theList;
-}
-document.form.submit();
-}*/
-
 function swap(source) {
     if (document.images) {
         document.images['myImage'].src = source;
     }
-}
-
-var counter = 0;
-
-function addFields(divname)
-{
-  document.getElementById(divname).innerHTML = '';
-  //document.getElementById(divname).innerHTML = "<input type='file' name='icon_file[]'><br>Hello";
-  counter = document.icon_upload.count.options[document.icon_upload.count.selectedIndex].value;
-  for (i = 1; i <= counter; i++)
-  {
-    document.getElementById(divname).innerHTML += "<input type='file' name='icon_file[]'><br>";
-  }
-  return true;
-}
-
-function isImage(upload) {
-	if(!/(\.gif)$/i.test(upload.value)) {
-		alert("Invalid image file type.");
-		//upload.form.reset();
-		upload.focus();
-		return false;
-	}
-	return true;
 }

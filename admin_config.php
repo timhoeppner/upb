@@ -175,7 +175,6 @@ $skin_tablefooter";
                     }
                   }
                   echo "</select></td></tr>";
-                  //echo "<tr><td><input type=\"button\" value=\"^\" ";
                   echo "<tr><td><img src='./images/up.gif' ";
                   echo "onClick=\"moveOptionsUp('".$configVars[$i]["name"]."');".$configVars[$i]["name"].".focus()\"><p>";
                   echo "<img src='./images/down.gif' ";

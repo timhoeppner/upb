@@ -78,10 +78,8 @@
                     }
                      echo "</select></td>";
                     echo "<td><img src='./images/up.gif' ";
-     //echo "onClick=\"change_order(this.form.fsort.selectedIndex,-1,'forum')\">&nbsp;&nbsp;&nbsp;";
      echo "onClick=\"moveOptionsUp('fsort');fsort.focus();\">&nbsp;&nbsp;&nbsp;";
      echo "<p><img src='./images/down.gif' ";
-    //echo "onClick=\"change_order(this.form.fsort.selectedIndex,+1,'forum')\">";
     echo "onClick=\"moveOptionsDown('fsort');fsort.focus();\"></td></tr></table>";
         
         echo "</td>

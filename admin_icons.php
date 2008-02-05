@@ -109,8 +109,6 @@ if($_GET["action"] == "addnew")
         redirect("admin_icons.php", 2);
     }
     
-    dump($error);
-    
     if (!empty($error)) 
     {
       echo "<div class='alert'>";
@@ -130,7 +128,7 @@ if($_GET["action"] == "addnew")
       }
       
       if ($permission === true)
-        echo "An error has occurred moving one or more icons to the icon folder.<br>Please check the permissions for this folder. They should be set to 775 or 777";
+        echo "An error has occurred moving one or more icons to the icon folder.<br>Please check the permissions for this folder. They should be set to 755 or 777";
       echo "<p><a href='admin_icons.php?action=addnew'>Back to upload form</a></div></div>";
     }
   }
@@ -138,7 +136,7 @@ if($_GET["action"] == "addnew")
   {
     echo "<form action='admin_icons.php?action=addnew' name='icon_upload' method='POST' enctype='multipart/form-data'>";
 		echo "<input type='hidden' name='MAX_FILE_SIZE' value='15500' />";
-    echoTableHeading("Add a new post icon", $_CONFIG);
+    echoTableHeading("Add new post icon(s)", $_CONFIG);
 				echo "<tr><th colspan='2'>Post Icon File Requirements</th>";
         echo "<tr><td class='area_2' style='padding:8px;' colspan='2'>Post Icons must be gif files and have a maximum filesize of 3KB each</td></tr>";
         echo "
@@ -146,27 +144,30 @@ if($_GET["action"] == "addnew")
 				<th colspan='2'>&nbsp;</th>
 			</tr>
 			<tr>
-				<td class='area_1' style='width:20%'><strong>Number of icons</strong></td>
-				<td class='area_2'><select onChange=\"addFields('files')\" name='count'>";
-      
-      for ($i = 1;$i<=5;$i++)
-      {
-        $selected = '';
-        if ($i == 1)
-          $selected = "selected";
-        echo "<option value='$i' $selected>$i</option>";
-      }
-      echo "</select></td>
+				<td class='area_1' style='width:20%'><strong>Post Icon File</strong></td>
+				<td class='area_2'><input type='file' name='icon_file[]'></td>
 			</tr>
 			<tr>
-				<td class='area_1' style='width:20%'><strong>Post Icon files</strong></td>
-				<td class='area_2'><div id='files' name='files'><input type='file' name='icon_file[]' onChange=\"isImage('this')\"></div></td>
+				<td class='area_1' style='width:20%'><strong>Post Icon File</strong></td>
+				<td class='area_2'><input type='file' name='icon_file[]'></td>
+			</tr>
+			<tr>
+				<td class='area_1' style='width:20%'><strong>Post Icon File</strong></td>
+				<td class='area_2'><input type='file' name='icon_file[]'></td>
+			</tr>
+			<tr>
+				<td class='area_1' style='width:20%'><strong>Post Icon File</strong></td>
+				<td class='area_2'><input type='file' name='icon_file[]'></td>
+			</tr>
+			<tr>
+				<td class='area_1' style='width:20%'><strong>Post Icon File</strong></td>
+				<td class='area_2'><input type='file' name='icon_file[]'></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Add Post Icon'></td>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Add Post Icon(s)'></td>
 			</tr>
 		$skin_tablefooter
 	</form>";
