@@ -225,7 +225,7 @@ elseif($_GET["action"] == "edit")
       $data = $bdb->query('smilies', "id='{$tmp_key[0]}'", 1, 1, array('replace'));
       $file = $data[0]['replace'];
       $newfile = strmstr(strstr_after($file, "'"),"'",true);
-      unlink('./'.$newfile);
+      @unlink('./'.$newfile);
       $bdb->delete('smilies',$tmp_key[0]);
     }
   }

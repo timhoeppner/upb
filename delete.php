@@ -63,16 +63,22 @@
 		$pRec[0]["message"] = format_text($pRec[0]["message"]);
 		if ($_POST["verify"] == "Ok") {
 			$update_topic = array("replies" => ((int)$tRec[0]["replies"] - 1), "p_ids" => $tRec[0]["p_ids"]);
-			if (($key = array_search($_GET["p_id"], $p_ids)) !== FALSE) {
+			
+      if (($key = array_search($_GET["p_id"], $p_ids)) !== FALSE) {
 				$update_topic = array("replies" => ((int)$tRec[0]["replies"] - 1), "p_ids" => $tRec[0]["p_ids"]);
-				if ($key == (count($p_ids) - 1)) {
+				
+        if ($key == (count($p_ids) - 1)) {
 					//last post, update last_post of topic
-					if (FALSE === ($last_post = $post_tdb->get('posts', $p_ids[($key - 1)])))
-					$update_topic = array_merge($update_topic, array('last_post' => $last_post[0]['date'], 'user_name' => $last_post[0]['user_name'], $user_id => $last_post[0]['user_id']));
+					if (FALSE !== ($last_post = $post_tdb->get('posts', $p_ids[($key - 1)])))
+					{
+            $update_topic = array_merge($update_topic, array('last_post' => $last_post[0]['date'], 'user_name' => $last_post[0]['user_name'], 'user_id' => $last_post[0]['user_id']));
+            
+          }
 				}
 				unset($p_ids[$key]);
 				$update_topic["p_ids"] = implode(",", $p_ids);
-				$fRec = $tdb->get("forums", $_GET["id"]);
+				
+        $fRec = $tdb->get("forums", $_GET["id"]);
 				$tdb->edit("forums", $_GET["id"], array("posts" => ((int)$fRec[0]["posts"] - 1)));
 				$post_tdb->edit("topics", $_GET["t_id"], $update_topic);
 				$post_tdb->delete("posts", $_GET["p_id"]);
@@ -86,7 +92,7 @@
 					</div>
 					</div>";
 				require_once("./includes/footer.php");
-				redirect("viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"], "2");
+				//redirect("viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"], "2");
 				exit;
 			}
 			else echo '<b><font color="red">Fatal Error: </font></b> $p_id not found in the topic record.  The topic was not deleted';

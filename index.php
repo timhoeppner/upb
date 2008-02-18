@@ -93,7 +93,8 @@
 							//if($fRec["cat"] == $cRec["id"]) {
 							$posts->setFp("topics", $fRec["id"]."_topics");
 							$tRec = $posts->listRec("topics", 1, 1);
-							if ($fRec["mod"] == "") $mod = "unmoderated";
+							//dump($tRec);
+              if ($fRec["mod"] == "") $mod = "unmoderated";
 							else $mod = $fRec["mod"];
 							if ($tRec[0]["id"] == "") {
 								$when = "No Posts";

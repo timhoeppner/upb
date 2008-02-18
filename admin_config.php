@@ -78,7 +78,8 @@ $skin_tablefooter";
 		} elseif($_GET["action"] != "") {
 			$raws2 = explode(chr(31), $raws[1]);
 			$configVars = $config_tdb->getVars($_GET["action"], true);
-			echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
+			//dump($configVars);
+      echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
 			echo "<input type=\"hidden\" name=\"neworder\" value=\"\">";
 		echoTableHeading("&nbsp;", $_CONFIG);
 			foreach($raws2 as $raw) {
@@ -94,7 +95,7 @@ $skin_tablefooter";
 						if($configVars[$i]["minicat"] == $rec[1] && $configVars[$i]["sort"] == $j && $configVars[$i]["form_object"] != "hidden") {
 							echo "
 			<tr>
-				<td class='area_1' style='width:35%;padding:8px;'><strong>".$configVars[$i]["title"]."</strong>";
+				<td class='area_1' style='width:35%;padding:8px;'>".$configVars[$i]["sort"]."<strong>".$configVars[$i]["title"]."</strong>";
 							if($configVars[$i]["description"] != "") echo "<br />".$configVars[$i]["description"]."";
 							echo "</td>
 				<td class='area_2'>";
@@ -107,7 +108,8 @@ $skin_tablefooter";
 								echo "<input type=\"password\" name=\"".$configVars[$i]["name"]."\" value=\"".$configVars[$i]["value"]."\" size='40'>";
 								break 1;
 								case "checkbox":
-								if((bool) $configVars[$i]["value"]) $checked = " checked";
+								echo $configVars[$i]["value"];
+                if((bool) $configVars[$i]["value"]) $checked = " checked";
 								else $checked = "";
 								echo "<input type=\"checkbox\" name=\"".$configVars[$i]["name"]."\" value=\"1\" size='40'".$checked.">";
 								break 1;
@@ -121,6 +123,41 @@ $skin_tablefooter";
 								else $target = "";
 								echo "<a href=\"".$configVars[$i]["value"]."\"".$target.">".$configVars[$i]["name"]."</a>";
 								break 1;
+								
+								case "drop":
+								  $sdir = './skins/';
+								  $contents = array(); //array of valid skin directories
+                  if (is_dir($sdir)) 
+                  {
+                    if ($dh = opendir($sdir)) 
+                    {
+                      while (($file = readdir($dh)) !== false) 
+                      {
+                        echo "filename: $file : filetype: " . filetype($sdir . $file) . "\n<br>";
+                        if ($file != "." and $file != ".." and is_dir($sdir.$file))
+                        {
+                          if (file_exists($sdir.$file.'/index.html'))
+                            $contents[] = $file;
+                        }
+                      }   
+                      closedir($dh);
+                    }
+                  }
+
+                  echo "<select id='".$configVars[$i]["name"]."' name=\"".$configVars[$i]["name"]."\" size=\"1\">";
+								  
+                  $explode = explode("/",$configVars[$i]["value"]);
+                  $current = array_reverse($explode);
+                  
+                  echo "<option value='".$sdir.$current[0]."' selected>".ucwords($current[0])."</option>"; 
+                  foreach ($contents as $skindir)
+								  {
+                    if ($sdir.$skindir != $configVars[$i]["value"])
+                      echo "<option value='".$sdir.$skindir."'>".ucwords($skindir)."</option>";
+                  }
+                  echo "</select>";
+                  echo $configVars[$i]["value"];
+                  break 1;
 								
 								case "list":
                   
@@ -175,7 +212,7 @@ $skin_tablefooter";
                     }
                   }
                   echo "</select></td></tr>";
-                  echo "<tr><td><img src='./images/up.gif' ";
+                  echo "<tr><td><br><img src='./images/up.gif' ";
                   echo "onClick=\"moveOptionsUp('".$configVars[$i]["name"]."');".$configVars[$i]["name"].".focus()\"><p>";
                   echo "<img src='./images/down.gif' ";
                   echo "onClick=\"moveOptionsDown('".$configVars[$i]["name"]."');".$configVars[$i]["name"].".focus()\"></td></tr></table>";

@@ -4,7 +4,8 @@
 	// Website: http://www.myupb.com
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
-	if (!headers_sent()) {
+	session_start();
+  if (!headers_sent()) {
 		switch (basename($_SERVER['PHP_SELF'])) {
 			case 'register.php':
 			case 'profile.php':
@@ -28,7 +29,7 @@
 	if (trim($address) == $HTTP_SERVER_VARS['REMOTE_ADDR']) {
 		if (!headers_sent()) {
 			setcookie("banned", "User is banned", time()+9999 * 99999 * 999999);
-			header("location: http://www.catholicninjas.org/superfuntime/");
+			header("location: http://www.google.com/");
 		}
 		exit;
 	}
@@ -38,13 +39,13 @@
 		if (trim($address) == $_COOKIE["user_env"]) {
 			if (!headers_sent()) {
 				setcookie("banned", "User is banned", time()+9999 * 99999 * 999999);
-				header("location: http://www.whitetrash.nl/pmf");
+				header("location: about:blank");
 			}
 			exit;
 		}
 	}
 	if (isset($_COOKIE["banned"])) {
-		if (!headers_sent()) header("location: http://www.whitetrash.nl/pmf");
+		if (!headers_sent()) header("location: about:blank");
 		exit;
 	}
 	$mt = explode(' ', microtime());
@@ -60,10 +61,11 @@
       $tdb->edit("users",$_COOKIE["id_env"],array('lastvisit'=>mkdate()));
       
 			if (!headers_sent()) {
-				$uniquekey = generateUniqueKey();
+        $uniquekey = generateUniqueKey();
 				$tdb->edit('users', $_COOKIE['id_env'], array('uniquekey' => $uniquekey));
 				//setcookie("thisvisit", $v_date);
-				setcookie("lastvisit", $ses_info);
+				setcookie("lastvisit", $ses_info); //time of this login/view
+				setcookie("previousvisit",$r['lastvisit']); //time of previous login/view
 				setcookie("timezone", $_COOKIE["timezone"], (time() + (60 * 60 * 24 * 7)));
 				if (isset($_COOKIE["remember"])) {
 					setcookie("remember", 1, (time() + (60 * 60 * 24 * 7)));
@@ -114,14 +116,15 @@
 	flock($h_f, 3);
 	fclose($h_f);
 	if (!defined('SKIN_DIR')) die('The constant, SKIN_DIR has not been defined. Go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.');
-	include $_CONFIG["skin_dir"]."/coding.php";
+	include "./includes/coding.php";
 	$login = "";
 	if (!$tdb->is_logged_in()) {
 		$login = "You are not logged in.";
 		$loginlink = "login.php?ref=";
 		$pm_display = "login.php?ref=pmsystem.php";
 	} else {
-		$login = "Welcome, ".$_COOKIE["user_env"]."!";
+		lastread();
+    $login = "Welcome, ".$_COOKIE["user_env"]."!";
 		$loginlink = "logoff.php";
 		$pm_display = "pmsystem.php";
 		$f = fopen(DB_DIR."/new_pm.dat", 'r');
@@ -141,10 +144,10 @@
 <title>".(($where == '') ? $_CONFIG['title'] : (strip_tags(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where))))."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1' />
 <link rel='stylesheet' type='text/css' href='".$_CONFIG["skin_dir"]."/css/style.css' />
-<script type='text/javascript' src='".$_CONFIG["skin_dir"]."/scripts/formsubmit.js'></script>
-<script type='text/javascript' src='".$_CONFIG["skin_dir"]."/scripts/form_field_limiter.js'></script>
-<script type='text/javascript' src='".$_CONFIG["skin_dir"]."/scripts/hover.js'></script>
-<script type='text/javascript' src='".$_CONFIG["skin_dir"]."/scripts/images_switch.js'></script>
+<script type='text/javascript' src='./includes/scripts/formsubmit.js'></script>
+<script type='text/javascript' src='./includes/scripts/form_field_limiter.js'></script>
+<!--<script type='text/javascript' src='./includes/scripts/hover.js'></script>-->
+<script type='text/javascript' src='./includes/scripts/images_switch.js'></script>
 <script language=\"Javascript\" src=\"./includes/bbcode.js\"></script>
 <script language=\"Javascript\" src=\"./includes/ajax.js\"></script>
 <script language=\"Javascript\" src=\"./includes/scripts.js\"></script>

@@ -7,15 +7,25 @@ $tdb->setFp("config", "config");
 $tdb->setFp("ext_config", "ext_config");
 $tdb->setFP("members","members");
 
-$tdb->add("ext_config", array("name" => "security_code", "value" => "1", "type" => "config", "title" => "Enable Security Code", "description" => "Enable/Disable the security code image for new user registration<br>Enabling this is recommended", "form_object" => "checkbox", "minicat" => "1", "sort" => "16"));
-$tdb->add("config", array("name" => "security_code", "value" => "1", "type" => "config"));
+//$tdb->add("ext_config", array("name" => "security_code", "value" => "1", "type" => "config", "title" => "Enable Security Code", "description" => "Enable/Disable the security code image for new user registration<br>Enabling this is recommended", "form_object" => "checkbox", "minicat" => "1", "sort" => "16"));
+//$tdb->add("config", array("name" => "security_code", "value" => "1", "type" => "config"));
+//$tdb->add("ext_config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config", "title" => "Banned Words", "description" => "Enter any words you want to censor separated by commas", "form_object" => "text", "minicat" => "1", "sort" => "12"));
+//$tdb->add("config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config"));
 
-$tdb->edit("config",1,array('value'=>'2.1.1b'));
+/*$tdb->edit("config",1,array('value'=>'2.1.1b'));
 $tdb->edit("ext_config",1,array('value'=>'2.1.1b'));
-$tdb->edit("ext_config",8,array('sort'=>'17'));
-$tdb->edit("ext_config",9,array('sort'=>'18'));
+$tdb->edit("ext_config",20,array('sort'=>'17'));
 $tdb->edit("ext_config",16,array('sort'=>'19'));
-
+$tdb->edit("ext_config",10,array('sort'=>'11'));
+*/
+$tdb->edit("ext_config",10,array('form_object'=>'drop'));
+$tdb->edit("ext_config",11,array('form_object'=>'text'));
+die();
+$res = $tdb->query('ext_config',"id>'0'");
+dump($res);
+$tdb->edit("ext_config",21,array('value'=>'1'));
+$tdb->edit("config",21,array('value'=>'1'));
+die();
 //move lastvisit information to the member database
 $tdb->addField('members', array('lastvisit', 'number', 10));
 $members = $tdb->query('members',"id>'0'");
@@ -103,9 +113,6 @@ $tdb->add("smilies",array("bbcode"=>"[img]smilies/imo.gif[/img]","replace"=>"<im
 $tdb->add("smilies",array("bbcode"=>"[img]smilies/inq.gif[/img]","replace"=>"<img src='./smilies/inq.gif' border='0' alt='inq.gif'>","type"=>"more"));
 $tdb->add("smilies",array("bbcode"=>"[img]smilies/jackhammer.gif[/img]","replace"=>"<img src='./smilies/jackhammer.gif' border='0' alt='jackhammer.gif'>","type"=>"more"));
 $tdb->add("smilies",array("bbcode"=>"[img]smilies/jk.gif[/img]","replace"=>"<img src='./smilies/jk.gif' border='0' alt='jk.gif'>","type"=>"more"));
-$tdb->add("smilies",array("bbcode"=>"[img]smilies/laser.gif[/img]","replace"=>"<img src='./smilies/laser.gif' border='0' alt='laser.gif'>","type"=>"more"));
-$tdb->add("smilies",array("bbcode"=>"[img]smilies/laser2.gif[/img]","replace"=>"<img src='./smilies/laser2.gif' border='0' alt='laser2.gif'>","type"=>"more"));
-$tdb->add("smilies",array("bbcode"=>"[img]smilies/laser3.gif[/img]","replace"=>"<img src='./smilies/laser3.gif' border='0' alt='laser3.gif'>","type"=>"more"));
 $tdb->add("smilies",array("bbcode"=>"[img]smilies/blahblah.gif[/img]","replace"=>"<img src='./smilies/blahblah.gif' border='0' alt='blahblah.gif'>","type"=>"more"));
 $tdb->add("smilies",array("bbcode"=>"[img]smilies/machine_Gun.gif[/img]","replace"=>"<img src='./smilies/machine_Gun.gif' border='0' alt='machine_Gun.gif'>","type"=>"more"));
 $tdb->add("smilies",array("bbcode"=>"[img]smilies/moo.gif[/img]","replace"=>"<img src='./smilies/moo.gif' border='0' alt='moo.gif'>","type"=>"more"));

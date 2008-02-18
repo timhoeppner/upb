@@ -232,7 +232,24 @@ function strmstr($haystack, $needle, $before_needle=FALSE) {
  if($before_needle) return substr($haystack,0,($pos-1)+strlen($needle));
  else return substr($haystack,$pos);
  }
- 
+
+function lastread($pid = '')
+{
+  global $tdb,$posts; //read in database objects and file pointers etc.
+  $cats = $tdb->listRec("cats",1);
+  
+  if ($cats !== false)
+  {
+    foreach ($cats as $cat)
+    {
+      $cat_id = $cat['id'];
+      $_SESSION['cats'][$cat['id']] = array('forums'=>$cat['sort']);
+    }
+    $_SESSION['lastread'] = "hello";
+  }
+  //dump($_SESSION);
+}
+
 //for debugging
 function dump($array)
 {
