@@ -8,7 +8,7 @@
 	$where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_forum.php'>Manage Forums</a>";
 	require_once('./includes/header.php');
 	$post_tdb = new functions(DB_DIR, "posts.tdb");
-	if (!$tdb->is_logged_in() || $_COOKIE["power_env"] != 3) exitPage("
+	if (!$tdb->is_logged_in() || $_COOKIE["power_env"] < 3) exitPage("
 		<div class='alert'><div class='alert_text'>
 		<strong>Access Denied!</strong></div><div style='padding:4px;'>you are not authorized to be here.</div></div>
 		<meta http-equiv='refresh' content='2;URL=login.php?ref=admin.php'>");
@@ -104,7 +104,9 @@
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Edit'></td>
 			</tr>
-		$skin_tablefooter
+		";
+    echoTableFooter($_CONFIG['skin_dir']);
+    echo "
 	</form>";
 				}
 			} else {
@@ -228,8 +230,8 @@
 				<td class='area_2' style='padding:20px;' valign='top'>";
 				require_once("admin_navigation.php");
 				echo "</td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+      echoTableFooter($_CONFIG['skin_dir']);
 				echo "<form action='admin_forum.php?action=addnew' method=POST>";
 		echoTableHeading("Creating a new forum", $_CONFIG);
 				echo "
@@ -273,8 +275,9 @@
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Add'> <input type=submit name='command' value='Add and Add another forum' size='10'> <input type=submit name='command' value='Add and Add another forum to the selected Category' size='15'></td>
 			</tr>
-		$skin_tablefooter
-	</form>";
+		";
+    echoTableFooter($_CONFIG['skin_dir']);
+    echo "</form>";
 			}
 		}
 	} else {
@@ -290,8 +293,8 @@
 				<td class='area_2' style='padding:20px;' valign='top'>";
 		require_once("admin_navigation.php");
 		echo "</td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 		echo "
 			<div id='tabstyle_2'>
 			<ul>
@@ -334,7 +337,7 @@
 				<td class='area_2' style='padding:8px;text-align:center;'><a href='admin_forum.php?action=delete&id=".$fRec["id"]."'>Delete</a></td>
 			</tr>";
 		}
-		echo "$skin_tablefooter";
+		echoTableFooter($_CONFIG['skin_dir']);
 	}
 	require_once("./includes/footer.php");
 ?>

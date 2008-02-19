@@ -33,9 +33,10 @@ function format_text($text) {
 }
 
 function filterLanguage($text, $censor) {
+    global $_CONFIG;
     $msg = $text;
     //start bad words filter
-    $words = file(DB_DIR."/badwords.dat");
+    $words = explode(",",$_CONFIG['banned_words']);
     deleteWhiteIndex($words);
     for($pp=0;$pp<count($words);$pp++) {
         $msg = eregi_replace(" ".$words[$pp]." ", " ".$censor." ", $msg);
@@ -176,5 +177,38 @@ function getSmilies($field = 'message')
       $output .= "<br>";
   }   
   return $output;
+}
+
+function status($user)
+{
+global $_STATUS;
+if ($user[0]["level"] == "1") {
+				$status = "Member";
+        $statuscolor = $_STATUS["userColor"];
+				if ($user[0]["posts"] >= $_STATUS["member_post1"]) $status = $_STATUS["member_status1"];
+				if ($user[0]["posts"] >= $_STATUS["member_post2"]) $status = $_STATUS["member_status2"];
+				if ($user[0]["posts"] >= $_STATUS["member_post3"]) $status = $_STATUS["member_status3"];
+				if ($user[0]["posts"] >= $_STATUS["member_post4"]) $status = $_STATUS["member_status4"];
+				if ($user[0]["posts"] >= $_STATUS["member_post5"]) $status = $_STATUS["member_status5"];
+			} elseif($user[0]["level"] == "2") {
+				$statuscolor = $_STATUS["modColor"];
+				if ($user[0]["posts"] >= $_STATUS["mod_post1"]) $status = $_STATUS["mod_status1"];
+				if ($user[0]["posts"] >= $_STATUS["mod_post2"]) $status = $_STATUS["mod_status2"];
+				if ($user[0]["posts"] >= $_STATUS["mod_post3"]) $status = $_STATUS["mod_status3"];
+				if ($user[0]["posts"] >= $_STATUS["mod_post4"]) $status = $_STATUS["mod_status4"];
+				if ($user[0]["posts"] >= $_STATUS["mod_post5"]) $status = $_STATUS["mod_status5"];
+			} elseif($user[0]["level"] >= "3") {
+				$statuscolor = $_STATUS["adminColor"];
+				if ($user[0]["posts"] >= $_STATUS["admin_post1"]) $status = $_STATUS["admin_status1"];
+				if ($user[0]["posts"] >= $_STATUS["admin_post2"]) $status = $_STATUS["admin_status2"];
+				if ($user[0]["posts"] >= $_STATUS["admin_post3"]) $status = $_STATUS["admin_status3"];
+				if ($user[0]["posts"] >= $_STATUS["admin_post4"]) $status = $_STATUS["admin_status4"];
+				if ($user[0]["posts"] >= $_STATUS["admin_post5"]) $status = $_STATUS["admin_status5"];
+			} else {
+				$status = "Member";
+				$statuscolor = $_STATUS["membercolor"];
+			}
+			$statconf = array('status' => $status,'statuscolor'=>$statuscolor);
+      return $statconf;
 }
 ?>

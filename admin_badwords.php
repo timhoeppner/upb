@@ -13,7 +13,7 @@
 			<strong>Access Denied!</strong></div><div style='padding:4px;'>you are not logged in!</div></div>";
 		redirect("login.php?ref=admin_badwords.php", 2);
 	}
-	if (!($tdb->is_logged_in() && $_COOKIE["power_env"] == 3)) exitPage("
+	if (!($tdb->is_logged_in() && $_COOKIE["power_env"] < 3)) exitPage("
 		<div class='alert'><div class='alert_text'>
 		<strong>Access Denied!</strong></div><div style='padding:4px;'>you are not authorized to be here.</div></div>");
 	if ($_GET["action"] == "delete" && $_GET["word"] != "") {
@@ -61,9 +61,8 @@
 			<tr>
 				<td class='area_2' style='padding:20px;' valign='top'>";
 			require_once("admin_navigation.php");
-			echo "</td>
-			</tr>
-				$skin_tablefooter";
+			echo "</td></tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 			echo "<form action='admin_badwords.php?action=addnew' method=POST>";
 		echoTableHeading("Adding a badword", $_CONFIG);
 			echo "
@@ -79,9 +78,9 @@
 			</tr>
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Add'></td>
-			</tr>
-		$skin_tablefooter
-	</form>";
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
+	echo "</form>";
 		}
 	} else {
 		$words = explode("\n", file_get_contents(DB_DIR."/badwords.dat"));
@@ -95,8 +94,8 @@
 				<td class='area_2' style='padding:20px;' valign='top'>";
 		require_once("admin_navigation.php");
 		echo "</td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+		echoTableFooter($_CONFIG['skin_dir']);
 		echo "
 			<div id='tabstyle_2'>
 			<ul>
@@ -124,8 +123,7 @@
 			</tr>";
 			}
 		}
-		echo "
-		$skin_tablefooter";
+		echoTableFooter($_CONFIG['skin_dir']);
 	}
 	require_once("./includes/footer.php");
 ?>

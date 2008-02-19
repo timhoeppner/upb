@@ -116,7 +116,6 @@
 	flock($h_f, 3);
 	fclose($h_f);
 	if (!defined('SKIN_DIR')) die('The constant, SKIN_DIR has not been defined. Go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.');
-	include "./includes/coding.php";
 	$login = "";
 	if (!$tdb->is_logged_in()) {
 		$login = "You are not logged in.";
@@ -198,8 +197,8 @@
 				or <a href='$loginlink'><strong>Login</strong></a>";
 	echo "
 			</div></td>
-		</tr>
-	$skin_tablefooter";
+		</tr>";
+		echoTableFooter($_CONFIG['skin_dir']);
 	//login information
 	
   if (!$tdb->is_logged_in() && isset($_COOKIE['user_env']) && isset($_COOKIE['uniquekey_env']) && isset($_COOKIE['id_env'])) {

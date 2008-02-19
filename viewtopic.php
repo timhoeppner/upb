@@ -81,31 +81,10 @@
 				$user[0] = array_merge($user[0], $new_avatar);
 				unset($new_avatar);
 			}
-			if ($user[0]["level"] == "1") {
-				$statuscolor = $_STATUS["userColor"];
-				if ($user[0]["posts"] >= $_STATUS["member_post1"]) $status = $_STATUS["member_status1"];
-				if ($user[0]["posts"] >= $_STATUS["member_post2"]) $status = $_STATUS["member_status2"];
-				if ($user[0]["posts"] >= $_STATUS["member_post3"]) $status = $_STATUS["member_status3"];
-				if ($user[0]["posts"] >= $_STATUS["member_post4"]) $status = $_STATUS["member_status4"];
-				if ($user[0]["posts"] >= $_STATUS["member_post5"]) $status = $_STATUS["member_status5"];
-			} elseif($user[0]["level"] == "2") {
-				$statuscolor = $_STATUS["modColor"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post1"]) $status = $_STATUS["mod_status1"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post2"]) $status = $_STATUS["mod_status2"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post3"]) $status = $_STATUS["mod_status3"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post4"]) $status = $_STATUS["mod_status4"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post5"]) $status = $_STATUS["mod_status5"];
-			} elseif($user[0]["level"] == "3") {
-				$statuscolor = $_STATUS["adminColor"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post1"]) $status = $_STATUS["admin_status1"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post2"]) $status = $_STATUS["admin_status2"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post3"]) $status = $_STATUS["admin_status3"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post4"]) $status = $_STATUS["admin_status4"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post5"]) $status = $_STATUS["admin_status5"];
-			} else {
-				$status = "Member";
-				$statuscolor = $_STATUS["membercolor"];
-			}
+			$status_config = status($user);
+			$status = $status_config['status'];
+			$statuscolor = $status_config['statuscolor'];
+			
 			if ($user[0]["status"] != "") $status = $user[0]["status"];
 			if (isset($_COOKIE["id_env"]) && $pRec["user_id"] != $_COOKIE["id_env"]) {
 				$user_blList = getUsersPMBlockedList($pRec["user_id"]);
@@ -132,7 +111,8 @@
 			<tr>
 				<td class='$table_color' valign='top' style='width:15%;'>";
 		if (@$user[0]["avatar"] != "") echo "<br /><img src=\"".$user[0]["avatar"]."\" border='0' width='".$user[0]['avatar_width']."' height='".$user[0]['avatar_height']."' alt='' title=''><br />";
-		else echo "<br /><a href='profile.php'><img src='images/avatars/noavatar.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
+		else if ($pRec["user_id"] != "0") 
+      echo "<br /><a href='profile.php'><img src='images/avatars/noavatar.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
 		if ($pRec["user_id"] != "0") echo "
 					<div class='post_info'><span style='color:#".$statuscolor."'><strong>".$status."</strong></span></div>
 					<div class='post_info'>
@@ -165,13 +145,13 @@
 					<div class='post_edited' name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>Last edited by: <a href='profile.php?action=get&id=".$pRec['edited_by_id']." target='_new'><strong>".$pRec['edited_by']."</strong></a> on ".gmdate("M d, Y g:i:s a", user_date($pRec['edited_date']))."</div>";
 		else
       	echo "<div name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' class='post_edited'></div>";
-		echo "
+		if ($pRec['user_id'] != 0)
+    echo "
 					<div class='button_pro2'><a href='profile.php?action=get&id=".$pRec["user_id"]."'>Profile</a></div>
 					<div class='button_pro2'><a href='".$user[0]["url"]."' target = '_blank'>Homepage</a></div>
 					<div class='button_pro2'><a href='email.php?id=".$pRec["user_id"]."'>email ".$pRec["user_name"]."</a></div>";
-    echo "</td>
-			</tr>
-		$skin_tablefooter </div>";
+    //echo "</td></tr>".$skin_tablefooter."</div>";
+    echo "</td></tr>".echoTableFooter($_CONFIG['skin_dir'])."</div>";
 	}
 	echo "</div>";
 	

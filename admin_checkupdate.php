@@ -7,7 +7,7 @@
 	require_once("./includes/class/func.class.php");
 	$where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." Checking for updates";
 	require_once('./includes/header.php');
-	if ($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
+	if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 	echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
 			<tr>
@@ -18,14 +18,14 @@
 				<td class='area_2' style='padding:20px;' valign='top'>";
 		require_once("admin_navigation.php");
 		echo "</td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 	echoTableHeading("Checking for myUPB updates", $_CONFIG);
 		echo "
 		<tr>
 			<td class='review_container'><div class='review_sub'><iframe src='http://www.myupb.com/upbcheckupdate.php?ver=".UPB_VERSION."' class='review_frame' scrolling='auto' frameborder='0'></iframe></div></td>
-		</tr>
-	$skin_tablefooter";
+		</tr>";
+		echoTableFooter($_CONFIG['skin_dir']);
 	} else {
 		echo "
 			<div class='alert'><div class='alert_text'>

@@ -13,9 +13,9 @@
 	if (isset($_COOKIE["user_env"])) {
 		$banned_addresses = file(DB_DIR.'/banneduser.dat' );
 		foreach($banned_addresses as $address)
-		if (trim($address) == $_COOKIE["user_env"]) header("location: http://www.whitetrash.nl/pmf");
+		if (trim($address) == $_COOKIE["user_env"]) header("location: about:blank");
 	}
-	if (isset($_COOKIE["banned"])) header("location: http://www.whitetrash.nl/pmf");
+	if (isset($_COOKIE["banned"])) header("location: about:blank");
 	$h_f = fopen(DB_DIR."/hits.dat", "r");
 	$hits = fread($h_f, filesize(DB_DIR."/hits.dat"));
 	fclose($h_f);
@@ -24,7 +24,7 @@
 	$h_f = fopen(DB_DIR."/hits.dat", "w");
 	fwrite($h_f, $hits);
 	fclose($h_f);
-	include $_CONFIG["skin_dir"]."/coding.php";
+	include ("./includes/coding.php");
 	header ("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 	// Date in the past
 	header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
@@ -39,9 +39,8 @@
 <title>".$_CONFIG["title"]."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1' />
 <link rel='stylesheet' type='text/css' href='".$_CONFIG["skin_dir"]."/css/style_simple.css' />
-<script type='text/javascript' src='".$_CONFIG["skin_dir"]."/scripts/formsubmit.js'></script>
-<script type='text/javascript' src='".$_CONFIG["skin_dir"]."/scripts/form_field_limiter.js'></script>
-<script type='text/javascript' src='".$_CONFIG["skin_dir"]."/scripts/add_emoticon.js'></script>
+<script type='text/javascript' src='./includes/scripts/formsubmit.js'></script>
+<script type='text/javascript' src='./includes/scripts/form_field_limiter.js'></script>
 <script language='JavaScript'>
 function PopUp(where) {
 window.open(\"where\", \"This PM has been Recieved Within the Last 5 Minutes\", \"toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,width=500,height=350\");

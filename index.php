@@ -20,8 +20,8 @@
 		echo "
 			<tr>
 			<td class='area_1' style='text-align:left;'>".$_CONFIG["servicemessage"]."</td>
-			</tr>
-			$skin_tablefooter";
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 	}
 	$posts = new tdb(DB_DIR, "posts.tdb");
 	$cRecs = $tdb->listRec("cats", 1);
@@ -131,7 +131,7 @@
 						unset($when);
 					}
 				}
-				echo $skin_tablefooter;
+				echoTableFooter($_CONFIG['skin_dir']);
 			}
 			unset($cRec);
 		}
@@ -185,8 +185,8 @@
 					<strong>Newest Member:</strong> <span class='link_2'><a href='profile.php?action=get&amp;id=".$mem_last[0]["id"]."'>".$mem_last[0]["user_name"]."</a></span><br />
 					<strong>Forum Page Views:</strong> $hits_today<br />
 					<strong>Page Rendering Time:</strong> ".round($script_end_time - $script_start_time, 5)." seconds</span></td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+      echoTableFooter($_CONFIG['skin_dir']);
 	//End Statistic Table
 	require_once("./includes/footer.php");
 	if (empty($_COOKIE["user_env"])) $user = "guest";

@@ -30,7 +30,7 @@ echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $wher
 		$skin_tablefooter";
 
 //REMOVE ALL TRACES OF $_GET['word']
-if(!($tdb->is_logged_in() && $_COOKIE["power_env"] == 3)) exitPage("you are not authorized to be here.");
+if(!($tdb->is_logged_in() && $_COOKIE["power_env"] < 3)) exitPage("you are not authorized to be here.");
 if($_GET["action"] == "addnew") {
 	
 	$bbcodes = $bdb->query('smilies', "id>'0'",1,-1,array('bbcode'));
@@ -201,10 +201,9 @@ if($_GET["action"] == "addnew") {
 				<td class='footer_3' colspan='6'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='footer_3a' colspan='6' style='text-align:center;'><input type=submit value='Add Smilie(s)'></td>
-			</tr>
-		$skin_tablefooter
-	</form>";
+				<td class='footer_3a' colspan='6' style='text-align:center;'><input type=submit value='Add Smilie(s)'></td></tr>";
+    echoTableFooter($_CONFIG['skin_dir']);
+    echo "</form>";
 	}
 } 
 elseif($_GET["action"] == "edit") 
@@ -312,7 +311,8 @@ echo "<tr><th colspan='4'>Smilie Management</th>";
 		}
 		echo "<tr><td class='area_1' colspan='4' style='padding:8px;text-align:center;'><input type='submit' value='Submit Changes'><input type='reset' value='Reset Form'></td></tr>";
 	}
-	echo "</table>$skin_tablefooter";
+	echo "</table>";
+	echoTableFooter($_CONFIG['skin_dir']);
 }
 require_once("./includes/footer.php");
 ?>

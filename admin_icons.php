@@ -27,11 +27,10 @@ echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $wher
 				<td class='area_2' style='padding:20px;' valign='top'>";
 					require_once("admin_navigation.php");
 					echo "</td>
-			</tr>
-		$skin_tablefooter";
-
+			</tr>";
+echoTableFooter($_CONFIG['skin_dir']);
 //REMOVE ALL TRACES OF $_GET['word']
-if(!($tdb->is_logged_in() && $_COOKIE["power_env"] == 3)) exitPage("you are not authorized to be here.");
+if(!($tdb->is_logged_in() && $_COOKIE["power_env"] < 3)) exitPage("you are not authorized to be here.");
 if($_GET["action"] == "addnew") 
 {
   $error = $success = array();
@@ -168,8 +167,9 @@ if($_GET["action"] == "addnew")
 			</tr>
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Add Post Icon(s)'></td>
-			</tr>
-		$skin_tablefooter
+			</tr>";
+echoTableFooter($_CONFIG['skin_dir']);
+echo "
 	</form>";
 	}
 } 
@@ -231,7 +231,7 @@ else {
 				</ul>
 				</div>
 				<div style='clear:both;'></div>";
-		echoTableHeading("Post Icon Control", $_CONFIG);
+		echoTableHeading("Post Icon Management", $_CONFIG);
 echo "<tr><th colspan='4'>Post Icon Management</th>";
 		echo "<tr><td class='area_2' style='padding:8px;' colspan='4'>
     There must always be at least one post icon.</td></tr>";
@@ -265,7 +265,8 @@ echo "<tr><th colspan='4'>Post Icon Management</th>";
     echo "</tr>\n";
     echo "<tr><td class='area_1' colspan='4' style='padding:8px;text-align:center;'><input type='submit' value='Submit Changes'><input type='reset' value='Reset Form'></td></tr>";
 	
-	echo "</table>$skin_tablefooter";
+	echo "</table>";
+	echoTableFooter($_CONFIG['skin_dir']);
 }
 require_once("./includes/footer.php");
 ?>

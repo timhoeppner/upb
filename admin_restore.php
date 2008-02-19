@@ -10,7 +10,7 @@
 		<div class="alert"><div class="alert_text">
 		<strong>Access Denied!</strong></div><div style="padding:4px;">you are not logged in</div></div>
 		<meta http-equiv="refresh" content="2;URL=login.php?ref=admin.php">', true);
-	if (!($tdb->is_logged_in() && $_COOKIE["power_env"] == 3)) exitPage('
+	if (!($tdb->is_logged_in() && $_COOKIE["power_env"] < 3)) exitPage('
 		<div class="alert"><div class="alert_text">
 		<strong>Access Denied!</strong></div><div style="padding:4px;">you are not authorized to be here.</div></div>', true);
 	if (!($_GET['action'] == 'download' && isset($_GET['file'])) && $_POST['verify'] != 'Cancel') {
@@ -25,8 +25,8 @@
 				<td class='area_2' style='padding:20px;' valign='top'>";
 		require_once("admin_navigation.php");
 		echo "</td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+		echoTableFooter($_CONFIG['skin_dir']);
 		echoTableHeading("Backup and Restore Data", $_CONFIG);
 		echo "
 			<tr>
@@ -209,6 +209,7 @@
 	}
 	// else echo 'Cannot process request: Invalid action.';
 	echo "</td>
-			</tr>".$skin_tablefooter;
+			</tr>";
+	echoTableFooter($_CONFIG['skin_dir']);
 	require_once('./includes/footer.php');
 ?>

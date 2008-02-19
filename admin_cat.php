@@ -7,7 +7,7 @@
 	require_once("./includes/class/func.class.php");
 	$where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_cat.php'>Manage Categories</a>";
 	require_once('./includes/header.php');
-	if ($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
+	if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 		if ($_GET["action"] == "edit") {
 			//edit categories
 			if (isset($_GET["id"])) {
@@ -33,8 +33,8 @@
 				<td class='area_2' style='padding:20px;' valign='top'>";
 					require_once("admin_navigation.php");
 					echo "</td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 					echo "<form action='admin_cat.php?action=edit&id=".$_GET["id"]."' method='POST' name='form'>";
 		echoTableHeading("Editing a category", $_CONFIG);
           echo "<input type=\"hidden\" name=\"neworder\" value=\"\">
@@ -93,7 +93,8 @@
       echo "<td class='area_1' colspan='2'>There are no forums in this category";
       echo "</td></tr><tr><td colspan='2'><input type='button' onClick=\"submitorderform('forum','empty')\" value='Edit'></td></tr>";
       }
-			echo "$skin_tablefooter</form>";
+			echoTableFooter($_CONFIG['skin_dir']);
+      echo "</form>";
 				}
 			} else {
 				echo "No id selected.";
@@ -147,9 +148,8 @@
 			<tr>
 				<td class='area_2' style='padding:20px;' valign='top'>";
 				require_once("admin_navigation.php");
-				echo "</td>
-			</tr>
-		$skin_tablefooter";
+				echo "</td></tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 				echo "<form action='admin_cat.php?action=addnew&a=1' method=POST>";
 		echoTableHeading("Creating a new category", $_CONFIG);
 				echo "
@@ -170,9 +170,9 @@
 			</tr>
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Add'> <input type=submit name='command' value='Add and Add another Category'> <input type=submit name='command' value='Add and Add forums to this category'></td>
-			</tr>
-		$skin_tablefooter
-	</form>";
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
+		echo "</form>";
 			}
 		} else {
 			$cats = $tdb->listRec("cats", 1);
@@ -187,9 +187,8 @@
 			<tr>
 				<td class='area_2' style='padding:20px;' valign='top'>";
 			require_once("admin_navigation.php");
-			echo "</td>
-			</tr>
-		$skin_tablefooter";
+			echo "</td></tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 			echo "
 				<div id='tabstyle_2'>
 				<ul>
@@ -197,7 +196,7 @@
 				</ul>
 				</div>
 				<div style='clear:both;'></div>";
-		echoTableHeading("Category Control", $_CONFIG);
+		echoTableHeading("Category Management", $_CONFIG);
 			echo "
 			<tr>
 				<th style='width:60%;'>Category Name</th>
@@ -223,7 +222,7 @@
 			</tr>";
 				}
 			}
-			echo "$skin_tablefooter";
+			echoTableFooter($_CONFIG['skin_dir']);
 		}
 	} else {
 		echo "

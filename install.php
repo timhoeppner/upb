@@ -3,7 +3,7 @@
 	// designed for Ultimate PHP Board
 	// Author: Jerroyd Moore, aka Rebles
 	// Website: http://www.myupb.com
-	// Version: 2.0
+	// Version: 2.2.1
 	// Using textdb Version: 4.4.1
 	session_start();
 	ignore_user_abort();

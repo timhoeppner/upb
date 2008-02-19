@@ -10,7 +10,7 @@ $where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin
 require_once('./includes/header.php');
 
 if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_COOKIE["id_env"])) {
-	if($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
+	if($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 		if($_POST["action"] != "") {
 			if(file_exists('./includes/admin/'.$_POST['action'].'.config.php')) include('./includes/admin/'.$_POST['action'].'.config.php');
       if($result = $config_tdb->editVars($_POST["action"], $_POST)) 
@@ -44,9 +44,9 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 
 		require_once("admin_navigation.php");
 		echo "</td>
-			</tr>
-$skin_tablefooter";
-
+			</tr>";
+    echoTableFooter($_CONFIG['skin_dir']);
+    
 		echoTableHeading("Configuration areas", $_CONFIG);
 		
 		echo "
@@ -70,8 +70,8 @@ $skin_tablefooter";
 			echo "<a href=\"admin_config.php?action=".$rec[0]."\">".$rec[1]."</a><br>";
 		}
 		echo "</span></td>
-			</tr>
-$skin_tablefooter";
+			</tr>";
+		echoTableFooter($_CONFIG['skin_dir']);
 		
 		if($_GET["action"] == "Installation Mode") {
 			//Insert coding here
@@ -126,26 +126,21 @@ $skin_tablefooter";
 								
 								case "drop":
 								  $sdir = './skins/';
-								  $contents = array(); //array of valid skin directories
-                  if (is_dir($sdir)) 
+								  $contents = array(); //array for valid skin directories
+                  if (is_dir($sdir))
                   {
-                    if ($dh = opendir($sdir)) 
+                    $dir = directory($sdir);
+                    foreach ($dir as $subdir)
                     {
-                      while (($file = readdir($dh)) !== false) 
+                      if (is_dir($sdir.$subdir))
                       {
-                        echo "filename: $file : filetype: " . filetype($sdir . $file) . "\n<br>";
-                        if ($file != "." and $file != ".." and is_dir($sdir.$file))
-                        {
-                          if (file_exists($sdir.$file.'/index.html'))
-                            $contents[] = $file;
-                        }
-                      }   
-                      closedir($dh);
+                        if (file_exists($sdir.$subdir.'/index.html'))
+                          $contents[] = $subdir;
+                      }
                     }
                   }
-
+                  
                   echo "<select id='".$configVars[$i]["name"]."' name=\"".$configVars[$i]["name"]."\" size=\"1\">";
-								  
                   $explode = explode("/",$configVars[$i]["value"]);
                   $current = array_reverse($explode);
                   
@@ -156,7 +151,6 @@ $skin_tablefooter";
                       echo "<option value='".$sdir.$skindir."'>".ucwords($skindir)."</option>";
                   }
                   echo "</select>";
-                  echo $configVars[$i]["value"];
                   break 1;
 								
 								case "list":
@@ -239,8 +233,9 @@ echo "		<tr>
       else
         echo "<input type=button onClick=\"submitorderform('category','full')\" value='Edit'>";
       echo "</td>
-			</tr>
-$skin_tablefooter</form>";
+			</tr>";
+echoTableFooter($_CONFIG['skin_dir']);
+echo "</form>";
 
 /*
 print '<pre>'; print_r($configVars);

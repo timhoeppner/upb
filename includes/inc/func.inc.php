@@ -30,6 +30,8 @@ foreach($GLOBALS["_REQUEST"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
 }
 
+
+
 require_once("./includes/inc/date.inc.php");
 require_once("./includes/inc/encode.inc.php");
 require_once("./includes/inc/privmsg.inc.php");
@@ -147,7 +149,7 @@ function createUserPowerMisc($user_power, $list_format, $exclude_guests=false) {
         elseif($oneDropDown) $list .= '<option value="2">Moderator</option>';
         elseif($oneShortDropDown) $list .= '<option value="2">Mod</option>';
     }
-    if($user_power == 3) {
+    if($user_power >= 3) {
         if($dropdown) $list .= '<option value="3" selected>Administrators only</option>';
         elseif($allText) return '<b>admins</b> only';
         elseif($allShortText) return 'admins';
@@ -225,6 +227,43 @@ function strstr_after($haystack, $needle, $case_insensitive = false) {
     return $pos;
 }
 
+function directory($dir,$filters="all")
+{
+  $handle=opendir($dir);
+	$files = $filtered =array();
+	
+  while(($file = readdir($handle))!==false)
+  {
+    if ($file != "." and $file != "..")
+      $files[] = $file;
+  }
+  closedir($handle);
+  
+  if ($filters == "all")
+  {
+    $filtered = $files;
+  }
+	
+  if ($filters != "all")
+	{
+		$filters=explode(",",$filters);
+		foreach ($files as $file)
+		{
+			for ($f=0;$f<sizeof($filters);$f++)
+			{	
+        $system=explode(".",$file);
+				if (count($system) > 1)
+        {
+          if (strtolower($system[1]) == $filters[$f])
+            $filtered[] = $file;
+        }
+      }
+		}
+	}
+
+	return $filtered;
+}
+
 function strmstr($haystack, $needle, $before_needle=FALSE) {
  //Find position of $needle or abort
  if(($pos=strpos($haystack,$needle))===FALSE) return FALSE;
@@ -256,5 +295,26 @@ function dump($array)
   echo "<pre>";
   var_dump($array);
   echo "</pre>";
+}
+
+function echoTableHeading($display, $_CONFIG) {
+		//set $display to 85
+		echo "
+	<div class='main_cat_wrapper'>
+		<div class='cat_area_1'>".$display."</div>
+		<table class='main_table' cellspacing='1'>
+		<tbody>";
+	}
+
+//$skin_tablefooter = "</tbody></table><div class='footer'><img src='".$skin_dir."/images/spacer.gif' alt='' title='' /></div></div><br />";
+
+function echoTableFooter($skin_dir)
+{
+echo "
+		</tbody>
+		</table>
+		<div class='footer'><img src='".$skin_dir."/images/spacer.gif' alt='' title='' /></div>
+	</div>
+	<br />";
 }
 ?>

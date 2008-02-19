@@ -7,7 +7,7 @@
 	require_once("./includes/class/func.class.php");
 	$where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <A href='admin_members.php'>Manage Members</a>";
 	require_once("./includes/header.php");
-	if (!$tdb->is_logged_in() || $_COOKIE["power_env"] != 3) exitPage("
+	if (!$tdb->is_logged_in() || $_COOKIE["power_env"] < 3) exitPage("
 		<div class='alert'><div class='alert_text'>
 		<strong>Access Denied!</strong></div><div style='padding:4px;'>you are not authorized to be here.</div></div>");
 	if ($_GET["action"] == "edit") {
@@ -60,8 +60,8 @@
 				<td class='area_2' style='padding:20px;' valign='top'>";
 			require_once("admin_navigation.php");
 			echo "</td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 			echo "<form method='POST' action=".$PHP_SELF."?action=edit&id=".$_GET["id"]."&page=".$_GET["page"]."><input type='hidden' name='a' value='1'>";
 		echoTableHeading("Editing member: ".$rec[0]["user_name"]."", $_CONFIG);
 			echo "
@@ -185,9 +185,9 @@
 			</tr>
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Submit' name='B1' /><input type='reset' value='Reset' name='B2' /></td>
-			</tr>
-		$skin_tablefooter
-	</form>";
+			</tr>";
+      echoTableFooter($_CONFIG['skin_dir']); 
+      echo "</form>";
 		}
 	} elseif($_GET["action"] == "pass" && isset($_GET["id"])) {
 		$user = $tdb->get("users", $_GET["id"]);
@@ -219,8 +219,8 @@
 				<td class='area_2' style='padding:20px;' valign='top'>";
 			require_once("admin_navigation.php");
 			echo "</td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 			echo "<form method='POST' action=".$PHP_SELF."?action=pass&id=".$_GET["id"]."><input type='hidden' name='a' value='1'>";
 		echoTableHeading("Setting a new password for: ".$user[0]["user_name"]."", $_CONFIG);
 			echo "
@@ -250,9 +250,9 @@
 			</tr>
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Change Password'></td>
-			</tr>
-		$skin_tablefooter
-	</form>";
+			</tr>";
+    echoTableFooter($_CONFIG['skin_dir']);
+    echo "</form>";
 		}
 	} elseif($_GET["action"] == "delete") {
 		if (!isset($_GET["id"])) exitPage("No id selected.");
@@ -291,8 +291,8 @@
 				<td class='area_2' style='padding:20px;' valign='top'>";
 		require_once("admin_navigation.php");
 		echo "</td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+		echoTableFooter($_CONFIG['skin_dir']);
 		echo "<table class='pagenum_container' cellspacing='1'>
 			<tr>
 				<td style='text-align:left;height:23px;'><span class='pagination_current'>Pages: </span>".$pageStr."</td>
@@ -372,8 +372,8 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='10'>An <i>italized</i> e-mail states that this member has chosen to have his/her email address non-viewable to all but admins.</td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+		echoTableFooter($_CONFIG['skin_dir']);
 		echo "
 		<table class='pagenum_container' cellspacing='1'>
 			<tr>

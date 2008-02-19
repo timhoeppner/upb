@@ -89,9 +89,9 @@
 			</tr>
 			<tr>
 				<td class='footer_3a' style='text-align:center;' colspan='2'><input type='submit' class='txtBox' value='Login'>&nbsp;&nbsp;&nbsp;<a href='getpass.php'>(Lost Password?)</a> <a href='register.php'>(Need to Register?)</a></td>
-			</tr>
-		$skin_tablefooter
-	</form>";
+			</tr>";
+      echoTableFooter($_CONFIG['skin_dir']);
+      echo "</form>";
 	} else {
 		echo "
 		<div class='alert'>

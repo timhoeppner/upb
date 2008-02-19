@@ -7,7 +7,7 @@
 	require_once("./includes/class/func.class.php");
 	$where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_cleanup.php'>Clean up (old search files)</a>";
 	require_once('./includes/header.php');
-	if ($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
+	if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 		if ($_GET["action"] == "cleanup") {
 			echo "Cleaning up...<br />";
 			$dbdir = opendir(DB_DIR);
@@ -39,8 +39,8 @@
 				<td class='area_2' style='padding:20px;' valign='top'>";
 			require_once("admin_navigation.php");
 			echo "</td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 		echoTableHeading("Cleaning...", $_CONFIG);
 			echo "
 			<tr>
@@ -51,8 +51,8 @@
 			if ($files > 0) echo "There is $files old search files. The files are taking up ".round($size / 1024, 2)." KB on the server.<br /><a href='admin_cleanup.php?action=cleanup'>Remove the old search files?</a>";
 			else echo "There are no old search files.";
 			echo "</td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 		}
 	} else {
 		echo "

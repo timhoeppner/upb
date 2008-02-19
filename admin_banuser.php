@@ -9,7 +9,7 @@ $where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin
 require_once("./includes/header.php");
 
 if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_COOKIE["power_env"]) && isset($_COOKIE["id_env"])) {
-	if($tdb->is_logged_in() && $_COOKIE["power_env"] == 3) {
+	if($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 		if (isset($_GET["action"])) {
 			if($_GET["action"] == "edit" && $_GET["word"] != "") {
 				//edit banned user
@@ -62,9 +62,9 @@ $skin_tablefooter";
 			</tr>
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Edit'></td>
-			</tr>
-		$skin_tablefooter
-	</form>";
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
+	echo "</form>";
 					}
 				} else {
 					echo $_GET["word"]." was not found in the banned users list.";
@@ -123,8 +123,8 @@ $skin_tablefooter";
 
 		require_once("admin_navigation.php");
 		echo "</td>
-			</tr>
-$skin_tablefooter";
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 
 		echo "<form action='admin_banuser.php?action=addnew' method=POST><input type='hidden' name='ref' value='".$_GET["ref"]."'>";
 
@@ -143,9 +143,9 @@ $skin_tablefooter";
 			</tr>
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Add to ban list'></td>
-			</tr>
-		$skin_tablefooter
-	</form>";
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
+	echo "</form>";
 				}
 			}
 		} else {
@@ -163,8 +163,8 @@ $skin_tablefooter";
 
 		require_once("admin_navigation.php");
 		echo "</td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 
 echo "
 	<div id='tabstyle_2'>
@@ -194,7 +194,7 @@ echo "
 			</tr>";
 				}
 			}
-			echo "$skin_tablefooter";
+			echoTableFooter($_CONFIG['skin_dir']);
 		}
 	} else {
 		echo "
