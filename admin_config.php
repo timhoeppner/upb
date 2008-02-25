@@ -228,7 +228,7 @@ echo "		<tr>
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'>";
       
-      if ($cRecs === false)
+      if ($cRecs === false or $_GET['action'] != 'config')
         echo "<input type=button onClick=\"submitorderform('category','empty')\" value='Edit'>";
       else
         echo "<input type=button onClick=\"submitorderform('category','full')\" value='Edit'>";
