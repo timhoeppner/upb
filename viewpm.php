@@ -60,8 +60,15 @@
 			exit;
 		}
 		$next_disabled = "";
+		$fileId = $PrivMsg->fileIdById("CuBox", $_GET['id']);
+print "\$fileId = $fileId<br>";
+		$next = $PrivMsg->query("CuBox", "box='".$_GET['section']."'&&$other='".$_COOKIE["id_env"]."'", $fileId);
+		//$next = $PrivMsg->query("CuBox", "box='".$_GET['section']."'&&$other='".$_COOKIE['id_env']."'", $fileId, 1);
+print "next:"; print_r($next);
+		$next_disabled = ((empty($next[0])) ? " DISABLED" : "");
+
 		$back_disabled = "";
-		if (FALSE === ($PrivMsg->getNextRec("CuBox", $_GET["id"], array("box" => $_GET["section"], $other => $_COOKIE["id_env"])))) $next_disabled = "DISABLED";
+		//if (FALSE === ($PrivMsg->getNextRec("CuBox", $_GET["id"], array("box" => $_GET["section"], $other => $_COOKIE["id_env"])))) $next_disabled = "DISABLED";
 		if (FALSE === ($PrivMsg->getLastRec("CuBox", $_GET["id"], array("box" => $_GET["section"], $other => $_COOKIE["id_env"])))) $back_disabled = "DISABLED";
 		if (!isset($pmRec) || $pmRec == "" || !is_array($pmRec)) $pmRec = $PrivMsg->get("CuBox", $_GET["id"]);
 		$user = $tdb->get("users", $pmRec[0][$users_id]);
