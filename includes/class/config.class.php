@@ -116,10 +116,10 @@ class configSettings extends tdb {
                     else $varArr[$oriVar["name"]] = 0;
                 } */
             }
-            elseif ($oriVar["form_object"] == "list" and $varArr['type'] != "addcat" and $varArr['type'] != "delcat")
-              $varArr[$oriVar["name"]] = $varArr['neworder'];
+            //elseif ($oriVar["form_object"] == "list" and $varArr['type'] != "addcat" and $varArr['type'] != "delcat")
+            //  $varArr[$oriVar["name"]] = $varArr['neworder'];     // Why is this here?  Breaking other scripts
 
-            
+
             if($editOptionalData) {
                 if(is_array($nameRef[$oriVar["name"]])) {
                     $this->edit("ext_config", $oriVar["id"], array_diff_assoc($nameRef[$oriVar["name"]], $oriVar), false);

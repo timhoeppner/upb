@@ -34,31 +34,29 @@
 			echo " Please contact an Administrator";
 			if ($_COOKIE["power_env"] > 0) echo " via <a href='newpm.php?id=1'>PM Message</a> or <a href='email.php?id=1'>web email</a>";
 		} else {
-			echo " To add a Category, <a href='admin_cat.php?action=addnew'>click here</a>.";
+			echo " To add a Category, <a href='admin_forums.php?action=add_cat'>click here</a>.";
 		}
 		echo '</div></div>';
 	} else {
-		if (@trim($_CONFIG["admin_catagory_sorting"]) != "") {
-			$cSorting = explode(",", $_CONFIG["admin_catagory_sorting"]);
-			$k = 0;
-			$i = 0;
-			$sorted = array();
-			while ($i < count($cRecs)) {
-				if ($cSorting[$k] == $cRecs[$i]["id"]) {
-					if ($_COOKIE["power_env"] >= $cRecs[$i]["view"]) $sorted[] = $cRecs[$i];
-					//unset($cRecs[$i]);
-					$k++;
-					$i = 0;
-				} else {
-					$i++;
-				}
+	    // Sort categories in the order that they appear
+		$cSorting = explode(",", $_CONFIG["admin_catagory_sorting"]);
+		$k = 0;
+		$i = 0;
+		$sorted = array();
+		while ($i < count($cRecs)) {
+			if ($cSorting[$k] == $cRecs[$i]["id"]) {
+				if ($_COOKIE["power_env"] >= $cRecs[$i]["view"]) $sorted[] = $cRecs[$i];
+				//unset($cRecs[$i]);
+				$k++;
+				$i = 0;
+			} else {
+				$i++;
 			}
-			$cRecs = $sorted;
-			unset($sorted, $i, $catdef, $cSorting);
-		} else {
-			sort($cRecs);
 		}
+		$cRecs = $sorted;
+		unset($sorted, $i, $catdef, $cSorting);
 		reset($cRecs);
+
 		$t_t = 0;
 		$t_p = 0;
 		foreach($cRecs as $cRec) {
@@ -79,7 +77,7 @@
 						echo " Please contact an Administrator";
 						if ($_COOKIE["power_env"] > 0) echo " via <a href='newpm.php?id=1'>PM Message</a> or <a href='email.php?id=1'>web email</a>";
 					} else {
-						echo " To add a forum, <a href='admin_forum.php?action=addnew&cat_id=".$cRec["id"]."'>click here</a>.";
+						echo " To add a forum, <a href='admin_forums.php?action=add_forum&cat_id=".$cRec["id"]."'>click here</a>.";
 					}
 					echo "</td>
 			</tr>";

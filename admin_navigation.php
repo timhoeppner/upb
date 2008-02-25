@@ -4,18 +4,17 @@
 		if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 			echo "
 				<div style='width:50%;float:left;line-height:20px;text-align:center;'><span class='link_1'>
-				<a href='admin_cat.php' target = '_parent'>Manage Categories</a><br />
-				<a href='admin_forum.php' target = '_parent'>Manage Forums</a><br />
-				<a href='admin_config.php' target = '_parent'>Config Settings</a><br />
-				<a href='admin_restore.php' target = '_parent'>Backup/Restore the database</a><br />
-		<a href='admin_checkupdate.php' target = '_parent'>Check for UPDATES</a><br /></div>
+				<a href='admin_forums.php#skip_nav' target = '_parent'>Manage Forums</a><br />
+				<a href='admin_config.php#skip_nav' target = '_parent'>Manage Settings</a><br />
+				<a href='admin_members.php#skip_nav' target = '_parent'>Manage Members</a><br />
+				<a href='admin_smilies.php#skip_nav' target = '_parent'>Manage Smilies</a><br />
+			<a href='admin_icons.php#skip_nav' target = '_parent'>Manage Post Icons</a></div>
 				<div style='width:50%;float:right;line-height:20px;text-align:center;'><span class='link_1'>
-				<a href='admin_members.php' target = '_parent'>Manage Members</a><br />
-				<a href='admin_iplog.php' target = '_parent'>Ip Address Log</a><br />
-				<a href='admin_banuser.php' target = '_parent'>Manage Banned users</a><br />
-				<a href='admin_badwords.php' target = '_parent'>Manage Bad Words</a><br />
-				<a href='admin_smilies.php' target = '_parent'>Manage Smilies</a><br />
-				<a href='admin_icons.php' target = '_parent'>Manage Post Icons</a></span></div>";
+		        <a href='admin_checkupdate.php#skip_nav' target = '_parent'>Check for Updates</a><br />
+				<a href='admin_banuser.php#skip_nav' target = '_parent'>Manage Banned users</a><br />
+				<a href='admin_badwords.php#skip_nav' target = '_parent'>Manage Bad Words</a><br />
+				<a href='admin_iplog.php#skip_nav' target = '_parent'>View the IP Address Log</a><br />
+				<a href='admin_restore.php#skip_nav' target = '_parent'>Backup/Restore the database</a><br /></span></div>";
 		}
 	}
 ?>
