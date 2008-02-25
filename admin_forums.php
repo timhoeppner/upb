@@ -117,7 +117,11 @@
 			//add new category
 			if (isset($_POST['a'])) {
 				$cat_id = $tdb->add("cats", array("name" => $_POST["u_cat"], "view" => $_POST["u_view"]));
-
+        $sort = $_CONFIG['admin_catagory_sorting'];
+        $sort = explode(",",$sort);
+        $sort[] = $cat_id;
+        $sort = implode(",",$sort);
+        $config_tdb->editVars('config', array('admin_catagory_sorting' => $sort));
 				echo "
 					<div class='alert_confirm'>
 					<div class='alert_confirm_text'>
@@ -427,11 +431,13 @@
 		    //
 		    //
 			$cRecs = $tdb->listRec("cats", 1);
+
 			if (empty($cRecs)) redirect('admin_forums.php?action=add_cat', 0);
 
     		// Sort categories in the order that they appear
     		$cSorting = explode(",", $_CONFIG["admin_catagory_sorting"]);
-    		$k = 0;
+    		
+        $k = 0;
     		$i = 0;
     		$sorted = array();
     		while ($i < count($cRecs)) {
