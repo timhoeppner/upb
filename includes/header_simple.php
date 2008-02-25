@@ -24,7 +24,6 @@
 	$h_f = fopen(DB_DIR."/hits.dat", "w");
 	fwrite($h_f, $hits);
 	fclose($h_f);
-	include ("./includes/coding.php");
 	header ("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 	// Date in the past
 	header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");

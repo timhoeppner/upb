@@ -38,8 +38,8 @@
 				</tr>
 				<tr>
 					<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='3'>No Messages in your ".$_GET["section"]."</td>
-				</tr>
-		$skin_tablefooter";
+				</tr>";
+		echoTableFooter(SKIN_DIR);
 		require_once('./includes/footer.php');
 		exit;
 	}
@@ -145,8 +145,8 @@
 				<tr>
 					<td class='footer_3a' colspan='6' style='text-align:center;'><input type='submit' name='action' value='Delete Selected PMs' $disable></td>
 				</tr>
-		$skin_tablefooter
 		</form>";
+		echoTableFooter(SKIN_DIR);
 	} elseif($_GET["section"] == "outbox") {
 		$none = 0;
 		echo "
@@ -173,7 +173,7 @@
 				<tr>
 					<td class='area_1' style='text-align:center;padding:8px;'><img src='./icon/".$pmRec["icon"]."' alt='' title='' /></td>
 					<td class='area_2'> <span class='link_1'><a href='viewpm.php?section=".$_GET["section"]."&id=".$pmRec["id"]."'>".$pmRec["subject"]."</a></span></td>
-					<td class='area_1'>Sent to <a href='profile.php?action=get&id=".$pmRec["to_id"]."'>".$user[0]["user_name"]."</a> on ".gmdate("M d, Y g:i:s a", user_date($pmRec["date"]))."</td>
+					<td class='area_1'>Sent to <a href='profile.php?action=get&id=".$user[0]['id']."'>".$user[0]["user_name"]."</a> on ".gmdate("M d, Y g:i:s a", user_date($pmRec["date"]))."</td>
 				</tr>";
 				unset($pmRec);
 			} else {
@@ -188,7 +188,7 @@
 				</tr>";
 			$disable = "DISABLED";
 		}
-		echo "$skin_tablefooter";
+		echoTableFooter(SKIN_DIR);
 	} else {
 		$old_pm = ($count - $new_pm);
 		echo "
@@ -208,8 +208,8 @@
 				</tr>
 				<tr>
 					<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;'>$new_pm New Private Msg(s) and <strong>$old_pm</strong> Old Private Msg(s)</td>
-				</tr>
-		$skin_tablefooter";
+				</tr>";
+		echoTableFooter(SKIN_DIR);
 	}
 	require_once("./includes/footer.php");
 ?>

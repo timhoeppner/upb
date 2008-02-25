@@ -6,7 +6,8 @@
 
 //Ultimate PHP Boart Private Messaging Custom Functions
 function addUsersPMBlockedList($user_id) {
-    if(FALSE === (getUsersPMBlockedList($user_id))) {
+    $tmp = getUsersPMBlockedList($user_id);
+    if(empty($tmp)) {
         $f = fopen(DB_DIR."/blockedlist.dat", 'a+');
         fwrite($f, $user_id.":".chr(31));
         fclose($f);

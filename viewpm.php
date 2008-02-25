@@ -13,7 +13,6 @@
 		$PrivMsg->setFp("CuBox", ceil($_COOKIE["id_env"]/120));
 		$options = "";
 		if ($_GET["section"] == "inbox") {
-			$options = "<input type='submit' name='action' value='Reply' onclick='check_submit()'> <input type='submit' name='action' value='Delete' onclick='check_submit()'>  <input type='submit' name='action' value='Block User' onclick='check_submit()'>";
 			$person = "Sender";
 			$users_id = "from";
 			$other = "to";
@@ -65,6 +64,15 @@
 		if (FALSE === ($PrivMsg->getNextRec("CuBox", $_GET["id"], array("box" => $_GET["section"], $other => $_COOKIE["id_env"])))) $next_disabled = "DISABLED";
 		if (FALSE === ($PrivMsg->getLastRec("CuBox", $_GET["id"], array("box" => $_GET["section"], $other => $_COOKIE["id_env"])))) $back_disabled = "DISABLED";
 		if (!isset($pmRec) || $pmRec == "" || !is_array($pmRec)) $pmRec = $PrivMsg->get("CuBox", $_GET["id"]);
+		$user = $tdb->get("users", $pmRec[0][$users_id]);
+		if ($_GET["section"] == "inbox") {
+		    if(in_array($_COOKIE['id_env'], getUsersPMBlockedList($pmRec[0][$users_id]))) $reply_disabled = " DISABLED";
+		    else $reply_disabled = '';
+		    if($user[0]['level'] > 1) $block_disabled = " DISABLED";
+		    else $block_disabled = "";
+			$options = "<input type='submit' name='action' value='Reply' onclick='check_submit()'$reply_disabled> <input type='submit' name='action' value='Delete' onclick='check_submit()'>  <input type='submit' name='action' value='Block User' onclick='check_submit()'$block_disabled>";
+
+		}
 		$where = "<a href='pmsystem.php'>Messenger</a> ".$_CONFIG["where_sep"]." <a href='pmsystem.php?section=".$_GET["section"]."'>".ucfirst($_GET["section"])."</a> ".$_CONFIG["where_sep"]." ".$pmRec[0]["subject"];
 		require_once('./includes/header.php');
 		$pm_navegate = "
@@ -82,21 +90,18 @@
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		$table_color = $table1;
 		$table_font = $font1;
-		$user = $tdb->get("users", $pmRec[0][$users_id]);
 		if ($user[0]["sig"] != "") $user[0]["sig"] = "
 			<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG["censor"]))."</div>";
-		if (FALSE === mod_avatar::verify_avatar($user[0]['avatar'], $user[0]['avatar_hash'])) {
-			$new_avatar = array();
-			list($new_avatar['avatar_width'], $new_avatar['avatar_height']) = mod_avatar::calculate_dimensions($user[0]['avatar'], $_CONFIG['avatar_width'], $_CONFIG['avatar_height']);
-			$new_avatar['avatar_hash'] = mod_avatar::md5_file($user[0]['avatar']);
-			$tdb->edit('users', $user[0]['id'], $new_avatar);
-			$user[0] = array_merge($user[0], $new_avatar);
-			unset($new_avatar);
-		}
+			if (FALSE === mod_avatar::verify_avatar($user[0]['avatar'], $user[0]['avatar_hash'])) {
+				$new_avatar = mod_avatar::new_parameters($user[0]['avatar'], $_CONFIG['avatar_width'], $_CONFIG['avatar_height']);
+				$tdb->edit('users', $user[0]['id'], $new_avatar);
+				$user[0] = array_merge($user[0], $new_avatar);
+				unset($new_avatar);
+			}
 		$status_config = status($user);
 		$status = $status_config['status'];
 		$statuscolor = $status_config['statuscolor'];
-    
+
 		$message = format_text(filterLanguage(UPBcoding($pmRec[0]["message"]), $_CONFIG["censor"]));
 		echo "
 			<tr>

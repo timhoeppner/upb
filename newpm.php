@@ -6,7 +6,7 @@
 	// Using textdb Version: 4.4.2
 	require_once("./includes/class/func.class.php");
 	require_once("./includes/inc/post.inc.php");
-	$where = "<a href='pmsystem.php'>Messenger</a> ".$_CONFIG["where_sep"]." Replying to message";
+	$where = "<a href='pmsystem.php'>Messenger</a> ".$_CONFIG["where_sep"]." New message";
 	if ($tdb->is_logged_in() === false) exitPage("You are not even Logged in.");
 	$PrivMsg = new functions(DB_DIR."/", "privmsg.tdb");
 	$PrivMsg->setFp("CuBox", ceil($_COOKIE["id_env"]/120));
@@ -55,8 +55,8 @@
 				<strong>Caution!</strong></div><div style='padding:4px;'>You cannot send yourself a Private Message.</div></div>
 				";
 		} else {
-			$ids = getUsersPMBlockedList($_COOKIE["user_env"]);
-			if (true === array_search($_COOKIE["id_env"], $ids)) {
+			$ids = getUsersPMBlockedList($_POST["to"]);
+			if (in_array($_COOKIE['id_env'], $ids)) {
 				$error_msg .= "
 					<div class='alert'><div class='alert_text'>
 					<strong>Denied!</strong></div><div style='padding:4px;'>The User you are sending does not wish to recieve messages from you. (You are blocked)</div></div>";
@@ -92,6 +92,12 @@
 	if (isset($_GET["r_id"]) && is_numeric($_GET["r_id"])) {
 		$reply = $PrivMsg->get("CuBox", $_GET["r_id"]);
 		$u_reply = $tdb->get("users", $reply[0]["from"]);
+		$ids = getUsersPMBlockedList($u_reply[0]['id']);
+		if(in_array($_COOKIE['id_env'], $ids)) {
+		   exitPage("
+		   <div class='alert'><div class='alert_text'>
+					<strong>Denied!</strong></div><div style='padding:4px;'>The User you are sending does not wish to recieve messages from you. (You are blocked)</div></div>");
+		}
 		$send_to = $u_reply[0]['user_name']."<input type='hidden' name='to' value='".$reply[0]["from"]."'>";
 		if (!isset($sbj)) {
 			while (substr($reply[subject], 0, 4) == "RE: ") {
@@ -157,7 +163,7 @@
 		</div>
 		<div style='clear:both;'></div>";
 	echo "<form action='".$_SERVER['PHP_SELF'].(isset($_GET['to']) ? "?to=".$_GET['to'] : '')."' method='POST' name='newentry' onSubmit='submitonce(this)' enctype='multipart/form-data'><input type='hidden' name='s' value='1'><input type='hidden' name='r' value='".$_GET["r_id"]."'>";
-	echoTableHeading("Replying to ".$u_reply[0]["user_name"]."'s Message", $_CONFIG);
+	echoTableHeading($hed, $_CONFIG);
 	echo "
 			<tr>
 				<th colspan='2'>$hed</th>
@@ -187,7 +193,8 @@
 			<tr>
 				<td class='area_1' style='padding:8px;' valign='top'><strong>Message:</strong>
 					<div style='text-align:center;margin-top:20px;margin-bottom:20px;'>";
-	toolMapImage();
+//	toolMapImage(); // Broken Tool
+    print "Tool Map Image is broken<br>";
 	echo "</div>
 					<div style='text-align:center;'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></div></td>
 				<td class='area_2'><textarea name='message' id='look1'>".$msg."</textarea>
@@ -219,11 +226,13 @@
 			<tr>
 				<td class='footer_3a' colspan='6' style='text-align:center;'><input type='submit' value='Send PM' onclick='check_submit()'></td>
 			</tr>
-		$skin_tablefooter
 	</form>";
+	echoTableFooter(SKIN_DIR);
+if (isset($_GET["r_id"]) && is_numeric($_GET["r_id"])) {
 	echoTableHeading("".$u_reply[0]["user_name"]."'s Message to you:", $_CONFIG);
 	echo "
-	$iframe
-	$skin_tablefooter";
+	$iframe";
+	echoTableFooter(SKIN_DIR);
+}
 	require_once("./includes/footer.php");
 ?>

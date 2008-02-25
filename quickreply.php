@@ -8,7 +8,7 @@ require_once('./includes/class/func.class.php');
 require_once('./includes/inc/post.inc.php');
 require_once("./includes/class/upload.class.php");
 require_once("./includes/class/posts.class.php");
-require_once("./includes/coding.php");
+//require_once("./includes/coding.php");
 
 $output = "<link rel=\"stylesheet\" href=\"".$_CONFIG["skin_dir"]."/css/style.css\" type=\"text/css\">";
 $fRec = $tdb->get("forums", $_POST["id"]);

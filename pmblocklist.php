@@ -21,13 +21,14 @@
 		if ($_GET["user_id"] == "" || !isset($_GET["user_id"])) exitPage("You must select a name!", true);
 		$user = $tdb->get("users", $_GET["user_id"]);
 		if ($user[0]["level"] != 1) {
-			$void .= 1;
+			$void .= '1';
 			$echo .= "You cannot Block ".$user[0]["user_name"].", He/She is an Administrator/Moderator<br />";
 		}
-		if (FALSE !== ($blockedIds = getUsersPMBlockedList($_COOKIE["id_env"]))) {
+		$blockedIds = getUsersPMBlockedList($_COOKIE["id_env"]);
+		if (!empty($blockedIds)) {
 			//print_r($blockedIds);
 			if (true === (in_array($user[0]["id"], $blockedIds))) {
-				$void .= 1;
+				$void .= '1';
 				$echo .= $user[0]["user_name"]." is already blocked<br />";
 			}
 		} else {
@@ -44,6 +45,7 @@
 				exitPage("<strong>Error</strong>:  An unexpected error occured when editing PMBlockedList file, <strong>USER NOT FOUND</strong><br />", true);
 			}
 			$echo = "Successfully Blocked <strong>".$user[0]["user_name"]."</strong>!<br />";
+			$action = 'done';
 			if ($after == "done") {
 				exitPage($echo, true);
 			} elseif($action == "close" || $after == "close") {
@@ -118,8 +120,8 @@
 				</form>
 				<br />
 				You are not allowed to block Administrators/Moderators";
-		echo "</td>
-		$skin_tablefooter";
+		echo "</td>";
+		echoTableFooter(SKIN_DIR);
 	}
 	if ($_GET["action"] == "") {
 		$where = "<a href='pmsystem.php'>Private Msg</a> ".$_CONFIG["where_sep"]." Manage Blocked Users";
@@ -174,8 +176,8 @@
 				</tr>
 				<tr>
 					<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' name='action' value='Unblock' $disable></form></td>
-				</tr>
-		$skin_tablefooter";
+				</tr>";
+		echoTableFooter(SKIN_DIR);
 	}
 	require_once('./includes/footer.php');
 ?>
