@@ -20,13 +20,13 @@ foreach($GLOBALS["_COOKIE"] as $varname => $varvalue) {
 foreach($GLOBALS["_SERVER"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
 }
-foreach($GLOBALS["_ENV"] as $varname => $varvalue) {
+if(!empty($GLOBALS['_ENV'])) foreach($GLOBALS["_ENV"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
 }
 foreach($GLOBALS["_FILES"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
 }
-foreach($GLOBALS["_REQUEST"] as $varname => $varvalue) {
+if(!empty($GLOBALS['_ENV'])) foreach($GLOBALS["_REQUEST"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
 }
 

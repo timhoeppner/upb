@@ -21,7 +21,9 @@
 			die('<strong>Security Risk</strong>:  Unable to initiate installation. An Administrater must put the forum in Installation Mode.  You\'re IP Address has been sent to the administrater aswell as login information.');
 		}
 	}
-	if (@$_POST["add"] == "" || !isset($_POST["add"])) {
+	if(!isset($_POST['add'])) $_POST['add'] = '';
+	if ($_POST["add"] == "") {
+  
 		//define and create the new database folder
 		if (!defined('DB_DIR')) {
 			define('DB_DIR', './'.uniqid('data_', true), true);
@@ -218,12 +220,12 @@
     $tdb->add("config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config"));
 		
 		//$_REGISTER
-		$tdb->add("ext_config", array("name" => "register_sbj", "value" => $register_sbj, "type" => "regist", "title" => "Register Email Subject", "description" => "this is the subject for confirmation of registration", "form_object" => "text", "data_type" => "string", "minicat" => "7", "sort" => "2"));
-		$tdb->add("config", array("name" => "register_sbj", "value" => $register_sbj, "type" => "regist"));
-		$tdb->add("ext_config", array("name" => "register_msg", "value" => $register_msg, "type" => "regist", "title" => "Register Email Message", "description" => "this is the message for confirmation of registration (options: &lt;login&gt; &lt;password&gt;)", "form_object" => "textarea", "data_type" => "string", "minicat" => "7", "sort" => "3"));
-		$tdb->add("config", array("name" => "register_msg", "value" => $register_msg, "type" => "regist"));
-		$tdb->add("ext_config", array("name" => "admin_email", "value" => $admin_email, "type" => "regist", "title" => "Admin E-mail", "description" => "this is the return address for confirmation of registration", "form_object" => "text", "data_type" => "string", "minicat" => "7", "sort" => "1"));
-		$tdb->add("config", array("name" => "admin_email", "value" => $admin_email, "type" => "regist"));
+		$tdb->add("ext_config", array("name" => "register_sbj", "value" => '', "type" => "regist", "title" => "Register Email Subject", "description" => "this is the subject for confirmation of registration", "form_object" => "text", "data_type" => "string", "minicat" => "7", "sort" => "2"));
+		$tdb->add("config", array("name" => "register_sbj", "value" => '', "type" => "regist"));
+		$tdb->add("ext_config", array("name" => "register_msg", "value" => '', "type" => "regist", "title" => "Register Email Message", "description" => "this is the message for confirmation of registration (options: &lt;login&gt; &lt;password&gt;)", "form_object" => "textarea", "data_type" => "string", "minicat" => "7", "sort" => "3"));
+		$tdb->add("config", array("name" => "register_msg", "value" => '', "type" => "regist"));
+		$tdb->add("ext_config", array("name" => "admin_email", "value" => '', "type" => "regist", "title" => "Admin E-mail", "description" => "this is the return address for confirmation of registration", "form_object" => "text", "data_type" => "string", "minicat" => "7", "sort" => "1"));
+		$tdb->add("config", array("name" => "admin_email", "value" => '', "type" => "regist"));
 		$tdb->add("ext_config", array("name" => "avatar1", "value" => "dome.jpg", "type" => "regist", "title" => "Avatar 1", "description" => "The first avatar on the selection menu for new users", "form_object" => "text", "data_type" => "string", "minicat" => "8", "sort" => "2"));
 		$tdb->add("config", array("name" => "avatar1", "value" => "dome.jpg", "type" => "regist"));
 		$tdb->add("ext_config", array("name" => "avatar2", "value" => "chic.jpg", "type" => "regist", "title" => "Avatar 2", "description" => "The second avatar on the selection menu for new users", "form_object" => "text", "data_type" => "string", "minicat" => "8", "sort" => "3"));
@@ -416,7 +418,7 @@
 		// Add the new table to main.tdb
 		$tdb->tdb(DB_DIR, "main.tdb");
 		$tdb->createTable("uploads", array(
-		array("name", "string", 80),
+		array("name", "string", 4096),
 			array("size", "number", 9),
 			array("downloads", "number", 10),
 			array("data", "memo"),
