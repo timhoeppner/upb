@@ -106,7 +106,7 @@ textarea#newentry {
 	margin : 0 auto 0 auto;
 	text-align : left;
 	width : 800px;
-	background-color : #f9f9f9;
+  background-color : #f9f9f9;
 	border : 1px solid #7a8b9E;
 	color : #000;
 	padding : 10px;
@@ -1166,10 +1166,20 @@ th a:hover {
 /*  (the first being either loose or lose) */
 /* --------------------------------------- */
 
+/*
+/* This is the style for the top content area of the members profile view */
+#topcontent {
+	text-align:center;
+  font-weight:bold;
+  background-color : #d6dcea;
+	font-family : arial,verdana,tahoma;
+	font-size : 11px;
+}
+
 /* This is the style for the left content area of the members profile view */
 #leftcontent {
-	width:40%;
-	background-color : #f9f9f9;
+	width:50%;
+  background-color : #f9f9f9;
 	font-family : arial,verdana,tahoma;
 	font-size : 11px;
 }

@@ -24,6 +24,7 @@ if ($_POST['type'] == 'getpost')
   $output .= "<textarea name='newedit' id='newedit' cols='60' rows='18'>".$pRec[0]['message']."</textarea><br>";
   $output .= "\n<input type='button' onclick='javascript:getEdit(document.getElementById(\"quickedit\"),\"".$_POST['divname']."\");'\' name='qedit' value='Save Edit'>";
   $output .= "\n<input type='submit' name='submit' value='Go Advanced'>";
+  $output .= "\n<input type='button' name='cancel_edit' value='Cancel Edit'>";
   $output .= "</form>";
   echo $output;
 }
@@ -34,8 +35,8 @@ else
 
   if($pRec[0]["user_id"] != $_COOKIE["id_env"] && $_COOKIE["power_env"] < 2) exitPage("You are not authorized to edit this post.");
 
-  $msg = format_text(filterLanguage(UPBcoding(htmlentities(utf8_decode(stripslashes($_POST["newedit"])))), $_CONFIG["censor"]));
-  $dbmsg = htmlentities(stripslashes(utf8_decode($_POST["newedit"])),ENT_NOQUOTES);
+  $msg = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($_POST["newedit"])))), $_CONFIG["censor"]));
+  $dbmsg = encode_text(stripslashes(utf8_decode($_POST["newedit"])),ENT_NOQUOTES);
 
   $posts_tdb->edit("posts", $_POST["postid"], array("message" => $dbmsg, "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate()));
 //clearstatcache();

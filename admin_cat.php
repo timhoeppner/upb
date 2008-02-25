@@ -77,7 +77,7 @@
                        }
                     }
                      echo "</select></td>";
-                    echo "<td><img src='./images/up.gif' ";
+                    echo "<td><br><img src='./images/up.gif' ";
      echo "onClick=\"moveOptionsUp('fsort');fsort.focus();\">&nbsp;&nbsp;&nbsp;";
      echo "<p><img src='./images/down.gif' ";
     echo "onClick=\"moveOptionsDown('fsort');fsort.focus();\"></td></tr></table>";

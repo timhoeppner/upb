@@ -5,6 +5,7 @@
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
 	require_once("./includes/class/func.class.php");
+	$words = array();
 	$where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_badwords.php'>Manage Badwords</a>";
 	require_once('./includes/header.php');
 	if (!(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_COOKIE["power_env"]) && isset($_COOKIE["id_env"]))) {
@@ -13,7 +14,7 @@
 			<strong>Access Denied!</strong></div><div style='padding:4px;'>you are not logged in!</div></div>";
 		redirect("login.php?ref=admin_badwords.php", 2);
 	}
-	if (!($tdb->is_logged_in() && $_COOKIE["power_env"] < 3)) exitPage("
+	if (!($tdb->is_logged_in() || $_COOKIE["power_env"] < 3)) exitPage("
 		<div class='alert'><div class='alert_text'>
 		<strong>Access Denied!</strong></div><div style='padding:4px;'>you are not authorized to be here.</div></div>");
 	if ($_GET["action"] == "delete" && $_GET["word"] != "") {
@@ -25,7 +26,8 @@
 				deleting bad word...
 				";
 			$words = explode("\n", file_get_contents(DB_DIR."/badwords.dat"));
-			if (($index = array_search($_GET["word"], $words)) !== FALSE) unset($words[$index]);
+			
+      if (($index = array_search($_GET["word"], $words)) !== FALSE) unset($words[$index]);
 			$f = fopen(DB_DIR."/badwords.dat", 'w');
 			fwrite($f, implode("\n", $words));
 			fclose($f);
@@ -83,7 +85,8 @@
 	echo "</form>";
 		}
 	} else {
-		$words = explode("\n", file_get_contents(DB_DIR."/badwords.dat"));
+		
+    $words = explode(",", $_CONFIG['banned_words']);
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
 			<tr>
@@ -109,7 +112,7 @@
 				<th style='width:35%;'>Word</th>
 				<th>Option</th>
 			</tr>";
-		if (trim($words[0]) == "") {
+		if (count($words) == 0) {
 			echo "
 			<tr>
 				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='2'>No words found</td>

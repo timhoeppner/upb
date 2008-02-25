@@ -14,7 +14,7 @@
 	$message = "";
   if (!empty($_POST))
 		{
-      $message = $_POST['newentry'];
+      $message = stripslashes($_POST['newentry']);
       foreach ($_POST as $key => $value)
       {
         $_GET[$key] = $value;
@@ -42,7 +42,7 @@
 		<strong>Caution!</strong></div><div style='padding:4px;'>Invalid Topic ID/Information.</div></div>");
 	if ($_POST["a"] == "1") {
 		if (isset($_POST['subject'])) $_POST['subject'] = htmlentities(stripslashes($_POST["subject"]));
-		$_POST['message'] = htmlentities(stripslashes($_POST["message"]));
+		$_POST['message'] = encode_text(stripslashes($_POST["message"]));
 		if ($_POST["icon"] == "") exitPage("<div class='alert'><div class='alert_text'>
 			<strong>Caution!</strong></div><div style='padding:4px;'>Please select a message icon.</div></div>");
 		if ($_GET["t"] == 1 && trim($_POST["subject"]) == "") exitPage("<div class='alert'><div class='alert_text'>
@@ -221,8 +221,9 @@
 		echo "
 			<tr>
 				<td class='footer_3a' style='text-align:center;' colspan='2'><input type=submit value='Submit' onclick='return check_submit()'></td>
-			</tr>
-		$skin_tablefooter
+			</tr>";
+      echoTableFooter($_CONFIG['skin_dir']);
+      echo "
 	</form>
 	".$iframe."";
 	}

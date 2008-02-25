@@ -28,7 +28,7 @@ if(!($tdb->is_logged_in())) {
     $_COOKIE["id_env"] = 0;
 }
 
-    $msg = htmlentities(stripslashes($_POST["newentry"]));        
+    $msg = encode_text(stripslashes($_POST["newentry"]));        
       $tdb->edit("forums", $_POST["id"], array("posts" => ((int)$fRec[0]["posts"] + 1)));
       $rec = $posts_tdb->get("topics", $_POST["t_id"]);
       
@@ -127,31 +127,9 @@ foreach($pRecs as $key => $pRec) {
 				$user[0] = array_merge($user[0], $new_avatar);
 				unset($new_avatar);
 			}
-			if ($user[0]["level"] == "1") {
-				$statuscolor = $_STATUS["userColor"];
-				if ($user[0]["posts"] >= $_STATUS["member_post1"]) $status = $_STATUS["member_status1"];
-				if ($user[0]["posts"] >= $_STATUS["member_post2"]) $status = $_STATUS["member_status2"];
-				if ($user[0]["posts"] >= $_STATUS["member_post3"]) $status = $_STATUS["member_status3"];
-				if ($user[0]["posts"] >= $_STATUS["member_post4"]) $status = $_STATUS["member_status4"];
-				if ($user[0]["posts"] >= $_STATUS["member_post5"]) $status = $_STATUS["member_status5"];
-			} elseif($user[0]["level"] == "2") {
-				$statuscolor = $_STATUS["modColor"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post1"]) $status = $_STATUS["mod_status1"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post2"]) $status = $_STATUS["mod_status2"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post3"]) $status = $_STATUS["mod_status3"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post4"]) $status = $_STATUS["mod_status4"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post5"]) $status = $_STATUS["mod_status5"];
-			} elseif($user[0]["level"] == "3") {
-				$statuscolor = $_STATUS["adminColor"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post1"]) $status = $_STATUS["admin_status1"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post2"]) $status = $_STATUS["admin_status2"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post3"]) $status = $_STATUS["admin_status3"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post4"]) $status = $_STATUS["admin_status4"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post5"]) $status = $_STATUS["admin_status5"];
-			} else {
-				$status = "Member";
-				$statuscolor = $_STATUS["membercolor"];
-			}
+			$status_config = status($user);
+			$status = $status_config['status'];
+			$statuscolor = $status_config['statuscolor'];
 			if ($user[0]["status"] != "") $status = $user[0]["status"];
 			if (isset($_COOKIE["id_env"]) && $pRec["user_id"] != $_COOKIE["id_env"]) {
 				$user_blList = getUsersPMBlockedList($pRec["user_id"]);
@@ -219,11 +197,15 @@ foreach($pRecs as $key => $pRec) {
 					<div class='button_pro2'><a href='email.php?id=".$pRec["user_id"]."'>email ".$pRec["user_name"]."</a></div>";
     $output .= "</td>
 			</tr>
-		$skin_tablefooter </div>"; 
+		</tbody>
+		</table>
+		<div class='footer'><img src='".$_CONFIG['skin_dir']."/images/spacer.gif' alt='' title='' /></div>
+	</div>
+	<br />";
 }
 
-$qrform = ""; //NEW QUICK REPLY FORM WILL HOPEFULLY GO HERE
-//
+$qrform = ""; //NEW QUICK REPLY FORM
+
 $qrform .= "<form name='quickreply' action='newpost.php?id=".$_POST['id']."&t_id=".$_POST['id']."&page=".$page."' method='POST' name='quickreply'>\n";
 $qrform .= "<div class='main_cat_wrapper'>
 		<div class='cat_area_1'>Quick Reply</div>

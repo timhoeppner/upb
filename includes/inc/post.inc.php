@@ -29,7 +29,14 @@ function message_icons()
 function format_text($text) {
     $text = str_replace("\n", "<br>", $text);
     $text = str_replace("  ", "&nbsp; ", $text);
+    $text = str_replace("&amp;#", "&#", $text);
     return $text;
+}
+
+function encode_text($text)
+{
+  $string = str_replace(array('<','>'),array('&lt;','&gt;'),$text);
+  return $string;
 }
 
 function filterLanguage($text, $censor) {

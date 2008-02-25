@@ -182,7 +182,8 @@
     </td></tr>\n";
   echo "<tr><td class='footer_3a' style='text-align:center;' colspan='2'>\n
     <input type='button' name='quickreply' value='Quick Reply' onclick=\"javascript:getReply(document.getElementById('quickreply'))\">\n
-    <input type='submit' name='submit' value='Go Advanced'>\n</td></tr></form></font>".$skin_tablefooter;
+    <input type='submit' name='submit' value='Go Advanced'>\n</td></tr></form></font>";
+    echoTableFooter($_CONFIG['skin_dir']);
   echo "</div>";
 }
 //END QUICK REPLY SEGMENT
@@ -206,8 +207,8 @@
 		echo "
 			<tr>
 				<th>Choose your action from the tab menu...</th>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+		echoTableFooter($_CONFIG['skin_dir']);
 	}
 	$tdb->cleanup();
 	unset($tdb);

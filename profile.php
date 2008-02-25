@@ -5,7 +5,10 @@
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
 	require_once('./includes/class/func.class.php');
-	$where = "User CP";
+	if ($_GET['action'] == "get")
+    $where = "Member Profile";
+  else
+    $where = "User CP";
 	if (isset($_POST["u_edit"])) {
 		if (!($tdb->is_logged_in())) {
 			echo "<html><head><meta http-equiv='refresh' content='2;URL=login.php?ref=profile.php'></head></html>";
@@ -32,10 +35,11 @@
 			if ($user[0]["email"] != $_POST["u_email"]) $rec["email"] = $_POST["u_email"];
 			if ($user[0]["u_sig"] != chop($_POST["u_sig"])) $rec["sig"] = chop($_POST["u_sig"]);
 			if (substr(trim(strtolower($_POST["u_site"])), 0, 7) != "http://") $_POST["u_site"] = "http://".$_POST["u_site"];
-			if ($user[0]["url"] != $_POST["u_site"]) $rec["url"] = $_POST["u_site"];
-			if ($_POST["u_timezone"] {
-				0 }
-			== '+') $_POST["u_timezone"] = substr($_POST["u_timezone"], 1);
+      if ($user[0]["url"] != $_POST["u_site"])
+        $rec["url"] = $_POST["u_site"];
+      if ($_POST['u_site'] == "http://" or $rec['url'] == 'http://')
+        $rec['url'] = "";
+      if ($_POST["u_timezone"]{0} == '+') $_POST["u_timezone"] = substr($_POST["u_timezone"], 1);
 			if ($_POST["show_email"] != "1") $_POST["show_email"] = "0";
 			if ($_POST["email_list"] != "1") $_POST["email_list"] = "0";
 			if ($user[0]["view_email"] != $_POST["show_email"]) $rec["view_email"] = $_POST["show_email"];
@@ -54,8 +58,15 @@
 				$rec["timezone"] = $_POST["u_timezone"];
 				setcookie("timezone", $_POST["u_timezone"], (time() + (60 * 60 * 24 * 7)));
 			}
-			$tdb->edit("users", $_COOKIE["id_env"], $rec);
-			exitPage('Your profile has been changed successfully.'.$ht, true);
+      $tdb->edit("users", $_COOKIE["id_env"], $rec);
+			require_once('./includes/header.php');
+      echo "<div class='alert_confirm'>
+					<div class='alert_confirm_text'>
+					<strong>User Profile Update:</strong></div><div style='padding:4px;'>Your user profile has been successfully updated
+					</div>
+					</div>
+					<meta http-equiv='refresh' content='2;URL=".$_GET["ref"]."'>";
+			require_once('./includes/footer.php');
 		}
 	} elseif(isset($_GET["action"])) {
 		if (!isset($_GET["id"])) {
@@ -69,39 +80,17 @@
 				$rec[0] = array_merge($rec[0], $new_avatar);
 				unset($new_avatar);
 			}
-			if ($rec[0]["level"] == '1') {
-				$statuscolor = $_STATUS["userColor"];
-				if ($rec[0]["posts"] >= $_STATUS["member_post1"]) $status = $_STATUS["member_status1"];
-				elseif($rec[0]["posts"] >= $_STATUS["member_post2"]) $status = $_STATUS["member_status2"];
-				elseif($rec[0]["posts"] >= $_STATUS["member_post3"]) $status = $_STATUS["member_status3"];
-				elseif($rec[0]["posts"] >= $_STATUS["member_post4"]) $status = $_STATUS["member_status4"];
-				elseif($rec[0]["posts"] >= $_STATUS["member_post5"]) $status = $_STATUS["member_status5"];
-			} elseif($rec[0]["level"] == '2') {
-				$statuscolor = $_STATUS["modColor"];
-				if ($rec[0]["posts"] >= $_STATUS["mod_post1"]) $status = $_STATUS["mod_status1"];
-				elseif($rec[0]["posts"] >= $_STATUS["mod_post2"]) $status = $_STATUS["mod_status2"];
-				elseif($rec[0]["posts"] >= $_STATUS["mod_post3"]) $status = $_STATUS["mod_status3"];
-				elseif($rec[0]["posts"] >= $_STATUS["mod_post4"]) $status = $_STATUS["mod_status4"];
-				elseif($rec[0]["posts"] >= $_STATUS["mod_post5"]) $status = $_STATUS["mod_status5"];
-			} elseif($rec[0]["level"] == '3') {
-				$statuscolor = $_STATUS["adminColor"];
-				if ($rec[0]["posts"] >= $_STATUS["admin_post1"]) $status = $_STATUS["admin_status1"];
-				elseif($rec[0]["posts"] >= $_STATUS["admin_post2"]) $status = $_STATUS["admin_status2"];
-				elseif($rec[0]["posts"] >= $_STATUS["admin_post3"]) $status = $_STATUS["admin_status3"];
-				elseif($rec[0]["posts"] >= $_STATUS["admin_post4"]) $status = $_STATUS["admin_status4"];
-				elseif($rec[0]["posts"] >= $_STATUS["admin_post5"]) $status = $_STATUS["admin_status5"];
-			} else {
-				$status = 'Member';
-				$statuscolor = $_STATUS["membercolor"];
-			}
+			$status_config = status($rec);
+			$status = $status_config['status'];
+			$statuscolor = $status_config['statuscolor'];
 			if ($rec[0]["status"] != "") $status = $rec[0]["status"];
 			require_once('./includes/header.php');
 			echo "";
 			echoTableHeading("Viewing profile for ".$rec[0]["user_name"]."", $_CONFIG);
 			echo "
 				<tr>
-					<td id='leftcontent'>
-						<div style='text-align:center;font-weight:bold;'>
+					<td colspan='2' id='topcontent'>
+					<div class='pro_container'>
 							<span style='color:#".$statuscolor.";font-size:14px;'>".$rec[0]["user_name"]."</span>
 							<br />
 							<br />
@@ -115,21 +104,23 @@
 			} elseif($_COOKIE["id_env"] == "" || $_COOKIE["id_env"] == "0") {
 				echo "Login to contact";
 			} elseif(in_array($_COOKIE["id_env"], $blockedList)) {
-				echo "You are Blocked";
+				echo "You are banned from using the PM system";
 			} else {
 				echo "<a href='newpm.php?to=".$_GET["id"]."' target='_blank'>Send private message?</a>";
 			}
-			echo "</div>
-						</div>
-						<div class='pro_container' style='margin-top:10px;'>
+			echo "</div></div></td></tr><tr><td id='leftcontent'>
+						<div class='pro_container'>
 							<div class='pro_area_1'><div class='pro_area_2'><strong>Joined: </strong></div>".gmdate("Y-m-d", user_date($rec[0]["date_added"]))."</div>
 							<div class='pro_area_1'><div class='pro_area_2'><strong>Posts made: </strong></div>".$rec[0]["posts"]."</div>";
 
-			if (@$rec[0]["url"] != "" || $rec[0]["url"] != "http://") echo "
-				<div class='pro_area_1'><div class='pro_area_2'><strong>Homepage: </strong></div>
-											<a href='".$rec[0]["url"]."' target='_blank'>".$rec[0]["url"]."</a>&nbsp;</div>";
-			echo "</div>
-				<br />
+			
+      echo "
+				<div class='pro_area_1'><div class='pro_area_2'><strong>Homepage: </strong></div>";
+			if (strlen($rec[0]['url']) != 0)
+        echo "<a href='".$rec[0]["url"]."' target='_blank'>".$rec[0]["url"]."</a>";
+			echo "&nbsp;</div>";
+      echo "</div>
+				</td><td id='rightcontent'>
 				<div class='pro_container'>
 							<div class='pro_area_1' style='white-space:nowrap;'><div class='pro_area_2'><strong>Status: </strong></div>
 								<span style='color:#".$statuscolor."'><strong>$status &nbsp;&nbsp;&nbsp;</strong></span></div>
@@ -137,11 +128,11 @@
 			if ((bool)$rec[0]["view_email"]) echo "<a href='mailto:".$rec[0]["email"]."'>".$rec[0]["email"]."</a>";
 			else echo "not public";
 			echo "</div>";
-			if (@$rec[0]["location"] != "") echo "
-							<div class='pro_area_1'><div class='pro_area_2'><strong>Location: </strong></div>".$rec[0]["location"]."</div>";
-			echo "</div></td>
-					<td id='rightcontent' valign='top'>
-							<div class='pro_contact'>";
+      echo "<div class='pro_area_1'><div class='pro_area_2'><strong>Location: </strong></div>".$rec[0]["location"]."&nbsp;</div>";
+			echo "</div>";
+			if (@$rec[0]["icq"] != "" and @$rec[0]["aim"] != "" and @$rec[0]["msn"] != "" and @$rec[0]["yahoo"] != "")
+      {
+      echo "<div class='pro_contact'>";
 			if (@$rec[0]["icq"] != "") echo "
 								<strong>icq</strong><a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$rec[0]["icq"]."&action=message'><img src='images/icq.gif' border='0'>&nbsp;".$rec[0]["icq"]."</a>";
 			if (@$rec[0]["aim"] != "") echo "
@@ -150,11 +141,12 @@
 								<strong>msn</strong><a href='http://members.msn.com/".$rec[0]["msn"]."' target='_blank'><img src='images/msn.gif' border='0'>&nbsp;".$rec[0]["msn"]."</a>";
 			if (@$rec[0]["yahoo"] != "") echo "
 								<strong>Y!</strong><a href='http://edit.yahoo.com/config/send_webmesg?.target=".$rec[0]["yahoo"]."&.src=pg'><img border=0 src='http://opi.yahoo.com/online?u=".$rec[0]["yahoo"]."&m=g&t=0'>&nbsp;".$rec[0]["yahoo"]."</a>";
-			echo "</div>
-					<div class='pro_blank'>Just imagine what could go here!</div>
-					<br />
-					<div class='pro_blank2'>Or here!</div>
-				";
+			echo "</div>";
+			}
+      //		<div class='pro_blank'>Just imagine what could go here!</div>
+			//		<br />
+			//		<div class='pro_blank2'>Or here!</div>
+			//	";
 			echo "</td>
 					</tr>";
 			if (@$rec[0]["sig"] != "") echo "
@@ -165,8 +157,7 @@
 								<div class='pro_signature'>".format_text(UPBcoding(filterLanguage($rec[0]["sig"], $_CONFIG["censor"])))."</div>
 							</div></td>
 					</tr>";
-			echo "
-			$skin_tablefooter";
+			echoTableFooter($_CONFIG['skin_dir']);
 			require_once('./includes/footer.php');
 		}
 	} else {
@@ -233,8 +224,8 @@
 				</tr>
 				<tr>
 					<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
-				</tr>
-			$skin_tablefooter";
+				</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 			echoTableHeading("Avatar Options", $_CONFIG);
 			echo "
 				<tr>
@@ -275,13 +266,18 @@
 					</td>
 				<tr>
 					<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
-				</tr>
-			$skin_tablefooter";
+				</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 			echoTableHeading("Other Information", $_CONFIG);
 			echo "
 				<tr>
 					<td class='area_1' style='width:45%;'><strong>homepage:</strong></td>
-					<td class='area_2'><input type='text' name='u_site' value='".$rec[0]["url"]."'></td>
+					<td class='area_2'><input type='text' name='u_site' value='";
+        if ($rec[0]["url"] == '')
+          echo "http://";
+        else
+          echo $rec[0]["url"];
+        echo "'></td>
 				</tr>
 				<tr>
 					<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
@@ -318,9 +314,9 @@
 				</tr>
 				<tr>
 					<td class='footer_3a' colspan='2' style='text-align:center;'><input type=reset name='reset' value='Reset'><input type='submit' name='u_edit' value='Submit'></td>
-				</tr>
-			$skin_tablefooter
-			</form>";
+				</tr>";
+        echoTableFooter($_CONFIG['skin_dir']);
+        echo "</form>";
 			require_once('./includes/footer.php');
 		}
 	}
