@@ -448,9 +448,9 @@ define("SKIN_DIR", $_CONFIG["skin_dir"], true);');
 
     $f = fopen("./db/config_org.dat", 'w');
     fwrite($f,
-    "config".chr(30)."Main Configuration Settings".chr(31).
-    "status".chr(30)."Members' Statuses Settings".chr(31).
-    "regist".chr(30)."Newly Registered Members Settings".chr(31).
+    "config".chr(30)."General Settings".chr(31).
+    "status".chr(30)."Members' Statuses".chr(31).
+    "regist".chr(30)."Newly Registered Users".chr(31).
     //.type.chr(30).type name.chr(31)
     chr(29).
     "config".chr(30)."1".chr(30)."Main Forum Config".chr(31).

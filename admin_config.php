@@ -8,12 +8,13 @@
 require_once("./includes/class/func.class.php");
 $where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_config.php'>Config Settings</a>";
 require_once('./includes/header.php');
+if($_GET['action'] == '') $_GET['action'] = 'config';
 
 if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_COOKIE["id_env"])) {
 	if($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 		if($_POST["action"] != "") {
 			if(file_exists('./includes/admin/'.$_POST['action'].'.config.php')) include('./includes/admin/'.$_POST['action'].'.config.php');
-      if($result = $config_tdb->editVars($_POST["action"], $_POST)) 
+      if($result = $config_tdb->editVars($_POST["action"], $_POST))
       {
         echo "
 	<div class='alert_confirm'>
@@ -22,7 +23,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 		Successfully edited.
 		</div>
 	</div>";
-			
+
       }
       else echo "
 <div class='alert'><div class='alert_text'>
@@ -46,36 +47,29 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 		echo "</td>
 			</tr>";
     echoTableFooter($_CONFIG['skin_dir']);
-    
-		echoTableHeading("Configuration areas", $_CONFIG);
-		
-		echo "
-			<tr>
-				<th colspan='2'>In these areas you can set the core configuration settings for your board.</th>
-			</tr>";
 
-		echo "
-			<tr>
-				<td class='area_2' style='width:50%;text-align:center;padding:12px;line-height:20px;' valign='top'><span class='link_1'>";
-		
+		echo "<a name='skip_nav'>&nbsp;</a>
+			<div id='tabstyle_2'>
+			    <ul>";
+
 		$f = fopen(DB_DIR."/config_org.dat", 'r');
 		$raws = fread($f, filesize(DB_DIR."/config_org.dat"));
 		$raws = explode(chr(29), $raws);
 		$raws1 = explode(chr(31), rtrim($raws[0], chr(31)));
 
-		for($i=0, $max=count($raws1), $howmanyInCol = ceil(count($raws1)/2);$i<$max;$i++) {
-			if($i == $howmanyInCol) echo "</span></td>
-				<td class='area_2' style='width:50%;text-align:center;padding:12px;line-height:20px;' valign='top'><span class='link_1'>";
+		for($i=0, $max=count($raws1);$i<$max;$i++) {
 			$rec = explode(chr(30), $raws1[$i]);
-			echo "<a href=\"admin_config.php?action=".$rec[0]."\">".$rec[1]."</a><br>";
+			print "
+			        <li><a href='admin_config.php?action=".$rec[0]."' title='".$rec[1]."'><span>".$rec[1]."</span></a></li>";
 		}
-		echo "</span></td>
-			</tr>";
-		echoTableFooter($_CONFIG['skin_dir']);
-		
+		echo "
+					    </ul>
+			</div>
+			<div style='clear:both;'></div>";
+
 		if($_GET["action"] == "Installation Mode") {
 			//Insert coding here
-		} elseif($_GET["action"] != "") {
+		} else {
 			$raws2 = explode(chr(31), $raws[1]);
 			$configVars = $config_tdb->getVars($_GET["action"], true);
 			//dump($configVars);
@@ -99,7 +93,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 							if($configVars[$i]["description"] != "") echo "<br />".$configVars[$i]["description"]."";
 							echo "</td>
 				<td class='area_2'>";
-						
+
 							switch($configVars[$i]["form_object"]) {
 								case "text":
 								echo "<input type=\"text\" name=\"".$configVars[$i]["name"]."\" value=\"".stripslashes($configVars[$i]["value"])."\" size='40'>";
@@ -123,7 +117,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 								else $target = "";
 								echo "<a href=\"".$configVars[$i]["value"]."\"".$target.">".$configVars[$i]["name"]."</a>";
 								break 1;
-								
+
 								case "drop":
 								  $sdir = './skins/';
 								  $contents = array(); //array for valid skin directories
@@ -139,12 +133,12 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
                       }
                     }
                   }
-                  
+
                   echo "<select id='".$configVars[$i]["name"]."' name=\"".$configVars[$i]["name"]."\" size=\"1\">";
                   $explode = explode("/",$configVars[$i]["value"]);
                   $current = array_reverse($explode);
-                  
-                  echo "<option value='".$sdir.$current[0]."' selected>".ucwords($current[0])."</option>"; 
+
+                  echo "<option value='".$sdir.$current[0]."' selected>".ucwords($current[0])."</option>";
                   foreach ($contents as $skindir)
 								  {
                     if ($sdir.$skindir != $configVars[$i]["value"])
@@ -152,9 +146,9 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
                   }
                   echo "</select>";
                   break 1;
-								
+
 								case "list":
-                  
+
                   $cRecs = $tdb->listRec("cats", 1);
                   if ($cRecs === false)
                   {
@@ -163,10 +157,10 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
                   }
                   else
                   {
-                    
+
                     $sort = $_CONFIG['admin_catagory_sorting'];
                     $order = explode(",",$sort);
-                    
+
                     if ($sort == "") //check if config is set correctly if not use data from database
                     {
                       $order = array();
@@ -175,23 +169,23 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
                         $order[] = $value['id'];
                       }
                     }
-                    
-                    // UN-COMMENT IF CATEGORY SORT DATA GETS CORRUPTED DURING TESTING    
+
+                    // UN-COMMENT IF CATEGORY SORT DATA GETS CORRUPTED DURING TESTING
                     //echo "cRecs ^".dump($cRecs)."<p>";
-                    
+
                     //echo "order ^".dump($order)."<p>";
-                    
+
                     //checks to make sure all categories are available for sorting
-                    if (count($cRecs) > count($order)) 
+                    if (count($cRecs) > count($order))
                     {
                       foreach ($cRecs as $value)
                       {
-                        
+
                         if (!in_array($value['id'],$order))
                           $order[] = $value['id'];
                       }
                     }
-                            
+
                   echo "<table border='0'>";
                   echo "<tr><td rowspan='2'>";
                   echo "<select id='".$configVars[$i]["name"]."' multiple name=\"".$configVars[$i]["name"]."\" size=\"".count($cRecs)."\">";
@@ -227,8 +221,8 @@ echo "		<tr>
 			echo "
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'>";
-      
-      if ($cRecs === false or $_GET['action'] != 'config')
+
+      if ($cRecs === false)
         echo "<input type=button onClick=\"submitorderform('category','empty')\" value='Edit'>";
       else
         echo "<input type=button onClick=\"submitorderform('category','full')\" value='Edit'>";
