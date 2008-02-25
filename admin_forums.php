@@ -518,7 +518,7 @@
                 			//show each forum
                 			echo "
 			<tr>
-			    <td class='area_2' style='padding:8px;text-align:center;'>".(($j>0) ? "<a href='admin_forums.php?action=shift&what=forum&where=up&id=".$fRec[0]['id']."'><img src='./images/up.gif'></a>" : "&nbsp;&nbsp;&nbsp;").(($j<($c2-1)) ? "<a href='admin_forums.php?action=shift&what=forum&where=down&id=".$fRec[0]['id']."'>&nbsp;<img src='./images/down.gif'></a>" : "")."</td>
+			    <td class='area_2' style='padding:8px;text-align:center;'>".(($j>0) ? "<a href='admin_forums.php?action=shift&what=forum&where=up&id=".$fRec[0]['id']."'><img src='./images/up.gif'></a>" : "&nbsp;&nbsp;&nbsp;").(($j<($c2-1)) ? "<a href='admin_forums.php?action=shift&what=forum&where=down&id=".$fRec[0]['id']."'><img src='./images/down.gif'></a>" : "")."</td>
 				<td class='area_2' style='padding:8px;'><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$fRec[0]["forum"]."</td>
 				<td class='area_2' style='padding:8px;text-align:center;'>$whoView</td>
 				<td class='area_2' style='padding:8px;text-align:center;'>$whoPost</td>
