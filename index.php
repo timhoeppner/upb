@@ -15,14 +15,7 @@
 	if ($_COOKIE["power_env"] == "" || empty($_COOKIE["power_env"]) || trim($_COOKIE["power_env"]) == "") $_COOKIE["power_env"] = "0";
 	//upb_session_start();
 	require_once("./includes/header.php");
-	if ($_CONFIG["servicemessage"] != "") {
-		echoTableHeading("Announcements", $_CONFIG);
-		echo "
-			<tr>
-			<td class='area_1' style='text-align:left;'>".$_CONFIG["servicemessage"]."</td>
-			</tr>";
-			echoTableFooter($_CONFIG['skin_dir']);
-	}
+
 	$posts = new tdb(DB_DIR, "posts.tdb");
 	$cRecs = $tdb->listRec("cats", 1);
 	//$cRecs = $tdb->query("cats", "view<'".($_COOKIE["power_env"] + 1)."'");

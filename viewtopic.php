@@ -14,7 +14,9 @@
 	$posts_tdb->setFp("topics", $_GET["id"]."_topics");
 	$posts_tdb->setFp("posts", $_GET["id"]);
 	if (FALSE === ($tRec = $posts_tdb->get("topics", $_GET["t_id"]))) exitPage("Invalid Topic.", true);
-	$posts_tdb->edit("topics", $_GET["t_id"], array("views" => ((int)$tRec[0]["views"] + 1)));
+	$sess_name = 'view_'.$_GET['id'].'_'.$_GET['t_id'];
+	if(!isset($_SESSION[$sess_name]) || $_SESSION[$sess_name]+300 < time()) $posts_tdb->edit("topics", $_GET["t_id"], array("views" => ((int)$tRec[0]["views"] + 1)));
+	$_SESSION[$sess_name] = time();
 	$posts_tdb->set_topic($tRec);
 	$posts_tdb->set_forum($fRec);
 	if (!($tdb->is_logged_in())) {
@@ -45,7 +47,7 @@
 	if ($_GET['page'] == 1) $first_post = $pRecs[0]['id'];
 	else $first_post = 0;
 	$x = +1;
-	
+
   echo "<div name='current_posts' id='current_posts'>";
   foreach($pRecs as $pRec) {
 		// display each post in the current topic
@@ -84,7 +86,7 @@
 			$status_config = status($user);
 			$status = $status_config['status'];
 			$statuscolor = $status_config['statuscolor'];
-			
+
 			if ($user[0]["status"] != "") $status = $user[0]["status"];
 			if (isset($_COOKIE["id_env"]) && $pRec["user_id"] != $_COOKIE["id_env"]) {
 				$user_blList = getUsersPMBlockedList($pRec["user_id"]);
@@ -111,7 +113,7 @@
 			<tr>
 				<td class='$table_color' valign='top' style='width:15%;'>";
 		if (@$user[0]["avatar"] != "") echo "<br /><img src=\"".$user[0]["avatar"]."\" border='0' width='".$user[0]['avatar_width']."' height='".$user[0]['avatar_height']."' alt='' title=''><br />";
-		else if ($pRec["user_id"] != "0") 
+		else if ($pRec["user_id"] != "0")
       echo "<br /><a href='profile.php'><img src='images/avatars/noavatar.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
 		if ($pRec["user_id"] != "0") echo "
 					<div class='post_info'><span style='color:#".$statuscolor."'><strong>".$status."</strong></span></div>
@@ -128,7 +130,7 @@
 		if ($user[0]["msn"] != "") echo "&nbsp;<a href='http://members.msn.com/".$user[0]["msn"]."' target='_blank'><img src='images/msn.gif' border='0' alt='MSN: ".$user[0]["msn"]."'></a>&nbsp;&nbsp;";
 		if ($user[0]["icq"] != "") echo "&nbsp;<a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$user[0]["icq"]."&action=message'><img src='images/icq.gif' border='0' alt='ICQ: ".$user[0]["icq"]."'></a>&nbsp;&nbsp;";
 		if ($user[0]["yahoo"] != "") echo "&nbsp;<a href='http://edit.yahoo.com/config/send_webmesg?.target=".$user[0]["yahoo"]."&.src=pg'><img border=0 src='http://opi.yahoo.com/online?u=".$user[0]["yahoo"]."&m=g&t=0' alt='Y!: ".$user[0]["yahoo"]."'></a>";
-		
+
 		echo"</div>";
 		echo "</td>
 				<td class='$table_color' valign='top'>
@@ -139,7 +141,7 @@
 				<td class='footer_3a' colspan='2'>";
 				if ($pRec["user_id"] != "0") echo "";
 		if ($pm != "") echo $pm."";
-		
+
         //echo "<div name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' style='float: right;'>";
 		if (!empty($pRec['edited_by']) && !empty($pRec['edited_by_id']) && !empty($pRec['edited_date'])) echo "
 					<div class='post_edited' name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>Last edited by: <a href='profile.php?action=get&id=".$pRec['edited_by_id']." target='_new'><strong>".$pRec['edited_by']."</strong></a> on ".gmdate("M d, Y g:i:s a", user_date($pRec['edited_date']))."</div>";
@@ -154,12 +156,12 @@
     echo "</td></tr>".echoTableFooter($_CONFIG['skin_dir'])."</div>";
 	}
 	echo "</div>";
-	
+
 	$p = createPageNumbers($_GET["page"], $num_pages, $_SERVER['QUERY_STRING']);
 	echo "<div id='pagelink2' name='pagelink2'>";
   $posts_tdb->d_posting($p,"bottom");
 	echo "</div>";
-	
+
 	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0))
 {
   echo "<div id='quickreplyform' name='quickreplyform'>";
@@ -167,7 +169,7 @@
   echoTableHeading("Quick Reply", $_CONFIG);
   echo "<table class='main_table' cellspacing='1'>";
   foreach ($_GET as $key => $value)
-    echo "<input type='hidden' id='$key' name='$key' value='$value'>\n"; 
+    echo "<input type='hidden' id='$key' name='$key' value='$value'>\n";
   echo "<input type='hidden' id='user_id' name='user_id' value='{$_COOKIE['id_env']}'>\n";
   echo "<input type='hidden' id='icon' name='icon' value='icon1.gif'>\n";
   echo "<input type='hidden' id='username' name='username' value='{$_COOKIE["user_env"]}'>\n";

@@ -132,11 +132,12 @@
 			$user = $tdb->get("users", $_COOKIE["id_env"]);
 			$tdb->edit("users", $_COOKIE["id_env"], array("posts" => ((int)$user[0]["posts"] + 1)));
 		}
+		$_SESSION['view_'.$_GET['id'].'_'.$_GET['t_id']] = time();
 		redirect($redirect.'#'.$p_id, 1);
 	} else {
-		
+
 		if (!isset($_GET["page"])) $_GET["page"] = 1;
-		
+
     if ($_GET["t"] == 1) {
 			$tpc = "
 			<tr>
@@ -199,7 +200,7 @@
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='area_1' style='padding:8px;' valign='top'><strong>Message:</strong>";			
+				<td class='area_1' style='padding:8px;' valign='top'><strong>Message:</strong>";
 		echo "
 					<div style='text-align:center;'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=350,height=450,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></div></td>
 				<td class='area_2'>

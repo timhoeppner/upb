@@ -59,7 +59,7 @@
       if ($ses_info == 0)
         $ses_info = mkdate();
       $tdb->edit("users",$_COOKIE["id_env"],array('lastvisit'=>mkdate()));
-      
+
 			if (!headers_sent()) {
         $uniquekey = generateUniqueKey();
 				$tdb->edit('users', $_COOKIE['id_env'], array('uniquekey' => $uniquekey));
@@ -200,7 +200,7 @@
 		</tr>";
 		echoTableFooter($_CONFIG['skin_dir']);
 	//login information
-	
+
   if (!$tdb->is_logged_in() && isset($_COOKIE['user_env']) && isset($_COOKIE['uniquekey_env']) && isset($_COOKIE['id_env'])) {
 		$redirect = urlencode($_SERVER['REQUEST_URI']);
 		echo "
@@ -224,6 +224,16 @@
 		if ($tdb->is_logged_in() && $_COOKIE['power_env'] === 3) echo 'You may access the <a href="admin.php">Admin Panel</a> to switch INSTALLATION_MODE off.';
 		require('./includes/footer.php');
 		exit;
+	}
+
+	if ($_CONFIG["servicemessage"] != "" && ($_SESSION['servicemessage'] != md5($_CONFIG['servicemessage']) || basename($_SERVER['PHP_SELF']) == 'index.php')) {
+	    $_SESSION['servicemessage'] = md5($_CONFIG['servicemessage']);
+		echoTableHeading("Announcements", $_CONFIG);
+		echo "
+			<tr>
+			<td class='area_1' style='text-align:left;'>".$_CONFIG["servicemessage"]."</td>
+			</tr>";
+			echoTableFooter($_CONFIG['skin_dir']);
 	}
 	if ($_GET['SHOW'] == 'COOKIES') {
 		print '<pre>';

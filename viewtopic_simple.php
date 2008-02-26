@@ -26,7 +26,7 @@
 	if ((int)$_COOKIE["power_env"] < $fRec[0]["view"]) exitPage("You do not have enough Power to view this topic");
 		if ($_GET["page"] == "") $_GET["page"] = 1;
 	$pRecs = $posts_tdb->getPosts("posts", (($_CONFIG["posts_per_page"] * $_GET["page"])-$_CONFIG["posts_per_page"]), $_CONFIG["posts_per_page"]);
-	$num_pages = ceil(($tRec[0]["replies"] + 1) / $_CONFIG["topics_per_page"]);
+	$num_pages = ceil(($tRec[0]["replies"] + 1) / $_CONFIG["posts_per_page"]);
 	if ($pRecs[0]["id"] == "") {
 		echo "";
 	} else {

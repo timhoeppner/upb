@@ -63,12 +63,42 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 			        <li><a href='admin_config.php?action=".$rec[0]."' title='".$rec[1]."'><span>".$rec[1]."</span></a></li>";
 		}
 		echo "
+			        <li><a href='admin_config.php?action=installation_mode' title='Toggle Installation Mode'><span>Installation Mode</span></a></li>
 					    </ul>
 			</div>
 			<div style='clear:both;'></div>";
 
-		if($_GET["action"] == "Installation Mode") {
-			//Insert coding here
+		if($_GET["action"] == "installation_mode") {
+			echoTableHeading('Installation Mode Interface', $_CONFIG);
+			if(isset($_POST['a'])) {
+			    if($_POST['a'] == 'Turn Off') {
+			        $newline = "define('INSTALLATION_MODE', false, true);\n";
+			    } elseif($_POST['a'] == 'Turn On') {
+			        $newline = "define('INSTALLATION_MODE', true, true);\n";
+			    }
+			    $file = file('config.php');
+			    for($i=0,$c=count($file);$i<$c;$i++) {
+			        if(strpos($file[$i], 'INSTALLATION_MODE')) $file[$i] = $newline;
+			    }
+			    $file = implode('', $file);
+			    if(FALSE !== ($f = @fopen('config.php', 'w'))) {
+    			    fwrite($f, $file);
+    			    fclose($f);
+    			    print "Successfully toggled the installation mode for the board";
+    			    redirect('admin_config.php?action=installation_mode#skip_nav', 0);
+			    } else {
+			        print "Unable to edit config.php.  Make sure permissions are set correctly (644)";
+			    }
+			} else {
+                print '<form action="admin_config.php?action=installation_mode" method="POST">';
+    		    if(INSTALLATION_MODE) {
+                    print 'Installation Mode is currently in effect<p><input type="submit" name="a" value="Turn Off">';
+    		    } else {
+    		        print 'Installation Mode is currently in off<p><input type="submit" name="a" value="Turn On">';
+    		    }
+    		    print '</form>';
+			}
+			echoTableFooter(SKIN_DIR);
 		} else {
 			$raws2 = explode(chr(31), $raws[1]);
 			$configVars = $config_tdb->getVars($_GET["action"], true);
