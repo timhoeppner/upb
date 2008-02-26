@@ -25,6 +25,17 @@
 				<div class='alert'><div class='alert_text'>
 				<strong>Warning!</strong></div><div style='padding:4px;'>Invalid Box.</div></div>", true);
 		}
+		$query = $PrivMsg->query('CuBox', "box='".$_GET['section']."'&&$other='".$_COOKIE['id_env']."'");
+		for($i=0,$c=count($query);$i<$c;$i++) {
+		    if($query[$i]['id'] == $_GET['id']) {
+		        $back_disabled = (($i > 0) ? "" : " DISABLED");
+		        $next_disabled = (($i < ($c-1)) ? "" : " DISABLED");
+		        $next_id = $query[$i+1]['id'];
+		        $back_id = $query[$i-1]['id'];
+		        break;
+		    }
+		}
+
 		if (isset($_POST["action"])) {
 			if ($_POST["action"] == "Reply") {
 				redirect("newpm.php?ref=viewpm.php&r_id=".$_GET["id"], "0");
@@ -42,12 +53,11 @@
 				require_once('./includes/footer.php');
 				redirect("pmsystem.php?section=".$_GET["section"], 2);
 			} elseif($_POST["action"] == "<< Last Message") {
-				$pmRec = $PrivMsg->getLastRec("CuBox", $_GET["id"], array("box" => $_GET["section"], $other => $_COOKIE["id_env"]));
-				redirect($PHP_SELF."?section=".$_GET["section"]."&id=".$pmRec[0]["id"].$extra, "0");
+				redirect($PHP_SELF."?section=".$_GET["section"]."&id=".$back_id.$extra, "0");
 				$_GET["id"] = $pmRec[0]["id"];
 			} elseif($_POST["action"] == "Next Message >>") {
 				$pmRec = $PrivMsg->getNextRec("CuBox", $_GET["id"], array("box" => $_GET["section"], $other => $_COOKIE["id_env"]));
-				redirect($PHP_SELF."?section=".$_GET["section"]."&id=".$pmRec[0]["id"].$extra, "0");
+				redirect($PHP_SELF."?section=".$_GET["section"]."&id=".$next_id.$extra, "0");
 				$_GET["id"] = $pmRec[0]["id"];
 			} elseif($_POST["action"] == "Block User") {
 				redirect("pmblocklist.php?action=add&section=".$_GET["section"]."&ref=viewpm.php&id=".$_GET["id"], "0");
@@ -59,17 +69,6 @@
 			}
 			exit;
 		}
-		$next_disabled = "";
-		$fileId = $PrivMsg->fileIdById("CuBox", $_GET['id']);
-print "\$fileId = $fileId<br>";
-		$next = $PrivMsg->query("CuBox", "box='".$_GET['section']."'&&$other='".$_COOKIE["id_env"]."'", $fileId);
-		//$next = $PrivMsg->query("CuBox", "box='".$_GET['section']."'&&$other='".$_COOKIE['id_env']."'", $fileId, 1);
-print "next:"; print_r($next);
-		$next_disabled = ((empty($next[0])) ? " DISABLED" : "");
-
-		$back_disabled = "";
-		//if (FALSE === ($PrivMsg->getNextRec("CuBox", $_GET["id"], array("box" => $_GET["section"], $other => $_COOKIE["id_env"])))) $next_disabled = "DISABLED";
-		if (FALSE === ($PrivMsg->getLastRec("CuBox", $_GET["id"], array("box" => $_GET["section"], $other => $_COOKIE["id_env"])))) $back_disabled = "DISABLED";
 		if (!isset($pmRec) || $pmRec == "" || !is_array($pmRec)) $pmRec = $PrivMsg->get("CuBox", $_GET["id"]);
 		$user = $tdb->get("users", $pmRec[0][$users_id]);
 		if ($_GET["section"] == "inbox") {
