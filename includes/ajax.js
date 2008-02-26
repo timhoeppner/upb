@@ -104,6 +104,8 @@ var http_request = false;
         http_request.onreadystatechange = GetPost;
       else if (type == 'reply')
         http_request.onreadystatechange = ReplyContents;
+      else if (type == 'sig')
+        http_request.onreadystatechange = Sig;
       else
         http_request.onreadystatechange = SortForums;
       http_request.open('POST', url, true);
@@ -113,6 +115,24 @@ var http_request = false;
       http_request.send(parameters);
    }
 
+   function Sig()
+   {
+      if (http_request.readyState == 3) {
+      document.getElementById('sig_preview').innerHTML = "<img src='images/spinner.gif' alt='' title='' style='vertical-align: middle;'><br>Getting Preview of Signature";
+      }
+      if (http_request.readyState == 4) {
+         if (http_request.status == 200) {
+            result = http_request.responseText;
+            result_array = result.split("<!--divider-->");
+            document.getElementById('sig_preview').innerHTML = result_array[0];
+            document.getElementById('sig_title').innerHTML = result_array[1];       
+         } else {
+            alert(http_request.status)
+            alert('There was a problem with the request.');
+         }
+      }
+   }
+   
    function SortForums() {
     if (http_request.readyState == 3) {
       if (what == 'forum')
@@ -249,3 +269,10 @@ var http_request = false;
       makePOSTRequest('sort_forums.php', poststr,'sort'); 
    }
    
+    function sigPreview(obj,id,status)
+    {
+    var poststr = "sig="+escape(Utf8.encode(document.getElementById("u_sig").value));
+    poststr += "&id="+escape(Utf8.encode(id));
+    poststr += "&status="+escape(Utf8.encode(status));
+    makePOSTRequest('sig_preview.php', poststr,'sig'); 
+    }

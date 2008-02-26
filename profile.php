@@ -171,7 +171,7 @@
 			@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
 			@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
 			@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
-			echo "<form action='$PHP_SELF' name='newentry' method='post'>";
+			echo "<form action='$PHP_SELF' id='newentry' name='newentry' method='post'>";
 			echoTableHeading("Account settings - Edit profile information", $_CONFIG);
 			echo "
 				<tr>
@@ -271,7 +271,7 @@
 			echoTableHeading("Other Information", $_CONFIG);
 			echo "
 				<tr>
-					<td class='area_1' style='width:45%;'><strong>homepage:</strong></td>
+					<td class='area_1' style='width:35%;'><strong>Homepage:</strong></td>
 					<td class='area_2'><input type='text' name='u_site' value='";
         if ($rec[0]["url"] == '')
           echo "http://";
@@ -301,19 +301,22 @@
 				<tr>
 					<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
 				</tr>
+        <tr>
+					<td class='area_1' valign='top'><strong>Signature:</strong></td>
+					<td class='area_2'>".bbcodebuttons('u_sig','sig')."<textarea id='u_sig' name='u_sig' cols=45 rows=10>".$rec[0]["sig"]."</textarea><br><input type='button' onClick=\"javascript:sigPreview(document.getElementById('newentry'),'".$_COOKIE['id_env']."','set');\" value='Preview Signature'></td></tr>
 				<tr>
-					<td class='area_1' valign='top'><strong>signature:</strong></td>
-					<td class='area_2'>".bbcodebuttons('u_sig','sig')."<textarea id='u_sig' name='u_sig' cols=45 rows=10>".$rec[0]["sig"]."</textarea></td>
+					<td class='area_1' valign='top'><div id='sig_title'><strong>Current Signature:</strong></div></td>
+					<td class='area_2'><div id='sig_preview'>".format_text(filterLanguage(UPBcoding($rec[0]["sig"]), $_CONFIG["censor"]))."</div></td>
 				</tr>
 				<tr>
 					<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
 				</tr>
 				<tr>
-					<td class='area_1'><strong>timezone setting:</strong><br />Set to how many hours you are from GMT.<br />Example: The North American Pacific Coast is \"-8\", whereas the city of Rome is just \"1\", or for London, just \"0\"</td>
+					<td class='area_1'><strong>Timezone Setting:</strong><br />Set to how many hours you are from GMT.<br />Example: The North American Pacific Coast is \"-8\", whereas the city of Rome is just \"1\", or for London, just \"0\"</td>
 					<td class='area_2'><input type='text' name='u_timezone' value='".$rec[0]["timezone"]."'></td>
 				</tr>
 				<tr>
-					<td class='footer_3a' colspan='2' style='text-align:center;'><input type=reset name='reset' value='Reset'><input type='submit' name='u_edit' value='Submit'></td>
+					<td class='footer_3a' colspan='2' style='text-align:center;'><input type=reset name='reset' value='Reset' onClick=\"javascript:sigPreview(document.getElementById('newentry'),'".$_COOKIE['id_env']."','reset');\"'><input type='submit' name='u_edit' value='Submit'></td>
 				</tr>";
         echoTableFooter($_CONFIG['skin_dir']);
         echo "</form>";
