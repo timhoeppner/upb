@@ -149,7 +149,6 @@
 <script type='text/javascript' src='./includes/scripts/images_switch.js'></script>
 <script language=\"Javascript\" src=\"./includes/bbcode.js\"></script>
 <script language=\"Javascript\" src=\"./includes/ajax.js\"></script>
-<script language=\"Javascript\" src=\"./includes/scripts.js\"></script>
 </head>
 <body>
 <div id='upb_container'>
