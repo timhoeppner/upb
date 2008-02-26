@@ -13,7 +13,7 @@
 			//edit categories
 			if (isset($_GET["id"])) {
 				if (isset($_POST["u_cat"])) {
-          $tdb->edit("cats", $_GET["id"], array("name" => $_POST["u_cat"], "view" => $_POST["u_view"], "sort" => $_POST['neworder']));
+          $tdb->edit("cats", $_GET["id"], array("name" => $_POST["u_cat"], "view" => $_POST["u_view"]));
 					echo "
 						<div class='alert_confirm'>
 						<div class='alert_confirm_text'>
@@ -39,49 +39,11 @@
 				<td class='area_2'><select size='1' name='u_view'>";
 					echo createUserPowerMisc($cRec[0]["view"], 1);
 					echo "</select></td>
-			</tr>
-			<tr>
-				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
-			</tr>
-			<tr>";
-
-        $fRecs = $tdb->query("forums", "cat='".$_GET["id"]."'");
-        if ($fRecs !== false)
-                      {
-                  echo "  <td class='area_1'><strong>Sort the Forums in this category</strong></td>
-				<td class='area_2'>";
-
-                    $sort = $cRec[0]["sort"];
-                    $order = explode(",",$sort);
-
-                    echo "<table><tr><td>";
-                    echo "<select id='fsort' multiple name='fsort' size='".count($fRecs)."'>";
-
-                    for ($i = 0;$i < count($order);$i++)
-                    {
-                      foreach ($fRecs as $fRec)
-                       {
-                         if ($fRec['id'] == $order[$i])
-                          echo "<option value='".$fRec['id']."'>".$fRec['forum']."</option>";
-                       }
-                    }
-                     echo "</select></td>";
-                    echo "<td><img src='./images/up.gif' ";
-     echo "onClick=\"moveOptionsUp('fsort');fsort.focus();\">&nbsp;&nbsp;&nbsp;";
-     echo "<p><img src='./images/down.gif' ";
-    echo "onClick=\"moveOptionsDown('fsort');fsort.focus();\"></td></tr></table>";
-
-        echo "</td>
-			</tr>
-			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='button' onClick=\"submitorderform('forum','full')\" value='Edit'></td>
 			</tr>";
-			}
-			else
-			{
-      echo "<td class='area_1' colspan='2'>There are no forums in this category";
-      echo "</td></tr><tr><td colspan='2'><input type='button' onClick=\"submitorderform('forum','empty')\" value='Edit'></td></tr>";
-      }
+      echo "</td></tr><tr>
+				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
+			</tr><tr><td class='footer_3a' style='text-align:center;' colspan='2'><input type='submit' value='Edit'></td></tr>";
+      
 			echoTableFooter($_CONFIG['skin_dir']);
       echo "</form>";
 				}
@@ -399,34 +361,8 @@
     echoTableFooter($_CONFIG['skin_dir']);
     echo "</form>";
 			}
-		} elseif($_GET['action'] == 'shift') {
-	        if($_GET['what'] == 'cat') {
-	            $sort = $_CONFIG['admin_catagory_sorting'];
-	        } elseif($_GET['what'] == 'forum') {
-                $fRec = $tdb->get('forums', $_GET['id']);
-                $cRec = $tdb->get('cats', $fRec[0]['cat']);
-	            $sort = $cRec[0]['sort'];
-	        }
-            $sort = explode(',', $sort);
-            if(FALSE !== ($index = array_search($_GET['id'], $sort))) {
-	            if($_GET['where'] == 'up' && $index > 0) {
-                    $tmp = $sort[$index-1];
-                    $sort[$index-1] = $sort[$index];
-                    $sort[$index] = $tmp;
-	            } elseif($_GET['where'] == 'down' && $index < (count($sort)-1)) {
-                    $tmp = $sort[$index+1];
-                    $sort[$index+1] = $sort[$index];
-                    $sort[$index] = $tmp;
-	            }
-	            $sort = implode(',', $sort);
-	            if($_GET['what'] == 'cat') {
-	                $config_tdb->editVars('config', array('admin_catagory_sorting' => $sort));
-                } elseif($_GET['what'] == 'forum') {
-                    $tdb->edit('cats', $cRec[0]['id'], array('sort' => $sort));
-                }
-                redirect('admin_forums.php#skip_nav', 0);
-	        }
-		} else {
+		}
+    else {
 		    //Main
 		    //
 		    //
@@ -476,13 +412,14 @@
 			        <li><a href='admin_forums.php?action=add_forum' title='Add a new forum?'><span>Add a new forum?</span></a></li>
 			    </ul>
 			</div>
-			<div style='clear:both;'></div>";
-	       	echoTableHeading("Forum Control", $_CONFIG);
+			<div style='clear:both;'></div><div id='sorting'>";
+	       	
+           echoTableHeading("Forum Control", $_CONFIG);
 
 		    echo "
 			<tr>
-			    <th style='width:6%;'>&nbsp;</th>
-				<th style='width:69%;'>Name</th>
+			    <th style='width:7%;'>&nbsp;</th>
+				<th style='width:68%;'>Name</th>
 				<th style='width:5%;text-align:center;'>View</th>
 				<th style='width:5%;text-align:center;'>Post</th>
 				<th style='width:5%;text-align:center;'>Reply</th>
@@ -500,7 +437,7 @@
 					$view = createUserPowerMisc($cRecs[$i]["view"], 2);
 					echo "
 			<tr>
-			    <td class='area_1' style='padding:8px;'>".(($i>0) ? "<a href='admin_forums.php?action=shift&what=cat&where=up&id=".$cRecs[$i]['id']."'><img src='./images/up.gif'></a>" : "&nbsp;&nbsp;&nbsp;").(($i<($c1-1)) ? "<a href='admin_forums.php?action=shift&what=cat&where=down&id=".$cRecs[$i]['id']."'><img src='./images/down.gif'></a>" : "")."</td>
+			    <td class='area_1' style='padding:8px;'>".(($i>0) ? "<a href=\"javascript:forumSort('cat','up','".$cRecs[$i]['id']."');\"><img src='./images/up.gif'></a>&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;").(($i<($c1-1)) ? "<a href=\"javascript:forumSort('cat','down','".$cRecs[$i]['id']."');\"><img src='./images/down.gif'></a>" : "")."</td>
 				<td class='area_1' style='padding:8px;'><strong>".$cRecs[$i]["name"]."</strong></td>
 				<td class='area_1' style='padding:8px;text-align:center;' colspan=3>$view</td>
 				<td class='area_1' style='padding:8px;text-align:center;'><a href='admin_forums.php?action=edit_cat&id=".$cRecs[$i]["id"]."'>Edit</a></td>
@@ -524,7 +461,7 @@
                 			//show each forum
                 			echo "
 			<tr>
-			    <td class='area_2' style='padding:8px;text-align:center;'>".(($j>0) ? "<a href='admin_forums.php?action=shift&what=forum&where=up&id=".$fRec[0]['id']."'><img src='./images/up.gif'></a>" : "&nbsp;&nbsp;&nbsp;").(($j<($c2-1)) ? "<a href='admin_forums.php?action=shift&what=forum&where=down&id=".$fRec[0]['id']."'><img src='./images/down.gif'></a>" : "")."</td>
+			    <td class='area_2' style='padding:8px;text-align:center;'>".(($j>0) ? "<a href=\"javascript:forumSort('forum','up','".$fRec[0]['id']."');\"><img src='./images/up.gif'></a>" : "&nbsp;&nbsp;&nbsp;").(($j<($c2-1)) ? "<a href=\"javascript:forumSort('forum','down','".$fRec[0]['id']."');\"><img src='./images/down.gif'></a>" : "")."</td>
 				<td class='area_2' style='padding:8px;'><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$fRec[0]["forum"]."</td>
 				<td class='area_2' style='padding:8px;text-align:center;'>$whoView</td>
 				<td class='area_2' style='padding:8px;text-align:center;'>$whoPost</td>
@@ -537,6 +474,7 @@
 				}
 			}
     		echoTableFooter($_CONFIG['skin_dir']);
+    		echo "</div>";
     	}
     	require_once("./includes/footer.php");
 	} else {

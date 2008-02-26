@@ -92,16 +92,16 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 			} else {
                 print '<form action="admin_config.php?action=installation_mode" method="POST">';
     		    if(INSTALLATION_MODE) {
-                    print 'Installation Mode is currently in effect<p><input type="submit" name="a" value="Turn Off">';
+                    print '<div class="area_2" style="text-align:center;"><strong>Installation Mode is currently in effect<p><input type="submit" name="a" value="Turn Off"></strong></div>';
     		    } else {
-    		        print 'Installation Mode is currently in off<p><input type="submit" name="a" value="Turn On">';
+    		        print '<div class="area_2" style="text-align:center;"><strong>Installation Mode is currently in off<p><input type="submit" name="a" value="Turn On"></strong></div>';
     		    }
     		    print '</form>';
 			}
 			echoTableFooter(SKIN_DIR);
 		} else {
 			$raws2 = explode(chr(31), $raws[1]);
-			$configVars = $config_tdb->getVars($_GET["action"], true);
+      $configVars = $config_tdb->getVars($_GET["action"], true);
 			//dump($configVars);
       echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
 			echo "<input type=\"hidden\" name=\"neworder\" value=\"\">";
@@ -116,10 +116,10 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 			</tr>";
 					for($i=0, $j=1, $max=count($configVars);$j<$max;$i++) {
 						if($i>$max) { $j++; $i=-1; }//Current Sorting Rec not found after cycling through all available recs, skipping on to find the next sorting rec
-						if($configVars[$i]["minicat"] == $rec[1] && $configVars[$i]["sort"] == $j && $configVars[$i]["form_object"] != "hidden") {
+						if($configVars[$i]["minicat"] == $rec[1] && $configVars[$i]["sort"] == $j && $configVars[$i]["form_object"] != "hidden" && $configVars[$i]["name"] != "admin_catagory_sorting") {
 							echo "
 			<tr>
-				<td class='area_1' style='width:35%;padding:8px;'>".$configVars[$i]["sort"]."<strong>".$configVars[$i]["title"]."</strong>";
+				<td class='area_1' style='width:35%;padding:8px;'><strong>".$configVars[$i]["title"]."</strong>";
 							if($configVars[$i]["description"] != "") echo "<br />".$configVars[$i]["description"]."";
 							echo "</td>
 				<td class='area_2'>";
@@ -132,7 +132,6 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 								echo "<input type=\"password\" name=\"".$configVars[$i]["name"]."\" value=\"".$configVars[$i]["value"]."\" size='40'>";
 								break 1;
 								case "checkbox":
-								echo $configVars[$i]["value"];
                 if((bool) $configVars[$i]["value"]) $checked = " checked";
 								else $checked = "";
 								echo "<input type=\"checkbox\" name=\"".$configVars[$i]["name"]."\" value=\"1\" size='40'".$checked.">";
@@ -176,66 +175,6 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
                   }
                   echo "</select>";
                   break 1;
-
-								case "list":
-
-                  $cRecs = $tdb->listRec("cats", 1);
-                  if ($cRecs === false)
-                  {
-                    echo "No categories have been added yet";
-                    break 1;
-                  }
-                  else
-                  {
-
-                    $sort = $_CONFIG['admin_catagory_sorting'];
-                    $order = explode(",",$sort);
-
-                    if ($sort == "") //check if config is set correctly if not use data from database
-                    {
-                      $order = array();
-                      foreach ($cRecs as $value)
-                      {
-                        $order[] = $value['id'];
-                      }
-                    }
-
-                    // UN-COMMENT IF CATEGORY SORT DATA GETS CORRUPTED DURING TESTING
-                    //echo "cRecs ^".dump($cRecs)."<p>";
-
-                    //echo "order ^".dump($order)."<p>";
-
-                    //checks to make sure all categories are available for sorting
-                    if (count($cRecs) > count($order))
-                    {
-                      foreach ($cRecs as $value)
-                      {
-
-                        if (!in_array($value['id'],$order))
-                          $order[] = $value['id'];
-                      }
-                    }
-
-                  echo "<table border='0'>";
-                  echo "<tr><td rowspan='2'>";
-                  echo "<select id='".$configVars[$i]["name"]."' multiple name=\"".$configVars[$i]["name"]."\" size=\"".count($cRecs)."\">";
-                  for ($k = 0;$k < count($order);$k++)
-                  {
-                    foreach ($cRecs as $cRec)
-                    {
-                      if ($cRec['id'] == $order[$k])
-                      {
-                        echo "<option value='".$cRec['id']."'>".$cRec['name']."</option>";
-                      }
-                    }
-                  }
-                  echo "</select></td></tr>";
-                  echo "<tr><td><br><img src='./images/up.gif' ";
-                  echo "onClick=\"moveOptionsUp('".$configVars[$i]["name"]."');".$configVars[$i]["name"].".focus()\"><p>";
-                  echo "<img src='./images/down.gif' ";
-                  echo "onClick=\"moveOptionsDown('".$configVars[$i]["name"]."');".$configVars[$i]["name"].".focus()\"></td></tr></table>";
-                  break 1;
-                  }
 							}
 							echo "</td>
 			</tr>";
@@ -252,10 +191,7 @@ echo "		<tr>
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'>";
 
-      if ($cRecs === false)
-        echo "<input type=button onClick=\"submitorderform('category','empty')\" value='Edit'>";
-      else
-        echo "<input type=button onClick=\"submitorderform('category','full')\" value='Edit'>";
+      echo "<input type=submit value='Edit'>";
       echo "</td>
 			</tr>";
 echoTableFooter($_CONFIG['skin_dir']);

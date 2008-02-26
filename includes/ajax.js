@@ -7,6 +7,7 @@
 
 
 var div="";
+var what="";
 var isIE = ( clientInfo.indexOf("msie") != -1 );
 var isWin = ( (clientInfo.indexOf("win")!=-1) || (clientInfo.indexOf("16bit") != -1) );
 var Utf8 = {
@@ -101,8 +102,10 @@ var http_request = false;
         http_request.onreadystatechange = EditContents;
       else if (type == 'getpost')
         http_request.onreadystatechange = GetPost;
-      else
+      else if (type == 'reply')
         http_request.onreadystatechange = ReplyContents;
+      else
+        http_request.onreadystatechange = SortForums;
       http_request.open('POST', url, true);
       http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
       http_request.setRequestHeader("Content-length", parameters.length);
@@ -110,6 +113,27 @@ var http_request = false;
       http_request.send(parameters);
    }
 
+   function SortForums() {
+    if (http_request.readyState == 3) {
+      if (what == 'forum')
+        waitwhat = 'Forums';
+      else
+        waitwhat = 'Categories';
+      html = "<div class='main_cat_wrapper'><div class='cat_area_1'>Quick Reply</div><table class='main_table' cellspacing='1'><tbody><td class='area_2' style='text-align:center'><img src='images/spinner.gif' alt='' title='' style='vertical-align: middle;'>&nbsp;<strong>Sorting "+waitwhat+"</strong></td></tr></tbody></table><div class='footer'></div></div>";
+      document.getElementById(div).innerHTML = html;
+      }
+      if (http_request.readyState == 4) {
+         if (http_request.status == 200) {
+            result = http_request.responseText;
+            //alert(result)
+            document.getElementById(div).innerHTML = result;       
+         } else {
+            alert(http_request.status)
+            alert('There was a problem with the request.');
+         }
+      }
+   }
+   
    function GetPost() {
       if (http_request.readyState == 3)
         document.getElementById(div).innerHTML = "Getting Post from Database....Please Wait";
@@ -205,8 +229,22 @@ var http_request = false;
       poststr += "&userid="+escape(Utf8.encode(userid));
       poststr += "&threadid="+escape(Utf8.encode(splitstring[1]));
       poststr += "&divname="+escape(Utf8.encode(divname));
-      poststr += "&type=getpost";
       //alert(poststr)
       makePOSTRequest('quickedit.php', poststr,'getpost'); 
+   }
+   
+   function forumSort(type,where,id)
+   {
+      div = 'sorting';
+      if (type == "forum")
+        what = 'forum';
+      else
+        what = 'cat';
+      var poststr = "what="+escape(Utf8.encode(type));
+      poststr += "&where="+escape(Utf8.encode(where));
+      poststr += "&id="+escape(Utf8.encode(id));
+      poststr += "&divname=sorting";
+      poststr += "&type=forumSort";
+      makePOSTRequest('sort_forums.php', poststr,'sort'); 
    }
    

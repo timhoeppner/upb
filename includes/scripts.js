@@ -33,32 +33,6 @@ function moveOptionsDown(selectId) {
     }
 }
 
-function submitorderform(type,status) 
-{
-//detect whether there is a list to be sorted
-  if (status == 'full')
-  {
-    //select the right name for the list
-    if (type == "category")
-      var list = document.form.admin_catagory_sorting;
-    else
-      var list = document.form.fsort;
-
-    var theList = "";
-
-    //get the order of the values and populate the hidden field with the new order
-    for (i = 0; i <= list.options.length-1; i++) 
-    { 
-      theList += list.options[i].value;
-      
-      if (i != list.options.length-1) 
-        theList += ",";
-    }
-    document.form.neworder.value = theList;
-  }
-document.form.submit();
-}
-
 function swap(source) {
     if (document.images) {
         document.images['myImage'].src = source;
