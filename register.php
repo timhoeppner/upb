@@ -150,10 +150,8 @@
 				<td class='area_2'><img src='./includes/image.php?id=$encid&key=$key'><br /><input type=text name=s_key maxlength=7 size=12></td>
 			</tr>";
 			}
-      echo "<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
-			</tr>
-		$skin_tablefooter";
+			
+		echoTableFooter($_CONFIG['skin_dir']);
 		echoTableHeading("Other Information", $_CONFIG);
 		echo "
 			<tr>
@@ -202,15 +200,17 @@
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='area_1'><strong>timezone setting</strong><br />Set to how many hours you are from GMT.<br>Example: The North American Pacific Coast is \"-8\", whereas the city of Rome is just \"1\", or for London, just \"0\"</font></font></td>
-				<td class='area_2'><input type='text' name='u_timezone' value='0'></td>
+				<td class='area_1'><strong>Timezone Setting:</strong></td>
+				<td class='area_2'>";
+        timezonelist();
+        echo "</td>
 			</tr>";
 		echo "
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit name=submit value='Submit'></td>
-			</tr>
-		$skin_tablefooter
-		</form>";
+			</tr>";
+		echoTableFooter($_CONFIG['skin_dir']);
+    echo "</form>";
 		require_once('./includes/footer.php');
 		if (empty($_COOKIE["user_env"])) $user = "guest";
 		else $user = $_COOKIE["user_env"];
