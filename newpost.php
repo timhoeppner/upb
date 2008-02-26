@@ -41,7 +41,7 @@
 	if (!($_GET["t_id"] != "" && is_numeric($_GET["t_id"]) || $_GET["t"] != 0)) exitPage("<div class='alert'><div class='alert_text'>
 		<strong>Caution!</strong></div><div style='padding:4px;'>Invalid Topic ID/Information.</div></div>");
 	if ($_POST["a"] == "1") {
-		if (isset($_POST['subject'])) $_POST['subject'] = htmlentities(stripslashes($_POST["subject"]));
+		if (isset($_POST['subject'])) $_POST['subject'] = encode_text(stripslashes($_POST["subject"]));
 		$_POST['message'] = encode_text(stripslashes($_POST["message"]));
 		if ($_POST["icon"] == "") exitPage("<div class='alert'><div class='alert_text'>
 			<strong>Caution!</strong></div><div style='padding:4px;'>Please select a message icon.</div></div>");

@@ -229,6 +229,7 @@ var http_request = false;
       poststr += "&userid="+escape(Utf8.encode(userid));
       poststr += "&threadid="+escape(Utf8.encode(splitstring[1]));
       poststr += "&divname="+escape(Utf8.encode(divname));
+      poststr += "&type=getpost";
       //alert(poststr)
       makePOSTRequest('quickedit.php', poststr,'getpost'); 
    }

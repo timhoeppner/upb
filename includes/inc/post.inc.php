@@ -121,7 +121,7 @@ function UPBcoding($text) {
     //end upb code
 }
 
-function bbcodebuttons($txtarea='message') {
+function bbcodebuttons($txtarea='message',$type='post') {
     $bb_buttons = "<p>";
     $bb_buttons .= "<select onChange=\"bb_dropdown(this.form.colors,'colors','$txtarea')\" name='colors'>";
     $bb_buttons .= "<option value='' selected>Choose color</option>";
@@ -166,8 +166,11 @@ function bbcodebuttons($txtarea='message') {
     $bb_buttons .= "<a href=\"javascript:add_list('ol','$txtarea')\"><img src='./images/bbcode/ol.gif' border='0'></a> ";
     $bb_buttons .= "<img src='./images/bbcode/separator.gif' border='0'>";
     $bb_buttons .= "<a href=\"javascript:createBBtag('[move]','[/move]','$txtarea')\"><img src='./images/bbcode/move.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[quote]','[/quote]','$txtarea')\"><img src='./images/bbcode/quote.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[offtopic]','[/offtopic]','$txtarea')\"><img src='./images/bbcode/offtopic.gif' border='0'></a> ";
+    if ($type != 'sig')
+    {
+      $bb_buttons .= "<a href=\"javascript:createBBtag('[quote]','[/quote]','$txtarea')\"><img src='./images/bbcode/quote.gif' border='0'></a> ";
+      $bb_buttons .= "<a href=\"javascript:createBBtag('[offtopic]','[/offtopic]','$txtarea')\"><img src='./images/bbcode/offtopic.gif' border='0'></a> ";
+    }
   return $bb_buttons."<br>";
 }
 

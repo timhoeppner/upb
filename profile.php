@@ -18,7 +18,7 @@
 			if (!isset($_POST["u_email"])) exitPage("please enter your email!", true);
 			if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["u_email"])) exitPage("please enter a valid email!", true);
 				$_POST['u_sig'] = stripslashes($_POST['u_sig']);
-			if (strlen($_POST["u_sig"]) > 200) exitPage("You cannot have more than 200 characters in your signature.", true);
+			if (strlen($_POST["u_sig"]) > 500) exitPage("You cannot have more than 500 characters in your signature.", true);
 			$user = $tdb->get("users", $_COOKIE["id_env"]);
 			if (strlen($_POST["u_newpass"]) > 0) {
 				if ($user[0]['password'] != generateHash($_POST['u_oldpass'], $user[0]['password'])) exitPage('You old password does not match the one on file!', true);
@@ -33,7 +33,7 @@
 			}
 			else $ht = "<meta http-equiv='refresh' content='2;URL=profile.php'>";
 			if ($user[0]["email"] != $_POST["u_email"]) $rec["email"] = $_POST["u_email"];
-			if ($user[0]["u_sig"] != chop($_POST["u_sig"])) $rec["sig"] = chop($_POST["u_sig"]);
+			if ($user[0]["u_sig"] != encode_text(chop($_POST["u_sig"]))) $rec["sig"] = encode_text(chop($_POST["u_sig"]));
 			if (substr(trim(strtolower($_POST["u_site"])), 0, 7) != "http://") $_POST["u_site"] = "http://".$_POST["u_site"];
       if ($user[0]["url"] != $_POST["u_site"])
         $rec["url"] = $_POST["u_site"];
@@ -171,7 +171,7 @@
 			@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
 			@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
 			@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
-			echo "<form action='$PHP_SELF' method='post'>";
+			echo "<form action='$PHP_SELF' name='newentry' method='post'>";
 			echoTableHeading("Account settings - Edit profile information", $_CONFIG);
 			echo "
 				<tr>
@@ -303,7 +303,7 @@
 				</tr>
 				<tr>
 					<td class='area_1' valign='top'><strong>signature:</strong></td>
-					<td class='area_2'><textarea name='u_sig' cols=45 rows=10>".$rec[0]["sig"]."</textarea></td>
+					<td class='area_2'>".bbcodebuttons('u_sig','sig')."<textarea id='u_sig' name='u_sig' cols=45 rows=10>".$rec[0]["sig"]."</textarea></td>
 				</tr>
 				<tr>
 					<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
