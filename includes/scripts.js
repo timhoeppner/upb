@@ -1,5 +1,5 @@
 // Ultimate PHP Board Javascripts
-// Author: Chris Kent aka Clark for Ultimate PHP Board by Tim Hoeppner aka RR_Pilot, FixITguy
+// Author: Chris Kent aka Clark and others for Ultimate PHP Board by Tim Hoeppner aka RR_Pilot, FixITguy
 // Website: http://www.myupb.com
 // Version: 2.2.1
 
@@ -560,7 +560,7 @@ var http_request = false;
          alert('Cannot create XMLHTTP instance');
          return false;
       }
-      //alert(div);
+      
       if (type == 'edit')
         http_request.onreadystatechange = EditContents;
       else if (type == 'getpost')
@@ -608,7 +608,7 @@ var http_request = false;
       if (http_request.readyState == 4) {
          if (http_request.status == 200) {
             result = http_request.responseText;
-            //alert(result)
+            
             document.getElementById(div).innerHTML = result;       
          } else {
             alert(http_request.status)
@@ -623,7 +623,7 @@ var http_request = false;
       if (http_request.readyState == 4) {
          if (http_request.status == 200) {
             result = http_request.responseText;
-            //alert(result)
+            
             document.getElementById(div).innerHTML = result;       
          } else {
             alert(http_request.status)
@@ -638,11 +638,11 @@ var http_request = false;
       if (http_request.readyState == 4) {
          if (http_request.status == 200) {
             result = http_request.responseText;
-            //alert(result)
+            
             result_array = result.split("<!--divider-->");
             var editdiv = "edit"+div;
             document.getElementById(div).innerHTML = result_array[0]; 
-            //alert(result_array[1])
+            
             document.getElementById(editdiv).innerHTML = result_array[1];       
          } else {
             alert(http_request.status)
@@ -652,7 +652,7 @@ var http_request = false;
    }
    
    function ReplyContents() {
-      //alert(div)
+      
       if (http_request.readyState == 3)
       {
         html = "<div class='main_cat_wrapper'><div class='cat_area_1'>Quick Reply</div><table class='main_table' cellspacing='1'><tbody><td class='area_2' style='text-align:center'><img src='images/spinner.gif' alt='' title='' style='vertical-align: middle;'>&nbsp;<strong>Adding Quick Reply....Please Wait</strong></td></tr></tbody></table><div class='footer'></div></div>";
@@ -661,10 +661,10 @@ var http_request = false;
       if (http_request.readyState == 4) {
          if (http_request.status == 200) {
             result = http_request.responseText;
-            //alert(result);
+            
             result_array = result.split("<!--divider-->");
             document.getElementById('current_posts').innerHTML = result_array[0];
-            //alert(result_array[1]);
+            
             document.getElementById('pagelink1').innerHTML = result_array[1];
             document.getElementById('pagelink2').innerHTML = result_array[2];
             document.getElementById('quickreplyform').innerHTML = result_array[3];
@@ -677,16 +677,14 @@ var http_request = false;
    
    function getEdit(obj,divname) {
       div = divname;
-      //alert(div)
       var poststr = "newedit=" + escape(Utf8.encode( document.getElementById("newedit").value ));
       poststr += "&forumid="+escape(Utf8.encode(document.getElementById("forumid").value));
       poststr += "&userid="+escape(Utf8.encode( document.getElementById("userid").value ));
       poststr += "&threadid="+escape(Utf8.encode( document.getElementById("threadid").value ));
       poststr += "&postid="+escape(Utf8.encode( document.getElementById("postid").value ));
-      //poststr += "&divid="+escape(Utf8.encode( document.getElementById("divid").value ));
-      //alert(poststr);
-           
-      makePOSTRequest('quickedit.php', poststr,'edit');
+      poststr += "&type=edit";
+      
+      makePOSTRequest('./ajax.php', poststr,'edit');     
    }
    
    function getReply(obj) {
@@ -697,24 +695,25 @@ var http_request = false;
       poststr += "&icon="+escape(Utf8.encode( document.getElementById("icon").value));
       poststr += "&newentry=" + escape(Utf8.encode( document.getElementById("newentry").value));
       poststr += "&username="+escape(Utf8.encode( document.getElementById("username").value));
+      poststr += "&type=reply";
       
-      //alert(poststr)
-      makePOSTRequest('quickreply.php', poststr,'reply');
+      makePOSTRequest('./ajax.php', poststr,'reply');
    }
-   
-   function getPost(userid,divname)
+    
+   function getPost(userid,divname,method)
    {  
       div = divname;
       splitstring = divname.split("-");
-      //alert(div);
+      
       var poststr = "forumid="+escape(Utf8.encode(splitstring[0]));
       poststr += "&postid="+escape(Utf8.encode(splitstring[2]));
       poststr += "&userid="+escape(Utf8.encode(userid));
       poststr += "&threadid="+escape(Utf8.encode(splitstring[1]));
       poststr += "&divname="+escape(Utf8.encode(divname));
+      poststr += "&method="+escape(Utf8.encode(method));
       poststr += "&type=getpost";
-      //alert(poststr)
-      makePOSTRequest('quickedit.php', poststr,'getpost'); 
+      alert(method);
+      makePOSTRequest('./ajax.php', poststr,'getpost');  
    }
    
    function forumSort(type,where,id)
@@ -728,8 +727,10 @@ var http_request = false;
       poststr += "&where="+escape(Utf8.encode(where));
       poststr += "&id="+escape(Utf8.encode(id));
       poststr += "&divname=sorting";
-      poststr += "&type=forumSort";
-      makePOSTRequest('sort_forums.php', poststr,'sort'); 
+      poststr += "&type=sort";
+      
+      makePOSTRequest('./ajax.php', poststr,'sort');
+
    }
    
     function sigPreview(obj,id,status)
@@ -737,7 +738,9 @@ var http_request = false;
     var poststr = "sig="+escape(Utf8.encode(document.getElementById("u_sig").value));
     poststr += "&id="+escape(Utf8.encode(id));
     poststr += "&status="+escape(Utf8.encode(status));
-    makePOSTRequest('sig_preview.php', poststr,'sig'); 
+    poststr += "&type=sig";
+    
+    makePOSTRequest('./ajax.php', poststr,'sig'); 
     }
 
 //END OF AJAX SCRIPTS
@@ -751,7 +754,7 @@ function swap(source) {
 }
 
 function PopUp(where) {
-window.open(\"where\", \"This PM has been Recieved Within the Last 5 Minutes\", \"toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,width=500,height=350\");
+window.open("where", "This PM has been Recieved Within the Last 5 Minutes", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,width=500,height=350");
 }
 
 //END OF MISCELLANEOUS SCRIPTS

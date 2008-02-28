@@ -35,18 +35,6 @@
 		exit;
 	} else {
 		echo "
-			<SCRIPT>
-			<!--
-			function SetSmiley(Which) {
-			if (document.newentry.message.createTextRange) {
-			document.newentry.message.focus();
-			document.selection.createRange().duplicate().text = Which;
-			} else {
-			document.newentry.message.value += Which;
-			}
-			}
-			//-->
-			</SCRIPT>
 	<form action='editpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$_GET["p_id"]."' METHOD=POST name='newentry'>";
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
@@ -82,9 +70,14 @@
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='footer_3a' style='text-align:center;' colspan='2'><input type=submit value='Edit'></td>
-			</tr>
-		$skin_tablefooter
+				<td class='footer_3a' style='text-align:center;' colspan='2'>
+        <input type=submit value='Edit'>
+        <input type=reset value='Reset'>";
+        echo "<input type=button onClick=\"javascript:window.location='viewtopic.php?id=".$_GET['id']."&t_id=".$_GET['t_id']."#".$_GET['p_id']."' value='Cancel Edit'>
+        </td>
+			</tr>";
+      echoTableFooter($_CONFIG['skin_dir']);
+      echo "
 	</form>";
 	}
 	require_once("./includes/footer.php");

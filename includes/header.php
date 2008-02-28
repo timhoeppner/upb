@@ -143,9 +143,7 @@
 <title>".(($where == '') ? $_CONFIG['title'] : (strip_tags(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where))))."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 <link rel='stylesheet' type='text/css' href='".$_CONFIG["skin_dir"]."/css/style.css' />
-
 <script type='text/javascript' language='Javascript' src='./includes/scripts.js'></script>
-
 </head>
 <body>
 <div id='upb_container'>
