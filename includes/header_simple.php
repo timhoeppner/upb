@@ -38,24 +38,7 @@
 <title>".$_CONFIG["title"]."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1' />
 <link rel='stylesheet' type='text/css' href='".$_CONFIG["skin_dir"]."/css/style_simple.css' />
-<script type='text/javascript' src='./includes/scripts/formsubmit.js'></script>
-<script type='text/javascript' src='./includes/scripts/form_field_limiter.js'></script>
-<script language='JavaScript'>
-function PopUp(where) {
-window.open(\"where\", \"This PM has been Recieved Within the Last 5 Minutes\", \"toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,width=500,height=350\");
-}
-		<!--
-		var counter=0;
-		function check_submit() {
-		counter++;
-		if (counter>1) {
-		alert('You cannot submit the form again! Please Wait.');
-		return false;
-		}
-		}
-		-->
-</script>
-<script language=\"Javascript\" src=\"./includes/bbcode.js\"></script>
+<script type='text/javascript' src='./includes/scripts.js'></script>
 </head>
 <body>";
 ?>
