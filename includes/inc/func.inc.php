@@ -36,21 +36,21 @@ require_once("./includes/inc/date.inc.php");
 require_once("./includes/inc/encode.inc.php");
 require_once("./includes/inc/privmsg.inc.php");
 
-function exitPage($text, $include_header=false, $include_footer=true, $footer_simple=false) { 
+function exitPage($text, $include_header=false, $include_footer=true, $footer_simple=false) {
     require_once("./includes/class/config.class.php");
     $config_tdb = new configSettings();
     $_CONFIG = $config_tdb->getVars("config");
     $tdb = new functions(DB_DIR.'/', 'main.tdb');
     //$tdb->define_error_handler(array(&$errorHandler, 'add_error'));
     $tdb->setFp('users', 'members');
-    
-    if($include_header) require_once('./includes/header.php'); 
-    echo "<br \>".$text; 
-    if($footer_simple) $footer = "footer_simple.php"; 
-    else $footer = "footer.php"; 
+
+    if($include_header) require_once('./includes/header.php');
+    echo "<br \>".$text;
+    if($footer_simple) $footer = "footer_simple.php";
+    else $footer = "footer.php";
     if($include_footer) require_once('./includes/' . $footer);
-    exit; 
-} 
+    exit;
+}
 
 function redirect($where, $time) {
     echo "<meta http-equiv='refresh' content='$time;URL=$where'>";
@@ -82,7 +82,7 @@ function createUserPowerMisc($user_power, $list_format, $exclude_guests=false) {
     //$list_format = 6; ==> short dropdown list of current Power and above
     //$list_format = 7; ==> dropdown list of current Power only
     //$list_format = 8; ==> short dropdown list of current Power only
-    
+
     $dropdown = false;
     $allText = false;
     $allShortText = false;
@@ -100,7 +100,7 @@ function createUserPowerMisc($user_power, $list_format, $exclude_guests=false) {
     elseif($list_format == 7) $oneDropDown = true;
     elseif($list_format == 8) $oneShortDropDown = true;
     else { echo "Wrong Selection"; return false; }
-    
+
     $list = "";
     if((bool)$exclude_guests === FALSE) {
         if(($user_power == 0 || $user_power == '')) {
@@ -164,7 +164,7 @@ function createUserPowerMisc($user_power, $list_format, $exclude_guests=false) {
         elseif($oneDropDown) $list .= '<option value="3">Administrator</option>';
         elseif($oneShortDropDown) $list .= '<option value="3">Admin</option>';
     }
-    
+
     if($list != '') return $list;
     else { echo 'Error in createUserPowerMisc(): User\'s power unidentifiable ('.$user_power.')'; return false; }
 }
@@ -187,7 +187,7 @@ function createPageNumbers($current_page, $total_number_of_pages, $url_string=''
     if($url_string != '') $url_string = '?'.$url_string.'&';
     else $url_string = '?';
     $url_string = str_replace('&&', '&', $url_string);
-        
+
     if($num_pages == 1) $pageStr = "<span class='pagination_current'>$num_pages</span>";
     else {
         //$pageStr = "<font face='$font_face' size='$font_s'><span class=pagenumstatic>";
@@ -198,14 +198,6 @@ function createPageNumbers($current_page, $total_number_of_pages, $url_string=''
         //$pageStr .= "</font></span>";
     }
     return $pageStr;
-}
-
-function addIdRefToArray(&$ArrRec, $field) {
-    $ArrRec[$field] = array();
-    for($i=0;$i<count($ArrRec);$i++) {
-        $ArrRec[$field][$i] = $ArrRec[$i][$field];
-    }
-    return $ArrRec;
 }
 
 function generateUniqueKey() {
@@ -231,26 +223,26 @@ function directory($dir,$filters="all")
 {
   $handle=opendir($dir);
 	$files = $filtered =array();
-	
+
   while(($file = readdir($handle))!==false)
   {
     if ($file != "." and $file != "..")
       $files[] = $file;
   }
   closedir($handle);
-  
+
   if ($filters == "all")
   {
     $filtered = $files;
   }
-	
+
   if ($filters != "all")
 	{
 		$filters=explode(",",$filters);
 		foreach ($files as $file)
 		{
 			for ($f=0;$f<sizeof($filters);$f++)
-			{	
+			{
         $system=explode(".",$file);
 				if (count($system) > 1)
         {
@@ -276,7 +268,7 @@ function lastread($pid = '')
 {
   global $tdb,$posts; //read in database objects and file pointers etc.
   $cats = $tdb->listRec("cats",1);
-  
+
   if ($cats !== false)
   {
     foreach ($cats as $cat)

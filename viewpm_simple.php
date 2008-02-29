@@ -17,7 +17,7 @@
 	$table_color = $table1;
 	$table_font = $font1;
 	$user = $tdb->get("users", $pmRec[0]["from"]);
-	if ($user[0]["sig"] != "") $user[0]["sig"] = "<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG["censor"]))."</div>";
+	if ($user[0]["sig"] != "") $user[0]["sig"] = "<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG))."</div>";
 	if (FALSE === mod_avatar::verify_avatar($user[0]['avatar'], $user[0]['avatar_hash'])) {
 		$new_avatar = array();
 		list($new_avatar['avatar_width'], $new_avatar['avatar_height']) = mod_avatar::calculate_dimensions($user[0]['avatar'], $_CONFIG['avatar_width'], $_CONFIG['avatar_height']);
@@ -51,7 +51,7 @@
 		$status = "Member";
 		$statuscolor = $_STATUS["membercolor"];
 	}
-	$message = format_text(filterLanguage(UPBcoding($pmRec[0]["message"]), $_CONFIG["censor"]));
+	$message = format_text(filterLanguage(UPBcoding($pmRec[0]["message"]), $_CONFIG));
 	echo "
 		<table id='simple_table' style='background-color:#ffffff;' cellspacing='12'>
 			<tr>

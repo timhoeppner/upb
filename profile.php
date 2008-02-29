@@ -113,7 +113,7 @@
 							<div class='pro_area_1'><div class='pro_area_2'><strong>Joined: </strong></div>".gmdate("Y-m-d", user_date($rec[0]["date_added"]))."</div>
 							<div class='pro_area_1'><div class='pro_area_2'><strong>Posts made: </strong></div>".$rec[0]["posts"]."</div>";
 
-			
+
       echo "
 				<div class='pro_area_1'><div class='pro_area_2'><strong>Homepage: </strong></div>";
 			if (strlen($rec[0]['url']) != 0)
@@ -154,7 +154,7 @@
 						<td id='bottomcontent' colspan='2'>
 							<div class='pro_sig_name'>".$rec[0]["user_name"]."'s Signature:</div>
 							<div class='pro_sig_area'>
-								<div class='pro_signature'>".format_text(UPBcoding(filterLanguage($rec[0]["sig"], $_CONFIG["censor"])))."</div>
+								<div class='pro_signature'>".format_text(UPBcoding(filterLanguage($rec[0]["sig"], $_CONFIG)))."</div>
 							</div></td>
 					</tr>";
 			echoTableFooter($_CONFIG['skin_dir']);
@@ -231,7 +231,7 @@
 				<tr>
 					<th style='text-align:center;'>Current avatar</th>
 					<th style='text-align:center;'>Select a new avatar</th>
-				</tr>	
+				</tr>
 				<tr>
 					<td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'>";
 			if (@$rec[0]["avatar"] != "") echo "<img src=\"".$rec[0]["avatar"]."\" border='0' width='".$rec[0]['avatar_width']."' height='".$rec[0]['avatar_height']."'><br />";
@@ -306,7 +306,7 @@
 					<td class='area_2'>".bbcodebuttons('u_sig','sig')."<textarea id='u_sig' name='u_sig' cols=45 rows=10>".$rec[0]["sig"]."</textarea><br><input type='button' onClick=\"javascript:sigPreview(document.getElementById('newentry'),'".$_COOKIE['id_env']."','set');\" value='Preview Signature'></td></tr>
 				<tr>
 					<td class='area_1' valign='top'><div id='sig_title'><strong>Current Signature:</strong></div></td>
-					<td class='area_2'><div style='display:inline;' id='sig_preview'>".format_text(filterLanguage(UPBcoding($rec[0]["sig"]), $_CONFIG["censor"]))."</div></td>
+					<td class='area_2'><div style='display:inline;' id='sig_preview'>".format_text(filterLanguage(UPBcoding($rec[0]["sig"]), $_CONFIG))."</div></td>
 				</tr>
 				<tr>
 					<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>

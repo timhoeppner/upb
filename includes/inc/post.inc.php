@@ -22,7 +22,7 @@ function message_icons()
     $output .= "<input type='radio' name='icon' value=".$icon['filename']." $checked><img src='./icon/".$icon['filename']."' border='0'>&nbsp;&nbsp;&nbsp;&nbsp;";
     if ($key%10 == 9)
       $output .= "<br>";
-  }   
+  }
   return $output;
 }
 
@@ -39,14 +39,16 @@ function encode_text($text)
   return $string;
 }
 
-function filterLanguage($text, $censor) {
-    global $_CONFIG;
+function filterLanguage($text, $_CONFIG) {
     $msg = $text;
     //start bad words filter
-    $words = explode(",",$_CONFIG['banned_words']);
+    $words = explode(",", $_CONFIG['banned_words']);
     deleteWhiteIndex($words);
+print "banned_words:".$_CONFIG['banned_words'].'<br>';
     for($pp=0;$pp<count($words);$pp++) {
-        $msg = eregi_replace(" ".$words[$pp]." ", " ".$censor." ", $msg);
+        $words[$pp] = html_entity_decode($words[$pp]);
+print "$pp=$words[$pp]<br>";
+        $msg = preg_replace('/\b'.$words[$pp].'\b/i', $_CONFIG["censor"], $msg);
         //$msg = eregi_replace($words[$pp]." ", $censor." ", $msg);
     }
     //end bad words filter
@@ -54,12 +56,12 @@ function filterLanguage($text, $censor) {
 }
 
 function UPBcoding($text) {
-    
+
     $tdb = new tdb(DB_DIR.'/', 'bbcode.tdb');
-    
+
     $tdb->setFP("smilies","smilies");
     $msg = $text;
-    
+
     $smilies = array();
     //start emoticons
     $smilies = $tdb->query("smilies","id>'0'");
@@ -68,11 +70,11 @@ function UPBcoding($text) {
     {
       $msg = str_replace($smiley['bbcode'],$smiley['replace'],$msg);
     }
-        
+
     //escape characters to prevent data injection
     //$msg = str_replace("&quot;", "\"", $msg);
     //$msg = str_replace("\"", "&quot;", $msg);
-    
+
     //bullet points
     $msg = str_replace("[ul]", "<ul>", $msg);
     $msg = str_replace("[/ul]", "</ul>", $msg);
@@ -106,14 +108,14 @@ function UPBcoding($text) {
     $msg = preg_replace("/\[quote\](.*?)\[\/quote\]/si", "<blockquote><font size='1' face='tahoma'>Quote:</font><hr>\\1<br><hr></blockquote>", $msg);
     $msg = preg_replace("/\[quote=(.*?)\](.*?)\[\/quote\]/si", "<blockquote><font size='1' face='tahoma'>Quote: \\1</font><hr>\\2<br><hr></blockquote>", $msg);
     $msg = preg_replace("/\[code\](.*?)\[\/code\]/si", "<font color='red'>Code:<hr><pre>\\1<hr></pre></font>", $msg);
-    
+
     while (true)
     {
       $tmp_msg = $msg;
       $search = array('#<span(\s[^>]*)><span(\s[^>]*)>#i','#</span></span>#i');
       $replace = array('<span\\1\\2>','</span>');
       $msg = preg_replace($search, $replace, $msg);
-      $msg = preg_replace("/style='(.*?)\' style='(.*?)\'/si","style='\\1\\2'",$msg); 
+      $msg = preg_replace("/style='(.*?)\' style='(.*?)\'/si","style='\\1\\2'",$msg);
       if ($msg == $tmp_msg)
         break;
     }
@@ -185,7 +187,7 @@ function getSmilies($field = 'message')
     $output .= "<A HREF=\"javascript:setsmilies(' ".$smiley['bbcode']." ','$field')\" ONFOCUS=\"filter:blur()\">".$smiley['replace']."</A>&nbsp;&nbsp;&nbsp;&nbsp;";
     if ($key%10 == 9)
       $output .= "<br>";
-  }   
+  }
   return $output;
 }
 

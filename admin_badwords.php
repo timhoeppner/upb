@@ -6,7 +6,7 @@
 	// Using textdb Version: 4.3.2
 	require_once("./includes/class/func.class.php");
 	$words = array();
-	$where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_badwords.php'>Manage Badwords</a>";
+	$where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_badwords.php'>Manage Filtered Lanuage</a>";
 	require_once('./includes/header.php');
 	if (!(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_COOKIE["power_env"]) && isset($_COOKIE["id_env"]))) {
 		echo "
@@ -25,17 +25,17 @@
 				<strong>Redirecting:</div><div style='padding:4px;'>
 				deleting bad word...
 				";
-			$words = explode("\n", file_get_contents(DB_DIR."/badwords.dat"));
-			
-      if (($index = array_search($_GET["word"], $words)) !== FALSE) unset($words[$index]);
-			$f = fopen(DB_DIR."/badwords.dat", 'w');
-			fwrite($f, implode("\n", $words));
-			fclose($f);
-			echo "Done!</div>
-				</div>";
-			redirect("admin_badwords.php", 1);
+			$words = explode(",", $_CONFIG['banned_words']);
+            if (($index = array_search($_GET["word"], $words)) !== FALSE) {
+                unset($words[$index]);
+                $words = implode(',', $words);
+                $config_tdb->editVars('config', array('banned_words' => $words));
+    			echo "Done!</div>
+    				</div>";
+    			redirect("admin_badwords.php", 1);
+            } else print 'Could not delete "'.$_GET['word'].'"</div></div>';
 		} elseif($_POST["verify"] == "Cancel") redirect("admin_badwords.php", 1);
-		else ok_cancel("admin_badwords.php?action=delete&word=".$_GET["word"], "Are you sure you want to delete <b>".$_GET["word"]."</b> from the badword list?");
+		else ok_cancel("admin_badwords.php?action=delete&word=".$_GET["word"], "Are you sure you want to remove the <b>".$_GET["word"]."</b> from the filter list?");
 	} elseif($_GET["action"] == "addnew") {
 		if ($_POST["newword"] != "") {
 			echo "
@@ -43,29 +43,13 @@
 				<div class='alert_confirm_text'>
 				<strong>Redirecting:</div><div style='padding:4px;'>
 				adding new word...";
-			if (filesize(DB_DIR.'/badwords.dat') > 0) {
-				$pre = file_get_contents(DB_DIR."/badwords.dat");
-			}
-			else $pre = '';
-			$f = fopen(DB_DIR."/badwords.dat", 'w');
-			fwrite($f, $pre."\n".stripslashes(trim($_POST['newword'])));
-			fclose($f);
+			$words = $_CONFIG['banned_words'] . ((strlen($_CONFIG['banned_words']) == 0) ? '' : ',') . htmlentities(stripslashes(trim($_POST['newword'])));
+			$config_tdb->editVars('config', array('banned_words' => $words));
 			echo "Done!</div>
 				</div>";
 			redirect("admin_badwords.php", 1);
 		} else {
-		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
-			echo "
-			<tr>
-				<th>Admin Panel Navigation</th>
-			</tr>";
-			echo "
-			<tr>
-				<td class='area_2' style='padding:20px;' valign='top'>";
-			require_once("admin_navigation.php");
-			echo "</td></tr>";
-			echoTableFooter($_CONFIG['skin_dir']);
-			echo "<form action='admin_badwords.php?action=addnew' method=POST>";
+    	echo "<form action='admin_badwords.php?action=addnew' method=POST>";
 		echoTableHeading("Adding a badword", $_CONFIG);
 			echo "
 			<tr>
@@ -85,7 +69,7 @@
 	echo "</form>";
 		}
 	} else {
-		
+
     $words = explode(",", $_CONFIG['banned_words']);
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
@@ -106,10 +90,10 @@
 			</ul>
 			</div>
 			<div style='clear:both;'></div>";
-		echoTableHeading("Censored words", $_CONFIG);
+		echoTableHeading("Filtered Words", $_CONFIG);
 		echo "
 			<tr>
-				<th style='width:35%;'>Word</th>
+				<th style='width:65%;'>Word</th>
 				<th>Option</th>
 			</tr>";
 		if (count($words) == 0) {

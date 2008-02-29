@@ -97,7 +97,7 @@
 		$table_color = $table1;
 		$table_font = $font1;
 		if ($user[0]["sig"] != "") $user[0]["sig"] = "
-			<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG["censor"]))."</div>";
+			<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG))."</div>";
 			if (FALSE === mod_avatar::verify_avatar($user[0]['avatar'], $user[0]['avatar_hash'])) {
 				$new_avatar = mod_avatar::new_parameters($user[0]['avatar'], $_CONFIG['avatar_width'], $_CONFIG['avatar_height']);
 				$tdb->edit('users', $user[0]['id'], $new_avatar);
@@ -108,7 +108,7 @@
 		$status = $status_config['status'];
 		$statuscolor = $status_config['statuscolor'];
 
-		$message = format_text(filterLanguage(UPBcoding($pmRec[0]["message"]), $_CONFIG["censor"]));
+		$message = format_text(filterLanguage(UPBcoding($pmRec[0]["message"]), $_CONFIG));
 		echo "
 			<tr>
 				<th style='width:15%;'><div class='post_name'><a href='profile.php?action=get&id=".$user[0]["id"]."'>".$user[0]["user_name"]."</a></div></th>

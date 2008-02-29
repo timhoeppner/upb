@@ -217,7 +217,7 @@
 			</tr>";
 				$x = 1;
 				foreach($pRecs as $pRec) {
-					$msg = format_text(UPBcoding(filterLanguage($pRec["message"], $_CONFIG["censor"])));
+					$msg = format_text(UPBcoding(filterLanguage($pRec["message"], $_CONFIG)));
 					if ($x == 0) {
 						$table_color = $table1;
 						$table_font = $font1;
@@ -384,7 +384,7 @@
 						$table_font = $font2;
 						$x--;
 					}
-					$msg = format_text(UPBcoding(filterLanguage($pRec["message"], $_CONFIG["censor"])));
+					$msg = format_text(UPBcoding(filterLanguage($pRec["message"], $_CONFIG)));
 					echo "
 			<tr>
 				<td class='footer_3' colspan='3'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>

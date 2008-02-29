@@ -29,12 +29,12 @@ switch ($ajax_type)
       $output .= "</form>";
     }
     else
-      $output = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($pRec[0]['message'])))), $_CONFIG["censor"]));
-    
+      $output = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($pRec[0]['message'])))), $_CONFIG));
+
     echo $output;
-    
+
     break 1;
-    
+
   case "edit" :
     $posts_tdb = new posts(DB_DIR, "posts.tdb");
     $posts_tdb->setFp("topics", $_POST["forumid"]."_topics");
@@ -46,7 +46,7 @@ switch ($ajax_type)
 
     if($pRec[0]["user_id"] != $_COOKIE["id_env"] && $_COOKIE["power_env"] < 2) exitPage("You are not authorized to edit this post.");
 
-    $msg = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($_POST["newedit"])))), $_CONFIG["censor"]));
+    $msg = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($_POST["newedit"])))), $_CONFIG));
     $dbmsg = encode_text(stripslashes(utf8_decode($_POST["newedit"])),ENT_NOQUOTES);
 
     $posts_tdb->edit("posts", $_POST["postid"], array("message" => $dbmsg, "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate()));
@@ -54,15 +54,15 @@ switch ($ajax_type)
     $posts_tdb->cleanup();
     $posts_tdb->setFp("posts", $_POST["forumid"]);
     $pRec2 = $posts_tdb->get("posts", $_POST["postid"]);
-  
+
     $div = $_POST['forumid']."-".$_POST['threadid']."-".$_POST['postid'];
-  
-    if(!empty($pRec2[0]['edited_by']) && !empty($pRec2[0]['edited_by_id']) && !empty($pRec2[0]['edited_date'])) 
+
+    if(!empty($pRec2[0]['edited_by']) && !empty($pRec2[0]['edited_by_id']) && !empty($pRec2[0]['edited_date']))
     $edited = "Last edited by: <a href='profile.php?action=get&id=".$pRec2[0]['edited_by_id']."' target='_new'>".$pRec2[0]['edited_by']."</a> on ".gmdate("M d, Y g:i:s a", user_date($pRec2[0]['edited_date']));
     echo "$msg<!--divider-->$edited";
-    
+
     break 1;
-    
+
   case "reply" :
     //QUICK REPLY TO TOPIC, STORES POST IN DATABASE AND RETURNS THE USER TO THE NEW POST AND ADDS NEW QUICK REPLY FORM
     $output = "<link rel=\"stylesheet\" href=\"".$_CONFIG["skin_dir"]."/css/style.css\" type=\"text/css\">";
@@ -77,45 +77,45 @@ switch ($ajax_type)
 
     if (!isset($a)) $a = 0;
 
-    if(!($tdb->is_logged_in())) 
+    if(!($tdb->is_logged_in()))
     {
       $_COOKIE["user_env"] = "guest";
       $_COOKIE["power_env"] = 0;
       $_COOKIE["id_env"] = 0;
     }
 
-    $msg = encode_text(stripslashes($_POST["newentry"]));        
+    $msg = encode_text(stripslashes($_POST["newentry"]));
     $tdb->edit("forums", $_POST["id"], array("posts" => ((int)$fRec[0]["posts"] + 1)));
     $rec = $posts_tdb->get("topics", $_POST["t_id"]);
-      
+
     $posts_tdb->edit("topics", $_POST["t_id"], array("replies" => ((int)$rec[0]["replies"] + 1), "last_post" => mkdate(), "user_name" => $_COOKIE["user_env"], "user_id" => $_COOKIE["id_env"], "monitor" => ""));
-        
+
     $pre = $rec[0]["p_ids"].",";
-    
+
     clearstatcache();
     $posts_tdb->sort("topics", "last_post", "DESC");
     clearstatcache();
-    
+
     $post_date = mkdate();
-    
+
     $p_id = $posts_tdb->add("posts", array(
-        "icon" => $_POST["icon"], 
-        "user_name" => $_COOKIE["user_env"], 
-        "date" => $post_date, 
-        "message" => $msg, 
-        "user_id" => $_COOKIE["id_env"], 
-        "t_id" => $_POST["t_id"], 
+        "icon" => $_POST["icon"],
+        "user_name" => $_COOKIE["user_env"],
+        "date" => $post_date,
+        "message" => $msg,
+        "user_id" => $_COOKIE["id_env"],
+        "t_id" => $_POST["t_id"],
         "upload_id" => $uploadId
     ));
-    
-    $posts_tdb->edit("topics", $_POST["t_id"], array("p_ids" => $pre.$p_id));  
-    
+
+    $posts_tdb->edit("topics", $_POST["t_id"], array("p_ids" => $pre.$p_id));
+
     if($_COOKIE["power_env"] != "0")
     {
       $user = $tdb->get("users",$_COOKIE["id_env"]);
       $tdb->edit("users", $_COOKIE["id_env"], array("posts" => ((int)$user[0]["posts"] + 1)));
     }
-    
+
     $posts_tdb->cleanUp();
     $fRec = $tdb->get("forums", $_POST["id"]);
     $posts_tdb->setFp("topics", $_POST["id"]."_topics");
@@ -124,25 +124,25 @@ switch ($ajax_type)
     $posts_tdb->set_topic($tRec);
     $posts_tdb->set_forum($fRec);
     $tdb->setFp('users', 'members');
-    if(!($tdb->is_logged_in())) 
+    if(!($tdb->is_logged_in()))
     {
       $posts_tdb->set_user_info("guest", "password", "0", "0");
       $_COOKIE["power_env"] = 0;
-    } 
+    }
     else $posts_tdb->set_user_info($_COOKIE["user_env"], $_COOKIE["uniquekey_env"], $_COOKIE["power_env"], $_COOKIE["id_env"]);
     $page=1;
 
     $postids = $tRec[0]['p_ids'];
     $postnums = explode(",",$postids);
     $count = count($postnums);
-    
-    $num_pages = ceil($count/$_CONFIG["posts_per_page"]);    
+
+    $num_pages = ceil($count/$_CONFIG["posts_per_page"]);
     $page = $num_pages;
-    
+
     $pRecs = $posts_tdb->getPosts("posts", (($_CONFIG["posts_per_page"] * $page)-$_CONFIG["posts_per_page"]), $_CONFIG["posts_per_page"]);
-    
+
     $query = "id={$_POST['id']}&t_id={$_POST['t_id']}";
-    
+
     $p = createPageNumbers($page, $num_pages, $query,true);
     $pagelinks1 = $posts_tdb->d_posting_qr($p,$page);
     $pagelinks2 = $posts_tdb->d_posting_qr($p,$page,"bottom");
@@ -151,7 +151,7 @@ switch ($ajax_type)
     $x = +1;
     $output = "";
 
-    foreach($pRecs as $key => $pRec) 
+    foreach($pRecs as $key => $pRec)
     {
 		// display new reply
 		$output .= "<a name='{$pRec['id']}'>
@@ -159,12 +159,12 @@ switch ($ajax_type)
       <div class='main_cat_wrapper'>
 			<div class='cat_area_1' style='text-align:center;'>Posted: ".gmdate("M d, Y g:i:s a", user_date($pRec["date"]))."</div>
 			<table class='main_table' cellspacing='1'>";
-		if ($x == 0) 
+		if ($x == 0)
     {
 			$table_color = "area_1";
 			$table_font = $font1;
 			$x++;
-		} else 
+		} else
     {
 			$table_color = "area_2";
 			$table_font = $font2;
@@ -178,7 +178,7 @@ switch ($ajax_type)
 		if ($pRec["user_id"] != "0") {
 			$user = $tdb->get("users", $pRec["user_id"]);
 			if ($user[0]["sig"] != "") {
-				$sig = format_text(filterLanguage(UPBcoding($user[0]["sig"]), $_CONFIG["censor"]));
+				$sig = format_text(filterLanguage(UPBcoding($user[0]["sig"]), $_CONFIG));
 				$sig = "<div class='signature'>$sig</div>";
 			}
 			if (FALSE === mod_avatar::verify_avatar($user[0]['avatar'], $user[0]['avatar_hash'])) {
@@ -196,7 +196,7 @@ switch ($ajax_type)
 				if (TRUE !== (in_array($_COOKIE["id_env"], $user_blList))) $pm = "<div class='button_pro2'><a href='newpm.php?to=".$pRec["user_id"]."'>Send ".$pRec["user_name"]." a PM</a></div>";
 			}
 		}
-		if (($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >=2) 
+		if (($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >=2)
       $edit = "<div class='button_pro1'><a href=\"javascript:getPost('{$pRec["user_id"]}','{$_POST["id"]}-{$_POST["t_id"]}-{$pRec["id"]}');\">Edit</a></div>";
      //$edit = "<div class='button_pro1'><a href=\"editpost.php?id={$_POST["id"]}&t_id={$_POST["t_id"]}&p_id={$pRec["id"]}\">Edit</a></div>";
 		else $edit = "";
@@ -206,7 +206,7 @@ switch ($ajax_type)
 		else $quote = "";
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_POST["id"]."&t=0&t_id=".$_POST["t_id"]."&page=$page'>Add Reply</a></div>";
 		else $reply = "";
-		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG["censor"]));
+		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
 		$output .= "
 			<tr>
 				<th><div class='post_name'>";
@@ -234,7 +234,7 @@ switch ($ajax_type)
 		if ($user[0]["msn"] != "") $output .= "&nbsp;<a href='http://members.msn.com/".$user[0]["msn"]."' target='_blank'><img src='images/msn.gif' border='0' alt='MSN: ".$user[0]["msn"]."'></a>&nbsp;&nbsp;";
 		if ($user[0]["icq"] != "") $output .= "&nbsp;<a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$user[0]["icq"]."&action=message'><img src='images/icq.gif' border='0' alt='ICQ: ".$user[0]["icq"]."'></a>&nbsp;&nbsp;";
 		if ($user[0]["yahoo"] != "") $output .= "&nbsp;<a href='http://edit.yahoo.com/config/send_webmesg?.target=".$user[0]["yahoo"]."&.src=pg'><img border=0 src='http://opi.yahoo.com/online?u=".$user[0]["yahoo"]."&m=g&t=0' alt='Y!: ".$user[0]["yahoo"]."'></a>";
-		
+
 		$output .= "</div>";
 		$output .= "</td>
 				<td class='$table_color' valign='top'>
@@ -245,9 +245,9 @@ switch ($ajax_type)
 				<td class='footer_3a' colspan='2'>";
 				if ($pRec["user_id"] != "0") $output .= "";
 		if ($pm != "") $output .= $pm."";
-		
+
         //echo "<div name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' style='float: right;'>";
-		if (!empty($pRec['edited_by']) && !empty($pRec['edited_by_id']) && !empty($pRec['edited_date'])) 
+		if (!empty($pRec['edited_by']) && !empty($pRec['edited_by_id']) && !empty($pRec['edited_date']))
     $output .= "<div class='post_edited' name='edit{$_POST['id']}-{$_POST['t_id']}-{$pRec['id']}' id='edit{$_POST['id']}-{$_POST['t_id']}-{$pRec['id']}'>Last edited by: <a href='profile.php?action=get&id=".$pRec['edited_by_id']." target='_new'><strong>".$pRec['edited_by']."</strong></a> on ".gmdate("M d, Y g:i:s a", user_date($pRec['edited_date']))."</div>";
 		else
       	$output .= "<div name='edit{$_POST['id']}-{$_POST['t_id']}-{$pRec['id']}' id='edit{$_POST['id']}-{$_POST['t_id']}-{$pRec['id']}' class='post_edited'></div>";
@@ -297,17 +297,17 @@ switch ($ajax_type)
 	<br />";
 
     $output .= "<!--divider-->$pagelinks1<!--divider-->$pagelinks2<!--divider-->$qrform";
-    
+
     echo $output;
-    
+
     break 1;
-    
+
     case "sort" :
       //SORTING OF FORUMS AND CATEGORIES
       $output = "";
-      if($_POST['what'] == 'cat') 
+      if($_POST['what'] == 'cat')
         $sort = $_CONFIG['admin_catagory_sorting'];
-      elseif($_POST['what'] == 'forum') 
+      elseif($_POST['what'] == 'forum')
       {
         $fRec = $tdb->get('forums', $_POST['id']);
         $cRec = $tdb->get('cats', $fRec[0]['cat']);
@@ -316,25 +316,25 @@ switch ($ajax_type)
 
       $sort = explode(',', $sort);
 
-      if(FALSE !== ($index = array_search($_POST['id'], $sort))) 
+      if(FALSE !== ($index = array_search($_POST['id'], $sort)))
       {
-        if($_POST['where'] == 'up' && $index > 0) 
+        if($_POST['where'] == 'up' && $index > 0)
         {
           $tmp = $sort[$index-1];
           $sort[$index-1] = $sort[$index];
           $sort[$index] = $tmp;
-        }       
-        elseif($_POST['where'] == 'down' && $index < (count($sort)-1)) 
+        }
+        elseif($_POST['where'] == 'down' && $index < (count($sort)-1))
         {
           $tmp = $sort[$index+1];
           $sort[$index+1] = $sort[$index];
           $sort[$index] = $tmp;
         }
 	     $sort = implode(',', $sort);
-	     
+
        if($_POST['what'] == 'cat')
           $config_tdb->editVars('config', array('admin_catagory_sorting' => $sort));
-      elseif($_POST['what'] == 'forum') 
+      elseif($_POST['what'] == 'forum')
         $tdb->edit('cats', $cRec[0]['id'], array('sort' => $sort));
       }
 
@@ -346,23 +346,23 @@ switch ($ajax_type)
       $config_tdb->clearcache();
       $vars = $config_tdb->getVars('config', true);
     	// Sort categories in the order that they appear
-    		
+
       $cSorting = explode(",", $vars[7]['value']);
       $k = 0;
     	$i = 0;
     	$sorted = array();
     	while ($i < count($cRecs)) {
-    	 if ($cSorting[$k] == $cRecs[$i]["id"]) 
+    	 if ($cSorting[$k] == $cRecs[$i]["id"])
        {
     	   $sorted[] = $cRecs[$i];
     		  //unset($cRecs[$i]);
     			$k++;
     			$i = 0;
-    	 } 
-       else 
+    	 }
+       else
         $i++;
     	 }
-    		
+
       $cRecs = $sorted;
     	unset($sorted, $i, $catdef, $cSorting);
     	reset($cRecs);
@@ -436,25 +436,25 @@ switch ($ajax_type)
 	</div>
 	<br />";
 	     echo $output;
-      
+
         break 1;
-      
+
     case "sig" :
       if ($_POST['status'] == "set")
       {
-        $sig = format_text(filterLanguage(UPBcoding($_POST["sig"]), $_CONFIG["censor"]));
+        $sig = format_text(filterLanguage(UPBcoding($_POST["sig"]), $_CONFIG));
         $sig_title = "<strong>Signature Preview:</strong><br>To save this signature press Submit below";
       }
       else
       {
         $rec = $tdb->get("users", $_POST["id"]);
-        $sig = format_text(filterLanguage(UPBcoding($rec[0]['sig']), $_CONFIG["censor"]));
+        $sig = format_text(filterLanguage(UPBcoding($rec[0]['sig']), $_CONFIG));
         $sig_title = "<strong>Current Signature:</strong>";
       }
       echo $sig."<!--divider-->".$sig_title;
-      
+
       break 1;
-      
+
     default:
       echo "Something has gone horribly wrong. You should never see this text";
       break 1;

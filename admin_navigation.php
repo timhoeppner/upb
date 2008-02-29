@@ -12,7 +12,7 @@
 				<div style='width:50%;float:right;line-height:20px;text-align:center;'><span class='link_1'>
 		        <a href='admin_checkupdate.php#skip_nav' target = '_parent'>Check for Updates</a><br />
 				<a href='admin_banuser.php#skip_nav' target = '_parent'>Manage Banned users</a><br />
-				<a href='admin_badwords.php#skip_nav' target = '_parent'>Manage Bad Words</a><br />
+				<a href='admin_badwords.php#skip_nav' target = '_parent'>Manage Filtered Lanuage</a><br />
 				<a href='admin_iplog.php#skip_nav' target = '_parent'>View the IP Address Log</a><br />
 				<a href='admin_restore.php#skip_nav' target = '_parent'>Backup/Restore the database</a><br /></span></div>";
 		}

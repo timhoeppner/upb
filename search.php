@@ -202,7 +202,7 @@
 		$table_font = $font1;
 		foreach($resultPosts as $fID => $result) {
 			foreach($result["records"] as $post) {
-				$msg = format_text(filterLanguage(UPBcoding($post["message"]), $_CONFIG["censor"]));
+				$msg = format_text(filterLanguage(UPBcoding($post["message"]), $_CONFIG));
 				$msg = removeRedirect($msg);
 				echo "";
 				echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], "Result from: <a href='viewforum.php?id=".$fID."'>".$result["forumName"]."</a> ".$_CONFIG["where_sep"]." <a href='viewtopic.php?id=".$fID."&t_id=".$post["t_id"]."'>".$post["topicName"]."</a>"), $_CONFIG);

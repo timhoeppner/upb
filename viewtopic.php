@@ -14,9 +14,6 @@
 	$posts_tdb->setFp("topics", $_GET["id"]."_topics");
 	$posts_tdb->setFp("posts", $_GET["id"]);
 	if (FALSE === ($tRec = $posts_tdb->get("topics", $_GET["t_id"]))) exitPage("Invalid Topic.", true);
-	$sess_name = 'view_'.$_GET['id'].'_'.$_GET['t_id'];
-	if(!isset($_SESSION[$sess_name]) || $_SESSION[$sess_name]+300 < time()) $posts_tdb->edit("topics", $_GET["t_id"], array("views" => ((int)$tRec[0]["views"] + 1)));
-	$_SESSION[$sess_name] = time();
 	$posts_tdb->set_topic($tRec);
 	$posts_tdb->set_forum($fRec);
 	if (!($tdb->is_logged_in())) {
@@ -26,6 +23,11 @@
 	else $posts_tdb->set_user_info($_COOKIE["user_env"], $_COOKIE["uniquekey_env"], $_COOKIE["power_env"], $_COOKIE["id_env"]);
 	$where = "<a href='viewforum.php?id=".$_GET["id"]."'>".$fRec[0]["forum"]."</a> ".$_CONFIG["where_sep"]." ".$tRec[0]["subject"];
 	require_once('./includes/header.php');
+
+	//because session_start() is in header.php CONSIDER MOVING TO FUNC.INC.PHP or FUNC.CLASS.PHP
+	$sess_name = 'view_'.$_GET['id'].'_'.$_GET['t_id'];
+	if(!isset($_SESSION[$sess_name]) || $_SESSION[$sess_name]+300 < time()) $posts_tdb->edit("topics", $_GET["t_id"], array("views" => ((int)$tRec[0]["views"] + 1)));
+	$_SESSION[$sess_name] = time();
 	if ((int)$_COOKIE["power_env"] < $fRec[0]["view"]) exitPage("You do not have enough Power to view this topic");
 	if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) exitPage("Invalid Forum ID");
 	if (!isset($_GET["t_id"]) || !is_numeric($_GET["t_id"])) exitPage("Invalid Topic ID");
@@ -74,7 +76,7 @@
 		if ($pRec["user_id"] != "0") {
 			$user = $tdb->get("users", $pRec["user_id"]);
 			if ($user[0]["sig"] != "") {
-				$sig = format_text(filterLanguage(UPBcoding($user[0]["sig"]), $_CONFIG["censor"]));
+				$sig = format_text(filterLanguage(UPBcoding($user[0]["sig"]), $_CONFIG));
 				$sig = "<div class='signature'>$sig</div>";
 			}
 			if (FALSE === mod_avatar::verify_avatar($user[0]['avatar'], $user[0]['avatar_hash'])) {
@@ -101,7 +103,7 @@
 		else $quote = "";
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=$page'>Add Reply</a></div>";
 		else $reply = "";
-		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG["censor"]));
+		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
 		echo "
 			<tr>
 				<th><div class='post_name'>";

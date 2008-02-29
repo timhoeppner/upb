@@ -56,7 +56,7 @@
 				$table_font = $font2;
 				$x--;
 			}
-			$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG["censor"]));
+			$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
 			echo "
 				<div class='simple_head' style='text-align:left;'>".$pRec["user_name"]."</div>";
 			echo "

@@ -63,21 +63,21 @@
 		$pRec[0]["message"] = format_text($pRec[0]["message"]);
 		if ($_POST["verify"] == "Ok") {
 			$update_topic = array("replies" => ((int)$tRec[0]["replies"] - 1), "p_ids" => $tRec[0]["p_ids"]);
-			
+
       if (($key = array_search($_GET["p_id"], $p_ids)) !== FALSE) {
 				$update_topic = array("replies" => ((int)$tRec[0]["replies"] - 1), "p_ids" => $tRec[0]["p_ids"]);
-				
+
         if ($key == (count($p_ids) - 1)) {
 					//last post, update last_post of topic
 					if (FALSE !== ($last_post = $post_tdb->get('posts', $p_ids[($key - 1)])))
 					{
             $update_topic = array_merge($update_topic, array('last_post' => $last_post[0]['date'], 'user_name' => $last_post[0]['user_name'], 'user_id' => $last_post[0]['user_id']));
-            
+
           }
 				}
 				unset($p_ids[$key]);
 				$update_topic["p_ids"] = implode(",", $p_ids);
-				
+
         $fRec = $tdb->get("forums", $_GET["id"]);
 				$tdb->edit("forums", $_GET["id"], array("posts" => ((int)$fRec[0]["posts"] - 1)));
 				$post_tdb->edit("topics", $_GET["t_id"], $update_topic);
@@ -104,7 +104,7 @@
 			$table_color = $table1;
 			$table_font = $font1;
 			$user = $tdb->get("users", $pRec[0]["user_id"]);
-			if ($user[0]["sig"] != "") $user[0]["sig"] = "<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG["censor"]))."</div>";
+			if ($user[0]["sig"] != "") $user[0]["sig"] = "<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG))."</div>";
 			if ($user[0]["level"] == '1') {
 				$statuscolor = $userColor;
 				if ($user[0]["posts"] >= $member_post1) $status = $member_status1;
@@ -130,8 +130,8 @@
 				$status = 'Member';
 				$statuscolor = $membercolor;
 			}
-			
-			$msg = UPBcoding(filterLanguage($pRec[0]["message"], $_CONFIG["censor"]));
+
+			$msg = UPBcoding(filterLanguage($pRec[0]["message"], $_CONFIG));
 			echo "
 			<tr>
 				<th><div class='post_name'><a href='profile.php?action=get&id=".$pRec[0]["user_id"]."'>".$pRec[0]["user_name"]."</a></div></th>
