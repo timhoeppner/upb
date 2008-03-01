@@ -181,8 +181,7 @@
 			<tr valign='bottom'>
 				<td height='1%'><br />".$user[0]["sig"]."</td>
 			</tr></table>";
-			echo "
-		$skin_tablefooter";
+			echoTableFooter(SKIN_DIR);
 			ok_cancel("delete.php?action=".$_GET["action"]."&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$_GET["p_id"], "Delete Post?");
 		}
 	} else {

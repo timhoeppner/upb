@@ -39,7 +39,8 @@ function encode_text($text)
   return $string;
 }
 
-function filterLanguage($text, $_CONFIG) {
+function filterLanguage($text) {
+    $_CONFIG = &$GLOBALS['_CONFIG'];
     $msg = $text;
     //start bad words filter
     $words = explode(",", $_CONFIG['banned_words']);
@@ -191,7 +192,7 @@ function getSmilies($field = 'message')
 
 function status($user)
 {
-global $_STATUS;
+$_STATUS = $GLOBALS['_STATUS'];
 if ($user[0]["level"] == "1") {
 				$status = "Member";
         $statuscolor = $_STATUS["userColor"];

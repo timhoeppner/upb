@@ -173,7 +173,6 @@
 					<div class='button_pro2'><a href='profile.php?action=get&id=".$pRec["user_id"]."'>Profile</a></div>
 					<div class='button_pro2'><a href='".$user[0]["url"]."' target = '_blank'>Homepage</a></div>
 					<div class='button_pro2'><a href='email.php?id=".$pRec["user_id"]."'>email ".$pRec["user_name"]."</a></div>";
-    //echo "</td></tr>".$skin_tablefooter."</div>";
     echo "</td></tr>".echoTableFooter($_CONFIG['skin_dir'])."</div>";
 	}
 	echo "</div>";

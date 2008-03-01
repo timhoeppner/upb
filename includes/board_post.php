@@ -46,6 +46,6 @@ email me at : [email]myemail@myserver.com[/email]</textarea>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+		echoTableFooter(SKIN_DIR);
 ?>

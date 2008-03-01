@@ -142,8 +142,8 @@
 						<div class='button_pro2'><a href='profile.php?action=get&id=".$pmRec["user_id"]."'>Profile</a></div>
 						<div class='button_pro2'><a href='".$user[0]["url"]."' target = '_blank'>Homepage</a></div>
 						<div class='button_pro2'><a href='email.php?id=".$pmRec["user_id"]."'>email ".$pmRec["user_name"]."</a></div></td>
-				</tr>
-			$skin_tablefooter";
+				</tr>";
+		echoTableFooter(SKIN_DIR);
 		echo $pm_navegate;
 	} else {
 		require_once('./includes/header.php');

@@ -170,8 +170,6 @@ function createUserPowerMisc($user_power, $list_format, $exclude_guests=false) {
 }
 
 function ok_cancel($action, $text) {
-    //global $font_m, $font_face, $font_color_main;
-
     echo "
 <form action='$action' METHOD=POST>
 <div class='alert'><div class='alert_text'>
@@ -266,7 +264,8 @@ function strmstr($haystack, $needle, $before_needle=FALSE) {
 
 function lastread($pid = '')
 {
-  global $tdb,$posts; //read in database objects and file pointers etc.
+  $tdb = &$GLOBALS['tdb'];
+  $posts = &$GLOBALS['posts'];
   $cats = $tdb->listRec("cats",1);
 
   if ($cats !== false)

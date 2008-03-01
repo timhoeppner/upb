@@ -42,8 +42,8 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 
 		require_once("admin_navigation.php");
 		echo "</td>
-			</tr>
-$skin_tablefooter";
+			</tr>";
+		echoTableFooter(SKIN_DIR);
 
 		echo "<form action='admin_banuser.php?action=edit&word=".((isset($_POST["word"])) ? $_POST['word'] : $_GET['word'])."' method=POST>";
 

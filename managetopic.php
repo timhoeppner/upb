@@ -8,6 +8,7 @@
 	require_once("./includes/class/func.class.php");
 	require_once("./includes/class/posts.class.php");
 	$posts_tdb = new posts(DB_DIR."/", "posts.tdb");
+
 	if (!isset($_GET["id"]) || !isset($_GET["t_id"])) exitPage("Unable to retrieve topic information, Not enough information provided", true);
 	if (!$tdb->is_logged_in()) exitPage("<div class='alert'><div class='alert_text'>
 		<strong>Warning:</strong></div>
@@ -28,7 +29,7 @@
 					$posts_tdb->edit("topics", $_GET["t_id"], array("monitor" => ""));
 					echo "You are no longer monitoring this topic.";
 				} elseif($_POST["verify"] != "Cancel") {
-					ok_cancel($PHP_SELF."?action=watch&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"], "Are you sure you no longer wish to monitor this topic?");
+					ok_cancel($_SERVER['PHP_SELF']."?action=watch&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"], "Are you sure you no longer wish to monitor this topic?");
 					exitPage('', false, true);
 				}
 			} else {
@@ -45,7 +46,7 @@
 					$posts_tdb->edit("topics", $_GET["t_id"], array("monitor" => $monitor_list));
 					echo "You are no longer monitoring this topic.";
 				} elseif($_POST["verify"] != "Cancel") {
-					ok_cancel($PHP_SELF."?action=watch&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"], "Are you sure you no longer wish to monitor this topic?");
+					ok_cancel($_SERVER['PHP_SELF']."?action=watch&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"], "Are you sure you no longer wish to monitor this topic?");
 					exitPage('', false, true);
 				}
 			} else {
@@ -66,7 +67,7 @@
 			if ($_COOKIE["power_env"] != "3") {
 				echo "Unable to move/copy topic, you are not an administrator";
 				require_once("./includes/footer.php");
-				redirect($PHP_SELF."?id=".$_GET["id"]."&t_id=".$_GET["t_id"], 2);
+				redirect($_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"], 2);
 				exit;
 			}
 			if ($_POST["newId"] != "") {
@@ -127,7 +128,7 @@
 				$tdb->edit("forums", $_POST["newId"], array("topics" => $fNRec[0]["topics"], "posts" => $fNRec[0]["posts"]));
 				require_once("./includes/footer.php");
 				if ($_GET["redirect"] != "") redirect($_GET["redirect"], 2);
-				else redirect($PHP_SELF."?id=".$_POST["newId"]."&t_id=$newT_id&s=".$_GET["s"], 2);
+				else redirect($_SERVER['PHP_SELF']."?id=".$_POST["newId"]."&t_id=$newT_id&s=".$_GET["s"], 2);
 				exit;
 			} else {
 				echo "Please select a forum.";
@@ -154,7 +155,7 @@
 				<div class='alert_confirm_text'>
 				<strong>Redirecting:</div><div style='padding:4px;'>Successfully edited topic properties</div></div>";
 			require_once("./includes/footer.php");
-			redirect($PHP_SELF."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$s, "2");
+			redirect($_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$s, "2");
 			exit;
 		} elseif($_GET["action"] == "CloseTopic" || $_POST["action"] == "CloseTopic") {
 			if ($tRec[0]["locked"] == 1) echo "This Topic is already locked!";
@@ -189,7 +190,7 @@
 				$posts_tdb->edit("topics", $_GET["t_id"], array("p_ids" => $p_ids));
 				echo "Successfully deleted ".$num." Post(s)";
 				require_once("./includes/footer.php");
-				redirect($PHP_SELF."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"], "2");
+				redirect($_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"], "2");
 				exit;
 			} elseif($_POST["verify"] == "Cancel") {
 				unset($_POST["action"]);
@@ -233,9 +234,8 @@
 				<td width='78%' bgcolor='$table_color'><font size='$font_m' face='$font_face' color='$table_font'>$msg</font></td>
 			</tr>";
 				}
-				echo "
-		$skin_tablefooter<br />";
-				ok_cancel("$PHP_SELF?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"], "<input type='hidden' name='action' value='Delete'><input type='hidden' name='ids' value ='".$ids."'>");
+				echoTableFooter(SKIN_DIR);
+				ok_cancel($_SERVER['PHP_SELF']."id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"], "<input type='hidden' name='action' value='Delete'><input type='hidden' name='ids' value ='".$ids."'>");
 			}
 		}
 		if ($_GET["action"] == "" && $_POST["action"] == "") {
@@ -251,7 +251,7 @@
 			else $sticky_checked = "";
 			$p_ids = explode(",", $tRec[0]["p_ids"]);
 			$pRec = $posts_tdb->get("posts", $p_ids[0]);
-			echo "<form method='POST' action='$PHP_SELF?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"]."'>";
+			echo "<form method='POST' action='".$_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"]."'>";
 		echoTableHeading("Topic Properties", $_CONFIG);
 			echo "
 			<tr>
@@ -289,9 +289,9 @@
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Modify' name='action'><input type='reset' value='Reset' name='B2'></td>
 			</tr>
-		$skin_tablefooter
 	</form>";
-			echo "<form method='POST' action='$PHP_SELF?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"]."'>";
+	echoTableFooter(SKIN_DIR);
+			echo "<form method='POST' action='".$_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"]."'>";
 		echoTableHeading("Topic Options", $_CONFIG);
 			if ($_COOKIE["power_env"] == 3) {
 				echo "
@@ -330,7 +330,7 @@
 				$options .= "</select></td>
 			</tr>";
 				echo "
-			<form method='POST' action='$PHP_SELF?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"]."'><input type='hidden' name='move_forum' value='1'>
+			<form method='POST' action='".$_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"]."'><input type='hidden' name='move_forum' value='1'>
 			$options
 			</form>
 			<tr>
@@ -364,11 +364,11 @@
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Submit' name='submit2'></td>
 			</tr>
-		$skin_tablefooter
 		</form>";
+	   echoTableFooter(SKIN_DIR);
 			if ($_GET["s"] == "1") {
 				echo "
-		<form method='POST' action='$PHP_SELF?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"]."'>";
+		<form method='POST' action='".$_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"]."'>";
 		echoTableHeading("Topic Posts", $_CONFIG);
 				$posts_tdb->set_topic($tRec);
 				$pRecs = $posts_tdb->getPosts("posts");
@@ -399,8 +399,8 @@
 			<tr>
 				<td class='footer_3a' colspan='3' style='text-align:center;'><input type='submit' value='Delete Selected' name='action' /></td>
 			</tr>
-		$skin_tablefooter
 	</form>";
+				echoTableFooter(SKIN_DIR);
 				$i++;
 			}
 		}

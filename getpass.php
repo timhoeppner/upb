@@ -80,9 +80,9 @@
 			</tr>
 			<tr>
 				<td class='footer_3a' style='text-align:center;' colspan='2'><input type=submit value='Submit'></td>
-			</tr>	
-		$skin_tablefooter
+			</tr>
 	</form>";
+    echoTableFooter(SKIN_DIR);
 				require_once('includes/footer.php');
 				exit;
 			} else {
@@ -119,8 +119,8 @@
 			<tr>
 				<td class='footer_3a' style='text-align:center;' colspan='2'><input type=submit value='Submit'></td>
 			</tr>
-		$skin_tablefooter
 	</form>";
+    echoTableFooter(SKIN_DIR);
 	}
 	require_once("./includes/footer.php");
 ?>

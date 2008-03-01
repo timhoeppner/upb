@@ -58,8 +58,8 @@
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Send'><input type='reset' value='Reset' name='Reset'></td>
 			</tr>
-		$skin_tablefooter
 	</form>";
+	echoTableFooter(SKIN_DIR);
 	}
 	require_once("./includes/footer.php");
 ?>

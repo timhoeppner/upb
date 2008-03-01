@@ -16,7 +16,7 @@
 	session_start();
 	if ($_POST["submit"] == "Submit") {
 		if ((bool) $_CONFIG['security_code'] === true)
-    {  
+    {
       if ($_POST['s_key'] !== $_SESSION["u_keycheck"]) {
 			 exitPage("Please enter the security code <b>exactly</b> as it appears...", true);
 		  }
@@ -45,9 +45,9 @@
 		if (strlen($_POST["u_sig"]) > 200) exitPage("You cannot have more than 200 characters in your signature.", true);
 		if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["u_email"])) exitPage("please enter a valid email!", true);
 			$email = explode("@", $_POST["u_email"]);
-	
+
 	   //call to checkdnsrr removed due to false negatives occuring. Some hosts use mail servers that use different domain names to the user email address.
-	
+
 		if (substr(trim(strtolower($_POST["u_site"])), 0, 7) != "http://") $_POST["u_site"] = "http://" . $_POST["u_site"];
 		if ($_POST["timezone"] {
 			0 }
@@ -59,18 +59,18 @@
 		if (FALSE === $temp_tdb->isTable($pmT_num)) $temp_tdb->createTable($pmT_num, array(array("box", "string", 6), array("from", "number", 7), array("to", "number", 7), array("icon", "string", 10), array("subject", "memo"), array("date", "number", 14), array("message", "memo"), array("id", "id")));
 		$temp_tdb->cleanup();
 		unset($temp_tdb);
-		
+
 		$f = fopen(DB_DIR."/new_pm.dat", 'a');
 		fwrite($f, " 0");
 		fclose($f);
-		
+
 		$register_msg = $_REGISTER['register_msg'];
 		$register_msg = str_replace("<login>", $_POST['u_login'], $register_msg);
 		$register_msg = str_replace("<password>", $u_pass, $register_msg);
 		$email_fail = false;
-    if (!@mail($_POST["u_email"], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"])) 
+    if (!@mail($_POST["u_email"], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"]))
     $email_fail = true;
-		
+
 		require_once('./includes/header.php');
 		if ($email_fail === false)
     {
@@ -80,7 +80,8 @@
 			<td class='area_1'><div class='description'>";
       echo "<strong>You are now registered!</strong><p>An email has been sent to your email account with a random password which you can change at any time.<p>It should arrive within 2 - 5 minutes.<p>If you haven't received your password after a significant amount of time please contact an administrator who can provide you with a temporary password";
       redirect("login.php", "5");
-      echo "</div></td></tr>$skin_tablefooter";
+      echo "</div></td></tr>";
+      echoTableFooter(SKIN_DIR);
 		}
 		else
     {
@@ -93,11 +94,11 @@
 		  echo "<p>Please make a note of your password and then login to change it<p>Click <a href='login.php'><strong>here</strong></a></a>";
 	echo "
 			</div></td>
-		</tr>
-	$skin_tablefooter";
+		</tr>";
+	echoTableFooter(SKIN_DIR);
 		}
     require_once('./includes/footer.php');
-		
+
 		exit;
 	} else {
 		require_once('./includes/header.php');
@@ -150,7 +151,7 @@
 				<td class='area_2'><img src='./includes/image.php?id=$encid&key=$key'><br /><input type=text name=s_key maxlength=7 size=12></td>
 			</tr>";
 			}
-			
+
 		echoTableFooter($_CONFIG['skin_dir']);
 		echoTableHeading("Other Information", $_CONFIG);
 		echo "

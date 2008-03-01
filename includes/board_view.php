@@ -57,8 +57,9 @@
 					<div class='button_pro2'><a href='#'>Profile</a></div>
 					<div class='button_pro2'><a href='#'>Homepage</a></div>
 					<div class='button_pro2'><a href='#'>Email Sample User</a></div></td>
-			</tr>
-		$skin_tablefooter
+			</tr>";
+		echoTableFooter(SKIN_DIR);
+		echo "
 				</td>
 			</tr>";
 ?>

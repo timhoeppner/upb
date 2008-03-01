@@ -9,7 +9,7 @@
 		echo "
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
-			</tr>
-		$skin_tablefooter";
+			</tr>";
+		echoTableFooter(SKIN_DIR);
 	require_once("./includes/footer.php");
 ?>

@@ -59,7 +59,8 @@
 		<tr>
 			<td class='footer_3a' style='text-align:center;' colspan='2'><input type=submit value='Search'></td>
 		</tr>
-	$skin_tablefooter</form>";
+	</form>";
+	echoTableFooter(SKIN_DIR);
 	//end form
 	if (isset($_GET['q']) && trim($_GET['q']) != "" || trim($_GET["q"]) == "" && trim($_GET["user"]) != "") {
 		$forums = array();
@@ -193,7 +194,7 @@
 			</tr>";
 			}
 		}
-		echo "$skin_tablefooter";
+		echoTableFooter(SKIN_DIR);
 		flush();
 	}
 	if (!empty($resultPosts)) {
@@ -214,8 +215,7 @@
 					<tr>
 						<td class='area_2'><div style='padding:12px;margin-bottom:20px;'>$msg</div></td>
 					</tr>";
-				echo "
-				$skin_tablefooter";
+				echoTableFooter(SKIN_DIR);
 			}
 		}
 	}

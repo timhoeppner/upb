@@ -77,7 +77,7 @@
 				<td class='area_2'>";
         if ($rec[0]["superuser"] == "Y")
           echo "Administrator";
-        else 
+        else
           echo "<select size='1' name='level'>".createUserPowerMisc($rec[0]["level"], 7, TRUE);
         echo "</td>
 			</tr>
@@ -169,7 +169,7 @@
           echo '<i>today</i>';
         else if (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y'))))
           echo '<i>yesterday</i>';
-        else 
+        else
           echo gmdate("Y-m-d", user_date($lastvisit));
         echo "</td></tr>
 			<tr>
@@ -186,7 +186,7 @@
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Submit' name='B1' /><input type='reset' value='Reset' name='B2' /></td>
 			</tr>";
-      echoTableFooter($_CONFIG['skin_dir']); 
+      echoTableFooter($_CONFIG['skin_dir']);
       echo "</form>";
 		}
 	} elseif($_GET["action"] == "pass" && isset($_GET["id"])) {
@@ -207,7 +207,8 @@
       echo "You successfully changed ".$user[0]["user_name"]."'s password to ".$_POST["pass"]."</strong>";
 			if ($email_fail === true)
         echo "<p>The automated email was unable to be sent.<p>Please email them at ".$user[0]['email']." to inform them of the change of password";
-      echo "</div></td></tr>$skin_tablefooter";
+      echo "</div></td></tr>";
+      echoTableFooter(SKIN_DIR);
 		} else {
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 			echo "
@@ -318,7 +319,7 @@
 				<td colspan='10'>No records found</td>
 			</tr>";
 		} else {
-			
+
 			$bList = file(DB_DIR."/banneduser.dat");
 			foreach($users as $user) {
 			   $lastvisit = $user['lastvisit'];
@@ -340,8 +341,8 @@
         if ($lastvisit == 0)
           echo "<i>never</i>";
         else if (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d'))
-          echo '<i>today</i>'; 
-        else if (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y')))) 
+          echo '<i>today</i>';
+        else if (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y'))))
           echo "<i>yesterday</i>";
         else
           echo gmdate("Y-m-d", user_date($lastvisit))."</td><td class='area_1' style='text-align:center;'>".gmdate("Y-m-d", user_date($user["date_added"]))."</td>";

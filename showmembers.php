@@ -83,8 +83,7 @@
 			</tr>";
 			}
 		}
-		echo "
-		$skin_tablefooter";
+		echoTableFooter(SKIN_DIR);
 		echo "
 		<table class='pagenum_container' cellspacing='1'>
 			<tr>
