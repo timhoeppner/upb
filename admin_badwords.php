@@ -50,13 +50,13 @@
 			redirect("admin_badwords.php", 1);
 		} else {
     	echo "<form action='admin_badwords.php?action=addnew' method=POST>";
-		echoTableHeading("Adding a badword", $_CONFIG);
+		echoTableHeading("Adding a filtered word", $_CONFIG);
 			echo "
 			<tr>
 				<th colspan='2'>Add the word you wish to be censored below</th>
 			</tr>
 			<tr>
-				<td class='area_1' style='width:35%;padding:12px;'><strong>New badword</strong></td>
+				<td class='area_1' style='width:35%;padding:12px;'><strong>New filtered word</strong></td>
 				<td class='area_2'><input type='text' name='newword' size='20'></td>
 			</tr>
 			<tr>

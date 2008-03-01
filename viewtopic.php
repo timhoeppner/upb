@@ -101,6 +101,25 @@
 		else $delete = "";
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $quote = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&quote=1&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."&page=".$_GET["page"]."'>\"Quote\"</a></div>";
 		else $quote = "";
+		
+		$uploadId = (int) $pRec["upload_id"];
+    
+    if($uploadId > 0) {
+        // We have an attachment, query the database for the info
+        $tdb->setFp("uploads", "uploads");
+        
+        $q = $tdb->get("uploads", $uploadId, array("name", "downloads"));
+        
+        // Make sure the attachment exists
+        if($q !== false) {
+            $attachName = $q[0]["name"];
+            $attachDownloads = $q[0]["downloads"];
+            
+            $pRec["message"] = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n" . $pRec["message"];
+        }
+    }
+		
+		
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=$page'>Add Reply</a></div>";
 		else $reply = "";
 		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));

@@ -712,7 +712,7 @@ var http_request = false;
       poststr += "&divname="+escape(Utf8.encode(divname));
       poststr += "&method="+escape(Utf8.encode(method));
       poststr += "&type=getpost";
-      alert(method);
+
       makePOSTRequest('./ajax.php', poststr,'getpost');  
    }
    

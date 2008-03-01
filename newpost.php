@@ -55,7 +55,7 @@
 		$uploadText = '';
 		$uploadId = 0;
 		if (trim($_FILES["file"]["name"]) != "") {
-			$upload = new upload(DB_DIR, $_CONFIG["fileupload_size"]);
+			$upload = new upload(DB_DIR, $_CONFIG["fileupload_size"],$_CONFIG["fileupload_location"]);
 			$uploadId = $upload->storeFile($_FILES["file"]);
 			if ($uploadId === false) $uploadId = 0;
 		}

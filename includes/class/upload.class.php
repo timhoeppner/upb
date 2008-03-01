@@ -10,6 +10,7 @@ class upload extends tdb {
     var $initialized=false;
     var $file=array();
     var $maxSize;
+    var $uploadLoc;
     
     /**
      * Class instantiation
@@ -17,10 +18,10 @@ class upload extends tdb {
      * @param String $dir
      * @return bool, true on success
      */
-    function upload($dir, $maxSize) {
+    function upload($dir, $maxSize,$uploadLoc) {
         // Make sure we start fresh
         $this->initialized = false;
-        
+        $this->uploadLoc = $uploadLoc;
         // Initialize the TextDb object
         $this->tdb($dir."/", "main.tdb");
         
@@ -46,7 +47,6 @@ class upload extends tdb {
      */
     function storeFile($file) {
         if(!$this->initialized) { $this->notInitialized(); return false; }
-        
         if($file["error"] != UPLOAD_ERR_OK) return false;
         
         // Create a temporary location to store the data before putting it in the database
@@ -63,13 +63,15 @@ class upload extends tdb {
             $data = fread($f, filesize($tmpName));
             fclose($f);
             
-            unlink($tmpName);
+            $file_name = md5(uniqid(rand(), true));
+            $dir = getcwd();
+            move_uploaded_file($tmpName,$dir."/".$this->uploadLoc."/".$file_name);
             
             $id = $this->add("uploads", array(
                     "name" => $file["name"],
                     "size" => $file["size"],
                     "downloads" => 0,
-                    "data" => $data
+                    "data" => $file_name
                 ));
             
             return $id;
@@ -83,7 +85,6 @@ class upload extends tdb {
         
         // Retrieve the file from the database
         $q = $this->get("uploads", $id);
-        
         if($q !== FALSE) {
             $this->file = $q[0];
             return true;
@@ -95,15 +96,17 @@ class upload extends tdb {
     
     function dumpFile() {
         if(!$this->initialized) { $this->notInitialized(); return false; }
-        
         // Pre-dump checks
         if(empty($this->file)) { $this->sendError(E_USER_NOTICE, "No file loaded, cannot dump", __LINE__); return false; }
         if(headers_sent()) { $this->sendError(E_USER_NOTICE, "Headers have already been sent, unable to dump file", __LINE__); return false; }
-        
+        $dir = getcwd();
+
         // Dump the file to the browser
         header("Content-type: application/octet-stream");
+        header('Content-Length: ' . filesize($this->uploadLoc."/".$this->file['data']));
         header("Content-disposition: attachment; filename=".$this->file["name"]);
-        echo $this->file["data"];
+        readfile($dir."/".$this->uploadLoc."/".$this->file['data']);
+
     }
     
     function notInitialized() {

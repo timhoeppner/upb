@@ -92,7 +92,7 @@
 					</div>
 					</div>";
 				require_once("./includes/footer.php");
-				//redirect("viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"], "2");
+				redirect("viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"], "2");
 				exit;
 			}
 			else echo '<b><font color="red">Fatal Error: </font></b> $p_id not found in the topic record.  The topic was not deleted';
