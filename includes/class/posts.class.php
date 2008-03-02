@@ -14,21 +14,21 @@ class posts extends tdb {
 	var $tRec;
 	var $fRec;
 	var $user = array();
-	
+
 	function posts($dir, $db) {
 		$this->tdb($dir, $db);
 	}
-	
+
 	//Check Functions
 	function set_topic($tRec) {
 		$this->tRec = $tRec;
 	}
-	
+
 	function set_forum($fRec) {
 		$this->fRec = $fRec;
-		
+
 	}
-	
+
 	function set_user_info($username, $password, $power, $id) {
 		if($power == 0) {
 			$username = "guest";
@@ -37,7 +37,7 @@ class posts extends tdb {
 		}
 		$this->user = array("username" => $username, "password" => $password, "power" => $power, "id" => $id);
 	}
-	
+
 	//Development Purposes
 	function varDump() {
 		echo '<pre><b>$tRec:</b><br>';
@@ -48,7 +48,7 @@ class posts extends tdb {
 		var_dump($this->user);
 		echo '</pre>';
 	}
-	
+
 	function check_user_info() {
 		if($this->user["username"] == "" || !isset($this->user["username"])) return false;
 		if($this->user["password"] == "" || !isset($this->user["password"])) return false;
@@ -56,25 +56,19 @@ class posts extends tdb {
 		if($this->user["id"] == "" || !isset($this->user["id"])) return false;
 		return true;
 	}
-	
+
 	function check_forum() {
 		if($this->fRec[0]["id"] == "" || !isset($this->fRec[0]["id"])) return false;
 		return true;
 	}
-	
+
 	function check_topic() {
 		if($this->tRec[0]["id"] == "" || !isset($this->tRec[0]["id"])) return false;
 		//if($this->tRec[0]["p_ids"] == "") return false;
 		return true;
 	}
 	// end check functions
-	
-	function d_delTopic() {
-		if(!$this->check_user_info() || $this->user["power"] < 2) return false;
-		echo "<font><a href='admin.php?action=del_t&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."'>Delete Topic</a></font>";
-		return true;
-	}
-	
+
 	function d_topic($page_string) {
 		if(!$this->check_user_info()) return false;
 		echo "
@@ -94,36 +88,7 @@ class posts extends tdb {
 		return true;
 	}
 
-	function d_posting($page_string,$position = "top") {
-		if(!$this->check_topic() || !$this->check_forum() || !$this->check_user_info()) return false;
-		
-		echo "
-	<br />
-    <div id='tabstyle_pagenum'>
-<span class='pagination_current'>Page:</span>$page_string
-</div>
-
-    <div style='clear:both;'></div>";
-    if ($position == "top")
-    {
-    echo "<div id='tabstyle_1'>
-        <ul>";
-		if((int)$this->user["power"] > 0) echo "<li><a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Watch This Topic?'><span>Watch Topic</span></a></li>";
-		if((int)$this->user["power"] >= (int)$this->fRec[0]["post"]) echo "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=' title='Create a new topic?'><span>Create New Topic</span></a></li>";
-		else echo"";
-		if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"]) {
-			if(!(bool)$this->tRec[0]["locked"]) echo "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=0&t_id=".$this->tRec[0]["id"]."&page=$page' title='Add a reply?'><span>Add Reply</span></a></li>";
-			else echo "<li><a href='#' title='Topic Is Locked'><span>Topic Is Locked</span></a></li>";
-		} else echo"";
-		echo "
-        </ul>
-    </div>";
-    }
-    echo "<div style='clear:both;'></div>";
-		return true;
-	}
-	
-	function d_posting_qr($page_string, $current, $position = "top")
+	function d_posting($page_string, $position = "top")
   {
     if(!$this->check_topic() || !$this->check_forum() || !$this->check_user_info()) return false;
     $output = "<br />
@@ -135,14 +100,24 @@ class posts extends tdb {
       {
       $output .= "<div id='tabstyle_1'>
          <ul>";
-  		
-      if((int)$this->user["power"] > 0) $output .= "<li><a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Watch This Topic?'><span>Watch Topic</span></a></li>";
+
   		if((int)$this->user["power"] >= (int)$this->fRec[0]["post"]) $output .= "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=' title='Create a new topic?'><span>Create New Topic</span></a></li>";
-		else $output .= "";
    		if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"]) {
   			if(!(bool)$this->tRec[0]["locked"]) $output .= "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=0&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Add a reply?'><span>Add Reply</span></a></li>";
   			else $output .= "<li><a href='#' title='Topic Is Locked'><span>Topic Is Locked</span></a></li>";
-  		} else $output .= "";
+  		}
+  		if((int)$this->user["power"] > 0) $output .= "<li><a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Watch This Topic?'><span>Watch Topic</span></a></li>";
+    	if ((int)$_COOKIE["power_env"] >= 2) {
+/*    		$output .= "
+				<li><a href='delete.php?action=delete&t=1&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><span>Delete topic</span></a></li>";
+		    if ($tRec[0]["locked"] == "0") $output .= "
+				<li><a href='managetopic.php?action=CloseTopic&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><span>Close topic?</span></a></li>";
+		    else $output .= "
+				<li><a href='managetopic.php?action=OpenTopic&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><span>Open topic?</span></a></li>";
+*/
+		    $output .= "
+				<li><a href='managetopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><span>Options</span></a></li>";
+	    }
    	$output .= "
         </ul>
       </div>";
@@ -150,7 +125,7 @@ class posts extends tdb {
      $output .= "<div style='clear:both;'></div>";
   		return $output;
      }
-	
+
 	function getPosts($fp, $start=0, $howmany=-1) {
 		if(!$this->check(__LINE__) || !$this->check_topic()) return false;
 

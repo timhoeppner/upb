@@ -26,14 +26,14 @@ $proceed = true;
 	</div>\n
 	<br />\n
 	<br />\n";
-	
+
   echo "
 	<div class='main_cat_wrapper'>
 		<div class='cat_area_1'>myUPB v2.1.1b -> v2.2.1 Upgrade</div>
 		<form method='POST' action='".$_SERVER['PHP_SELF']."'>
     <table class='main_table' cellspacing='1'><tbody>";
 if (!isset($_POST['next']) or empty($_POST))
-{				
+{
       echo "<tr>
 				<th colspan='2'><strong>Welcome to myUPB v2.2.1</strong></th>
 			</tr>
@@ -62,18 +62,17 @@ if (!isset($_POST['next']) or empty($_POST))
       <td class='area_2'>";
       //$tdb->addField('members', array('superuser', 'string', 1));
       //$tdb->addField('members', array('lastvisit', 'number', 10));
-      
-      $members = $tdb->query('members',"id>'0'");
+
+      $members = $tdb->query('members',"level='3'");
       echo "<select id='superad' name='superad' size='1'>";
       foreach ($members as $member)
       {
-        if ($member['level'] == 3)
           echo "<option value='".$member['id']."'>".$member['user_name']."</option>";
       }
       echo "</select>";
       //dump($members);
       echo "</td></tr>";
-			
+
 }
 else if($_POST['next'] == 2)
 {
@@ -88,7 +87,7 @@ echo "<tr>
       echo "</select>";
       //dump($members);
       echo "</td></tr>";
-      
+
 //move lastvisit information to the member database
 
 
@@ -214,7 +213,7 @@ echo "<tr>
           $next = (int) $_POST['next'] + 1;
         else
           $next = 2;
-          
+
         echo "<tr>
 				<td colspan='2' class='footer_3a' style='text-align:center;'><input type='hidden' name='next' value='$next'><input type='submit' value='Next >>' name='submit'></td>
 			</tr>";

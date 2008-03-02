@@ -144,8 +144,9 @@ switch ($ajax_type)
     $query = "id={$_POST['id']}&t_id={$_POST['t_id']}";
 
     $p = createPageNumbers($page, $num_pages, $query,true);
-    $pagelinks1 = $posts_tdb->d_posting_qr($p,$page);
-    $pagelinks2 = $posts_tdb->d_posting_qr($p,$page,"bottom");
+    $p = str_replace('ajax.php', 'viewtopic.php', $p);
+    $pagelinks1 = $posts_tdb->d_posting($p);
+    $pagelinks2 = $posts_tdb->d_posting($p,"bottom");
 
     //BEGIN NEW REPLY OUTPUT
     $x = +1;

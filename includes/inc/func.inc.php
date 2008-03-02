@@ -37,12 +37,9 @@ require_once("./includes/inc/encode.inc.php");
 require_once("./includes/inc/privmsg.inc.php");
 
 function exitPage($text, $include_header=false, $include_footer=true, $footer_simple=false) {
-    require_once("./includes/class/config.class.php");
-    $config_tdb = new configSettings();
-    $_CONFIG = $config_tdb->getVars("config");
-    $tdb = new functions(DB_DIR.'/', 'main.tdb');
+    $_CONFIG = &$GLOBALS['_CONFIG'];;
+    $tdb = &$GLOBALS['tdb'];
     //$tdb->define_error_handler(array(&$errorHandler, 'add_error'));
-    $tdb->setFp('users', 'members');
 
     if($include_header) require_once('./includes/header.php');
     echo "<br \>".$text;
@@ -55,12 +52,6 @@ function exitPage($text, $include_header=false, $include_footer=true, $footer_si
 function redirect($where, $time) {
     echo "<meta http-equiv='refresh' content='$time;URL=$where'>";
     exit;
-}
-
-function checkAlphaNumeric($string) {
-    if(function_exists("ctype_alnum")) return ctype_alnum($string);
-    if(ereg("^[a-zA-Z0-9]", $string)) return true;
-    return false;
 }
 
 function deleteWhiteIndex(&$array) {

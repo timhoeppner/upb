@@ -24,28 +24,29 @@
 	$where = "<a href='viewforum.php?id=".$_GET["id"]."'>".$fRec[0]["forum"]."</a> ".$_CONFIG["where_sep"]." ".$tRec[0]["subject"];
 	require_once('./includes/header.php');
 
+	if ((int)$_COOKIE["power_env"] < $fRec[0]["view"]) exitPage("You do not have enough Power to view this topic");
+	if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) exitPage("Invalid Forum ID");
+	if (!isset($_GET["t_id"]) || !is_numeric($_GET["t_id"])) exitPage("Invalid Topic ID");
+
 	//because session_start() is in header.php CONSIDER MOVING TO FUNC.INC.PHP or FUNC.CLASS.PHP
 	$sess_name = 'view_'.$_GET['id'].'_'.$_GET['t_id'];
 	if(!isset($_SESSION[$sess_name]) || $_SESSION[$sess_name]+300 < time()) $posts_tdb->edit("topics", $_GET["t_id"], array("views" => ((int)$tRec[0]["views"] + 1)));
 	$_SESSION[$sess_name] = time();
-	if ((int)$_COOKIE["power_env"] < $fRec[0]["view"]) exitPage("You do not have enough Power to view this topic");
-	if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) exitPage("Invalid Forum ID");
-	if (!isset($_GET["t_id"]) || !is_numeric($_GET["t_id"])) exitPage("Invalid Topic ID");
+    if($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] == 1) unset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']]);
+    if($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] == 0 && $_SESSION['newTopics']['lastVisitForums'][$_GET['id']] > $tRec[0]['last_post']) unset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']]);
+    if($tRec[0]['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$_GET['id']]) $_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] = 0;
+    $tdb->updateVisitedTopics();
+    //if($tRec[0]['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$_GET['id']]) echo 'true'; else echo  'false';
+
 	if (!isset($_GET['page']) || $_GET["page"] == "") {
 		$_GET['page'] = ceil((substr_count($tRec[0]['p_ids'], ',') + 1) / $_CONFIG['posts_per_page']);
 	}
 	$pRecs = $posts_tdb->getPosts("posts", (($_CONFIG["posts_per_page"] * $_GET["page"])-$_CONFIG["posts_per_page"]), $_CONFIG["posts_per_page"]);
-	//$pRecs = $posts_tdb->getPosts("posts", 20,20);
 	if (empty($pRecs)) exitPage("Posts not found");
 	$num_pages = ceil(($tRec[0]["replies"] + 1) / $_CONFIG["posts_per_page"]);
 	$p = createPageNumbers($_GET["page"], $num_pages, $_SERVER['QUERY_STRING']);
-	echo "<div id='pagelink1' name='pagelink1'>";
-  $posts_tdb->d_posting($p);
-	echo "</div>";
-  echo "";
-	//show header of topic
-	echo "
-		";
+	echo "<div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p) . "</div>
+	";
 	if ($_GET['page'] == 1) $first_post = $pRecs[0]['id'];
 	else $first_post = 0;
 	$x = +1;
@@ -101,25 +102,25 @@
 		else $delete = "";
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $quote = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&quote=1&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."&page=".$_GET["page"]."'>\"Quote\"</a></div>";
 		else $quote = "";
-		
+
 		$uploadId = (int) $pRec["upload_id"];
-    
+
     if($uploadId > 0) {
         // We have an attachment, query the database for the info
         $tdb->setFp("uploads", "uploads");
-        
+
         $q = $tdb->get("uploads", $uploadId, array("name", "downloads"));
-        
+
         // Make sure the attachment exists
         if($q !== false) {
             $attachName = $q[0]["name"];
             $attachDownloads = $q[0]["downloads"];
-            
+
             $pRec["message"] = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n" . $pRec["message"];
         }
     }
-		
-		
+
+
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=$page'>Add Reply</a></div>";
 		else $reply = "";
 		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
@@ -178,9 +179,7 @@
 	echo "</div>";
 
 	$p = createPageNumbers($_GET["page"], $num_pages, $_SERVER['QUERY_STRING']);
-	echo "<div id='pagelink2' name='pagelink2'>";
-  $posts_tdb->d_posting($p,"bottom");
-	echo "</div>";
+	echo "<div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,"bottom") . "</div>";
 
 	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0))
 {
@@ -209,29 +208,6 @@
   echo "</div>";
 }
 //END QUICK REPLY SEGMENT
-	//$posts_tdb->d_posting($p);
-	if ((int)$_COOKIE["power_env"] >= 2) {
-		echo "
-		<div id='tabstyle_2'>
-			<ul>
-				<li><a href='delete.php?action=delete&t=1&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><span>Delete topic</span></a></li>";
-		if ($tRec[0]["locked"] == "0") echo "
-				<li><a href='managetopic.php?action=CloseTopic&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><span>Close topic?</span></a></li>";
-		else echo "
-
-				<li><a href='managetopic.php?action=OpenTopic&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><span>Open topic?</span></a></li>";
-		echo "
-				<li><a href='managetopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><span>Manage</span></a></li>
-			</ul>
-		</div>
-		<div style='clear:both;'></div>";
-		echoTableHeading("Admin / Moderator topic options", $_CONFIG);
-		echo "
-			<tr>
-				<th>Choose your action from the tab menu...</th>
-			</tr>";
-		echoTableFooter($_CONFIG['skin_dir']);
-	}
 	$tdb->cleanup();
 	unset($tdb);
 	require('./includes/footer.php');

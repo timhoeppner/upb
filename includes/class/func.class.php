@@ -19,7 +19,7 @@ require_once('./includes/inc/post.inc.php');
 $config_tdb = new configSettings();
 $_CONFIG = $config_tdb->getVars("config");
 $_REGISTER = $config_tdb->getVars("regist");
-$_REGIST = $_REGISTER;
+$_REGIST = &$_REGISTER;
 $_STATUS = $config_tdb->getVars("status");
 
 //integrate into admin_config
@@ -39,46 +39,12 @@ class functions extends tdb {
         $this->tdb($dir, $db);
     }
 
-    //$requireArray is case INsensitive
-    function getNextRec($fp, $id, $requireArray='') {
-        if(!is_array($requireArray)) return $this->get($fp, ++$id);
-        while(FALSE !== ($rec = $this->get($fp, ++$id))) {
-            $return = TRUE;
-            reset($requireArray);
-            while (list ($field, $value) = each ($requireArray)) {
-                if(strtolower($CuRec[0][$field]) != strtolower($value)) {
-                    $return = false;
-                    break 1;
-                }
-            }
-            if($return) return $CuRec;
-        }
-        return false;
-    }
-
-    //$requireArray is case INsensitive
-    function getLastRec($fp, $id, $requireArray='') {
-        if(!is_array($requireArray)) return $this->get($fp, --$id);
-        while(FALSE !== ($rec = $this->get($fp, --$id))) {
-            $return = TRUE;
-            reset($requireArray);
-            while (list ($field, $value) = each ($requireArray)) {
-                if(strtolower($CuRec[0][$field]) != strtolower($value)) {
-                    $return = false;
-                    break 1;
-                }
-            }
-            if($return) return $CuRec;
-        }
-        return false;
-    }
-
     function login_user($user, $pass, $key) {
         if($this->fp['users'] != 'members') $this->setFp("users", "members");
         $rec = $this->query("users", "user_name='".$user."'", 1, 1);
         if($rec[0]["user_name"] != $user) return false;
         if($rec[0]["password"]{0} != chr(21)) {
-            if($rec[0]["password"] == generateHash($pass, $rec[0]["password"])) 
+            if($rec[0]["password"] == generateHash($pass, $rec[0]["password"]))
             {
               $this->edit("users", $rec[0]["id"], array("lastvisit" => mkdate()));
               $rec[0]['lastvisit'] = mkdate();
@@ -115,6 +81,11 @@ class functions extends tdb {
             return true;
         }
         return false;
+    }
+
+    function updateVisitedTopics() {
+        //this is a stub
+        //proposed user field: "newTopicsData"
     }
 
     function getID($fp) {

@@ -62,7 +62,20 @@
 	$num_pages = (int) $num_pages;
 	$p = createPageNumbers($_GET["page"], $num_pages, 'id='.$_GET['id']);
 	require_once('./includes/header.php');
-	if (isset($_GET['show'])) echo 'forum last check: '.gmdate("M d, Y g:i:s a", user_date($_COOKIE['fId'.$_GET['id']]));
+if (isset($_GET['show'])) echo 'forum last check: '.gmdate("M d, Y g:i:s a", user_date($_SESSION['newTopics']['lastVisitForums'][$_GET['id']]));
+    while(list($key, $val) = each($_SESSION['lastVisitForums'][$_GET['id']])) {
+        if($val == 0) unset($_SESSION['lastVisitForums'][$_GET['id']][$key]);
+    }
+    $newVisitedTime = $_SESSION['newTopics']['lastVisitForums'][$_GET['id']];
+    for($i=0,$c=count($tRecs);$i<$c;$i++) {
+        if(empty($tRecs[$i])) continue;
+        if($_SESSION['newTopics']['lastVisitForums'][$_GET['id']] < $tRecs[0]['last_visit']) {
+            if($tRecs[0]['last_visit'] > $newVisitedTime) $newVisitedTime = $tRecs[0]['last_visit'];
+            $_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] = 1;
+        } elseif($tRecs[$i]['sticky'] == 0) break; //Since its sorted, once we find an old topic, they are all old (excluding stickied)
+    }
+    $_SESSION['newTopics']['lastVisitForums'][$_GET['id']] = $newVisitedTime;
+    $tdb->updateVisitedTopics();
 	$posts_tdb->d_topic($p);
 	echoTableHeading($fRec[0]["forum"], $_CONFIG);
 	echo "
@@ -70,26 +83,21 @@
 			<th style='width: 75%;'>Topic</th>
 			<th style='width:25%;text-align:center;'>Last Post</th>
 		</tr>";
-	if (empty($tRecs)) {
+	if (empty($tRecs[0]['id'])) {
 		echo "
 		<tr>
 			<td colspan='6' class='area_2' style='text-align:center;font-weight:bold;padding:20px;'>no posts</td>
 		</tr>";
 	} else {
 		foreach($tRecs as $tRec) {
-			$posts_tdb->set_topic(array($tRec));
-			if ($tRec["icon"] == "") {
-				echo "";
-			} else {
+			if ($tRec["icon"] != "") {
+			    $posts_tdb->set_topic(array($tRec));
 				if ($tdb->is_logged_in()) {
 					if ($_COOKIE['lastvisit'] < $tRec['last_post']) {
-						//if($_COOKIE['fId'.$_GET['id'].'tId'.$tRec['id']] == 1 || ($tRec['last_post'] > $_COOKIE['fId'.$_GET['id']] && $_COOKIE['fId'.$_GET['id'].'tId'.$tRec['id']] != 0)) {
-						//$v_icon = "<font color=red size='$font_s'>new</font>";
+					//if($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] == 1 || ($tRec['last_post'] > $_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] && $_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] != 0)) {
 						$tRec['icon'] = 'new.gif';
 					}
-					else $v_icon = "";
 				}
-				else $v_icon = "";
 				if ($tRec["sticky"] == "1") {
 					if ($_CONFIG["sticky_after"] == "1") $tRec["subject"] = "<a href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."'>".$tRec["subject"]."</a>&nbsp;".stripslashes($_CONFIG["sticky_note"]);
 					else $tRec["subject"] = stripslashes($_CONFIG["sticky_note"])."&nbsp;<a href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."'>".$tRec["subject"]."</a>";

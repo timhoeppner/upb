@@ -53,7 +53,7 @@
 	if ($tdb->is_logged_in() && INSTALLATION_MODE === FALSE) {
 		$refresh = false;
 		if (!isset($_COOKIE["lastvisit"])) {
-			$r = $tdb->basicQuery("users",'id',$_COOKIE['id_env']);
+			$r = $tdb->get("users", $_COOKIE['id_env']);
       //NEW VERSION
       $ses_info = $r['lastvisit'];
       if ($ses_info == 0)
@@ -78,6 +78,10 @@
 			$refresh = true;
 		}
 		if ($refresh && $_GET["a"] != 1 && $_POST["a"] != 1 && $_GET["s"] != 1 && $_POST["s"] != 1) redirect($_SERVER['PHP_SELF']."?".$QUERY_STRING, 0);
+		if(!isset($_SESSION['newTopics'])) {
+		    $user = $tdb->get('users', $_COOKIE['id_env']);
+		    $_SESSION['newTopics'] = unserialize($user[0]['newTopicsData']);
+		}
 	} else {
 		if (!isset($_COOKIE["timezone"]) && !headers_sent()) setcookie("timezone", "0", (time() + (60 * 60 * 24 * 7)));
 	}

@@ -56,7 +56,6 @@
 				redirect($PHP_SELF."?section=".$_GET["section"]."&id=".$back_id.$extra, "0");
 				$_GET["id"] = $pmRec[0]["id"];
 			} elseif($_POST["action"] == "Next Message >>") {
-				$pmRec = $PrivMsg->getNextRec("CuBox", $_GET["id"], array("box" => $_GET["section"], $other => $_COOKIE["id_env"]));
 				redirect($PHP_SELF."?section=".$_GET["section"]."&id=".$next_id.$extra, "0");
 				$_GET["id"] = $pmRec[0]["id"];
 			} elseif($_POST["action"] == "Block User") {
