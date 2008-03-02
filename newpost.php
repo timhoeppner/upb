@@ -155,7 +155,7 @@
 			if ($_GET['quote'] == 1) {
 				$hed = "Reply Quote";
 				$reply = $posts_tdb->get("posts", $_GET['p_id']);
-				$message = "[quote]".$reply[0]["message"]."[/quote]";
+				$message = "[quote=".$reply[0]['user_name'].";".$reply[0]['date']."]".$reply[0]["message"]."[/quote]";
 			}
 			else $hed = "Reply";
 			$tpc = "";
