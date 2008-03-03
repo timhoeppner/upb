@@ -1,4 +1,4 @@
-<?php
+//$tdb->addField('members', array('superuser', 'string', 1));<?php
 	// install.php
 	// designed for Ultimate PHP Board
 	// Author: Jerroyd Moore, aka Rebles
@@ -101,6 +101,7 @@
 			array("posts", "number", 7),
 			array("date_added", "number", 14),
 			array("timezone", "string", 3),
+			array('newTopicsData', 'memo'),
 			array("id", "id"),
 			array("lastvisit","number",10),
 			array("superuser","string",1)

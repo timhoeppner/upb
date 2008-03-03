@@ -60,6 +60,7 @@ if (!isset($_POST['next']) or empty($_POST))
       echo "
       <tr><td class='area_1' style='width:35%;padding:8px;'>Super Administrator Account</td>
       <td class='area_2'>";
+      $tdb->addField('members', array('newTopicsData', 'memo'));
       //$tdb->addField('members', array('superuser', 'string', 1));
       //$tdb->addField('members', array('lastvisit', 'number', 10));
 
