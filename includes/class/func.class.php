@@ -84,8 +84,15 @@ class functions extends tdb {
     }
 
     function updateVisitedTopics() {
-        //this is a stub
-        //proposed user field: "newTopicsData"
+        if(!$this->is_logged_in()) return false;
+        $compact = serialize($_SESSION['newTopics']);
+        $hash = md5($compact);
+        if($hash != $_SESSION['__newTopicsHash']) {
+            $_SESSION['__newTopicsHash'] = $hash;
+            $this->edit('users', $_COOKIE['id_env'], array('newTopicsData' => $compact));
+            return true;
+        }
+        return false;
     }
 
     function getID($fp) {

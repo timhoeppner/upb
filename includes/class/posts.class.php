@@ -106,7 +106,10 @@ class posts extends tdb {
   			if(!(bool)$this->tRec[0]["locked"]) $output .= "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=0&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Add a reply?'><span>Add Reply</span></a></li>";
   			else $output .= "<li><a href='#' title='Topic Is Locked'><span>Topic Is Locked</span></a></li>";
   		}
-  		if((int)$this->user["power"] > 0) $output .= "<li><a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Watch This Topic?'><span>Watch Topic</span></a></li>";
+  		if((int)$this->user["power"] > 0) {
+  		    $output .= "<li><a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Watch This Topic?'><span>Watch Topic</span></a></li>";
+	        $output .= "<li><a href='managetopic.php?action=favorite&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Favorite this Topic?'><span>Bookmark Topic</span></a></li>";
+  		}
     	if ((int)$_COOKIE["power_env"] >= 2) {
 /*    		$output .= "
 				<li><a href='delete.php?action=delete&t=1&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><span>Delete topic</span></a></li>";

@@ -95,8 +95,8 @@
 								if ($tRec[0]["user_id"] != "0") $when .= "<span class='link_2'><a href='profile.php?action=get&amp;id=".$tRec[0]["user_id"]."'>".$tRec[0]["user_name"]."</a></span>";
 								else $when .= "a ".$tRec[0]["user_name"]."";
 								if (isset($_COOKIE["lastvisit"])) {
-									//if(($tRec[0]["last_post"] > $_SESSION['newTopics']['lastVisitForums'][$cId] || $_SESSION['newTopics']['f'.$cId]['t'.$tRec[0]['id']] == 1)) $v_icon = "on.gif";
-									if ($tRec[0]["last_post"] > $_COOKIE["lastvisit"]) $v_icon = "on.png";
+									if($tRec[0]["last_post"] > $_SESSION['newTopics']['lastVisitForums'][$cId] || (FALSE !== array_search("1", $_SESSION['newTopics']['f'.$cId]))) $v_icon = "on.png";
+									//if ($tRec[0]["last_post"] > $_COOKIE["lastvisit"]) $v_icon = "on.png";
 									else $v_icon = "off.png";
 								}
 								else $v_icon = "off.png";

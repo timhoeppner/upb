@@ -13,7 +13,20 @@
 	if (!$tdb->is_logged_in()) exitPage("<div class='alert'><div class='alert_text'>
 		<strong>Warning:</strong></div>
 		<div style='padding:4px;'>You must be logged in!</div></div>", true);
-	if ($_GET["action"] == "watch") {
+	if($_GET['action'] == 'favorite') {
+	    require_once('./includes/header.php');
+	    $fav = &$_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']];
+	    if($fav == 2) {
+	        $fav = 0;
+	        print "Topic has been deleted from your bookmarks";
+	    } else {
+	        $fav = 2;
+	        print "Topic has been bookmarked";
+	    }
+	    $tdb->updateVisitedTopics();
+	    redirect('viewtopic.php?id='.$_GET['id'].'&t_id='.$_GET['t_id'].'&page='.$_GET['page'], 2);
+	    exit;
+	} elseif ($_GET["action"] == "watch") {
 		if (!isset($_GET["id"]) || !isset($_GET["t_id"])) exitPage("Not enough information to watch this topic", true);
 		$posts_tdb->setFp("topics", $_GET["id"]."_topics");
 		$tRec = $posts_tdb->get("topics", $_GET["t_id"]);

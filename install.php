@@ -411,8 +411,6 @@
 
 
     $tdb->tdb(DB_DIR.'/', 'posts.tdb');
-		$tdb->createTable('trackforums', array(array('fId', 'number', 7), array('uId', 'number', 7), array('lastvisit', 'number', 14), array('id', 'id')));
-		$tdb->createTable('tracktopics', array(array('fId', 'number', 7), array('tId', 'number', 7), array('uId', 'number', 7), array('old', 'number', 1), array('id', 'id')));
 		//$tdb->tdb(DB_DIR.'/', 'privmsg.tdb');
 		//$tdb->createTable('1', array(array("box", "string", 6), array("from", "number", 7), array("to", "number", 7), array("icon", "string", 10), array("subject", "memo"), array("date", "number", 14), array("message", "memo"), array("id", "id")));
 		// Add the new table to main.tdb

@@ -81,6 +81,7 @@
 		if(!isset($_SESSION['newTopics'])) {
 		    $user = $tdb->get('users', $_COOKIE['id_env']);
 		    $_SESSION['newTopics'] = unserialize($user[0]['newTopicsData']);
+		    $_SESSION['__newTopicsHash'] = md5($user[0]['newTopicsData']);
 		}
 	} else {
 		if (!isset($_COOKIE["timezone"]) && !headers_sent()) setcookie("timezone", "0", (time() + (60 * 60 * 24 * 7)));

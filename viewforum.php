@@ -62,16 +62,15 @@
 	$num_pages = (int) $num_pages;
 	$p = createPageNumbers($_GET["page"], $num_pages, 'id='.$_GET['id']);
 	require_once('./includes/header.php');
-if (isset($_GET['show'])) echo 'forum last check: '.gmdate("M d, Y g:i:s a", user_date($_SESSION['newTopics']['lastVisitForums'][$_GET['id']]));
-    while(list($key, $val) = each($_SESSION['lastVisitForums'][$_GET['id']])) {
-        if($val == 0) unset($_SESSION['lastVisitForums'][$_GET['id']][$key]);
+    if(!empty($_SESSION['newTopics'][$_GET['id']])) while(list($key, $val) = each($_SESSION['newTopics'][$_GET['id']])) {
+        if($val == 0) unset($_SESSION['newTopics'][$_GET['id']][$key]);
     }
     $newVisitedTime = $_SESSION['newTopics']['lastVisitForums'][$_GET['id']];
     for($i=0,$c=count($tRecs);$i<$c;$i++) {
         if(empty($tRecs[$i])) continue;
-        if($_SESSION['newTopics']['lastVisitForums'][$_GET['id']] < $tRecs[0]['last_visit']) {
-            if($tRecs[0]['last_visit'] > $newVisitedTime) $newVisitedTime = $tRecs[0]['last_visit'];
-            $_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] = 1;
+        if($_SESSION['newTopics']['lastVisitForums'][$_GET['id']] < $tRecs[0]['last_post']) {
+            if($tRecs[$i]['last_post'] > $newVisitedTime) $newVisitedTime = $tRecs[0]['last_post'];
+            $_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRecs[$i]['id']] = 1;
         } elseif($tRecs[$i]['sticky'] == 0) break; //Since its sorted, once we find an old topic, they are all old (excluding stickied)
     }
     $_SESSION['newTopics']['lastVisitForums'][$_GET['id']] = $newVisitedTime;
@@ -93,8 +92,9 @@ if (isset($_GET['show'])) echo 'forum last check: '.gmdate("M d, Y g:i:s a", use
 			if ($tRec["icon"] != "") {
 			    $posts_tdb->set_topic(array($tRec));
 				if ($tdb->is_logged_in()) {
-					if ($_COOKIE['lastvisit'] < $tRec['last_post']) {
-					//if($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] == 1 || ($tRec['last_post'] > $_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] && $_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] != 0)) {
+					if($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']] == 2) {
+					    $tRec['icon'] = 'star.gif';
+					} elseif($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']] == 1 || ($tRec['last_post'] > $_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']] && $_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']] != 0)) {
 						$tRec['icon'] = 'new.gif';
 					}
 				}
