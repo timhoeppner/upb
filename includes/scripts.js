@@ -700,7 +700,7 @@ var http_request = false;
       makePOSTRequest('./ajax.php', poststr,'reply');
    }
     
-   function getPost(userid,divname)
+   function getPost(userid,divname,method)
    {  
       div = divname;
       splitstring = divname.split("-");
@@ -709,6 +709,7 @@ var http_request = false;
       poststr += "&userid="+escape(Utf8.encode(userid));
       poststr += "&threadid="+escape(Utf8.encode(splitstring[1]));
       poststr += "&divname="+escape(Utf8.encode(divname));
+      poststr += "&method="+escape(Utf8.encode(method));
       poststr += "&type=getpost";
 
       makePOSTRequest('./ajax.php', poststr,'getpost');  
