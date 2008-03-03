@@ -88,7 +88,7 @@ class posts extends tdb {
 		return true;
 	}
 
-	function d_posting($page_string, $position = "top")
+	function d_posting($page_string, $page, $position = "top")
   {
     if(!$this->check_topic() || !$this->check_forum() || !$this->check_user_info()) return false;
     $output = "<br />
@@ -103,7 +103,7 @@ class posts extends tdb {
 
   		if((int)$this->user["power"] >= (int)$this->fRec[0]["post"]) $output .= "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=' title='Create a new topic?'><span>Create New Topic</span></a></li>";
    		if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"]) {
-  			if(!(bool)$this->tRec[0]["locked"]) $output .= "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=0&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Add a reply?'><span>Add Reply</span></a></li>";
+  			if(!(bool)$this->tRec[0]["locked"]) $output .= "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=0&t_id=".$this->tRec[0]["id"]."&page=".$page."' title='Add a reply?'><span>Add Reply</span></a></li>";
   			else $output .= "<li><a href='#' title='Topic Is Locked'><span>Topic Is Locked</span></a></li>";
   		}
   		if((int)$this->user["power"] > 0) {

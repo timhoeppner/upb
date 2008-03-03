@@ -27,12 +27,19 @@ function message_icons()
 }
 
 function format_text($text) {
-    $text = str_replace("\n", "<br>", $text);
-    $text = str_replace("  ", "&nbsp; ", $text);
-    $text = str_replace("&amp;#", "&#", $text);
+    //remove potentially harmful code from post
+    while(preg_match("#<script(.*)>(.*)</script(.*)>#is", $text))
+		{
+		  $message = preg_replace("#<script(.*)>(.*)</script(.*)>#is", "&lt;script$1&gt;$2&lt;/script$3&gt;", $message);
+		}
+		$message = preg_replace("#\s*<base[^>]*>\s*#is", "", $text);
+		$message = preg_replace("#\s*<meta[^>]*>\s*#is", "", $text);
+
+		$message = str_replace(array('\n','  ','<?php', '<!--', '-->', '?>', "<br />\n", "<br>\n"), array('\n','&nbsp;','&lt;?php', '&lt;!--', '--&gt;', '?&gt;', "\n", "\n"), $text);
+     
     return $text;
 }
-
+?><?php //<? added to allow for syntax highlighting in editors
 function encode_text($text)
 {
   $string = str_replace(array('<','>'),array('&lt;','&gt;'),$text);

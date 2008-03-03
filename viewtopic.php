@@ -25,8 +25,8 @@
 	require_once('./includes/header.php');
 
 	if ((int)$_COOKIE["power_env"] < $fRec[0]["view"]) exitPage("You do not have enough Power to view this topic");
-	if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) exitPage("Invalid Forum ID");
-	if (!isset($_GET["t_id"]) || !is_numeric($_GET["t_id"])) exitPage("Invalid Topic ID");
+	if (!isset($_GET["id"]) || !ctype_digit($_GET["id"])) exitPage("Invalid Forum ID");
+	if (!isset($_GET["t_id"]) || !ctype_digit($_GET["t_id"])) exitPage("Invalid Topic ID");
 
 	//because session_start() is in header.php CONSIDER MOVING TO FUNC.INC.PHP or FUNC.CLASS.PHP
 	$sess_name = 'view_'.$_GET['id'].'_'.$_GET['t_id'];
@@ -39,15 +39,15 @@
     //if($tRec[0]['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$_GET['id']]) echo 'true'; else echo  'false';
 
 	if (!isset($_GET['page']) || $_GET["page"] == "") {
-		$_GET['page'] = ceil((substr_count($tRec[0]['p_ids'], ',') + 1) / $_CONFIG['posts_per_page']);
+		$vars['page'] = ceil((substr_count($tRec[0]['p_ids'], ',') + 1) / $_CONFIG['posts_per_page']);
 	}
 	$pRecs = $posts_tdb->getPosts("posts", (($_CONFIG["posts_per_page"] * $_GET["page"])-$_CONFIG["posts_per_page"]), $_CONFIG["posts_per_page"]);
 	if (empty($pRecs)) exitPage("Posts not found");
 	$num_pages = ceil(($tRec[0]["replies"] + 1) / $_CONFIG["posts_per_page"]);
-	$p = createPageNumbers($_GET["page"], $num_pages, $_SERVER['QUERY_STRING']);
-	echo "<div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p) . "</div>
+	$p = createPageNumbers($vars["page"], $num_pages, $_SERVER['QUERY_STRING']);
+	echo "<div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page']) . "</div>
 	";
-	if ($_GET['page'] == 1) $first_post = $pRecs[0]['id'];
+	if ($vars['page'] == 1) $first_post = $pRecs[0]['id'];
 	else $first_post = 0;
 	$x = +1;
 
@@ -178,8 +178,8 @@
 	}
 	echo "</div>";
 
-	$p = createPageNumbers($_GET["page"], $num_pages, $_SERVER['QUERY_STRING']);
-	echo "<div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,"bottom") . "</div>";
+	$p = createPageNumbers($vars['page'], $num_pages, $_SERVER['QUERY_STRING']);
+	echo "<div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,$vars['page'],"bottom") . "</div>";
 
 	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0))
 {

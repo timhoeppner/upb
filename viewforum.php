@@ -19,9 +19,10 @@
 	if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) exitPage("Invalid ID", true);
 	if ($_COOKIE["power_env"] < $fRec[0]["view"]) exitPage("You do not have enough Power to view this forum", true);
 	$vars["cTopics"] = $posts_tdb->getNumberOfRecords("topics");
-	if (!isset($_GET["page"])) $_GET["page"] = 1;
-	$vars["page"] = $_GET["page"];
-	$start = ($_GET["page"] * $_CONFIG["topics_per_page"] - $_CONFIG["topics_per_page"]) + 1;
+	if (!isset($_GET["page"]) or $_GET['page'] == "") $vars["page"] = 1;
+	else
+    $vars["page"] = $_GET["page"];
+	$start = ($vars["page"] * $_CONFIG["topics_per_page"] - $_CONFIG["topics_per_page"]) + 1;
 	$tRecs1 = $posts_tdb->query("topics", "sticky='1'", 1);
 	if (!empty($tRecs1)) $c_total_stickies = count($tRecs1);
 	else $c_total_stickies = 0;
@@ -33,7 +34,7 @@
 		}
 	}
 	//delete records off the beginning
-	if ($_GET['page'] != 1) {
+	if ($vars['page'] != 1) {
 		for($i = 0; $i < ($start - 1); $i++) {
 			unset($tRecs1[$i]);
 		}
@@ -45,9 +46,9 @@
 	if (!empty($tRecs1)) $c_cur_stickies = count($tRecs1);
 	else $c_cur_stickies = 0;
 	if ($c_cur_stickies != $_CONFIG['topics_per_page']) {
-		if ($_GET['page'] == 1) {
+		if ($vars['page'] == 1) {
 			$tRecs2 = $posts_tdb->query('topics', "sticky='0'", $start, $_CONFIG['topics_per_page'] - $c_cur_stickies);
-		} elseif($_GET['page'] > 1) {
+		} elseif($vars['page'] > 1) {
 			$tRecs2 = $posts_tdb->query('topics', "sticky='0'", $start - $c_total_stickies, $_CONFIG['topics_per_page'] - $c_cur_stickies);
 		}
 	}
@@ -60,7 +61,7 @@
 	elseif (($vars["cTopics"] % $_CONFIG["topics_per_page"]) == 0) $num_pages = ($vars["cTopics"] / $_CONFIG["topics_per_page"]);
 	else $num_pages = ($vars["cTopics"] / $_CONFIG["topics_per_page"]) + 1;
 	$num_pages = (int) $num_pages;
-	$p = createPageNumbers($_GET["page"], $num_pages, 'id='.$_GET['id']);
+	$p = createPageNumbers($vars["page"], $num_pages, 'id='.$_GET['id']);
 	require_once('./includes/header.php');
     if(!empty($_SESSION['newTopics'][$_GET['id']])) while(list($key, $val) = each($_SESSION['newTopics'][$_GET['id']])) {
         if($val == 0) unset($_SESSION['newTopics'][$_GET['id']][$key]);

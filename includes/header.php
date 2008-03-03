@@ -21,7 +21,9 @@
 			break;
 		}
 	}
-	if (!defined('DB_DIR')) die('The constant, DB_DIR has not been defined.  Go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.');
+	is_secure();
+  
+  if (!defined('DB_DIR')) die('The constant, DB_DIR has not been defined.  Go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.');
 	if (!is_array($_CONFIG)) die('UPB Arrays have not been initialized.  Go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.');
 	if ($_CONFIG['skin_dir'] == '') die('SKIN_DIR not set ("'.SKIN_DIR.'").  This may be an indication that your config data was not set.');
 	$banned_addresses = file(DB_DIR.'/banneduser.dat');
