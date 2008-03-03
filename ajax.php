@@ -63,7 +63,8 @@ switch ($ajax_type)
         }
     }
     
-    $msg = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($attach_msg.$_POST["newedit"])))), $_CONFIG));
+    
+    $msg = format_text(filterLanguage(UPBcoding(utf8_decode(stripslashes($attach_msg.$_POST["newedit"]))), $_CONFIG));
     $dbmsg = encode_text(stripslashes(utf8_decode($attach_msg.$_POST["newedit"])),ENT_NOQUOTES);
 
     $posts_tdb->edit("posts", $_POST["postid"], array("message" => $dbmsg, "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate()));
@@ -88,7 +89,7 @@ switch ($ajax_type)
             $msg = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n". $msg;
         }
     }
-    $msg = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($msg)))), $_CONFIG));
+    $msg = format_text(filterLanguage(UPBcoding(utf8_decode(stripslashes($msg))), $_CONFIG));
     
     $div = $_POST['forumid']."-".$_POST['threadid']."-".$_POST['postid'];
 

@@ -8,6 +8,7 @@
 	require_once('./includes/class/func.class.php');
 	require_once('./includes/class/posts.class.php');
 	$posts_tdb = new posts(DB_DIR."/", "posts.tdb");
+	$vars['page'] = $_GET['page'];
 	//check if the id exists
 	if (!(is_numeric($_GET["id"]) && $posts_tdb->isTable($_GET["id"]))) exitPage("Forum does not exist.", true);
 	if (FALSE === ($fRec = $tdb->get("forums", $_GET["id"]))) exitPage("Forum does not exist.", true);
@@ -41,11 +42,11 @@
 	if (!isset($_GET['page']) || $_GET["page"] == "") {
 		$vars['page'] = ceil((substr_count($tRec[0]['p_ids'], ',') + 1) / $_CONFIG['posts_per_page']);
 	}
-	$pRecs = $posts_tdb->getPosts("posts", (($_CONFIG["posts_per_page"] * $_GET["page"])-$_CONFIG["posts_per_page"]), $_CONFIG["posts_per_page"]);
+	$pRecs = $posts_tdb->getPosts("posts", (($_CONFIG["posts_per_page"] * $vars['page'])-$_CONFIG["posts_per_page"]), $_CONFIG["posts_per_page"]);
 	if (empty($pRecs)) exitPage("Posts not found");
 	$num_pages = ceil(($tRec[0]["replies"] + 1) / $_CONFIG["posts_per_page"]);
 	$p = createPageNumbers($vars["page"], $num_pages, $_SERVER['QUERY_STRING']);
-	echo "<div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page']) . "</div>
+  echo "<div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page']) . "</div>
 	";
 	if ($vars['page'] == 1) $first_post = $pRecs[0]['id'];
 	else $first_post = 0;
@@ -100,7 +101,8 @@
 		else $edit = "";
 		if ((($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) && $pRec['id'] != $first_post) $delete = "<div class='button_pro1'><a href='delete.php?action=delete&t=0&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."'>X</a></div>";
 		else $delete = "";
-		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $quote = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&quote=1&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."&page=".$_GET["page"]."'>\"Quote\"</a></div>";
+		
+    if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $quote = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&quote=1&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."&page=".$vars['page']."'>\"Quote\"</a></div>";
 		else $quote = "";
 
 		$uploadId = (int) $pRec["upload_id"];
@@ -121,7 +123,7 @@
     }
 
 
-		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=$page'>Add Reply</a></div>";
+		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$vars['page']."'>Add Reply</a></div>";
 		else $reply = "";
 		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
 		echo "
@@ -184,11 +186,17 @@
 	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0))
 {
   echo "<div id='quickreplyform' name='quickreplyform'>";
-  echo "<form name='quickreply' action='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."' method='POST' name='quickreply'>\n";
+  echo "<form name='quickreply' action='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$vars["page"]."' method='POST' name='quickreply'>\n";
   echoTableHeading("Quick Reply", $_CONFIG);
   echo "<table class='main_table' cellspacing='1'>";
   foreach ($_GET as $key => $value)
-    echo "<input type='hidden' id='$key' name='$key' value='$value'>\n";
+  {
+    if ($key != 'page')
+      echo "<input type='hidden' id='$key' name='$key' value='$value'>\n";
+    else
+      echo "<input type='hidden' id='page' name='page' value='".$vars['page']."'>\n";
+  }
+  
   echo "<input type='hidden' id='user_id' name='user_id' value='{$_COOKIE['id_env']}'>\n";
   echo "<input type='hidden' id='icon' name='icon' value='icon1.gif'>\n";
   echo "<input type='hidden' id='username' name='username' value='{$_COOKIE["user_env"]}'>\n";

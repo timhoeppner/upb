@@ -20,12 +20,13 @@
         $_GET[$key] = $value;
       }
     }
+  $vars['page'] = $_GET['page'];
   $where = "<a href='viewforum.php?id=".$_GET["id"]."'>".$fRec[0]["forum"]."</a> ".$_CONFIG["where_sep"];
 	if ($_GET["t_id"] == "") {
 		$where .= " New Topic";
 	} else {
 		$tRec = $posts_tdb->get("topics", $_GET["t_id"]);
-		$where .= " <a href='viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."'>".$tRec[0]["subject"]."</a> ".$_CONFIG["where_sep"]." Post Reply";
+		$where .= " <a href='viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$vars['page']."'>".$tRec[0]["subject"]."</a> ".$_CONFIG["where_sep"]." Post Reply";
 	}
 	if (!isset($a)) $a = 0;
 	require_once('./includes/header.php');
@@ -36,9 +37,9 @@
 	}
 	if ($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0) exitPage("<div class='alert'><div class='alert_text'>
 		<strong>Caution!</strong></div><div style='padding:4px;'>You do not have the rights to perform this action.</div></div>");
-	if (!($_GET["id"] != "" && is_numeric($_GET["id"]))) exitPage("<div class='alert'><div class='alert_text'>
+	if (!($_GET["id"] != "" && ctype_digit($_GET["id"]))) exitPage("<div class='alert'><div class='alert_text'>
 		<strong>Caution!</strong></div><div style='padding:4px;'>Invalid Forum ID/Information.</div></div>");
-	if (!($_GET["t_id"] != "" && is_numeric($_GET["t_id"]) || $_GET["t"] != 0)) exitPage("<div class='alert'><div class='alert_text'>
+	if (!($_GET["t_id"] != "" && ctype_digit($_GET["t_id"]) || $_GET["t"] != 0)) exitPage("<div class='alert'><div class='alert_text'>
 		<strong>Caution!</strong></div><div style='padding:4px;'>Invalid Topic ID/Information.</div></div>");
 	if ($_POST["a"] == "1") {
 		if (isset($_POST['subject'])) $_POST['subject'] = encode_text(stripslashes($_POST["subject"]));
@@ -101,7 +102,7 @@
 			if ($rec[0]["monitor"] != "") {
 				$local_dir = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']);
 				$e_sbj = "New Reply in \"".$rec[0]["subject"]."\"";
-				$e_msg = "You, or someone else using this e-mail address has requested to watch this topic: ".$rec[0]["subject"]." at ".$local_dir."/index.php\n\n".$_COOKIE["user_env"]." wrote:\n".$_POST["message"]."\n\n- - - - -\nSince this user has replied, you have been taken off the monitor list.  There may have been other users who have replied since then.  To read the rest of this topic, visit ".$local_dir."/viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."\nOr you can reply immediately if you forum cookies are valid by visiting ".$local_dir."/newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$_GET["page"];
+				$e_msg = "You, or someone else using this e-mail address has requested to watch this topic: ".$rec[0]["subject"]." at ".$local_dir."/index.php\n\n".$_COOKIE["user_env"]." wrote:\n".$_POST["message"]."\n\n- - - - -\nSince this user has replied, you have been taken off the monitor list.  There may have been other users who have replied since then.  To read the rest of this topic, visit ".$local_dir."/viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."\nOr you can reply immediately if you forum cookies are valid by visiting ".$local_dir."/newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$vars['page'];
 				$e_hed = "From: ".$_REGISTER["admin_email"]."\r\nReply-To: no-reply@".$_SERVER["server_name"]."\r\n";
 				if (strpos($rec[0]["monitor"], ",") !== FALSE) $monitor = explode($rec[0]["monitor"], ",");
 				else $monitor[0] = $rec[0]["monitor"];
@@ -110,8 +111,8 @@
 				}
 			}
 			$posts_tdb->edit("topics", $_GET["t_id"], array("replies" => ((int)$rec[0]["replies"] + 1), "last_post" => mkdate(), "user_name" => $_COOKIE["user_env"], "sticky" => $rec[0]["sticky"], "user_id" => $_COOKIE["id_env"], "monitor" => ""));
-			if ($_GET["page"] == "") $_GET["page"] = 1;
-			$redirect = "viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"];
+			if ($_GET["page"] == "") $vars['page'] = 1;
+			$redirect = "viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$vars['page'];
 			$pre = $rec[0]["p_ids"].",";
 		}
 		clearstatcache();
@@ -136,7 +137,7 @@
 		redirect($redirect.'#'.$p_id, 1);
 	} else {
 
-		if (!isset($_GET["page"])) $_GET["page"] = 1;
+		if (!isset($_GET["page"]) or $_GET['page'] == "") $vars['page'] = 1;
 
     if ($_GET["t"] == 1) {
 			$tpc = "
