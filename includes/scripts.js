@@ -700,17 +700,15 @@ var http_request = false;
       makePOSTRequest('./ajax.php', poststr,'reply');
    }
     
-   function getPost(userid,divname,method)
+   function getPost(userid,divname)
    {  
       div = divname;
       splitstring = divname.split("-");
-      
       var poststr = "forumid="+escape(Utf8.encode(splitstring[0]));
       poststr += "&postid="+escape(Utf8.encode(splitstring[2]));
       poststr += "&userid="+escape(Utf8.encode(userid));
       poststr += "&threadid="+escape(Utf8.encode(splitstring[1]));
       poststr += "&divname="+escape(Utf8.encode(divname));
-      poststr += "&method="+escape(Utf8.encode(method));
       poststr += "&type=getpost";
 
       makePOSTRequest('./ajax.php', poststr,'getpost');  

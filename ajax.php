@@ -45,18 +45,54 @@ switch ($ajax_type)
     if(!($tdb->is_logged_in())) exitPage("You are not logged in, therefore unable to perform this action.");
 
     if($pRec[0]["user_id"] != $_COOKIE["id_env"] && $_COOKIE["power_env"] < 2) exitPage("You are not authorized to edit this post.");
+    $msg = "";
+    $uploadId = (int) $pRec["upload_id"];
 
-    $msg = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($_POST["newedit"])))), $_CONFIG));
-    $dbmsg = encode_text(stripslashes(utf8_decode($_POST["newedit"])),ENT_NOQUOTES);
+    if($uploadId > 0) {
+        // We have an attachment, query the database for the info
+        $tdb->setFp("uploads", "uploads");
+
+        $q = $tdb->get("uploads", $uploadId, array("name", "downloads"));
+
+        // Make sure the attachment exists
+        if($q !== false) {
+            $attachName = $q[0]["name"];
+            $attachDownloads = $q[0]["downloads"];
+
+            $attach_msg = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n";
+        }
+    }
+    
+    $msg = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($attach_msg.$_POST["newedit"])))), $_CONFIG));
+    $dbmsg = encode_text(stripslashes(utf8_decode($attach_msg.$_POST["newedit"])),ENT_NOQUOTES);
 
     $posts_tdb->edit("posts", $_POST["postid"], array("message" => $dbmsg, "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate()));
 //clearstatcache();
     $posts_tdb->cleanup();
     $posts_tdb->setFp("posts", $_POST["forumid"]);
     $pRec2 = $posts_tdb->get("posts", $_POST["postid"]);
+    $uploadId = (int) $pRec2[0]["upload_id"];
 
+    if($uploadId > 0) {
+        
+        // We have an attachment, query the database for the info
+        $tdb->setFp("uploads", "uploads");
+
+        $q = $tdb->get("uploads", $uploadId, array("name", "downloads"));
+
+        // Make sure the attachment exists
+        if($q !== false) {
+            $attachName = $q[0]["name"];
+            $attachDownloads = $q[0]["downloads"];
+           
+            $msg = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n". $msg;
+        }
+    }
+    $msg = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($msg)))), $_CONFIG));
+    
     $div = $_POST['forumid']."-".$_POST['threadid']."-".$_POST['postid'];
 
+    
     if(!empty($pRec2[0]['edited_by']) && !empty($pRec2[0]['edited_by_id']) && !empty($pRec2[0]['edited_date']))
     $edited = "Last edited by: <a href='profile.php?action=get&id=".$pRec2[0]['edited_by_id']."' target='_new'>".$pRec2[0]['edited_by']."</a> on ".gmdate("M d, Y g:i:s a", user_date($pRec2[0]['edited_date']));
     echo "$msg<!--divider-->$edited";
@@ -205,6 +241,24 @@ switch ($ajax_type)
 		else $delete = "";
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $quote = "<div class='button_pro1'><a href='newpost.php?id=".$_POST["id"]."&t=0&quote=1&t_id=".$_POST["t_id"]."&p_id=".$pRec["id"]."&page=".$_GET["page"]."'>\"Quote\"</a></div>";
 		else $quote = "";
+		
+		$uploadId = (int) $pRec["upload_id"];
+
+    if($uploadId > 0) {
+        // We have an attachment, query the database for the info
+        $tdb->setFp("uploads", "uploads");
+
+        $q = $tdb->get("uploads", $uploadId, array("name", "downloads"));
+
+        // Make sure the attachment exists
+        if($q !== false) {
+            $attachName = $q[0]["name"];
+            $attachDownloads = $q[0]["downloads"];
+
+            $pRec["message"] = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n" . $pRec["message"];
+        }
+    }
+		
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_POST["id"]."&t=0&t_id=".$_POST["t_id"]."&page=$page'>Add Reply</a></div>";
 		else $reply = "";
 		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));

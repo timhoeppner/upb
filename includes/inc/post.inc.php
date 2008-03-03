@@ -105,7 +105,7 @@ function UPBcoding($text) {
     $msg = preg_replace("/\[offtopic\](.*?)\[\/offtopic\]/si", "<font color='blue' size='$font_s' face='$font_face'>Offtopic: \\1</font>", $msg);
     $msg = preg_replace("/\[small\](.*?)\[\/small\]/si", "<small>\\1</small>", $msg);
     $msg = preg_replace("/\[quote\](.*?)\[\/quote\]/si", "<blockquote><font size='1' face='tahoma'>Quote:</font><hr>\\1<br><hr></blockquote>", $msg);   
-    $msg = preg_replace_callback("/\[quote=(.*?);(.*?)\](.*?)\[\/quote\]/si", "quote_time_format", $msg);
+    $msg = preg_replace_callback("/\[quote=(.*?);(.*?);(.*?)\](.*?)\[\/quote\]/si", "quote_time_format", $msg);
     $msg = preg_replace("/\[quote=(.*?)\](.*?)\[\/quote\]/si", "<blockquote><font size='1' face='tahoma'>Quote: \\1</font><hr>\\2<br><hr></blockquote>", $msg);
     $msg = preg_replace("/\[code\](.*?)\[\/code\]/si", "<font color='red'>Code:<hr><pre>\\1<hr></pre></font>", $msg);
 
@@ -125,7 +125,12 @@ function UPBcoding($text) {
 
 function quote_time_format($matches)
 {
-  return "<blockquote><font size='1' face='tahoma'>Quote: ".$matches[1]." at ".gmdate("M d, Y g:i:s a", user_date($matches[2]))."</font><hr>Hello".$matches[3]."<br><hr></blockquote>";
+  $output = "<blockquote><font size='1' face='tahoma'>Quote: <a href='viewtopic.php?id=".$_GET['id']."&t_id=".$_GET['t_id'];
+  if (array_key_exists('page',$_GET))
+    $output .= "&page=".$_GET['page'];
+  $output .= "#".$matches[2]."'>".$matches[1]." at ".gmdate("M d, Y g:i:s a", user_date($matches[3]))."</a></font><hr>".$matches[4]."<br><hr></blockquote>";
+  
+  return $output;
 }
 
 function bbcodebuttons($txtarea='message',$type='post') {
