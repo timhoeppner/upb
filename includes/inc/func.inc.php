@@ -352,7 +352,7 @@ function is_secure()
   {
     if ((substr_count($key,'id') > 0) or $key == 'page')
     {
-      if (!ctype_digit($value))
+      if (!ctype_digit($value) && !empty($value))
         die('Possible XSS attack detected');
     }
   }

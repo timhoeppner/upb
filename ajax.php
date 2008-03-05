@@ -23,9 +23,9 @@ switch ($ajax_type)
       $output .= "<input type='hidden' id='threadid' name='threadid' value='".$_POST["threadid"]."'>";
       $output .= "<input type='hidden' id='postid' name='postid' value='".$_POST["postid"]."'>";
       $output .= "<textarea name='newedit' id='newedit' cols='60' rows='18'>".$pRec[0]['message']."</textarea><br>";
-      $output .= "\n<input type='button' onclick='javascript:getEdit(document.getElementById(\"quickedit\"),\"".$_POST['divname']."\");'\' name='qedit' value='Save Edit'>";
-      $output .= "\n<input type='submit' name='submit' value='Go Advanced'>";
-      $output .= "\n<input type='button' name='cancel_edit' onClick=\"javascript:getPost('".$_POST["userid"]."','".$_POST["forumid"]."-".$_POST["threadid"]."-".$_POST["postid"]."','cancel');\" value='Cancel Edit'>";
+      $output .= "\n<input type='button' onclick='javascript:getEdit(document.getElementById(\"quickedit\"),\"".$_POST['divname']."\");'\' name='qedit' value='Save'>";
+      $output .= "\n<input type='button' name='cancel_edit' onClick=\"javascript:getPost('".$_POST["userid"]."','".$_POST["forumid"]."-".$_POST["threadid"]."-".$_POST["postid"]."','cancel');\" value='Cancel'>";
+      $output .= "\n<input type='submit' name='submit' value='Advanced'>";
       $output .= "</form>";
     }
     else
@@ -62,8 +62,8 @@ switch ($ajax_type)
             $attach_msg = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n";
         }
     }
-    
-    
+
+
     $msg = format_text(filterLanguage(UPBcoding(utf8_decode(stripslashes($attach_msg.$_POST["newedit"]))), $_CONFIG));
     $dbmsg = encode_text(stripslashes(utf8_decode($attach_msg.$_POST["newedit"])),ENT_NOQUOTES);
 
@@ -75,7 +75,7 @@ switch ($ajax_type)
     $uploadId = (int) $pRec2[0]["upload_id"];
 
     if($uploadId > 0) {
-        
+
         // We have an attachment, query the database for the info
         $tdb->setFp("uploads", "uploads");
 
@@ -85,15 +85,15 @@ switch ($ajax_type)
         if($q !== false) {
             $attachName = $q[0]["name"];
             $attachDownloads = $q[0]["downloads"];
-           
+
             $msg = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n". $msg;
         }
     }
     $msg = format_text(filterLanguage(UPBcoding(utf8_decode(stripslashes($msg))), $_CONFIG));
-    
+
     $div = $_POST['forumid']."-".$_POST['threadid']."-".$_POST['postid'];
 
-    
+
     if(!empty($pRec2[0]['edited_by']) && !empty($pRec2[0]['edited_by_id']) && !empty($pRec2[0]['edited_date']))
     $edited = "Last edited by: <a href='profile.php?action=get&id=".$pRec2[0]['edited_by_id']."' target='_new'>".$pRec2[0]['edited_by']."</a> on ".gmdate("M d, Y g:i:s a", user_date($pRec2[0]['edited_date']));
     echo "$msg<!--divider-->$edited";
@@ -242,7 +242,7 @@ switch ($ajax_type)
 		else $delete = "";
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $quote = "<div class='button_pro1'><a href='newpost.php?id=".$_POST["id"]."&t=0&quote=1&t_id=".$_POST["t_id"]."&p_id=".$pRec["id"]."&page=".$_GET["page"]."'>\"Quote\"</a></div>";
 		else $quote = "";
-		
+
 		$uploadId = (int) $pRec["upload_id"];
 
     if($uploadId > 0) {
@@ -259,7 +259,7 @@ switch ($ajax_type)
             $pRec["message"] = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n" . $pRec["message"];
         }
     }
-		
+
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_POST["id"]."&t=0&t_id=".$_POST["t_id"]."&page=$page'>Add Reply</a></div>";
 		else $reply = "";
 		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));

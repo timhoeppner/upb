@@ -133,6 +133,7 @@
 			$user = $tdb->get("users", $_COOKIE["id_env"]);
 			$tdb->edit("users", $_COOKIE["id_env"], array("posts" => ((int)$user[0]["posts"] + 1)));
 		}
+		$_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] = 0;
 		$_SESSION['view_'.$_GET['id'].'_'.$_GET['t_id']] = time();
 		redirect($redirect.'#'.$p_id, 1);
 	} else {
