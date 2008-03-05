@@ -30,17 +30,6 @@ function format_text($text) {
     $text = str_replace("\n", "<br>", $text);
     $text = str_replace("  ", "&nbsp; ", $text);
     $text = str_replace("&amp;#", "&#", $text);
-/*  NOT NEEDED BECAUSE encode_test() REPLACES '<', '>' WITH HTML TAGS
-    //remove potentially harmful code from post
-    while(preg_match("#<script(.*)>(.*)</script(.*)>#is", $text))
-		{
-		  $message = preg_replace("#<script(.*)>(.*)</script(.*)>#is", "&lt;script$1&gt;$2&lt;/script$3&gt;", $message);
-		}
-		$message = preg_replace("#\s*<base[^>]*>\s*#is", "", $text);
-		$message = preg_replace("#\s*<meta[^>]*>\s*#is", "", $text);
-
-		$message = str_replace(array('\n','  ','<?php', '<!--', '-->', '?>', "<br />\n", "<br>\n"), array('\n','&nbsp;','&lt;?php', '&lt;!--', '--&gt;', '?&gt;', "\n", "\n"), $text);
-     */
     return $text;
 }
 /* cOULD POTENTIALLY BREAK SETTING COOKIES AND SESSIONS */?><?php //<? added to allow for syntax highlighting in editors

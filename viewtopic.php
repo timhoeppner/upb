@@ -192,11 +192,9 @@
   foreach ($_GET as $key => $value)
   {
     if ($key != 'page')
-      echo "<input type='hidden' id='$key' name='$key' value='$value'>\n";
-    else
-      echo "<input type='hidden' id='page' name='page' value='".$vars['page']."'>\n";
+      echo "<input type='hidden' id='$key' name='$key' value='$value'>\n";     
   }
-  
+  echo "<input type='hidden' id='page' name='page' value='".$vars['page']."'>\n";
   echo "<input type='hidden' id='user_id' name='user_id' value='{$_COOKIE['id_env']}'>\n";
   echo "<input type='hidden' id='icon' name='icon' value='icon1.gif'>\n";
   echo "<input type='hidden' id='username' name='username' value='{$_COOKIE["user_env"]}'>\n";

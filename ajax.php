@@ -235,7 +235,7 @@ switch ($ajax_type)
 			}
 		}
 		if (($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >=2)
-      $edit = "<div class='button_pro1'><a href=\"javascript:getPost('{$pRec["user_id"]}','{$_POST["id"]}-{$_POST["t_id"]}-{$pRec["id"]}');\">Edit</a></div>";
+      $edit = "<div class='button_pro1'><a href=\"javascript:getPost('{$pRec["user_id"]}','{$_POST["id"]}-{$_POST["t_id"]}-{$pRec["id"]}','edit');\">Edit</a></div>";
      //$edit = "<div class='button_pro1'><a href=\"editpost.php?id={$_POST["id"]}&t_id={$_POST["t_id"]}&p_id={$pRec["id"]}\">Edit</a></div>";
 		else $edit = "";
 		if ((($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) && $pRec['id'] != $first_post) $delete = "<div class='button_pro1'><a href='delete.php?action=delete&t=0&id=".$_POST["id"]."&t_id=".$_POST["t_id"]."&p_id=".$pRec["id"]."'>X</a></div>";
