@@ -170,28 +170,29 @@ function bbcodebuttons($txtarea='message',$type='post') {
     $bb_buttons .= "<option value='24'>24px</option>";
     $bb_buttons .= "</select> ";
     $bb_buttons .= "<p>";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[b]','[/b]','$txtarea')\"><img src='./images/bbcode/bold.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[i]','[/i]','$txtarea')\"><img src='./images/bbcode/italic.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[u]','[/u]','$txtarea')\"><img src='./images/bbcode/underline.gif' border='0'></a>";
-    $bb_buttons .= "<img src='./images/bbcode/separator.gif' border='0'>";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[left]','[/left]','$txtarea')\"><img src='./images/bbcode/left.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[center]','[/center]','$txtarea')\"><img src='./images/bbcode/center.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[right]','[/right]','$txtarea')\"><img src='./images/bbcode/right.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[justify]','[/justify]','$txtarea')\"><img src='./images/bbcode/justify.gif' border='0'></a>";
-    $bb_buttons .= "<img src='./images/bbcode/separator.gif' border='0'>";
-    $bb_buttons .= "<a href=\"javascript:add_link('img','$txtarea')\"><img src='./images/bbcode/img.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:add_link('url','$txtarea')\"><img src='./images/bbcode/url.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:add_link('email','$txtarea')\"><img src='./images/bbcode/email.gif' border='0'></a> ";
-    $bb_buttons .= "<img src='./images/bbcode/separator.gif' border='0'>";
-    $bb_buttons .= "<a href=\"javascript:add_list('ul','$txtarea')\"><img src='./images/bbcode/ul.gif' border='0'></a> ";
-    $bb_buttons .= "<a href=\"javascript:add_list('ol','$txtarea')\"><img src='./images/bbcode/ol.gif' border='0'></a> ";
-    $bb_buttons .= "<img src='./images/bbcode/separator.gif' border='0'>";
-    $bb_buttons .= "<a href=\"javascript:createBBtag('[move]','[/move]','$txtarea')\"><img src='./images/bbcode/move.gif' border='0'></a> ";
+    $bb_buttons .= "<a href=\"javascript:createBBtag('[b]','[/b]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/bold.gif' border='0'></a> ";
+    $bb_buttons .= "<a href=\"javascript:createBBtag('[i]','[/i]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/italic.gif' border='0'></a> ";
+    $bb_buttons .= "<a href=\"javascript:createBBtag('[u]','[/u]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/underline.gif' border='0'></a>";
+    $bb_buttons .= "<img src='".SKIN_DIR."/images/bbcode/separator.gif' border='0'>";
+    $bb_buttons .= "<a href=\"javascript:createBBtag('[left]','[/left]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/left.gif' border='0'></a> ";
+    $bb_buttons .= "<a href=\"javascript:createBBtag('[center]','[/center]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/center.gif' border='0'></a> ";
+    $bb_buttons .= "<a href=\"javascript:createBBtag('[right]','[/right]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/right.gif' border='0'></a> ";
+    $bb_buttons .= "<a href=\"javascript:createBBtag('[justify]','[/justify]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/justify.gif' border='0'></a>";
+    $bb_buttons .= "<img src='".SKIN_DIR."/images/bbcode/separator.gif' border='0'>";
+    $bb_buttons .= "<a href=\"javascript:add_link('img','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/img.gif' border='0'></a> ";
+    $bb_buttons .= "<a href=\"javascript:add_link('url','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/url.gif' border='0'></a> ";
+    $bb_buttons .= "<a href=\"javascript:add_link('email','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/email.gif' border='0'></a>";
+    $bb_buttons .= "<img src='".SKIN_DIR."/images/bbcode/separator.gif' border='0'>";
+    $bb_buttons .= "<a href=\"javascript:add_list('ul','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/ul.gif' border='0'></a> ";
+    $bb_buttons .= "<a href=\"javascript:add_list('ol','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/ol.gif' border='0'></a>";
+    $bb_buttons .= "<img src='".SKIN_DIR."/images/bbcode/separator.gif' border='0'>";
+    $bb_buttons .= "<a href=\"javascript:createBBtag('[move]','[/move]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/move.gif' border='0'></a> ";
     if ($type != 'sig')
     {
-      $bb_buttons .= "<a href=\"javascript:createBBtag('[quote]','[/quote]','$txtarea')\"><img src='./images/bbcode/quote.gif' border='0'></a> ";
-      $bb_buttons .= "<a href=\"javascript:createBBtag('[offtopic]','[/offtopic]','$txtarea')\"><img src='./images/bbcode/offtopic.gif' border='0'></a> ";
+      $bb_buttons .= "<a href=\"javascript:createBBtag('[quote]','[/quote]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/quote.gif' border='0'></a> ";
+      $bb_buttons .= "<a href=\"javascript:createBBtag('[offtopic]','[/offtopic]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/offtopic.gif' border='0'></a> ";
     }
+    //$bb_buttons .= "<a href=\"javascript:removeBBcode('$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/removeformat.gif' border='0'></a>";
   return $bb_buttons."<br>";
 }
 

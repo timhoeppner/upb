@@ -240,7 +240,7 @@ switch ($ajax_type)
 		else $edit = "";
 		if ((($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) && $pRec['id'] != $first_post) $delete = "<div class='button_pro1'><a href='delete.php?action=delete&t=0&id=".$_POST["id"]."&t_id=".$_POST["t_id"]."&p_id=".$pRec["id"]."'>X</a></div>";
 		else $delete = "";
-		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $quote = "<div class='button_pro1'><a href='newpost.php?id=".$_POST["id"]."&t=0&quote=1&t_id=".$_POST["t_id"]."&p_id=".$pRec["id"]."&page=".$_GET["page"]."'>\"Quote\"</a></div>";
+		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $quote = "<div class='button_pro1'><a href=\"javascript:addQuote('".$pRec["user_name"]."-".$pRec["id"]."-".$pRec['date']."','".$pRec["message"]."')\">\"Quote\"</a></div>";
 		else $quote = "";
 
 		$uploadId = (int) $pRec["upload_id"];
@@ -341,7 +341,7 @@ switch ($ajax_type)
 			</tr>
 		<tr><td class='area_1' style='padding:8px;' valign='top'><strong>Message:</strong></td>
     <td class='area_2'>\n
-    <textarea id=\"newentry\" name=\"newentry\" cols=\"60\" rows=\"18\"></textarea>\n
+    <textarea id=\"newentry\" value=\"\" name=\"newentry\" cols=\"60\" rows=\"18\"></textarea>\n
     </td></tr>\n";
     $qrform .= "<tr><td class='footer_3a' style='text-align:center;' colspan='2'>\n
     <input type='button' name='quickreply' value='Quick Reply' onclick=\"javascript:getReply(document.getElementById('quickreply'))\">\n
