@@ -767,18 +767,14 @@ document.quickreply.newentry.value += output;
 //removes all bbcode from post boxes
 
 //function below is not complete, relevant bbcode button has been commented out until completion.
-function removeBBcode(areaId)
-{
-
-//alert(message);
-var txtArea = document.getElementById( areaId );
-//alert(document.getElementById( areaId ).value)
-pattern = new RegExp ("/\[[^\[]*?\]/g");
-//document.getElementById( areaId ).value = document.getElementById( areaId ).value.replace(pattern,"");
-if (document.getElementById( areaId ).value.match(pattern))
-alert("Success");
-else
-alert("Something went wrong with the regex");
+function removeBBcode(areaId) {
+   var text1 = new String("");
+   text1 = document.getElementById( areaId ).value;
+   var pattern = new RegExp(/\[[^\]]*\]/g);
+   var text2 = new String(document.getElementById( areaId ).value.replace(pattern,""));
+   alert('Before: '+text1);
+   alert('After: '+text2);
+   document.getElementById( areaId ).value = text2;
 }
 
 //END OF MISCELLANEOUS SCRIPTS

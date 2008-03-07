@@ -144,30 +144,31 @@ function parse_quote($matches)
 
 function bbcodebuttons($txtarea='message',$type='post') {
     $bb_buttons = "<p>";
-    $bb_buttons .= "<select onChange=\"bb_dropdown(this.form.colors,'colors','$txtarea')\" name='colors'>";
+    $bb_buttons .= "<select class='bbselect' onChange=\"bb_dropdown(this.form.colors,'colors','$txtarea')\" name='colors'>";
     $bb_buttons .= "<option value='' selected>Choose color</option>";
-    $bb_buttons .= "<option value='#FFFFFF'>White</option>";
-    $bb_buttons .= "<option value='#FFFF00'>Yellow</option>";
-    $bb_buttons .= "<option value='#008000'>Green</option>";
-    $bb_buttons .= "<option value='#800080'>Purple</option>";
-    $bb_buttons .= "<option value='#FF0000'>Red</option>";
-    $bb_buttons .= "<option value='#0000FF'>Blue</option>";
+    $bb_buttons .= "<option style='color: #ffffff;' value='#FFFFFF'>White</option>";
+    $bb_buttons .= "<option style='color: #ffff00;' value='#FFFF00'>Yellow</option>";
+    $bb_buttons .= "<option style='color: #008000;' value='#008000'>Green</option>";
+    $bb_buttons .= "<option style='color: #800080;' value='#800080'>Purple</option>";
+    $bb_buttons .= "<option style='color: #ff0000;' value='#FF0000'>Red</option>";
+    $bb_buttons .= "<option style='color: #0000ff;' value='#0000FF'>Blue</option>";
     $bb_buttons .= "</select> ";
-    $bb_buttons .= "<select onChange=\"bb_dropdown(this.form.typeface,'typeface','$txtarea')\" name='typeface'>";
+    $bb_buttons .= "<select class='bbselect' onChange=\"bb_dropdown(this.form.typeface,'typeface','$txtarea')\" name='typeface'>";
     $bb_buttons .= "<option value='' selected>Choose font</option>";
-    $bb_buttons .= "<option value='arial'>Arial</option>";
-    $bb_buttons .= "<option value='Times New Roman'>Times New Roman</option>";
-    $bb_buttons .= "<option value='Helvetica'>Helvetica</option>";
-    $bb_buttons .= "<option value='Garamond'>Garamond</option>";
-    $bb_buttons .= "<option value='Courier'>Courier</option>";
-    $bb_buttons .= "<option value='Verdana'>Verdana</option>";
+    $bb_buttons .= "<option style='font-family : Arial;' value='arial'>Arial</option>";
+    $bb_buttons .= "<option style='font-family : Times New Roman;' value='Times New Roman'>Times New Roman</option>";
+    $bb_buttons .= "<option style='font-family : Helvetica;' value='Helvetica'>Helvetica</option>";
+    $bb_buttons .= "<option style='font-family : Garamond;' value='Garamond'>Garamond</option>";
+    $bb_buttons .= "<option style='font-family : Courier;' value='Courier'>Courier</option>";
+    $bb_buttons .= "<option style='font-family : Verdana;' value='Verdana'>Verdana</option>";
+    $bb_buttons .= "<option style='font-family : Comic Sans MS;' value='Comic Sans MS'>Comic Sans MS</option>";
     $bb_buttons .= "</select> ";
-    $bb_buttons .= "<select onChange=\"bb_dropdown(this.form.size,'size','$txtarea')\" name='size'>";
+    $bb_buttons .= "<select class='bbselect' onChange=\"bb_dropdown(this.form.size,'size','$txtarea')\" name='size'>";
     $bb_buttons .= "<option value='' selected>Choose font size</option>";
-    $bb_buttons .= "<option value='6'>6px</option>";
-    $bb_buttons .= "<option value='12'>12px</option>";
-    $bb_buttons .= "<option value='18'>18px</option>";
-    $bb_buttons .= "<option value='24'>24px</option>";
+    $bb_buttons .= "<option style='font-size : 8px;' value='8'>8px</option>";
+    $bb_buttons .= "<option style='font-size : 12px;' value='12'>12px</option>";
+    $bb_buttons .= "<option style='font-size : 18px;' value='18'>18px</option>";
+    $bb_buttons .= "<option style='font-size : 24px;' value='24'>24px</option>";
     $bb_buttons .= "</select> ";
     $bb_buttons .= "<p>";
     $bb_buttons .= "<a href=\"javascript:createBBtag('[b]','[/b]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/bold.gif' border='0'></a> ";
@@ -192,7 +193,7 @@ function bbcodebuttons($txtarea='message',$type='post') {
       $bb_buttons .= "<a href=\"javascript:createBBtag('[quote]','[/quote]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/quote.gif' border='0'></a> ";
       $bb_buttons .= "<a href=\"javascript:createBBtag('[offtopic]','[/offtopic]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/offtopic.gif' border='0'></a> ";
     }
-    //$bb_buttons .= "<a href=\"javascript:removeBBcode('$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/removeformat.gif' border='0'></a>";
+    $bb_buttons .= "<a href=\"javascript:removeBBcode('$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/removeformat.gif' border='0'></a>";
   return $bb_buttons."<br>";
 }
 
