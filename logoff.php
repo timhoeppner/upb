@@ -51,8 +51,6 @@
 	</div>
 	<br />
 	<br />
-	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>Log Off</div>
 					<div class='alert_confirm'>
 					<div class='alert_confirm_text'>
 					<strong>Redirecting:</strong></div><div style='padding:4px;'>Logging off user:
@@ -60,9 +58,6 @@
 					".$u_name."
 					</div>
 					</div>
-		<div class='footer'><img src='skins/default/images/spacer.gif' alt='' title='' /></div>
-	</div>
-	<br />
 	<div class='copy'>Powered by myUPB&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href='http://www.myupb.com/'>PHP Outburst</a>
 		&nbsp;&nbsp;&copy;2002 - 2008</div>
 </div>

@@ -186,7 +186,7 @@
     $tdb->add("ext_config", array("name" => "homepage", "type" => "config", "title" => "Homepage URL", "description" => "can be relative or a url", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "3"));
 		$tdb->add("config", array("name" => "homepage", "type" => "config"));
 
-    $tdb->add("ext_config", array("name" => "admin_catagory_sorting", "type" => "config", "title" => "Category Sorting", "description" => "Sort the categories in the order you want them to appear on the main page", "form_object" => "list", "data_type" => "string", "minicat" => "1", "sort" => "17"));
+    $tdb->add("ext_config", array("name" => "admin_catagory_sorting", "type" => "config", "form_object" => "hidden", "data_type" => "string"));
 		$tdb->add("config", array("name" => "admin_catagory_sorting", "type" => "config"));
 
     $tdb->add("ext_config", array("name" => "servicemessage", "type" => "config", "title" => "Service Messages", "description" => "Service Messages appear above the forum, if nothing input, Announcements will not be displayed. Html is allowed.", "form_object" => "textarea", "data_type" => "string", "minicat" => "1", "sort" => "18"));
@@ -207,18 +207,16 @@
 		$tdb->add("config", array("name" => "sticky_after", "value" => "0", "type" => "config"));
 		$tdb->add("ext_config", array("name" => "pm_max_outbox_msg", "value" => "50", "type" => "config", "title" => "Max Number of Private Msgs in a Users OutBox", "description" => "Can be set to 0 to infinity", "form_object" => "text", "data_object" => "number", "minicat" => "1", "sort" => "19"));
 		$tdb->add("config", array("name" => "pm_max_outbox_msg", "value" => "50", "type" => "config"));
-		$tdb->add("ext_config", array("name" => "pm_version", "value" => "1.1c", "type" => "config", "form_object" => "hidden", "data_type" => "string"));
-		$tdb->add("config", array("name" => "pm_version", "value" => "1.1c", "type" => "config"));
 		$tdb->add("ext_config", array("name" => "avatar_width", "value" => "60", "type" => "config", "title" => "Avatars' Width", "description" => "The width (with respect to the height) of user avatars you want to be displayed at in pixels (Cannot be higher than 999)", "form_object" => "text", "data_object" => "number", "minicat" => "1", "sort" => "8"));
 		$tdb->add("config", array("name" => "avatar_width", "value" => "60", "type" => "config"));
 		$tdb->add("ext_config", array("name" => "avatar_height", "value" => "60", "type" => "config", "title" => "Avatars' Height", "description" => "The height (with respect to the width) of user avatars you want to be displayed at in pixels (Cannot be higher than 999)", "form_object" => "text", "data_object" => "number", "minicat" => "1", "sort" => "9"));
 		$tdb->add("config", array("name" => "avatar_height", "value" => "60", "type" => "config"));
 
-    $tdb->add("ext_config", array("name" => "security_code", "value" => "1", "type" => "config", "title" => "Enable Security Code", "description" => "Enable the security code image for new user registration<br><strong>Enabling this is recommended</strong>", "form_object" => "checkbox", "minicat" => "1", "sort" => "16"));
-		$tdb->add("config", array("name" => "security_code", "value" => "1", "type" => "config"));
+        $tdb->add("ext_config", array("name" => "security_code", "value" => "1", "type" => "regist", "title" => "Enable Security Code", "description" => "Enable the security code image for new user registration<br><strong>Enabling this is recommended</strong>", "form_object" => "checkbox", "minicat" => "1", "sort" => "16"));
+		$tdb->add("config", array("name" => "security_code", "value" => "1", "type" => "regist"));
 
-		$tdb->add("ext_config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config", "title" => "Banned Words", "description" => "Enter any words you want to censor separated by commas", "form_object" => "text", "minicat" => "1", "sort" => "12"));
-    $tdb->add("config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config"));
+		$tdb->add("ext_config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config", "form_object" => "hidden", "data_type" => "string"));
+        $tdb->add("config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config"));
 
 		//$_REGISTER
 		$tdb->add("ext_config", array("name" => "register_sbj", "value" => '', "type" => "regist", "title" => "Register Email Subject", "description" => "this is the subject for confirmation of registration", "form_object" => "text", "data_type" => "string", "minicat" => "7", "sort" => "2"));
@@ -227,26 +225,9 @@
 		$tdb->add("config", array("name" => "register_msg", "value" => '', "type" => "regist"));
 		$tdb->add("ext_config", array("name" => "admin_email", "value" => '', "type" => "regist", "title" => "Admin E-mail", "description" => "this is the return address for confirmation of registration", "form_object" => "text", "data_type" => "string", "minicat" => "7", "sort" => "1"));
 		$tdb->add("config", array("name" => "admin_email", "value" => '', "type" => "regist"));
-		$tdb->add("ext_config", array("name" => "avatar1", "value" => "dome.jpg", "type" => "regist", "title" => "Avatar 1", "description" => "The first avatar on the selection menu for new users", "form_object" => "text", "data_type" => "string", "minicat" => "8", "sort" => "2"));
-		$tdb->add("config", array("name" => "avatar1", "value" => "dome.jpg", "type" => "regist"));
-		$tdb->add("ext_config", array("name" => "avatar2", "value" => "chic.jpg", "type" => "regist", "title" => "Avatar 2", "description" => "The second avatar on the selection menu for new users", "form_object" => "text", "data_type" => "string", "minicat" => "8", "sort" => "3"));
-		$tdb->add("config", array("name" => "avatar2", "value" => "chic.jpg", "type" => "regist"));
-		$tdb->add("ext_config", array("name" => "avatar3", "value" => "woman.jpg", "type" => "regist", "title" => "Avatar 3", "description" => "The third avatar on the selection menu for new users", "form_object" => "text", "data_type" => "string", "minicat" => "8", "sort" => "4"));
-		$tdb->add("config", array("name" => "avatar3", "value" => "woman.jpg", "type" => "regist"));
-		$tdb->add("ext_config", array("name" => "avatar4", "value" => "wizard.jpg", "type" => "regist", "title" => "Avatar 4", "description" => "The fourth avatar on the selection menu for new users", "form_object" => "text", "data_type" => "string", "minicat" => "8", "sort" => "5"));
-		$tdb->add("config", array("name" => "avatar4", "value" => "wizard.jpg", "type" => "regist"));
-		$tdb->add("ext_config", array("name" => "avatar5", "value" => "keeper.jpg", "type" => "regist", "title" => "Avatar 5", "description" => "The fifth avatar on the selection menu for new users", "form_object" => "text", "data_type" => "string", "minicat" => "8", "sort" => "6"));
-		$tdb->add("config", array("name" => "avatar5", "value" => "keeper.jpg", "type" => "regist"));
-		$tdb->add("ext_config", array("name" => "avatar6", "value" => "knight.jpg", "type" => "regist", "title" => "Avatar 6", "description" => "The sixth avatar on the selection menu for new users", "form_object" => "text", "data_type" => "string", "minicat" => "8", "sort" => "7"));
-		$tdb->add("config", array("name" => "avatar6", "value" => "knight.jpg", "type" => "regist"));
-		$tdb->add("ext_config", array("name" => "avatar7", "value" => "snake.jpg", "type" => "regist", "title" => "Avatar 7", "description" => "The seventh avatar on the selection menu for new users", "form_object" => "text", "data_type" => "string", "minicat" => "8", "sort" => "8"));
-		$tdb->add("config", array("name" => "avatar7", "value" => "snake.jpg", "type" => "regist"));
-		$tdb->add("ext_config", array("name" => "avatar8", "value" => "spice.jpg", "type" => "regist", "title" => "Avatar 8", "description" => "The eighth avatar on the selection menu for new users", "form_object" => "text", "data_type" => "string", "minicat" => "8", "sort" => "9"));
-		$tdb->add("config", array("name" => "avatar8", "value" => "spice.jpg", "type" => "regist"));
-		$tdb->add("ext_config", array("name" => "avatar9", "value" => "vampire.jpg", "type" => "regist", "title" => "Avatar 9", "description" => "The nineth avatar on the selection menu for new users", "form_object" => "text", "data_type" => "string", "minicat" => "8", "sort" => "10"));
-		$tdb->add("config", array("name" => "avatar9", "value" => "vampire.jpg", "type" => "regist"));
-		$tdb->add("ext_config", array("name" => "newuseravatars", "value" => "true", "type" => "regist", "title" => "Avatars for new users", "description" => "Would you like to define the avatars that members under 50 posts can use? (After 50 posts they may use whatever they like)", "form_object" => "checkbox", "minicat" => "8", "sort" => "1"));
-		$tdb->add("config", array("name" => "newuseravatars", "value" => "true", "type" => "regist"));
+
+		$tdb->add("ext_config", array("name" => "newuseravatars", "value" => "50", "type" => "regist", "title" => "Custom Avatars", "description" => "Allow users to choose their own avatars instead of the list in images/avatars directory after they have at least the number of posts indicated in this field", "form_object" => "text", "minicat" => "8", "sort" => "1"));
+		$tdb->add("config", array("name" => "newuseravatars", "value" => "50", "type" => "regist"));
 
     //$_STATUS
 		$tdb->add("ext_config", array("name" => "member_status1", "value" => "n00b", "type" => "status", "title" => "Member post status 1", "description" => "According to post count", "form_object" => "text", "data_type" => "string", "minicat" => "2", "sort" => "1"));

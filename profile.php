@@ -244,6 +244,7 @@ if (isset($_POST["u_edit"])) {
 				<td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'>";
 		if (@$rec[0]["avatar"] != "") echo "<img src=\"".$rec[0]["avatar"]."\" border='0' width='".$rec[0]['avatar_width']."' height='".$rec[0]['avatar_height']."'><br />";
 		else echo "<img src='images/avatars/noavatar.gif' alt='' title='' />";
+		//Add coding use$_REGIST[newuseravatar] OR check if user level > 1
 		echo "</td>
 				<td class='area_2'>
 					<table cellspacing='0px' style='width:100%;'>
@@ -334,7 +335,7 @@ if (isset($_POST["u_edit"])) {
 } elseif($_GET['action'] == 'bookmarks') {
     require_once('./includes/header.php');
     $topics = array();
-    while(list($forum, $arr) = each($_SESSION['newTopics'])) {
+    if(isset($_SESSION['newTopics']) && is_array($_SESSION['newTopics'])) while(list($forum, $arr) = each($_SESSION['newTopics'])) {
         if($forum == 'lastVisitForums') continue;
         while(list($topic, $val) = each($arr)) {
             if($val == 2) $topics[] = substr($forum, 1).','.substr($topic, 1);

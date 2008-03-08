@@ -106,16 +106,31 @@ echo "Last visit information inserted<p>";
 echo "Super-user created<p>";
 }
 
+$del_list = array('pm_version', 'avatar1', 'avatar2', 'avatar3', 'avatar4', 'avatar5', 'avatar6', 'avatar7', 'avatar8', 'avatar9');
+foreach($del_list as $string) {
+    $query = $config_tdb->query('config', "name='$string'", 1, 1);
+    if(!empty($query[0])) {
+        $config_tdb->delete('config', $query[0]['id']);
+        $config_tdb->delete('ext_config', $query[0]['id']);
+    }
+}
+//Make Forum/Users Settings Area, Make another sub category for users for "other" to put security_code in.
+$config_tdb->add("ext_config", array("name" => "security_code", "value" => "1", "type" => "regist", "title" => "Enable Security Code", "description" => "Enable the security code image for new user registration<br><strong>Enabling this is recommended</strong>", "form_object" => "checkbox", "minicat" => "7", "sort" => "4"));
+$config_tdb->add("config", array("name" => "security_code", "value" => "1", "type" => "regist"));
+$config_tdb->add("ext_config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config", "form_object" => "hidden", "data_type" => "string"));
+$config_tdb->add("config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config"));
 
-
-
-//$tdb->add("ext_config", array("name" => "security_code", "value" => "1", "type" => "config", "title" => "Enable Security Code", "description" => "Enable/Disable the security code image for new user registration<br>Enabling this is recommended", "form_object" => "checkbox", "minicat" => "1", "sort" => "16"));
-//$tdb->add("config", array("name" => "security_code", "value" => "1", "type" => "config"));
-//$tdb->add("ext_config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config", "title" => "Banned Words", "description" => "Enter any words you want to censor separated by commas", "form_object" => "text", "minicat" => "1", "sort" => "12"));
-//$tdb->add("config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config"));
-
-/*$tdb->edit("config",1,array('value'=>'2.1.1b'));
-$tdb->edit("ext_config",1,array('value'=>'2.1.1b'));
+/*  Correct way to edit values in config */
+$config = array();
+$config[] = array('name' => 'ver', 'value' => '2.1.1b');
+$config[] = array('name' => 'ver', 'value' => '2.1.1b');
+$config[] = array('name' => 'skin_dir', 'sort' => '11', 'form_object'=>'drop', 'title'=>'Skin Selection', 'description'=>'Choose a skin');
+$config[] = array('name' => 'pm_max_outbox_msg', 'sort' => '19');
+$config[] = array('name' => 'security_code', 'sort' => '17');
+$config[] = array('name' => 'fileupload_location', 'form_object' => 'text');
+$config[] = array("name" => "admin_catagory_sorting", "form_object" => "hidden", "data_type" => "string")
+$config_tdb->editVars('config', array(), true);
+/* Clark: I dunno what else you tried to do here...
 $tdb->edit("ext_config",20,array('sort'=>'17'));
 $tdb->edit("ext_config",16,array('sort'=>'19'));
 $tdb->edit("ext_config",10,array('sort'=>'11'));

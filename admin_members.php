@@ -273,15 +273,6 @@
 			ok_cancel("admin_members.php?action=delete&id=".$_GET["id"], "Are you sure you want to delete <strong><a href='profile.php?action=get&id=".$_GET["id"]."' targer='_blank'>".$rec[0]["user_name"]."</a></strong>?");
 		}
 	} else {
-		if ($_GET["page"] == "") $_GET["page"] = 1;
-		$users = $tdb->listRec("users", ($_GET["page"] * $_CONFIG["topics_per_page"] - $_CONFIG["topics_per_page"] + 1), $_CONFIG["topics_per_page"]);
-		$c = $tdb->getNumberOfRecords("users");
-		if ($c <= $_CONFIG["topics_per_page"]) $num_pages = 1;
-		elseif (($c % $_CONFIG["topics_per_page"]) == 0) $num_pages = ($c / $_CONFIG["topics_per_page"]);
-		else $num_pages = ($c / $_CONFIG["topics_per_page"]) + 1;
-		$pageStr = createPageNumbers($_GET["page"], $num_pages, $_SERVER['QUERY_STRING']);
-		//echo "<table border='0' cellspacing='0' cellpadding='4' width='".$_CONFIG["table_width_main"]."' align='center'><tr>
-		//<td>".$pageStr."</td></tr></table><center>";
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
 			<tr>
@@ -294,6 +285,22 @@
 		echo "</td>
 			</tr>";
 		echoTableFooter($_CONFIG['skin_dir']);
+		print '<a name="skip_nav">&nbsp;</a>';
+		echoTableHeading("Search", $_CONFIG);
+        ?><tr><td class='area_1' style='padding:8px;'><form action="admin_members.php#skip_nav" method="GET">Username: <input name="u" type="text" value="<?php print ((isset($_GET['u'])) ? $_GET['u'] : ''); ?>"><p><input type="submit" name="action" value="Search">&nbsp;&nbsp;<input type="submit" name="action" value="Clear"<?php print (($_GET['action'] == 'Search') ? '' : ' DISABLED'); ?>></form></td></tr><?php
+        echoTableFooter(SKIN_DIR);
+		if ($_GET["page"] == "") $_GET["page"] = 1;
+		$start = ($_GET["page"] * $_CONFIG["topics_per_page"] - $_CONFIG["topics_per_page"] + 1);
+		if($_GET['action'] != 'Search') {
+    		$users = $tdb->listRec("users", $start, $_CONFIG["topics_per_page"]);
+    		$c = $tdb->getNumberOfRecords("users");
+		} else {
+		    $users = $tdb->query('users', "user_name?'{$_GET['u']}'", $start, $_CONFIG['topics_per_page']);
+		}
+		if ($c <= $_CONFIG["topics_per_page"]) $num_pages = 1;
+		elseif (($c % $_CONFIG["topics_per_page"]) == 0) $num_pages = ($c / $_CONFIG["topics_per_page"]);
+		else $num_pages = ($c / $_CONFIG["topics_per_page"]) + 1;
+		$pageStr = createPageNumbers($_GET["page"], $num_pages, $_SERVER['QUERY_STRING']);
 		echo "<table class='pagenum_container' cellspacing='1'>
 			<tr>
 				<td style='text-align:left;height:23px;'><span class='pagination_current'>Pages: </span>".$pageStr."</td>
@@ -345,7 +352,7 @@
         else if (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y'))))
           echo "<i>yesterday</i>";
         else
-          echo gmdate("Y-m-d", user_date($lastvisit))."</td><td class='area_1' style='text-align:center;'>".gmdate("Y-m-d", user_date($user["date_added"]))."</td>";
+          echo gmdate("Y-m-d", user_date($lastvisit))."</td>";
 				echo "<td class='area_2' style='text-align:center;'>".gmdate("Y-m-d", user_date($user['date_added']))."</td>";
         echo "<td class='area_2' style='text-align:center;'>";
         if ($user['superuser'] != "Y")
