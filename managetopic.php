@@ -90,6 +90,7 @@
 				else $tRec[0]["sticky"] = 0;
 				if ($_POST["closed_status"] == "1") $tRec[0]["locked"] = 1;
 				else $tRec[0]["locked"] = 0;
+
 				$p_ids = explode(",", $tRec[0]["p_ids"]);
 				$posts_tdb->setfp("newTopics", $_POST["newId"]."_topics");
 				$posts_tdb->setFp("newPosts", $_POST["newId"]);
@@ -97,12 +98,11 @@
 				unset($tRec[0]["p_ids"]);
 				$newT_id = $posts_tdb->add("newTopics", $tRec[0]);
 				$fNRec = $tdb->get("forums", $_POST["newId"]);
-				@settype($fNRec[0]["topics"], "double");
-				@settype($fNRec[0]["posts"], "double");
-				$fNRec[0]["topics"]++;
+				$fNRec[0]['topics'] = (int)$fNRec[0]['topics'] + 1;
+				$fNRec[0]['posts']  = (int)$fNRec[0]['posts'];
 				if ($_POST["action"] == "redirect" || $_POST["action"] == "move") {
 					$fORec = $tdb->get("forums", $_GET["id"]);
-					@settype($fORec[0]["posts"], "double");
+					$fORec[0]['posts']  = (int)$fORec[0]['posts'];
 				}
 				$newSort = array();
 				for($i = 0; $i < count($p_ids); $i++) {
@@ -113,38 +113,36 @@
 							"icon" => "icon1.gif",
 								"user_name" => $_COOKIE["user_env"],
 								"date" => mkdate(),
-								"message" => "Topic was moved to forum : ".$fNRec[0]["forum"]."<br /> redirecting...<meta http-equiv='refresh' content='1;URL=viewtopic.php?id=".$_POST["newId"]."&t_id=".$newT_id."'>",
+								"message" => "Topic was moved to forum : ".$fNRec[0]["forum"]."<br /> You should be redirected in 2 seconds.  If not, <a href='viewtopic.php?id=".$_POST["newId"]."&t_id=".$newT_id."'>click here</a>.<meta http-equiv='refresh' content='1;URL=viewtopic.php?id=".$_POST["newId"]."&t_id=".$newT_id."'>",
 								"user_id" => $_COOKIE["id_env"]));
 						}
 						else $posts_tdb->delete("posts", $pRec[0]["id"], false);
-					}
-					if ($_POST["action"] == "move") {
-						$fORec[0]["posts"]--;
-						$posts_tdb->delete("posts", $pRecs[0]["id"], false);
+					} elseif ($_POST["action"] == "move") {
+						$posts_tdb->delete("posts", $pRec[0]["id"], false);
 					}
 					$pRec[0]["t_id"] = $newT_id;
 					$newSort[] = $posts_tdb->add("newPosts", $pRec[0]);
-					$fNRec[0]["posts"]++;
 				}
 				if ($_POST["action"] == "redirect") {
-					$tdb->edit("forums", $_GET["id"], array("posts" => ((((int)$fORec[0]["posts"]) - count($p_ids)) + 1)));
+					$tdb->edit("forums", $_GET["id"], array("posts" => (($fORec[0]["posts"] - count($p_ids)) + 1)));
 					echo "Successfully moved topic and replaced the old one with a redirection";
 				} elseif($_POST["action"] == "copy") {
 					echo "Successfully copied topic";
 				} elseif($_POST["action"] == "move") {
 					$posts_tdb->delete("topics", $_GET["t_id"]);
-					$tdb->edit("forums", $_GET["id"], array("topics" => ((int)$fRec[0]["topics"] - 1), "posts" => ((int)$fORec[0]["posts"] - count($p_ids))));
+					$tdb->edit("forums", $_GET["id"], array("topics" => ($fORec[0]["topics"] - 1), "posts" => ($fORec[0]["posts"] - count($p_ids))));
 					echo "Successfully moved topic";
 				}
 				$posts_tdb->edit("newTopics", $newT_id, array("p_ids" => implode(",", $newSort)));
-				$posts_tdb->sortAndBuild("newTopics", "last_post", "DESC");
-				$tdb->edit("forums", $_POST["newId"], array("topics" => $fNRec[0]["topics"], "posts" => $fNRec[0]["posts"]));
+				$posts_tdb->sort("newTopics", "last_post", "DESC");
+				$tdb->edit("forums", $_POST["newId"], array("topics" => $fNRec[0]["topics"], "posts" => ($fNRec[0]["posts"] + count($p_ids))));
 				require_once("./includes/footer.php");
 				if ($_GET["redirect"] != "") redirect($_GET["redirect"], 2);
 				else redirect($_SERVER['PHP_SELF']."?id=".$_POST["newId"]."&t_id=$newT_id&s=".$_GET["s"], 2);
 				exit;
 			} else {
-				echo "Please select a forum.";
+				$_GET['action'] = '';
+				$_POST['action'] = '';
 			}
 		} elseif($_POST["action"] == "Modify") {
 			require_once('./includes/header.php');
@@ -317,7 +315,7 @@
 			</tr>";
 				$options = "
 			<tr>
-				<td class='area_1' style='width:22%'><strong>Move Topic To: </strong></td><td class='area_2'><select name=newId>";
+				<td class='area_1' style='width:22%'><strong>Move Topic To: </strong></td><td class='area_2'><select name=newId><option value='' selected>< Select a Forum ></option>";
 				$cRecs = $tdb->listRec("cats", 1);
 				$cat_sort = explode(",", $_CONFIG["admin_catagory_sorting"]);
 				$index = 0;
@@ -336,14 +334,20 @@
 				reset($cRecs);
 				$fRecs = $tdb->listRec("forums", 1);
 				foreach($cRecs as $cRec) {
-					foreach($fRecs as $fRec) {
-						if ($fRec["cat"] == $cRec["id"] && $fRec["id"] != $_GET["id"]) $options .= "<option value='".$fRec["id"]."'>".$cRec["name"]."->".$fRec["forum"]."</option>\n";
+				    $options .= '<optgroup label="'.$cRec['name'].'">';
+				    $sort = explode(',', $cRec['sort']);
+				    for($i=0,$c=count($fRecs);$i<$c;$i++) {
+				        if(empty($sort)) break;
+				        if($fRecs[$i]['id'] != $sort[0]) continue;
+				        array_shift($sort);
+						if ($fRec["id"] != $_GET["id"]) $options .= "<option value='".$fRecs[$i]["id"]."'>&nbsp;&nbsp;&nbsp;".$fRecs[$i]["forum"]."</option>\n";
+						$i=0;
 					}
 				}
 				$options .= "</select></td>
 			</tr>";
 				echo "
-			<form method='POST' action='".$_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"]."'><input type='hidden' name='move_forum' value='1'>
+			<form method='POST' action='".$_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><input type='hidden' name='move_forum' value='1'>
 			$options
 			</form>
 			<tr>
@@ -371,18 +375,15 @@
 				<td class='area_2'><label for='fp8'> Sticky note the new topic</label></td>
 			</tr>";
 			}
-			if ($_GET["s"] == "1") echo "";
-			else echo "";
 			echo "
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Submit' name='submit2'></td>
 			</tr>
 		</form>";
 	   echoTableFooter(SKIN_DIR);
-			if ($_GET["s"] == "1") {
 				echo "
 		<form method='POST' action='".$_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"]."'>";
-		echoTableHeading("Topic Posts", $_CONFIG);
+		echoTableHeading("Delete Multiple Posts", $_CONFIG);
 				$posts_tdb->set_topic($tRec);
 				$pRecs = $posts_tdb->getPosts("posts");
 				$x = +1;
@@ -416,7 +417,6 @@
 				echoTableFooter(SKIN_DIR);
 				$i++;
 			}
-		}
 	} else {
 		require_once('./includes/header.php');
 		echo "

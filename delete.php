@@ -40,7 +40,7 @@
 				}
 				$post_tdb->delete("topics", $_GET["t_id"]);
 				$fRec = $tdb->get("forums", $_GET["id"]);
-				$tdb->edit("forums", $_GET["id"], array("topics" => ((int)$fRec[0]["topics"] - 1), "posts" => ((int)$fRec[0]["posts"] - ($tRec[0]["replies"] + 1))));
+				$tdb->edit("forums", $_GET["id"], array("topics" => ((int)$fRec[0]["topics"] - 1), "posts" => ((int)$fRec[0]["posts"] - count($p_ids))));
 				echo "
 					<div class='alert_confirm'><div class='alert_confirm_text'>
 					<strong>Redirecting:</strong></div><div style='padding:4px;'>Successfully deleted \"".$tRec[0]["subject"]."\"(T_ID:".$_GET["t_id"].")<br />from ".$fRec[0]["forum"]." (F_ID:".$_GET["id"].").</div></div>";
@@ -56,29 +56,31 @@
 	} elseif($_GET["t"] == 0) {
 		$p_ids = explode(",", $tRec[0]["p_ids"]);
 		if ($_GET["p_id"] == $p_ids[0]) {
-			echo "The topic is dependent on the first post, therefore you cannot delete it. The topic must be deleted in order to remove this post.";
+		    echo "<div class='alert'><div class='alert_text'>
+                <strong>The topic is dependent on the first post, therefore you cannot delete it. The topic must be deleted in order to remove this post.</strong></div><div style='padding:4px;'>
+                </div></div>";
 		}
 		$pRec = $post_tdb->get("posts", $_GET["p_id"]);
-		if (!(($pRec[0]["user_id"] == $_COOKIE["id_env"]) || ($_COOKIE["power_env"] >= 2))) exitPage("You are not authorized to delete this post.");
+		if (!(($pRec[0]["user_id"] == $_COOKIE["id_env"]) || ($_COOKIE["power_env"] >= 2))) exitPage("<div class='alert'><div class='alert_text'><strong>You are not authorized to delete this post</strong></div><div style='padding:4px;'></div></div>");
 		$pRec[0]["message"] = format_text($pRec[0]["message"]);
 		if ($_POST["verify"] == "Ok") {
-			$update_topic = array("replies" => ((int)$tRec[0]["replies"] - 1), "p_ids" => $tRec[0]["p_ids"]);
+            if (($key = array_search($_GET["p_id"], $p_ids)) === FALSE) {
+                print "<div class='alert'><div class='alert_text'><strong>Unable to find the post the topic's record.  The post was NOT deleted.</strong></div><div style='padding:4px;'></div></div>";
+            } else {
+				$update_topic = array("replies" => ((int)$tRec[0]["replies"] - 1));
 
-      if (($key = array_search($_GET["p_id"], $p_ids)) !== FALSE) {
-				$update_topic = array("replies" => ((int)$tRec[0]["replies"] - 1), "p_ids" => $tRec[0]["p_ids"]);
-
-        if ($key == (count($p_ids) - 1)) {
+                if ($key == (count($p_ids) - 1)) {
 					//last post, update last_post of topic
-					if (FALSE !== ($last_post = $post_tdb->get('posts', $p_ids[($key - 1)])))
-					{
-            $update_topic = array_merge($update_topic, array('last_post' => $last_post[0]['date'], 'user_name' => $last_post[0]['user_name'], 'user_id' => $last_post[0]['user_id']));
-
-          }
+					if (FALSE !== ($last_post = $post_tdb->get('posts', $p_ids[($key - 1)]))) {
+                        $update_topic['last_post'] = $last_post[0]['date'];
+                        $update_topic['user_name'] = $last_post[0]['user_name'];
+                        $update_topic['user_id'] = $last_post[0]['user_id'];
+                    }
 				}
 				unset($p_ids[$key]);
 				$update_topic["p_ids"] = implode(",", $p_ids);
 
-        $fRec = $tdb->get("forums", $_GET["id"]);
+                $fRec = $tdb->get("forums", $_GET["id"]);
 				$tdb->edit("forums", $_GET["id"], array("posts" => ((int)$fRec[0]["posts"] - 1)));
 				$post_tdb->edit("topics", $_GET["t_id"], $update_topic);
 				$post_tdb->delete("posts", $_GET["p_id"]);
@@ -95,10 +97,8 @@
 				redirect("viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"], "2");
 				exit;
 			}
-			else echo '<b><font color="red">Fatal Error: </font></b> $p_id not found in the topic record.  The topic was not deleted';
 		} elseif($_POST["verify"] == "Cancel") redirect("viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"], 0);
-		else
-		{
+		else {
 			echo "";
 		echoTableHeading("Posted: ".gmdate("M d, Y g:i:s a", user_date($pRec[0]["date"]))."", $_CONFIG);
 			$table_color = $table1;
