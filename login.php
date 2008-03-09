@@ -19,13 +19,13 @@
 		</div><br />";
 		} else {
 			//lastvisit info
-			
+
 			//NEW VERSION
       $ses_info = $r['lastvisit'];
       if ($ses_info == 0)
         $ses_info = mkdate();
       $tdb->edit("users",$r["id"],array('lastvisit'=>mkdate()));
-      
+
 			if (headers_sent()) $error_msg = 'Could not login: headers sent.';
 			else
 			{
@@ -39,14 +39,12 @@
 					setcookie("uniquekey_env", $r["uniquekey"], (time() + (60 * 60 * 24 * 7)));
 					setcookie("power_env", $r["level"], (time() + (60 * 60 * 24 * 7)));
 					setcookie("id_env", $r["id"], (time() + (60 * 60 * 24 * 7)));
-					setcookie("superuser", $r["superuser"], (time() + (60 * 60 * 24 * 7)));
 				} else {
 					setcookie("remember", '');
 					setcookie("user_env", $r["user_name"]);
 					setcookie("uniquekey_env", $r["uniquekey"]);
 					setcookie("power_env", $r["level"]);
 					setcookie("id_env", $r["id"]);
-					setcookie("superuser", $r["superuser"]);
 				}
 				setcookie("timezone", $r["timezone"], (time() + (60 * 60 * 24 * 7)));
 				if ($_GET["ref"] == "") $_GET["ref"] = "index.php";

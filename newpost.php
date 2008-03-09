@@ -103,12 +103,9 @@
 				$local_dir = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']);
 				$e_sbj = "New Reply in \"".$rec[0]["subject"]."\"";
 				$e_msg = "You, or someone else using this e-mail address has requested to watch this topic: ".$rec[0]["subject"]." at ".$local_dir."/index.php\n\n".$_COOKIE["user_env"]." wrote:\n".$_POST["message"]."\n\n- - - - -\nSince this user has replied, you have been taken off the monitor list.  There may have been other users who have replied since then.  To read the rest of this topic, visit ".$local_dir."/viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."\nOr you can reply immediately if you forum cookies are valid by visiting ".$local_dir."/newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$vars['page'];
-				$e_hed = "From: ".$_REGISTER["admin_email"]."\r\nReply-To: no-reply@".$_SERVER["server_name"]."\r\n";
-				if (strpos($rec[0]["monitor"], ",") !== FALSE) $monitor = explode($rec[0]["monitor"], ",");
-				else $monitor[0] = $rec[0]["monitor"];
-				for($i = 0; $i < count($monitor); $i++) {
-					@mail($monitor[$i], $e_sbj, $e_msg, $e_hed);
-				}
+				$e_hed = "From: ".$_REGISTER["admin_email"]."\r\n";
+				$e_hed = "Bcc: ".$rec[0]['monitor']."\r\n"; //More efficient to send one e-mail with everyone on a BLANK CARBON COPY (see php.net's mail())
+				@mail("", $e_sbj, $e_msg, $e_hed);
 			}
 			$posts_tdb->edit("topics", $_GET["t_id"], array("replies" => ((int)$rec[0]["replies"] + 1), "last_post" => mkdate(), "user_name" => $_COOKIE["user_env"], "sticky" => $rec[0]["sticky"], "user_id" => $_COOKIE["id_env"], "monitor" => ""));
 			if ($_GET["page"] == "") $vars['page'] = 1;
@@ -146,7 +143,7 @@
 				<td class='area_1' style='padding:8px;'><strong>Subject:</strong></td>
 				<td class='area_2'><input type=text name=subject size=40></td>
 			</tr>";
-			if ($_COOKIE["power_env"] == 3) $sticky = "
+			if ($_COOKIE["power_env"] >= 3) $sticky = "
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Sticky:</strong></td>
 				<td class='area_2'><input type=checkbox name=sticky size=40 value=\"1\"></td>
@@ -161,7 +158,7 @@
 			}
 			else $hed = "Reply";
 			$tpc = "";
-			if ($_COOKIE["power_env"] == 3) $sticky = "
+			if ($_COOKIE["power_env"] >= 3) $sticky = "
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Un-Sticky:</strong></td>
 				<td class='area_2'><input type=checkbox name=unstick size=40 value=\"1\"></td>

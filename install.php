@@ -1,11 +1,10 @@
-//$tdb->addField('members', array('superuser', 'string', 1));<?php
+<?php
 	// install.php
 	// designed for Ultimate PHP Board
 	// Author: Jerroyd Moore, aka Rebles
 	// Website: http://www.myupb.com
 	// Version: 2.2.1
 	// Using textdb Version: 4.4.1
-	session_start();
 	ignore_user_abort();
 	if (TRUE !== is_writable('config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
 	if (filesize('config.php') > 0) {
@@ -59,7 +58,22 @@
 			Deny from all');
 		fclose($f);
 		$f = fopen(DB_DIR.'/config_org.dat', 'w');
-    fwrite($f, "configGeneral SettingsstatusMembers' StatusesregistNewly Registered Usersconfig1Main Forum Configstatus2Member statusstatus3Moderator statusstatus4Admin Statusstatus5Member status Colorsstatus6Who's Online User Colorsregist7New Users' Confirmation E-mailregist8Users' Avatars");
+        fwrite($f,
+        "config".chr(30)."General".chr(31).
+        "status".chr(30)."Members' Statuses".chr(31).
+        "regist".chr(30)."New Users".chr(31).
+        //.type.chr(30).type name.chr(31)
+        chr(29).
+        "config".chr(30)."1".chr(30)."Main Forum Config".chr(31).
+        "config".chr(30)."9".chr(30)."Posting Settings".chr(31).
+        "status".chr(30)."2".chr(30)."Member status".chr(31).
+        "status".chr(30)."3".chr(30)."Moderator status".chr(31).
+        "status".chr(30)."4".chr(30)."Admin Status".chr(31).
+        "status".chr(30)."5".chr(30)."Member status Colors".chr(31).
+        "status".chr(30)."6".chr(30)."Who's Online User Colors".chr(31).
+        "regist".chr(30)."7".chr(30)."New Users' Confirmation E-mail".chr(31).
+        "regist".chr(30)."8".chr(30)."Users' Avatars".chr(31));
+        //.type.chr(30).minicat.chr(30).cat name.chr(31)
 		fclose($f);
       ?><?php
     //allows syntax highlighting to be work again for coding purposes
@@ -103,8 +117,7 @@
 			array("timezone", "string", 3),
 			array('newTopicsData', 'memo'),
 			array("id", "id"),
-			array("lastvisit","number",10),
-			array("superuser","string",1)
+			array("lastvisit","number",14),
 		), 20);
 		$tdb->createTable("forums", array(
 		array("forum", "memo"),
@@ -165,8 +178,8 @@
 		fclose($f);
 		//$_CONFIG
 		?><?php
-    $tdb->add("ext_config", array("name" => "ver", "value" => "2.1.1b", "type" => "config", "form_object" => "hidden", "data_type" => "string"));
-		$tdb->add("config", array("name" => "ver", "value" => "2.1.1b", "type" => "config"));
+    $tdb->add("ext_config", array("name" => "ver", "value" => "2.2.1", "type" => "config", "form_object" => "hidden", "data_type" => "string"));
+		$tdb->add("config", array("name" => "ver", "value" => "2.2.1", "type" => "config"));
 
 		$tdb->add("ext_config", array("name" => "title", "value" => "Discussion Forums", "type" => "config", "title" => "Title", "description" => "Title of the forum", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "1"));
 		$tdb->add("config", array("name" => "title", "value" => "Discussion Forums", "type" => "config"));
@@ -174,10 +187,10 @@
     $tdb->add("ext_config", array("name" => "table_width_main", "value" => "98%", "type" => "config", "title" => "Table Width", "description" => "This will change the table width of the main section of the forums", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "10"));
 		$tdb->add("config", array("name" => "table_width_main", "value" => "98%", "type" => "config"));
 
-    $tdb->add("ext_config", array("name" => "posts_per_page", "value" => "20", "type" => "config", "title" => "Posts Per Page", "description" => "this is how many posts will be displays on each page for topics", "form_object" => "text", "data_type" => "number", "minicat" => "1", "sort" => "4"));
+    $tdb->add("ext_config", array("name" => "posts_per_page", "value" => "20", "type" => "config", "title" => "Posts Per Page", "description" => "this is how many posts will be displays on each page for topics", "form_object" => "text", "data_type" => "number", "minicat" => "9", "sort" => "1"));
 		$tdb->add("config", array("name" => "posts_per_page", "value" => "20", "type" => "config"));
 
-    $tdb->add("ext_config", array("name" => "topics_per_page", "value" => "40", "type" => "config", "title" => "Topics per Page", "description" => "this is how many topics will be displays on each page for forums", "form_object" => "text", "data_type" => "number", "minicat" => "1", "sort" => "5"));
+    $tdb->add("ext_config", array("name" => "topics_per_page", "value" => "40", "type" => "config", "title" => "Topics per Page", "description" => "this is how many topics will be displays on each page for forums", "form_object" => "text", "data_type" => "number", "minicat" => "9", "sort" => "2"));
 		$tdb->add("config", array("name" => "topics_per_page", "value" => "40", "type" => "config"));
 
     $tdb->add("ext_config", array("name" => "logo", "value" => "images/logo.gif", "type" => "config", "title" => "Logo Location", "description" => "can be relative or a url", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "2"));
@@ -195,15 +208,15 @@
     $tdb->add("ext_config", array("name" => "skin_dir", "value" => "./skins/default", "type" => "config", "title" => "Skin Directory", "description" => "leave it unless you upload another skin", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "11"));
 		$tdb->add("config", array("name" => "skin_dir", "value" => "./skins/default", "type" => "config"));
 
-    $tdb->add("ext_config", array("name" => "fileupload_location", "value" => "./uploads", "type" => "config", "title" => "Location for file attachments", "description" => "Put the path to the directory for file attachments.<br />e.g. If your forums are located at http://forum.myupb.com, and your uploads directory is at http://forum.myupb.com/uploads, you would simply put 'uploads' (without quotes) in the box.", "form_object" => "text", "data_type" => "number", "minicat" => "1", "sort" => "6"));
+    $tdb->add("ext_config", array("name" => "fileupload_location", "value" => "./uploads", "type" => "config", "title" => "Location for file attachments", "description" => "Put the path to the directory for file attachments.<br />e.g. If your forums are located at http://forum.myupb.com, and your uploads directory is at http://forum.myupb.com/uploads, you would simply put 'uploads' (without quotes) in the box.", "form_object" => "text", "data_type" => "number", "minicat" => "9", "sort" => "3"));
 		$tdb->add("config", array("name" => "fileupload_location", "value" => "./uploads", "type" => "config"));
-		$tdb->add("ext_config", array("name" => "fileupload_size", "value" => "50", "type" => "config", "title" => "Size limits for file upload", "description" => "In kilobytes, type in the maximum size allowed for file uploads", "form_object" => "text", "data_type" => "number", "minicat" => "1", "sort" => "7"));
+		$tdb->add("ext_config", array("name" => "fileupload_size", "value" => "50", "type" => "config", "title" => "Size limits for file upload", "description" => "In kilobytes, type in the maximum size allowed for file uploads", "form_object" => "text", "data_type" => "number", "minicat" => "9", "sort" => "4"));
 		$tdb->add("config", array("name" => "fileupload_size", "value" => "50", "type" => "config"));
-		$tdb->add("ext_config", array("name" => "censor", "value" => "*censor*", "type" => "config", "title" => "Word to replace bad words", "description" => "Words that will replace bad words in a post", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "13"));
+		$tdb->add("ext_config", array("name" => "censor", "value" => "*censor*", "type" => "config", "title" => "Word to replace bad words", "description" => "Words that will replace bad words in a post", "form_object" => "text", "data_type" => "string", "minicat" => "9", "sort" => "5"));
 		$tdb->add("config", array("name" => "censor", "value" => "*censor*", "type" => "config"));
-		$tdb->add("ext_config", array("name" => "sticky_note", "value" => "[Stick Note]", "type" => "config", "title" => "Sticky Note Text", "description" => "Text that appends the title indicating it is a \"Stickied Topic\" (HTML Tags Allowed)", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "14"));
+		$tdb->add("ext_config", array("name" => "sticky_note", "value" => "[Stick Note]", "type" => "config", "title" => "Sticky Note Text", "description" => "Text that appends the title indicating it is a \"Stickied Topic\" (HTML Tags Allowed)", "form_object" => "text", "data_type" => "string", "minicat" => "9", "sort" => "6"));
 		$tdb->add("config", array("name" => "sticky_note", "value" => "[Stick Note]", "type" => "config"));
-		$tdb->add("ext_config", array("name" => "sticky_after", "value" => "0", "type" => "config", "title" => "Sticky Note Before or After Title", "description" => "If this is checked, the \"sticky note\" text will appear after the title.  Unchecking this will display it before the title.", "form_object" => "checkbox", "minicat" => "1", "sort" => "15"));
+		$tdb->add("ext_config", array("name" => "sticky_after", "value" => "0", "type" => "config", "title" => "Sticky Note Before or After Title", "description" => "If this is checked, the \"sticky note\" text will appear after the title.  Unchecking this will display it before the title.", "form_object" => "checkbox", "minicat" => "9", "sort" => "7"));
 		$tdb->add("config", array("name" => "sticky_after", "value" => "0", "type" => "config"));
 		$tdb->add("ext_config", array("name" => "pm_max_outbox_msg", "value" => "50", "type" => "config", "title" => "Max Number of Private Msgs in a Users OutBox", "description" => "Can be set to 0 to infinity", "form_object" => "text", "data_object" => "number", "minicat" => "1", "sort" => "19"));
 		$tdb->add("config", array("name" => "pm_max_outbox_msg", "value" => "50", "type" => "config"));
@@ -479,11 +492,9 @@
 		if (strlen($_POST["sig"]) > 200) $error .= "<div style='text-align:center;font-weight:bold;'>Your signature is too long (max 200 chars)</div><br /><br />";
 		if ($error != "") {
 			$_POST["add"] = 1;
-			$add = 1;
 		} else {
 			$_POST["add"] = "3";
-			$add = 3;
-			$admin = array("user_name" => $_POST["username"], "password" => generateHash($_POST["pass1"]), "level" => 3, "email" => $_POST["email"], "view_email" => $_POST["view_email"], "mail_list" => $_POST["mail_list"], "location" => $_POST["location"], "url" => $_POST["url"], "avatar" => $_POST["avatar"], "icq" => $_POST["icq"], "aim" => $_POST["aim"], "msn" => $_POST["msn"], "sig" => $_POST["sig"], "posts" => 0, "date_added" => mkdate(),"lastvisit" => mkdate(),"superuser"=>"Y");
+			$admin = array("user_name" => $_POST["username"], "password" => generateHash($_POST["pass1"]), "level" => 9, "email" => $_POST["email"], "view_email" => $_POST["view_email"], "mail_list" => $_POST["mail_list"], "location" => $_POST["location"], "url" => $_POST["url"], "avatar" => $_POST["avatar"], "icq" => $_POST["icq"], "aim" => $_POST["aim"], "msn" => $_POST["msn"], "sig" => $_POST["sig"], "posts" => 0, "date_added" => mkdate(),"lastvisit" => mkdate());
 			$tdb->add("users", $admin);
 			$f = fopen(DB_DIR."/new_pm.dat", 'w');
 			fwrite($f, " 0");
@@ -527,7 +538,7 @@
 					<strong>myUPB Installation Complete!</div><div style='padding:4px;'>
 					If you had any errors or you find that your forum is not working correctly, visit myUPB's support forums at <a href='http://www.myupb.com/' target='_blank'>www.myupb.com</a><br /><br />
 					Delete the install.php and update1.x-2.0.php NOW, as it is a security risk to leave it in your server.<br /><br />
-					<a href='javascript:window.close()'>Close Window</a> -or- <a href='index.php'>Go To Forum</a> -or- <a href='login.php?ref=admin_cat.php?action=addnew'>Login and add categories</a>
+					<a href='javascript:window.close()'>Close Window</a> -or- <a href='index.php'>Go To Forum</a> -or- <a href='login.php?ref=admin_forums.php?action=add_cat'>Login and add categories</a>
 				</div>
 			</div>";
 			require_once('./includes/footer.php');
@@ -536,7 +547,7 @@
 			require_once('./includes/footer.php');
 		}
 	}
-	if ($_POST["add"] == "3" || $add == 3) {
+	if ($_POST["add"] == "3") {
 		$where = "Installation ".$_CONFIG["where_sep"]." Initial Config Setup";
 		echo "
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
@@ -632,7 +643,7 @@
 </body>
 </html>";
 	}
-	if ($_POST["add"] == "1" || $add == 1) {
+	if ($_POST["add"] == "1") {
 		//Set up admin acccount
 		$where = "Step #1: Setting up your admin account";
 		$required = "#ff0000";

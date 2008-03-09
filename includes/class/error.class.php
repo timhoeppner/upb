@@ -2,9 +2,8 @@
 // Ultimate PHP Board's Custom Error Hander
 
 $errorHandler = &new errorhandler();
-//set_error_handler(array(&$errorHandler, 'add_error'));
+set_error_handler(array(&$errorHandler, 'add_error'));
 error_reporting(E_ALL ^ E_NOTICE);
-
 
 class errorhandler {
     var $error = array();
@@ -20,7 +19,7 @@ class errorhandler {
                E_USER_ERROR      => "Fatal error",
                E_USER_WARNING    => "Warning",
                E_USER_NOTICE    => "Notice",
-               ); 
+               );
 
     function add_error($errno, $errstr, $errfile='', $errline='') {
         /*
@@ -35,7 +34,7 @@ class errorhandler {
             if(defined('DB_DIR')) $errfile = str_replace(DB_DIR, '<DATA_DIRECTORY>', $errfile);
         }
         $this->error[] = array($errno, $errstr, $errfile, $errline);
-        if($errno == E_ERROR || $errno == E_USER_ERROR) {
+        if($errno == E_ERROR || $errno == E_USER_ERROR || $errno == E_CORE_ERROR || $errno == E_COMPILE_ERROR) {
             $this->print_errors();
             exit;
         }
@@ -54,7 +53,7 @@ class errorhandler {
                 if($error[3] != '') echo " on line <b>".$error[3]."</b>";
                 if($error[2] != '') echo " in file <b>".$error[2]."</b>";
                 echo '.<br>';
-                
+
                 if($error[0] == E_ERROR || $error[0] == E_USER_ERROR) {
                     if($in_table) die('</div></td></tr></table>');
                     else die('</div>');

@@ -59,7 +59,7 @@
 		} else {
 			foreach($users as $user) {
 				if ($user["level"] == "2") $userColor = $_STATUS["moderatcolor"];
-				elseif($user["level"] == "3") $userColor = $_STATUS["admcolor"];
+				elseif($user["level"] >= 3) $userColor = $_STATUS["admcolor"];
 				else $userColor = $_STATUS["membercolor"];
 				/* location, # of posts, aim, msn, yahoo, icq */
 				echo "

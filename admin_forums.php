@@ -43,7 +43,7 @@
       echo "</td></tr><tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr><tr><td class='footer_3a' style='text-align:center;' colspan='2'><input type='submit' value='Edit'></td></tr>";
-      
+
 			echoTableFooter($_CONFIG['skin_dir']);
       echo "</form>";
 				}
@@ -54,10 +54,17 @@
 			//delete categories
 			if (isset($_GET["id"])) {
 				if ($_POST["verify"] == "Ok") {
-					$sort = explode(",", $admin_catagory_sorting);
+					$sort = explode(",", $_CONFIG['admin_catagory_sorting']);
 					if (($i = array_search($_GET["id"], $sort)) !== FALSE) unset($sort[$i]);
 					$config_tdb->editVars("config", array("admin_catagory_sorting" => implode(",", $sort)));
 					$tdb->delete("cats", $_GET["id"]);
+					$forums = $tdb->query('forums', "cat='{$_GET['id']}'");
+					foreach($forums as $forum) {
+    					$tdb->delete("forums", $forum["id"]);
+    					$post_tdb->removeTable($forum["id"]);
+    					$post_tdb->removeTable($forum["id"]."_topics");
+    				}
+    				$post_tdb->cleanup();
 					echo "
 						<div class='alert_confirm'>
 						<div class='alert_confirm_text'>
@@ -70,7 +77,7 @@
 				} elseif($_POST["verify"] == "Cancel") {
 					redirect($_SERVER['PHP_SELF'], 0);
 				} else {
-					ok_cancel("admin_forums.php?action=delete_cat&id=".$_GET["id"], "Are you sure you want to delete a category?");
+					ok_cancel("admin_forums.php?action=delete_cat&id=".$_GET["id"], "Are you sure you want to delete this category and all forums in this category?");
 				}
 			} else {
 				echo "No id selected.";
@@ -372,7 +379,7 @@
 
     		// Sort categories in the order that they appear
     		$cSorting = explode(",", $_CONFIG["admin_catagory_sorting"]);
-    		
+
         $k = 0;
     		$i = 0;
     		$sorted = array();
@@ -413,7 +420,7 @@
 			    </ul>
 			</div>
 			<div style='clear:both;'></div><div id='sorting'>";
-	       	
+
            echoTableHeading("Forum Control", $_CONFIG);
 
 		    echo "

@@ -4,7 +4,6 @@
 	// Website: http://www.myupb.com
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
-	session_start();
   if (!headers_sent()) {
 		switch (basename($_SERVER['PHP_SELF'])) {
 			case 'register.php':
@@ -22,7 +21,7 @@
 		}
 	}
 	is_secure();
-  
+
   if (!defined('DB_DIR')) die('The constant, DB_DIR has not been defined.  Go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.');
 	if (!is_array($_CONFIG)) die('UPB Arrays have not been initialized.  Go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.');
 	if ($_CONFIG['skin_dir'] == '') die('SKIN_DIR not set ("'.SKIN_DIR.'").  This may be an indication that your config data was not set.');
@@ -140,7 +139,7 @@
 		if ((int)$new_pm != 0) $pm_alert .= "-&nbsp;<a href='pmsystem.php?section=inbox'><strong>".$new_pm."</strong> new PMs in your inbox</a>";
 		else $pm_alert .= "-&nbsp;No new messages";
 		$mark_all_read .= "<a href='setallread.php'>Mark all posts read</a>";
-		if ($_COOKIE["power_env"] == 3) $adminlink .= "<a href='admin.php'>Admin Panel</a>&nbsp;&middot;";
+		if ($_COOKIE["power_env"] >= 3) $adminlink .= "<a href='admin.php'>Admin Panel</a>&nbsp;&middot;";
 	}
 	//Start Header
   echo "

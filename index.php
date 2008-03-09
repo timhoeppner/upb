@@ -23,7 +23,7 @@
 		echo "
 			<div class='alert'><div class='alert_text'>
 			<strong>Caution!</strong></div><div style='padding:4px;'>No categories have been added yet or this is a private forum.<br />";
-		if ($_COOKIE["power_env"] != "3") {
+		if ($_COOKIE["power_env"] < 3) {
 			echo " Please contact an Administrator";
 			if ($_COOKIE["power_env"] > 0) echo " via <a href='newpm.php?id=1'>PM Message</a> or <a href='email.php?id=1'>web email</a>";
 		} else {

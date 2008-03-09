@@ -2,12 +2,9 @@
 //coding.php has gone
 //skin.css has gone
 
-require_once("config.php");
 require_once("./includes/class/func.class.php");
-$tdb->setFp("config", "config");
-$tdb->setFp("ext_config", "ext_config");
-$tdb->setFP("members","members");
-dump($_POST);
+//FPs already set in func.class.php
+//dump($_POST);
 $proceed = true;
   echo "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>\n
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>\n
@@ -46,7 +43,7 @@ if (!isset($_POST['next']) or empty($_POST))
         $proceed = false;
       }
       else
-			echo "<p>This release contains many new features and bug fixes";
+			echo "<p>This release contains many new features and bug fixes. For the changelog, please see the readme or visit MyUPB.com";
 			echo "</td>
 			</tr>";
 			echo "<tr>
@@ -60,11 +57,8 @@ if (!isset($_POST['next']) or empty($_POST))
       echo "
       <tr><td class='area_1' style='width:35%;padding:8px;'>Super Administrator Account</td>
       <td class='area_2'>";
-      $tdb->addField('members', array('newTopicsData', 'memo'));
-      //$tdb->addField('members', array('superuser', 'string', 1));
-      //$tdb->addField('members', array('lastvisit', 'number', 10));
 
-      $members = $tdb->query('members',"level='3'");
+      $members = $tdb->query('users',"level='3'");
       echo "<select id='superad' name='superad' size='1'>";
       foreach ($members as $member)
       {
@@ -77,33 +71,32 @@ if (!isset($_POST['next']) or empty($_POST))
 }
 else if($_POST['next'] == 2)
 {
-echo "<tr>
+    echo "<tr>
 				<th colspan='2'><strong>Updating Database</strong></th>
 			</tr>
 			<tr>
 			<td colspan='2' class='area_2'>
 			<td class='area_2'>";
-      //$tdb->addField('members', array('superuser', 'string', 1));
-      //$tdb->addField('members', array('lastvisit', 'number', 10));
-      echo "</select>";
-      //dump($members);
-      echo "</td></tr>";
+    $tdb->addField('users', array('newTopicsData', 'memo'));
+    $tdb->addField('users', array('lastvisit', 'number', 14));
+    if($post_tdb->isTable('trackforums')) $post_tdb->removeTable('trackforums');
+    if($post_tdb->isTable('tracktopics')) $post_tdb->removeTable('tracktopics');
+    echo "</td></tr>";
 
-//move lastvisit information to the member database
+    //move lastvisit information to the member database
+    $lastvisit_file = file_get_contents(DB_DIR . '/lastvisit.dat');
+    $id = 1;
+    while(strlen($lastvisit_file) > 0) {
+        $lastvisit = substr($lastvisit_file, 0, 14);
+        $lastvisit_file = substr($lastvisit_file, 14);
+        $tdb->edit('users', $id, array('lastvisit' => $lastvisit));
+        $id++;
+    }
+    echo "Last visit information inserted<p>";
 
-
-foreach ($members as $member)
-{
-  //$tdb->edit('members',$member['id'],array("lastvisit"=>0));
-}
-
-echo "Last visit information inserted<p>";
-
-//create superuser
-//$tdb->addField('members', array('superuser', 'string', 1));
-//$tdb->edit('members',1,array("superuser"=>"Y"));
-
-echo "Super-user created<p>";
+    //create superuser
+    $tdb->edit('users', $_POST['superad'], array('level' => 9));
+    echo "Super Admin Set<p>";
 }
 
 $del_list = array('pm_version', 'avatar1', 'avatar2', 'avatar3', 'avatar4', 'avatar5', 'avatar6', 'avatar7', 'avatar8', 'avatar9');
@@ -128,8 +121,8 @@ $config[] = array('name' => 'skin_dir', 'sort' => '11', 'form_object'=>'drop', '
 $config[] = array('name' => 'pm_max_outbox_msg', 'sort' => '19');
 $config[] = array('name' => 'security_code', 'sort' => '17');
 $config[] = array('name' => 'fileupload_location', 'form_object' => 'text');
-$config[] = array("name" => "admin_catagory_sorting", "form_object" => "hidden", "data_type" => "string")
-$config_tdb->editVars('config', array(), true);
+$config[] = array("name" => "admin_catagory_sorting", "form_object" => "hidden", "data_type" => "string");
+$config_tdb->editVars('config', $config, true);
 /* Clark: I dunno what else you tried to do here...
 $tdb->edit("ext_config",20,array('sort'=>'17'));
 $tdb->edit("ext_config",16,array('sort'=>'19'));

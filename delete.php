@@ -119,7 +119,7 @@
 				elseif($user[0]["posts"] >= $mod_post3) $status = $mod_status3;
 				elseif($user[0]["posts"] >= $mod_post4) $status = $mod_status4;
 				elseif($user[0]["posts"] >= $mod_post5) $status = $mod_status5;
-			} elseif($user[0]["level"] == '3') {
+			} elseif($user[0]["level"] >= 3) {
 				$statuscolor = $adminColor;
 				if ($user[0]["posts"] >= $admin_post1) $status = $admin_status1;
 				elseif($user[0]["posts"] >= $admin_post2) $status = $admin_status2;

@@ -77,7 +77,7 @@
 		$where = "<a href='viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'>".$tRec[0]["subject"]."</a> ".$_CONFIG["where_sep"]." Topic Properties";
 		if ($_POST["move_forum"] == "1") {
 			require_once('./includes/header.php');
-			if ($_COOKIE["power_env"] != "3") {
+			if ($_COOKIE["power_env"] < 3) {
 				echo "Unable to move/copy topic, you are not an administrator";
 				require_once("./includes/footer.php");
 				redirect($_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"], 2);
@@ -304,7 +304,7 @@
 	echoTableFooter(SKIN_DIR);
 			echo "<form method='POST' action='".$_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&s=".$_GET["s"]."'>";
 		echoTableHeading("Topic Options", $_CONFIG);
-			if ($_COOKIE["power_env"] == 3) {
+			if ($_COOKIE["power_env"] >= 3) {
 				echo "
 			<tr>
 				<td class='area_1'><strong>Delete Topic?</strong></td>

@@ -75,9 +75,6 @@
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>User group:</strong></td>
 				<td class='area_2'>";
-        if ($rec[0]["superuser"] == "Y")
-          echo "Administrator";
-        else
           echo "<select size='1' name='level'>".createUserPowerMisc($rec[0]["level"], 7, TRUE);
         echo "</td>
 			</tr>
@@ -355,7 +352,7 @@
           echo gmdate("Y-m-d", user_date($lastvisit))."</td>";
 				echo "<td class='area_2' style='text-align:center;'>".gmdate("Y-m-d", user_date($user['date_added']))."</td>";
         echo "<td class='area_2' style='text-align:center;'>";
-        if ($user['superuser'] != "Y")
+        if ($user['level'] != 9)
         {
           echo "<a href='admin_banuser.php?ref=admin_members.php?page=".$_GET["page"]."&action=";
 				  if (!in_array($user["user_name"], $bList)) echo 'addnew&newword='.$user["user_name"]."'>";
@@ -364,11 +361,11 @@
         }
         echo "</td>";
 				echo "<td class='area_1' style='text-align:center;'>";
-        if (($user['superuser'] == "Y" and $_COOKIE['superuser']) or ($user['superuser'] != "Y"))
+        if (($user['level'] == 9 and $user['id'] == $_COOKIE['id_env']) or ($user['level'] != 9))
           echo "<a href='admin_members.php?action=edit&id=".$user["id"]."&page=".$_GET["page"]."'>Edit</a>";
         echo "</td>";
 				echo "<td class='area_2' style='text-align:center;'>";
-        if ($user['superuser'] != "Y")
+        if ($user['level'] != 9)
           echo "<a href='admin_members.php?action=delete&id=".$user["id"]."'>Delete</a>";
         echo "</td>
 			</tr>";

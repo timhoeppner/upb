@@ -6,6 +6,7 @@
 // Using textdb Version: 4.3.2
 
 if(basename($_SERVER['PHP_SELF']) == 'func.class.php') die('This is a wrapper script!');
+session_start();
 require_once("./includes/class/error.class.php");
 require_once("./config.php");
 require_once("./includes/inc/func.inc.php");
@@ -30,7 +31,6 @@ $config_tdb->setFp("config", "config");
 $config_tdb->setFp("ext_config", "ext_config");
 
 eval(file_get_contents(DB_DIR.'/constants.php'));
-
 class functions extends tdb {
     var $_cache = array();
 
