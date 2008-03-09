@@ -4,7 +4,7 @@
 	// Original PM Version (before _MANUAL_ upgrades): 2.0
 	// Addon Created by J. Moore aka Rebles
 	// Using textdb Version: 4.2.3
-	require_once('./includes/class/func.class.php');
+	require_once('./includes/upb.initialize.php');
 	if (!$tdb->is_logged_in()) die('You are not properly logged in.');
 	if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) die('Invalid ID');
 	require_once('./includes/header_simple.php');

@@ -1,5 +1,5 @@
 <?php
-	include "./includes/class/func.class.php";
+	include "./includes/upb.initialize.php";
 	include "./includes/class/upload.class.php";
 	include "./config.php";
   $upload = new upload(DB_DIR, 0,$_CONFIG['fileupload_location']);

@@ -81,7 +81,7 @@
 		fwrite($f, '');
 		fclose($f);
 		$f = fopen(DB_DIR.'/constants.php', 'w');
-		fwrite($f, 'define("TABLE_WIDTH_MAIN", $_CONFIG["table_width_main"], true);'."\n".'define("SKIN_DIR", $_CONFIG["skin_dir"], true);');
+		fwrite($f, 'define("TABLE_WIDTH_MAIN", $_CONFIG["table_width_main"], true);'."\n".'define("SKIN_DIR", $_CONFIG["skin_dir"], true);>');
 		fclose($f);
 		//end
 		//begin db files

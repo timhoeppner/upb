@@ -5,7 +5,7 @@
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
 	// Ultimate PHP Board Topic display
-	require_once('./includes/class/func.class.php');
+	require_once('./includes/upb.initialize.php');
 	require_once('./includes/header_simple.php');
 	require_once('./includes/class/posts.class.php');
 	$posts_tdb = new posts(DB_DIR."/", "posts.tdb");

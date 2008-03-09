@@ -111,7 +111,8 @@
 		echo $error;
 		$blockedIds = explode(",", getUsersPMBlockedList($_COOKIE["id_env"]));
 		$select = $tdb->createUserSelectFormObject("user_id", true, true, true, "", $blockedIds);
-		echo "
+
+    echo "
 				<form action='".$PHP_SELF."' method='GET' onSubmit='submitonce(this)' enctype='multipart/form-data'>
 					<input type='hidden' name='action' value='add'>
 					<br />

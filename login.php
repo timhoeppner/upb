@@ -5,7 +5,7 @@
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
 	// Ultimate PHP Board Login
-	require_once('./includes/class/func.class.php');
+	require_once("./includes/upb.initialize.php");
 	$where = "Login";
 	$show = 0;
 	$e = 0;

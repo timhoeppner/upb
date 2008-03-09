@@ -4,7 +4,7 @@
 	// Website: http://www.myupb.com
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
-	require_once('./includes/class/func.class.php');
+	require_once('./includes/upb.initialize.php');
 	$fRec = $tdb->get("forums", $_GET["id"]);
 	require_once('./includes/class/posts.class.php');
 	$posts_tdb = new posts(DB_DIR."/", "posts.tdb");

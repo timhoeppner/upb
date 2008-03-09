@@ -62,6 +62,11 @@ form	{
 	margin: 0px;
 }
 
+/* Disables resizing of the textareas in browsers. CSS3 only */
+textarea {
+     resize: none;
+}
+
 /* This controls the way that the post box looks on posting screens */
 textarea#look1 {
 	font-family: Tahoma, sans-serif;

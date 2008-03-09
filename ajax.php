@@ -1,6 +1,5 @@
 <?php
-require_once('./includes/class/func.class.php');
-require_once('./includes/inc/post.inc.php');
+require_once('./includes/upb.initialize.php');
 require_once("./includes/class/upload.class.php");
 require_once("./includes/class/posts.class.php");
 
