@@ -4,7 +4,7 @@
 	// Original PM Version (before _MANUAL_ upgrades): 2.0
 	// Addon Created by J. Moore aka Rebles
 	// Using textdb Version: 4.4.2
-	require_once("./includes/class/func.class.php");
+	require_once("./includes/upb.initialize.php");
 	require_once("./includes/inc/post.inc.php");
 	$where = "<a href='pmsystem.php'>Messenger</a> ".$_CONFIG["where_sep"]." New message";
 	if ($tdb->is_logged_in() === false) exitPage("You are not even Logged in.");

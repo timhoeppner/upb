@@ -4,7 +4,7 @@
 	// Website: http://www.myupb.com
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
-	require_once("./includes/class/func.class.php");
+	require_once("./includes/upb.initialize.php");
 	$rec = $tdb->get("users", $_GET["id"]);
 		require_once('./includes/header.php');
 	if (!(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_COOKIE["id_env"]))) exitPage("<div class='alert'><div class='alert_text'>

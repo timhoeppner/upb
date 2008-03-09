@@ -5,7 +5,7 @@
 // Version: 2.0
 // Using textdb Version: 4.3.2
 
-require_once("./includes/class/func.class.php");
+require_once("./includes/upb.initialize.php");
 
 $where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_icons.php'>Manage Post Icons</a>";
 require_once('./includes/header.php');
@@ -31,7 +31,7 @@ echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $wher
 echoTableFooter($_CONFIG['skin_dir']);
 //REMOVE ALL TRACES OF $_GET['word']
 if(!($tdb->is_logged_in() && $_COOKIE["power_env"] < 3)) exitPage("you are not authorized to be here.");
-if($_GET["action"] == "addnew") 
+if($_GET["action"] == "addnew")
 {
   $error = $success = array();
   $x = 0;
@@ -52,49 +52,49 @@ if($_GET["action"] == "addnew")
     }
   }
 
-  if($x != 0) 
+  if($x != 0)
   {
     //this first section will be the same for smilies
     foreach ($_FILES['icon_file']['name'] as $key => $value)
     {
       if ($_FILES["icon_file"]["type"][$key] != "image/gif")
         $error[$key]['type'] .= "File must be a gif file ".$_FILES["icon_file"]["type"][$key]."<br />";
-    
+
       if ($_FILES['icon_file']['size'][$key] > 3072 or ($_FILES["icon_file"]["error"][$key] > 0 and $_FILES["icon_file"]["error"][$key] < 3))
         $error[$key]['size'] .= "File size must be under 3KB<br />";
-    
+
       if ($_FILES["icon_file"]["error"][$key] > 2)
         $error[$key]['unknown'] .= "Upload Error: " . $_FILES["icon_file"]["error"] . "<br />";
-        
+
       if (!empty($error[$key]))
         $error[$key]['name'] = $_FILES["icon_file"]["name"][$key];
     }
- 
+
     foreach ($_FILES['icon_file']['name'] as $key => $value)
     {
       if (empty($error[$key]))
       {
         $upload_dir = "./icon/";
         $upload_filename = $upload_dir.basename($_FILES['icon_file']['name'][$key]);
-      
+
         if (!file_exists($upload_filename))
-        {  
-          if (@move_uploaded_file($_FILES['icon_file']['tmp_name'][$key], $upload_filename)) 
+        {
+          if (@move_uploaded_file($_FILES['icon_file']['tmp_name'][$key], $upload_filename))
           {
             $bdb->add('icons',array("filename"=>$_FILES['icon_file']['name'][$key]));
-            $success[$key]['name'] = $_FILES['icon_file']['name'][$key]; 
+            $success[$key]['name'] = $_FILES['icon_file']['name'][$key];
           }
           else
-            $error[$key]['move'] = "Icon unable to be saved in the icon directory<br />"; 
+            $error[$key]['move'] = "Icon unable to be saved in the icon directory<br />";
         }
         else
           $error[$key]['exists'] = "Icon already exists. Please delete it before uploading a new one";
       }
-      
+
       if (!empty($error[$key]))
         $error[$key]['name'] = $_FILES['icon_file']['name'][$key];
     }
-      
+
     foreach ($success as $key => $value)
     {
       echo "<div class='alert_confirm'>
@@ -103,12 +103,12 @@ if($_GET["action"] == "addnew")
           <div style='padding:4px;'>";
       echo $success[$key]['name']." has been uploaded and is available for use.<br>";
 			echo "</div></div>";
-			
+
       if (count($success) == count($_FILES["icon_file"]["name"]))
         redirect("admin_icons.php", 2);
     }
-    
-    if (!empty($error)) 
+
+    if (!empty($error))
     {
       echo "<div class='alert'>";
       $permission = false; //toggle for whether to show folder permission message
@@ -122,16 +122,16 @@ if($_GET["action"] == "addnew")
             echo $msg;
           if ($err_key == "move")
             //set toggle to true if there is a problem moving from temp folder to icon folder
-            $permission = true; 
+            $permission = true;
         }
       }
-      
+
       if ($permission === true)
         echo "An error has occurred moving one or more icons to the icon folder.<br>Please check the permissions for this folder. They should be set to 755 or 777";
       echo "<p><a href='admin_icons.php?action=addnew'>Back to upload form</a></div></div>";
     }
   }
-  else 
+  else
   {
     echo "<form action='admin_icons.php?action=addnew' name='icon_upload' method='POST' enctype='multipart/form-data'>";
 		echo "<input type='hidden' name='MAX_FILE_SIZE' value='15500' />";
@@ -172,7 +172,7 @@ echoTableFooter($_CONFIG['skin_dir']);
 echo "
 	</form>";
 	}
-} 
+}
 else if ($_GET['action'] == 'delete')
 {
   $delete_array = array();
@@ -180,13 +180,13 @@ else if ($_GET['action'] == 'delete')
   {
     $delete_array[] = $value;
   }
-  
+
   $icon_dir = './icon/';
-  
+
   foreach ($delete_array as $value)
   {
     $result = $bdb->basicQuery('icons','id',$value);
-    
+
     $icon_file = $result[0]['filename'];
     if (@file_exists($icon_dir.$icon_file))
     {
@@ -216,14 +216,14 @@ else if ($_GET['action'] == 'delete')
 			<strong>Post Icon Deletion Error</strong></div><div style='padding:4px;'>The file for the icon could not be found.<p>The database entry for this icon has been removed.<p><a href='admin_icons.php'>Back to post icons</a></div>
 			</div>";
 			$bdb->delete('icons',$value);
-    } 
+    }
   }
 }
 else {
   $icons = $bdb->query('icons',"id>'0'");
   //var_dump($smilies);
-  
-		
+
+
   echo "
 				<div id='tabstyle_2'>
 				<ul>
@@ -243,7 +243,7 @@ echo "<tr><th colspan='4'>Post Icon Management</th>";
 				<th style='width:25%;text-align:center;'>Post Icon</th>
 				<th style='width:25%;text-align:center;'>Delete?</th>
 			</tr>";
-    
+
     echo "<tr>";
     foreach ($icons as $key => $icon)
     {
@@ -252,8 +252,8 @@ echo "<tr><th colspan='4'>Post Icon Management</th>";
       echo "<td class='area_1' style='padding:8px;text-align:center;'>";
       if (count($icons) > 1)
         echo "<input type='checkbox' name='{$id}_delete' value='$id'>";
-      echo "</td>\n";             
-      
+      echo "</td>\n";
+
       if (($key+1)%2 == 0)
         echo "</tr><tr>";
 		}
@@ -264,7 +264,7 @@ echo "<tr><th colspan='4'>Post Icon Management</th>";
     }
     echo "</tr>\n";
     echo "<tr><td class='area_1' colspan='4' style='padding:8px;text-align:center;'><input type='submit' value='Submit Changes'><input type='reset' value='Reset Form'></td></tr>";
-	
+
 	echo "</table>";
 	echoTableFooter($_CONFIG['skin_dir']);
 }

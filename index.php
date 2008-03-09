@@ -10,7 +10,7 @@
 		require_once("config.php");
 		if (!defined('DB_DIR')) die("installer has not been run yet. click <a href='install.php'>here</a> to install.");
 	}
-	require_once("./includes/class/func.class.php");
+	require_once("./includes/upb.initialize.php");
 	//echo '<pre>'; var_dump($GLOBALS); echo '</pre>';
 	if ($_COOKIE["power_env"] == "" || empty($_COOKIE["power_env"]) || trim($_COOKIE["power_env"]) == "") $_COOKIE["power_env"] = "0";
 	//upb_session_start();

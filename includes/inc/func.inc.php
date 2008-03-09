@@ -6,36 +6,6 @@
 
 // Ultimate PHP Board Functions
 
-//php registered_global off
-//prevent exploits for users who have registered globals on
-foreach($GLOBALS["_GET"] as $varname => $varvalue) {
-    if(isset($$varname)) unset($$varname);
-}
-foreach($GLOBALS["_POST"] as $varname => $varvalue) {
-    if(isset($$varname)) unset($$varname);
-}
-foreach($GLOBALS["_COOKIE"] as $varname => $varvalue) {
-    if(isset($$varname)) unset($$varname);
-}
-foreach($GLOBALS["_SERVER"] as $varname => $varvalue) {
-    if(isset($$varname)) unset($$varname);
-}
-if(!empty($GLOBALS['_ENV'])) foreach($GLOBALS["_ENV"] as $varname => $varvalue) {
-    if(isset($$varname)) unset($$varname);
-}
-foreach($GLOBALS["_FILES"] as $varname => $varvalue) {
-    if(isset($$varname)) unset($$varname);
-}
-if(!empty($GLOBALS['_ENV'])) foreach($GLOBALS["_REQUEST"] as $varname => $varvalue) {
-    if(isset($$varname)) unset($$varname);
-}
-
-
-
-require_once("./includes/inc/date.inc.php");
-require_once("./includes/inc/encode.inc.php");
-require_once("./includes/inc/privmsg.inc.php");
-
 function exitPage($text, $include_header=false, $include_footer=true, $footer_simple=false) {
     $_CONFIG = &$GLOBALS['_CONFIG'];;
     $tdb = &$GLOBALS['tdb'];

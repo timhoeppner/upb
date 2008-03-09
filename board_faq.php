@@ -1,5 +1,5 @@
 <?php
-	require_once("./includes/class/func.class.php");
+	require_once("./includes/upb.initialize.php");
 	$where = "Frequently Asked Questions - FAQ";
 	require_once("./includes/header.php");
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);

@@ -4,7 +4,7 @@
 	// Website: http://www.myupb.com
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
-	require_once("./includes/class/func.class.php");
+	require_once("./includes/upb.initialize.php");
 	$where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." Checking for updates";
 	require_once('./includes/header.php');
 	if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {

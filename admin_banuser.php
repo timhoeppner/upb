@@ -4,7 +4,7 @@
 // Website: http://www.myupb.com
 // Version: 2.0
 // Using textdb Version: 4.3.2
-require_once("./includes/class/func.class.php");
+require_once("./includes/upb.initialize.php");
 $where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_baduser.php'>Manage banned users</a>";
 require_once("./includes/header.php");
 

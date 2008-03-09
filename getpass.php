@@ -6,7 +6,7 @@
 	// Using textdb Version: 4.3.2
 	if (!isset($_GET["ref"])) $ref = "index.php";
 	else $ref = $_GET["ref"];
-	require_once("./includes/class/func.class.php");
+	require_once("./includes/upb.initialize.php");
 	$where = "Lost Password";
 	$e = false;
 	if (isset($_POST["u_name"])) {

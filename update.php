@@ -2,7 +2,7 @@
 //coding.php has gone
 //skin.css has gone
 
-require_once("./includes/class/func.class.php");
+require_once("./includes/upb.initialize.php");
 //FPs already set in func.class.php
 //dump($_POST);
 $proceed = true;
@@ -115,14 +115,20 @@ $config_tdb->add("config", array("name" => "banned_words", "value" => "shit,fuck
 
 /*  Correct way to edit values in config */
 $config = array();
-$config[] = array('name' => 'ver', 'value' => '2.1.1b');
-$config[] = array('name' => 'ver', 'value' => '2.1.1b');
-$config[] = array('name' => 'skin_dir', 'sort' => '11', 'form_object'=>'drop', 'title'=>'Skin Selection', 'description'=>'Choose a skin');
-$config[] = array('name' => 'pm_max_outbox_msg', 'sort' => '19');
-$config[] = array('name' => 'security_code', 'sort' => '17');
-$config[] = array('name' => 'fileupload_location', 'form_object' => 'text');
+$config[] = array('name' => 'ver', 'value' => '2.2.1');
+$config[] = array('name' => 'ver', 'value' => '2.2.1');
 $config[] = array("name" => "admin_catagory_sorting", "form_object" => "hidden", "data_type" => "string");
+$config[] = array("name" => "posts_per_page", 'minicat'=>9,'sort'=>1);
+$config[] = array("name" => "topics_per_page", 'minicat'=>9,'sort'=>2);
+$config[] = array('name' => 'fileupload_location', 'minicat'=>9,'sort'=>3);
+$config[] = array('name' => 'fileupload_size', 'minicat'=>9,'sort'=>4);
+$config[] = array('name' => 'censor', 'minicat'=>9,'sort'=>5);
+$config[] = array('name' => 'sticky_note', 'minicat'=>9,'sort'=>6);
+$config[] = array('name' => 'sticky_after', 'minicat'=>9,'sort'=>7);
 $config_tdb->editVars('config', $config, true);
+$f = fopen(DB_DIR.'/config_org.dat', 'a');
+fwrite($f, "config".chr(30)."9".chr(30)."Posting Settings".chr(31));
+fclose($f);
 /* Clark: I dunno what else you tried to do here...
 $tdb->edit("ext_config",20,array('sort'=>'17'));
 $tdb->edit("ext_config",16,array('sort'=>'19'));

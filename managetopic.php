@@ -5,7 +5,7 @@
 	// Website: http://www.myupb.com
 	// Version: 2.0
 	// Using textdb Version: 4.4.1
-	require_once("./includes/class/func.class.php");
+	require_once("./includes/upb.initialize.php");
 	require_once("./includes/class/posts.class.php");
 	$posts_tdb = new posts(DB_DIR."/", "posts.tdb");
 

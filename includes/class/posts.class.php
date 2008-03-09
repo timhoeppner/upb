@@ -7,8 +7,6 @@
 // Using textdb Version: 4.4.1
 
 if(basename($_SERVER['PHP_SELF']) == 'posts.class.php') die('This is a wrapper script!');
-require_once('./includes/inc/post.inc.php');
-require_once('./includes/class/tdb.class.php');
 class posts extends tdb {
 	//declare vars
 	var $tRec;

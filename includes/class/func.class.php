@@ -6,31 +6,6 @@
 // Using textdb Version: 4.3.2
 
 if(basename($_SERVER['PHP_SELF']) == 'func.class.php') die('This is a wrapper script!');
-session_start();
-require_once("./includes/class/error.class.php");
-require_once("./config.php");
-require_once("./includes/inc/func.inc.php");
-require_once("./includes/class/tdb.class.php");
-require_once("./includes/class/config.class.php");
-require_once("./includes/class/mod_avatar.class.php");
-require_once('./includes/inc/post.inc.php');
-//whos_online.php included at last line
-
-//UPB's main Vars
-$config_tdb = new configSettings();
-$_CONFIG = $config_tdb->getVars("config");
-$_REGISTER = $config_tdb->getVars("regist");
-$_REGIST = &$_REGISTER;
-$_STATUS = $config_tdb->getVars("status");
-
-//integrate into admin_config
-$_CONFIG["where_sep"] = "<b>&gt;</b>";
-$_CONFIG["table_sep"] = "<b>::</b>";
-
-$config_tdb->setFp("config", "config");
-$config_tdb->setFp("ext_config", "ext_config");
-
-eval(file_get_contents(DB_DIR.'/constants.php'));
 class functions extends tdb {
     var $_cache = array();
 
@@ -100,17 +75,5 @@ class functions extends tdb {
         $this->readHeader($fp, $header);
         return $header["curId"];
     }
-}
-
-//installation precausion
-//globalize resource $tdb to prevent multiple occurances
-if(file_exists(DB_DIR."/main.tdb")) {
-    $tdb = new functions(DB_DIR.'/', 'main.tdb');
-    //$tdb->define_error_handler(array(&$errorHandler, 'add_error'));
-    $tdb->setFp('users', 'members');
-    $tdb->setFp('forums', 'forums');
-    $tdb->setFp('cats', 'categories');
-    $tdb->setFp('getpass', 'getpass');
-    require_once('./includes/whos_online.php');
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 //XML FEED PAGE
-require_once("./includes/class/func.class.php");
+require_once("./includes/upb.initialize.php");
 require_once('./includes/class/posts.class.php');
 $fRec = $tdb->get("forums", $_GET["id"]);
 
@@ -32,7 +32,7 @@ foreach ($tRecs as $key => $tRec)
   <link>".xml_clean($newurl)."</link>
   <description>".$tRec['subject']."</description>
   </item>";
-  
+
 }
 $xml .= "</channel></rss>";
 //$posts_tdb->varDump();
