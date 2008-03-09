@@ -1,5 +1,5 @@
 <?php
-
+if(basename($_SERVER['PHP_SELF']) == 'upb.initialize.php') die('This is a wrapper script!');
 //Start session for all upb pages
 session_start();
 
@@ -29,6 +29,7 @@ if(!empty($GLOBALS['_ENV'])) foreach($GLOBALS["_REQUEST"] as $varname => $varval
 
 require_once("./includes/class/error.class.php");
 require_once("./config.php");
+require_once("./includes/class/func.class.php");
 require_once("./includes/class/tdb.class.php");
 require_once("./includes/class/config.class.php");
 require_once("./includes/class/mod_avatar.class.php");
