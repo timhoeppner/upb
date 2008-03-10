@@ -111,18 +111,21 @@
     if($uploadId > 0) {
         // We have an attachment, query the database for the info
         $tdb->setFp("uploads", "uploads");
+        
+        //check information is in the upload database
+        $q = $tdb->get("uploads", $uploadId, array("name", "downloads","data"));
+        
+        //check the physical file is there
+        $r = file_exists($_CONFIG['fileupload_location']."/".$q[0]['data']);
 
-        $q = $tdb->get("uploads", $uploadId, array("name", "downloads"));
-
-        // Make sure the attachment exists
-        if($q !== false) {
+        // If either of the above is false, don't show the attachment link
+        if($q !== false and $r !== false) {
             $attachName = $q[0]["name"];
             $attachDownloads = $q[0]["downloads"];
 
             $pRec["message"] = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n" . $pRec["message"];
         }
     }
-
 
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$vars['page']."'>Add Reply</a></div>";
 		else $reply = "";

@@ -95,7 +95,12 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 			} elseif($_GET["action"] == "addnew") {
 				//add new user
 				if($_POST["word"] != "") {
-					echo "Banning user...";
+					
+          
+          echo "
+	<div class='alert_confirm'>
+		<div class='alert_confirm_text'>
+		<strong>Adding banned user: ".$_POST['word']."!</div><div style='padding:4px;'>";
 					if(filesize(DB_DIR.'/banneduser.dat') > 0) {
 						$names = explode("\n", file_get_contents(DB_DIR."/banneduser.dat"));
 					} else $names = array();
@@ -106,7 +111,8 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 					$f = fopen(DB_DIR."/banneduser.dat", 'w');
 					fwrite($f, implode("\n", $names));
 					fclose($f);
-					echo "Done!";
+					echo "Done!</div>
+	</div>";
 					if($_POST["ref"] != "") redirect($_POST["ref"], 1);
 					else redirect("admin_banuser.php", 1);
 				} else {
@@ -136,7 +142,7 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 			</tr>
 			<tr>
 				<td class='area_1' style='width:25%;padding:8px;'><strong>Enter user name to be banned</strong></td>
-				<td class='area_2'><input type=text name='word' size=20 value='".$_GET['word']."'></td>
+				<td class='area_2'><input type=text name='word' size=20 value='".$_GET['newword']."'></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>

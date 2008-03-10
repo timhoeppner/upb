@@ -175,7 +175,7 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Time zone:</strong></td>
-				<td class='area_2'><input type='text' name='timezone' size='20' value='".$rec[0]["timezone"]."' /></td>
+				<td class='area_2'>".timezonelist($rec[0]['timezone'])."</td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
@@ -218,7 +218,7 @@
 			require_once("admin_navigation.php");
 			echo "</td>
 			</tr>";
-			echoTableFooter($_CONFIG['skin_dir']);
+			echoTableFooter(SKIN_DIR);
 			echo "<form method='POST' action=".$PHP_SELF."?action=pass&id=".$_GET["id"]."><input type='hidden' name='a' value='1'>";
 		echoTableHeading("Setting a new password for: ".$user[0]["user_name"]."", $_CONFIG);
 			echo "
@@ -249,7 +249,7 @@
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Change Password'></td>
 			</tr>";
-    echoTableFooter($_CONFIG['skin_dir']);
+    echoTableFooter(SKIN_DIR);
     echo "</form>";
 		}
 	} elseif($_GET["action"] == "delete") {
@@ -281,7 +281,7 @@
 		require_once("admin_navigation.php");
 		echo "</td>
 			</tr>";
-		echoTableFooter($_CONFIG['skin_dir']);
+		echoTableFooter(SKIN_DIR);
 		print '<a name="skip_nav">&nbsp;</a>';
 		echoTableHeading("Search", $_CONFIG);
         ?><tr><td class='area_1' style='padding:8px;'><form action="admin_members.php#skip_nav" method="GET">Username: <input name="u" type="text" value="<?php print ((isset($_GET['u'])) ? $_GET['u'] : ''); ?>"><p><input type="submit" name="action" value="Search">&nbsp;&nbsp;<input type="submit" name="action" value="Clear"<?php print (($_GET['action'] == 'Search') ? '' : ' DISABLED'); ?>></form></td></tr><?php
@@ -378,7 +378,7 @@
 			<tr>
 				<td class='area_1' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='10'>An <i>italized</i> e-mail states that this member has chosen to have his/her email address non-viewable to all but admins.</td>
 			</tr>";
-		echoTableFooter($_CONFIG['skin_dir']);
+		echoTableFooter(SKIN_DIR);
 		echo "
 		<table class='pagenum_container' cellspacing='1'>
 			<tr>

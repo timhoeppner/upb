@@ -152,7 +152,7 @@
 			</tr>";
 			}
 
-		echoTableFooter($_CONFIG['skin_dir']);
+		echoTableFooter(SKIN_DIR);
 		echoTableHeading("Other Information", $_CONFIG);
 		echo "
 			<tr>
@@ -202,15 +202,12 @@
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Timezone Setting:</strong></td>
-				<td class='area_2'>";
-        timezonelist();
-        echo "</td>
-			</tr>";
+				<td class='area_2'>".timezonelist()."</td></tr>";
 		echo "
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit name=submit value='Submit'></td>
 			</tr>";
-		echoTableFooter($_CONFIG['skin_dir']);
+		echoTableFooter(SKIN_DIR);
     echo "</form>";
 		require_once('./includes/footer.php');
 		if (empty($_COOKIE["user_env"])) $user = "guest";

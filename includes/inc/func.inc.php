@@ -303,17 +303,18 @@ function timezonelist($current=0)
   $timezones["11"] = "(GMT +11:00) Magadan, Solomon Islands, New Caledonia";
   $timezones["12"] = "(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka";
 
-  echo "\n<select name='u_timezone' id='u_timezone'>\n";
+  $output = "\n<select name='u_timezone' id='u_timezone'>\n";
   $set = (float) $current; //convert to a float for comparison with keys
   foreach ($timezones as $key => $places)
   {
     $diff = (float) $key; //set type to float to convert some array keys which are strings.
-    echo "<option value='".(float)$diff."'";
+    $output .= "<option value='".(float)$diff."'";
     if ($set == $diff)
-      echo " selected='selected'";
-    echo ">$places</option>\n";
+      $output .= " selected='selected'";
+    $output .= ">$places</option>\n";
   }
-  echo "</select>\n";
+  $output .= "</select>\n";
+  return $output;
 }
 
 function is_secure()
