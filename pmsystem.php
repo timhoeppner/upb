@@ -4,7 +4,7 @@
 	// Original PM Version (before _MANUAL_ upgrades): 2.0
 	// Addon Created by J. Moore aka Rebles
 	// Using textdb Version: 4.2.3
-	require_once('./includes/class/func.class.php');
+	require_once('./includes/upb.initialize.php');
 	$where = "<a href='pmsystem.php'>Messenger</a>";
 	if (isset($_GET["section"]) && $_GET["section"] != "") $where .= " ".$_CONFIG["where_sep"]." ".ucfirst($_GET["section"]);
 	require_once('./includes/header.php');

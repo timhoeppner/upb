@@ -9,7 +9,7 @@
 	topic lists - posts.tdb :: [FORUM_ID]_topics (icon, subject, topic_starter, sticky, replies, locked, last_post, user_name, user_id, p_ids, id)
 	posts - posts.tdb :: [FORUM_ID] (icon, user_name, date, message, user_id, t_id, id)
 	*/
-	require_once('./includes/class/func.class.php');
+	require_once('./includes/upb.initialize.php');
 	$where = "Search";
 	require_once('./includes/header.php');
 	$posts_tdb = new functions(DB_DIR.'/', "posts.tdb");

@@ -5,7 +5,7 @@
     // Version: 2.0
     // Using textdb Version: 4.3.2
     $where = 'Private Policy';
-    require_once('./includes/class/func.class.php');
+    require_once('./includes/upb.initialize.php');
     require_once("./includes/header_simple.php");
 ?>
 You can add an image to your profile. If you have space on a webserver somewhere, upload your image, then type the URL of the image in the avatar text box to the right. 

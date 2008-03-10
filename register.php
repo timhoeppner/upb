@@ -5,7 +5,7 @@
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
 	// Ultimate PHP Board Register
-	require_once('./includes/class/func.class.php');
+	require_once('./includes/upb.initialize.php');
 	$where = "Register";
 	$required = "#ff0000";
 	if ($tdb->is_logged_in()) exitPage('You\'re already logged in.', true);

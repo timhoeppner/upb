@@ -1,5 +1,5 @@
 <?php
-require_once('./includes/class/func.class.php');
+require_once('./includes/upb.initialize.php');
 if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_COOKIE["power_env"]) && isset($_COOKIE["id_env"])) {
     if($tdb->is_logged_in()) {
         $v_date = mkdate();

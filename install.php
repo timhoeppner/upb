@@ -478,7 +478,7 @@
 				<p>An error has ocurred in the script.  Please see above for details on the error to try to remody the problem.</p>";
 		}
 	} else {
-		require_once('./includes/class/func.class.php');
+		require_once('./includes/upb.initialize.php');
 	}
 	if ($_POST["add"] == "2") {
 		//Verify admin account

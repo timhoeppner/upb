@@ -4,7 +4,7 @@
 	// Original PM Version (before _MANUAL_ upgrades): 2.0
 	// Addon Created by J. Moore aka Rebles
 	// Using textdb Version: 4.2.3
-	require_once('./includes/class/func.class.php');
+	require_once('./includes/upb.initialize.php');
 	if (!isset($_COOKIE["user_env"]) || !isset($_COOKIE["uniquekey_env"]) || !isset($_COOKIE["power_env"]) || !isset($_COOKIE["id_env"])) exitPage('You are not logged in.', true);
 	if (!$tdb->is_logged_in()) exitPage('Invalid Login!', true);
 	require_once('./includes/inc/privmsg.inc.php');
