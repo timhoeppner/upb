@@ -194,15 +194,17 @@
 			$tdb->edit("users", $_GET["id"], array("password" => generateHash($_POST["pass"])));
 			$msg = "You Password was changed by ".$_COOKIE["user_env"]." on the website ".$_CONFIG["homepage"]." to \"".$_POST["pass"]."\"";
 			if (isset($_POST["reason"])) $msg .= "\n\n".$_COOKIE["user_env"]."'s reason was this:\n".$_POST["reason"];
-			$email_fail = false;
+
       if(!@mail($user[0]["email"], "Password Change Notification", "Password Changed by :".$_COOKIE["user_env"]."\n\n".$msg, "From: ".$_REGISTER["admin_email"]))
-        $email_fail = true;
+        $email_status = email_status(false);
+      else
+        $email_status = email_status(true);
 			echoTableHeading("Password changed!", $_CONFIG);
       echo "
 		<tr>
 			<td class='area_1'><div class='description'><strong>";
       echo "You successfully changed ".$user[0]["user_name"]."'s password to ".$_POST["pass"]."</strong>";
-			if ($email_fail === true)
+			if ($email_status !== true)
         echo "<p>The automated email was unable to be sent.<p>Please email them at ".$user[0]['email']." to inform them of the change of password";
       echo "</div></td></tr>";
       echoTableFooter(SKIN_DIR);
@@ -236,13 +238,15 @@
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Reason</strong></td>
 				<td class='area_2'><textarea name=reason></textarea></td>
-			</tr>
-			<tr>
+			</tr>";
+			if (EMAIL_MODE)
+			echo "<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='2'>An E-mail will be sent, notifying the user about the change of their password by <i>".$_COOKIE["user_env"]."</i></td>
-			</tr>
+			</tr>";
+			echo "
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>

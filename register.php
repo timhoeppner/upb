@@ -67,12 +67,13 @@
 		$register_msg = $_REGISTER['register_msg'];
 		$register_msg = str_replace("<login>", $_POST['u_login'], $register_msg);
 		$register_msg = str_replace("<password>", $u_pass, $register_msg);
-		$email_fail = false;
     if (!@mail($_POST["u_email"], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"]))
-    $email_fail = true;
+    $email_status = email_status(false);
+    else
+    $email_status = email_status(true);
 
 		require_once('./includes/header.php');
-		if ($email_fail === false)
+		if ($email_status !== false)
     {
       echoTableHeading("Thank you for registering!", $_CONFIG);
       echo "

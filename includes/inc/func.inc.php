@@ -329,4 +329,24 @@ function is_secure()
   }
   return true;
 }
+
+function email_status($status)
+{
+if ($status === false)
+$newline = "define('EMAIL_MODE', false, true);\n";
+else
+$newline = "define('EMAIL_MODE', true,true);\n";
+$file = file('config.php');
+for($i=0,$c=count($file);$i<$c;$i++) 
+{
+  if(strpos($file[$i], 'EMAIL_MODE')) $file[$i] = $newline;
+}
+$file = implode('', $file);
+if(FALSE !== ($f = @fopen('config.php', 'w'))) {
+fwrite($f, $file);
+fclose($f);
+return $status;
+}
+}
+
 ?>

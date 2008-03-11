@@ -83,7 +83,8 @@ function UPBcoding($text) {
     //$msg = str_replace("[/*]", "</li>", $msg);
 
     //start script for delete.php
-    $msg = str_replace("(emailadmin)", "<a href='email.php?id=$adminid' target='_blank'><img src='images/email.gif' border='0'></a>", $msg);
+    if (EMAIL_MODE)
+      $msg = str_replace("(emailadmin)", "<a href='email.php?id=$adminid' target='_blank'><img src='images/email.gif' border='0'></a>", $msg);
     //end script for delete.php
     //start upb code
     $msg = preg_replace("/\[center\](.*?)\[\/center\]/si", "<div align='center'>\\1</div>", $msg);

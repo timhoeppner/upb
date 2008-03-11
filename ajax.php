@@ -306,10 +306,14 @@ switch ($ajax_type)
     $output .= "<div class='post_edited' name='edit{$_POST['id']}-{$_POST['t_id']}-{$pRec['id']}' id='edit{$_POST['id']}-{$_POST['t_id']}-{$pRec['id']}'>Last edited by: <a href='profile.php?action=get&id=".$pRec['edited_by_id']." target='_new'><strong>".$pRec['edited_by']."</strong></a> on ".gmdate("M d, Y g:i:s a", user_date($pRec['edited_date']))."</div>";
 		else
       	$output .= "<div name='edit{$_POST['id']}-{$_POST['t_id']}-{$pRec['id']}' id='edit{$_POST['id']}-{$_POST['t_id']}-{$pRec['id']}' class='post_edited'></div>";
-		$output .= "
+		if ($pRec['user_id'] != 0)
+    { 
+    $output .= "
 					<div class='button_pro2'><a href='profile.php?action=get&id=".$pRec["user_id"]."'>Profile</a></div>
-					<div class='button_pro2'><a href='".$user[0]["url"]."' target = '_blank'>Homepage</a></div>
-					<div class='button_pro2'><a href='email.php?id=".$pRec["user_id"]."'>email ".$pRec["user_name"]."</a></div>";
+					<div class='button_pro2'><a href='".$user[0]["url"]."' target = '_blank'>Homepage</a></div>";
+					if (EMAIL_MODE)
+          $output .= "<div class='button_pro2'><a href='email.php?id=".$pRec["user_id"]."'>email ".$pRec["user_name"]."</a></div>";
+    }
     $output .= "</td>
 			</tr>
 		</tbody>

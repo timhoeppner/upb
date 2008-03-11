@@ -105,7 +105,8 @@ class posts extends tdb {
   			else $output .= "<li><a href='#' title='Topic Is Locked'><span>Topic Is Locked</span></a></li>";
   		}
   		if((int)$this->user["power"] > 0) {
-  		    $output .= "<li><a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Watch This Topic?'><span>Watch Topic</span></a></li>";
+  		    if (EMAIL_MODE)
+            $output .= "<li><a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Watch This Topic?'><span>Watch Topic</span></a></li>";
 	        $output .= "<li><a href='managetopic.php?action=favorite&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Favorite this Topic?'><span>Bookmark Topic</span></a></li>";
   		}
     	if ((int)$_COOKIE["power_env"] >= 2) {

@@ -176,12 +176,17 @@
 		else
       	echo "<div name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' class='post_edited'></div>";
 		if ($pRec['user_id'] != 0)
+    {
     echo "
 					<div class='button_pro2'><a href='profile.php?action=get&id=".$pRec["user_id"]."'>Profile</a></div>
-					<div class='button_pro2'><a href='".$user[0]["url"]."' target = '_blank'>Homepage</a></div>
+					<div class='button_pro2'><a href='".$user[0]["url"]."' target = '_blank'>Homepage</a></div>";
+		if (EMAIL_MODE)
+    echo "
 					<div class='button_pro2'><a href='email.php?id=".$pRec["user_id"]."'>email ".$pRec["user_name"]."</a></div>";
+		}
     echo "</td></tr>".echoTableFooter($_CONFIG['skin_dir'])."</div>";
-	}
+	
+  }
 	echo "</div>";
 
 	$p = createPageNumbers($vars['page'], $num_pages, $_SERVER['QUERY_STRING']);
