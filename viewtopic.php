@@ -101,31 +101,22 @@
 		else $edit = "";
 		if ((($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) && $pRec['id'] != $first_post) $delete = "<div class='button_pro1'><a href='delete.php?action=delete&t=0&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."'>X</a></div>";
 		else $delete = "";
-		
-    if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) 
+
+    if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"])
 		$quote = "<div class='button_pro1'><a href=\"javascript:addQuote('".$pRec["user_name"]."-".$pRec["id"]."-".$pRec['date']."','".$pRec["message"]."')\">\"Quote\"</a></div>";
     else $quote = "";
 
 		$uploadId = (int) $pRec["upload_id"];
+        if($uploadId > 0) {
+            //check information is in the upload database
+            $q = $tdb->get("uploads", $uploadId, array("name", "downloads","data"));
+            if(!empty($q[0]) && file_exists($_CONFIG['fileupload_location']."/".$q[0]['data'])) {
+                $attachName = $q[0]["name"];
+                $attachDownloads = $q[0]["downloads"];
 
-    if($uploadId > 0) {
-        // We have an attachment, query the database for the info
-        $tdb->setFp("uploads", "uploads");
-        
-        //check information is in the upload database
-        $q = $tdb->get("uploads", $uploadId, array("name", "downloads","data"));
-        
-        //check the physical file is there
-        $r = file_exists($_CONFIG['fileupload_location']."/".$q[0]['data']);
-
-        // If either of the above is false, don't show the attachment link
-        if($q !== false and $r !== false) {
-            $attachName = $q[0]["name"];
-            $attachDownloads = $q[0]["downloads"];
-
-            $pRec["message"] = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n" . $pRec["message"];
+                $pRec["message"] = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n" . $pRec["message"];
+            }
         }
-    }
 
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$vars['page']."'>Add Reply</a></div>";
 		else $reply = "";
@@ -185,7 +176,7 @@
 					<div class='button_pro2'><a href='email.php?id=".$pRec["user_id"]."'>email ".$pRec["user_name"]."</a></div>";
 		}
     echo "</td></tr>".echoTableFooter($_CONFIG['skin_dir'])."</div>";
-	
+
   }
 	echo "</div>";
 
@@ -201,7 +192,7 @@
   foreach ($_GET as $key => $value)
   {
     if ($key != 'page')
-      echo "<input type='hidden' id='$key' name='$key' value='$value'>\n";     
+      echo "<input type='hidden' id='$key' name='$key' value='$value'>\n";
   }
   echo "<input type='hidden' id='page' name='page' value='".$vars['page']."'>\n";
   echo "<input type='hidden' id='user_id' name='user_id' value='{$_COOKIE['id_env']}'>\n";

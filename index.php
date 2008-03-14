@@ -11,9 +11,7 @@
 		if (!defined('DB_DIR')) die("installer has not been run yet. click <a href='install.php'>here</a> to install.");
 	}
 	require_once("./includes/upb.initialize.php");
-	//echo '<pre>'; var_dump($GLOBALS); echo '</pre>';
 	if ($_COOKIE["power_env"] == "" || empty($_COOKIE["power_env"]) || trim($_COOKIE["power_env"]) == "") $_COOKIE["power_env"] = "0";
-	//upb_session_start();
 	require_once("./includes/header.php");
 
 	$posts = new tdb(DB_DIR, "posts.tdb");
@@ -22,16 +20,15 @@
 	if ($cRecs[0]["id"] == "") {
 		echo "
 			<div class='alert'><div class='alert_text'>
-			<strong>Caution!</strong></div><div style='padding:4px;'>No categories have been added yet or this is a private forum.<br />";
+			<strong>Caution!</strong></div><div style='padding:4px;'>No categories have been added yet.<br />";
 		if ($_COOKIE["power_env"] < 3) {
 			echo " Please contact an Administrator";
-			if ($_COOKIE["power_env"] > 0) 
-      {
-      echo " via <a href='newpm.php?id=1'>PM Message</a>";
-      if (EMAIL_MODE)
-      echo "or <a href='email.php?id=1'>web email</a>";
-		  }
-    } else {
+			if ($_COOKIE["power_env"] > 0) {
+                echo " via <a href='newpm.php?id=1'>PM Message</a>";
+                if (EMAIL_MODE)
+                echo "or <a href='email.php?id=1'>web email</a>";
+		    }
+        } else {
 			echo " To add a Category, <a href='admin_forums.php?action=add_cat'>click here</a>.";
 		}
 		echo '</div></div>';
@@ -55,88 +52,98 @@
 		unset($sorted, $i, $catdef, $cSorting);
 		reset($cRecs);
 
-		$t_t = 0;
-		$t_p = 0;
-		foreach($cRecs as $cRec) {
-			if ($_COOKIE["power_env"] >= $cRec["view"]) {
-		echoTableHeading($cRec["name"], $_CONFIG);
-				echo "
-			<tr>
-				<th style='width: 75%;'>Forum</th>
-				<th style='width:25%;text-align:center;'>Latest Topic</th>
-			</tr>";
-				$cId = $cRec["id"];
-				//$fRecs = $tdb->query("forums", "cat='$cId'&&view<'".($_COOKIE["power_env"] + 1)."'");
-				if ($cRec["sort"] == "") {
-					echo "
-			<tr>
-				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='2'>No forums have been added to this Category yet.<br />";
-					if ($_COOKIE["power_env"] != "3") {
-						echo " Please contact an Administrator";
-						
-            if ($_COOKIE["power_env"] > 0) 
-            {
-            echo " via <a href='newpm.php?id=1'>PM Message</a>";
-            if (EMAIL_MODE)
-            echo " or <a href='email.php?id=1'>web email</a>";
-					}
-          } else {
-						echo " To add a forum, <a href='admin_forums.php?action=add_forum&cat_id=".$cRec["id"]."'>click here</a>.";
-					}
-					echo "</td>
-			</tr>";
-				} else {
-					unset($sort);
-					$sort = explode(",", $cRec["sort"]);
-					while (!empty($sort)) {
-						$fRec = $tdb->get("forums", $sort[0]);
-						$fRec = $fRec[0];
-						if ((int)$fRec["view"] <= (int)($_COOKIE["power_env"])) {
-							//if($fRec["cat"] == $cRec["id"]) {
-							$posts->setFp("topics", $fRec["id"]."_topics");
-							$tRec = $posts->listRec("topics", 1, 1);
-							//dump($tRec);
-              if ($fRec["mod"] == "") $mod = "unmoderated";
-							else $mod = $fRec["mod"];
-							if ($tRec[0]["id"] == "") {
-								$when = "No Posts";
-								$v_icon = "off.png";
-							} else {
-								$when = "<span class='date'>".gmdate("M d, Y g:i:s a", user_date($tRec[0]["last_post"]))."</span><br /><strong>In:</strong>&nbsp;<strong><a href='viewtopic.php?id=".$fRec["id"]."&amp;t_id=".$tRec[0]["id"]."'>".$tRec[0]["subject"]."</a></strong><br /><strong>By:</strong> ";
-								if ($tRec[0]["user_id"] != "0") $when .= "<span class='link_2'><a href='profile.php?action=get&amp;id=".$tRec[0]["user_id"]."'>".$tRec[0]["user_name"]."</a></span>";
-								else $when .= "a ".$tRec[0]["user_name"]."";
-								if (isset($_COOKIE["lastvisit"])) {
-									if($tRec[0]["last_post"] > $_SESSION['newTopics']['lastVisitForums'][$cId] || (FALSE !== array_search("1", $_SESSION['newTopics']['f'.$cId]))) $v_icon = "on.png";
-									//if ($tRec[0]["last_post"] > $_COOKIE["lastvisit"]) $v_icon = "on.png";
-									else $v_icon = "off.png";
-								}
-								else $v_icon = "off.png";
-							}
-							$t_t += $fRec["topics"];
-							$t_p += $fRec["posts"];
-							if ($fRec["topics"] == "0") $v_icon = "off.png";
-							echo "
-			<tr>
-				<td class='area_2' style=\"cursor:pointer;\" onclick=\"window.location.href='viewforum.php?id=".$fRec["id"]."';\" onmouseover=\"this.className='area_2_over'\" onmouseout=\"this.className='area_2'\">
-								<span class='link_1'><a href='viewforum.php?id=".$fRec["id"]."'>".$fRec["forum"]."</a></span>
-								<div class='description'>".$fRec["des"]."</div>
-								<div class='box_posts'><strong>Posts:</strong>&nbsp;".$fRec["posts"]."</div>
-								<div class='box_topics'><strong>Topics:</strong>&nbsp;".$fRec["topics"]."</div></td>
-				<td class='area_1' style='text-align:center;'><div class='post_image'><img src='".$_CONFIG["skin_dir"]."/icons/$v_icon' alt='' title='' /></div><span class='latest_topic'>$when</span></td>
-			</tr>";
-							unset($when);
-							/*} else {
-							echo "<tr><td colspan='6' bgcolor='$table1'><center>Forum's Category ID doesn't match</center></td></tr>";
-							}*/
-						}
-						array_shift($sort);
-						unset($when);
-					}
-				}
-				echoTableFooter($_CONFIG['skin_dir']);
-			}
-			unset($cRec);
-		}
+    	if ($cRecs[0]["id"] == "") {
+    		echo "
+    			<div class='alert'><div class='alert_text'>
+    			<strong>Caution!</strong></div><div style='padding:4px;'>This is a private forum, which may require registration.<br />";
+    		if ($_COOKIE["power_env"] < 3) {
+    			echo " Please contact an Administrator";
+    			if ($_COOKIE["power_env"] > 0) echo " via <a href='newpm.php?id=1'>PM Message</a> or <a href='email.php?id=1'>web email</a>";
+    		} else {
+    			echo " To add a Category, <a href='admin_forums.php?action=add_cat'>click here</a>.";
+    		}
+    		echo '</div></div>';
+    	} else {
+    		$t_t = 0;
+    		$t_p = 0;
+    		foreach($cRecs as $cRec) {
+    			if ($_COOKIE["power_env"] >= $cRec["view"]) {
+    		echoTableHeading($cRec["name"], $_CONFIG);
+    				echo "
+    			<tr>
+    				<th style='width: 75%;'>Forum</th>
+    				<th style='width:25%;text-align:center;'>Latest Topic</th>
+    			</tr>";
+    				$cId = $cRec["id"];
+    				//$fRecs = $tdb->query("forums", "cat='$cId'&&view<'".($_COOKIE["power_env"] + 1)."'");
+    				if ($cRec["sort"] == "") {
+    					echo "
+    			<tr>
+    				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='2'>No forums have been added to this Category yet.<br />";
+    					if ($_COOKIE["power_env"] != "3") {
+    						echo " Please contact an Administrator";
+                            if ($_COOKIE["power_env"] > 0) {
+                                echo " via <a href='newpm.php?id=1'>PM Message</a>";
+                                if (EMAIL_MODE) echo " or <a href='email.php?id=1'>web email</a>";
+        					}
+    					} else {
+    						echo " To add a forum, <a href='admin_forums.php?action=add_forum&cat_id=".$cRec["id"]."'>click here</a>.";
+    					}
+    					echo "</td>
+    			</tr>";
+    				} else {
+    					unset($sort);
+    					$sort = explode(",", $cRec["sort"]);
+    					while (!empty($sort)) {
+    						$fRec = $tdb->get("forums", $sort[0]);
+    						$fRec = $fRec[0];
+    						if ((int)$fRec["view"] <= (int)($_COOKIE["power_env"])) {
+    							//if($fRec["cat"] == $cRec["id"]) {
+    							$posts->setFp("topics", $fRec["id"]."_topics");
+    							$tRec = $posts->listRec("topics", 1, 1);
+    							//dump($tRec);
+                  if ($fRec["mod"] == "") $mod = "unmoderated";
+    							else $mod = $fRec["mod"];
+    							if ($tRec[0]["id"] == "") {
+    								$when = "No Posts";
+    								$v_icon = "off.png";
+    							} else {
+    								$when = "<span class='date'>".gmdate("M d, Y g:i:s a", user_date($tRec[0]["last_post"]))."</span><br /><strong>In:</strong>&nbsp;<strong><a href='viewtopic.php?id=".$fRec["id"]."&amp;t_id=".$tRec[0]["id"]."'>".$tRec[0]["subject"]."</a></strong><br /><strong>By:</strong> ";
+    								if ($tRec[0]["user_id"] != "0") $when .= "<span class='link_2'><a href='profile.php?action=get&amp;id=".$tRec[0]["user_id"]."'>".$tRec[0]["user_name"]."</a></span>";
+    								else $when .= "a ".$tRec[0]["user_name"]."";
+    								if (isset($_COOKIE["lastvisit"])) {
+    									if($tRec[0]["last_post"] > $_SESSION['newTopics']['lastVisitForums'][$cId] || (FALSE !== array_search("1", $_SESSION['newTopics']['f'.$cId]))) $v_icon = "on.png";
+    									//if ($tRec[0]["last_post"] > $_COOKIE["lastvisit"]) $v_icon = "on.png";
+    									else $v_icon = "off.png";
+    								}
+    								else $v_icon = "off.png";
+    							}
+    							$t_t += $fRec["topics"];
+    							$t_p += $fRec["posts"];
+    							if ($fRec["topics"] == "0") $v_icon = "off.png";
+    							echo "
+    			<tr>
+    				<td class='area_2' style=\"cursor:pointer;\" onclick=\"window.location.href='viewforum.php?id=".$fRec["id"]."';\" onmouseover=\"this.className='area_2_over'\" onmouseout=\"this.className='area_2'\">
+    								<span class='link_1'><a href='viewforum.php?id=".$fRec["id"]."'>".$fRec["forum"]."</a></span>
+    								<div class='description'>".$fRec["des"]."</div>
+    								<div class='box_posts'><strong>Posts:</strong>&nbsp;".$fRec["posts"]."</div>
+    								<div class='box_topics'><strong>Topics:</strong>&nbsp;".$fRec["topics"]."</div></td>
+    				<td class='area_1' style='text-align:center;'><div class='post_image'><img src='".$_CONFIG["skin_dir"]."/icons/$v_icon' alt='' title='' /></div><span class='latest_topic'>$when</span></td>
+    			</tr>";
+    							unset($when);
+    							/*} else {
+    							echo "<tr><td colspan='6' bgcolor='$table1'><center>Forum's Category ID doesn't match</center></td></tr>";
+    							}*/
+    						}
+    						array_shift($sort);
+    						unset($when);
+    					}
+    				}
+    				echoTableFooter($_CONFIG['skin_dir']);
+    			}
+    			unset($cRec);
+    		}
+    	}
 	}
 	//start Statistics Table
 	$whos = whos_online($whos_online_log, $_STATUS);

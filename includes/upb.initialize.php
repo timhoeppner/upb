@@ -50,6 +50,7 @@ if(file_exists(DB_DIR."/main.tdb")) {
     $tdb->setFp('forums', 'forums');
     $tdb->setFp('cats', 'categories');
     $tdb->setFp('getpass', 'getpass');
+    $tdb->setFp("uploads", "uploads");
 
     //UPB's main Vars
     $config_tdb = new configSettings();
