@@ -90,7 +90,7 @@
 					<div class='simple_date' style='float:left;'>Message Sent: ".gmdate("M d, Y g:i:s a", user_date($pmRec[0]["date"]))."</div>
 					<div style='float:right;padding:4px;'><div class='simple_button'><a href='profile.php?action=get&id=".$user[0]["id"]."' target='_parent'>Profile</a></div>
 					<div class='simple_button'><a href='".$user[0]["url"]."' target='_parent'>homepage</a></div>";
-					if (EMAIL_MODE)
+					if ($_CONFIG['email_mode'])
           echo "
 					<div class='simple_button'><a href='email.php?id=".$user[0]["id"]."' target='_parent'>email ".$user[0]["user_name"]."</a></div>";
 					echo "</div>

@@ -68,9 +68,9 @@
 		$register_msg = str_replace("<login>", $_POST['u_login'], $register_msg);
 		$register_msg = str_replace("<password>", $u_pass, $register_msg);
     if (!@mail($_POST["u_email"], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"]))
-    $email_status = email_status(false);
+      if(!$_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '0'));
     else
-    $email_status = email_status(true);
+      if($_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '1'));
 
 		require_once('./includes/header.php');
 		if ($email_status !== false)

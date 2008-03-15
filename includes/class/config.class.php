@@ -22,7 +22,7 @@
       //rows predetermined (10)
       //cols predetermined (30)
       array("data_type", "string", 7)
-      //Determines what kind of data is acceptable in the object.  Options: "number", "text" aka "string", "_blank", "_parent"
+      //Determines what kind of data is acceptable in the object.  Options: "number", "text" aka "string", "_blank", "_parent", bool, or boolean
       //"data_type" is the target of links.
     ));
 *//*
@@ -90,9 +90,9 @@ class configSettings extends tdb {
         return $return;
     }
 
-    //format for $varArr is array('var_name' => 'var_value', ...)
-    //if($editOptionalData) format is how it is stored in the tdb, array(array("name" => $name, ...)...)
     function editVars($type, $varArr, $editOptionalData=false) {
+        //format for $varArr is array('var_name' => 'var_value', ...)
+        //if($editOptionalData) format is how it is stored in the tdb, array(array("name" => $name, ...)...)
         if(!is_array($varArr)) {
             echo "<b>Warning:</b> second argument of editVars(), must be an array.  (type: ".$type.")";
             return false;
@@ -101,24 +101,29 @@ class configSettings extends tdb {
         if($editOptionalData) {
             $nameRef = array();
             for($i=0;$i<count($varArr);$i++) {
-               $nameRef[$varArr[$i]["name"]] = $varArr[$i];
+               $nameRef[$varArr[$i]["name"]] = $varArr[$i];  //element "value" is already in $varArr[$i]$varArr
             }
         }
         foreach($oriVars as $oriVar) {
-            if($oriVar["form_object"] == "textarea") {
-                if($editOptionalData) $nameRef[$oriVar["name"]]["value"] = stripslashes($nameRef[$oriVar["name"]]["value"]);
-                else $varArr[$oriVar["name"]] = stripslashes($varArr[$oriVar["name"]]);
-            } elseif($oriVar["form_object"] == "checkbox") {
-                if($editOptionalData && $nameRef[$oriVar["name"]] != "1") $nameRef[$oriVar["name"]]["value"] = 0;
-                elseif($varArr[$oriVar["name"]] != "1") $varArr[$oriVar["name"]] = "0";
-                /*if($nameRef[$oriVar["name"]] != "1") {
-                    if($editOptionalData)
-                    else $varArr[$oriVar["name"]] = 0;
-                } */
+            switch ($oriVar['data_type']) {
+                case 'number':
+                    if($editOptionalData) {  //$field = eregi_replace("[^0-9.-]", "", $field);
+                        $nameRef[$oriVar["name"]]["value"] = eregi_replace("[^0-9.-]", "", $nameRef[$oriVar["name"]]["value"]);
+                    } else $varArr[$oriVar["name"]] = eregi_replace("[^0-9.-]", "", $varArr[$oriVar["name"]]);
+                    break;
+                case 'bool':
+                case 'boolean':
+                    if($editOptionalData) {
+                        $nameRef[$oriVar["name"]]["value"] = (($nameRef[$oriVar["name"]]["value"] != false) ? '1' : '0');
+                    } else $varArr[$oriVar["name"]] = (($varArr[$oriVar["name"]] != false) ? '1' : '0');
+                    break;
+                case 'text':
+                case 'string':
+                default:
+                    if($editOptionalData) $nameRef[$oriVar["name"]]["value"] = stripslashes($nameRef[$oriVar["name"]]["value"]);
+                    else $varArr[$oriVar["name"]] = stripslashes($varArr[$oriVar["name"]]);
+                    break;
             }
-            //elseif ($oriVar["form_object"] == "list" and $varArr['type'] != "addcat" and $varArr['type'] != "delcat")
-            //  $varArr[$oriVar["name"]] = $varArr['neworder'];     // Why is this here?  Breaking other scripts
-
 
             if($editOptionalData) {
                 if(is_array($nameRef[$oriVar["name"]])) {

@@ -307,11 +307,11 @@ switch ($ajax_type)
 		else
       	$output .= "<div name='edit{$_POST['id']}-{$_POST['t_id']}-{$pRec['id']}' id='edit{$_POST['id']}-{$_POST['t_id']}-{$pRec['id']}' class='post_edited'></div>";
 		if ($pRec['user_id'] != 0)
-    { 
+    {
     $output .= "
 					<div class='button_pro2'><a href='profile.php?action=get&id=".$pRec["user_id"]."'>Profile</a></div>
 					<div class='button_pro2'><a href='".$user[0]["url"]."' target = '_blank'>Homepage</a></div>";
-					if (EMAIL_MODE)
+					if ($_CONFIG['email_mode'])
           $output .= "<div class='button_pro2'><a href='email.php?id=".$pRec["user_id"]."'>email ".$pRec["user_name"]."</a></div>";
     }
     $output .= "</td>

@@ -83,7 +83,7 @@ function UPBcoding($text) {
     //$msg = str_replace("[/*]", "</li>", $msg);
 
     //start script for delete.php
-    if (EMAIL_MODE)
+    if ($_CONFIG['email_mode'])
       $msg = str_replace("(emailadmin)", "<a href='email.php?id=1' target='_blank'><img src='images/email.gif' border='0'></a>", $msg); //$adminid undefined, changed back to "1"
     //end script for delete.php
     //start upb code

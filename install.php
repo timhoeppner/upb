@@ -177,72 +177,37 @@
 		fclose($f);
 		//$_CONFIG
 		?><?php
-    $tdb->add("ext_config", array("name" => "ver", "value" => "2.2.1", "type" => "config", "form_object" => "hidden", "data_type" => "string"));
-		$tdb->add("config", array("name" => "ver", "value" => "2.2.1", "type" => "config"));
+		$config_tdb = new configSettings();
+		$config_tdb->add('ver', '2.2.1', 'config', 'text', 'hidden', '','','','');
+		$config_tdb->add('email_mode', '1', 'config', 'bool', 'hidden','','','','');
+		$config_tdb->add('admin_catagory_sorting', '', 'config', 'text', 'hidden', '', '', '', '');
+		$config_tdb->add('banned_words', 'shit,fuck,cunt,pussy,bitch,arse', 'config', 'text', 'hidden', '','','','');
+		$config_tdb->add('fileupload_location', './'.uniqid('uploads_', true), 'config', 'text', 'hidden', '', '', '', ''); //Since upload's name are gone, doesn't make much sense to let user pick the uploads location...
 
-		$tdb->add("ext_config", array("name" => "title", "value" => "Discussion Forums", "type" => "config", "title" => "Title", "description" => "Title of the forum", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "1"));
-		$tdb->add("config", array("name" => "title", "value" => "Discussion Forums", "type" => "config"));
+		$config_tdb->add('title', 'Discussion Forums', 'config', 'text', 'text', '1', '1', 'Title', 'Title of the forum.');
+		$config_tdb->add('logo', 'images/logo.gif', 'config', 'text', 'text', '1', '2', 'Logo Location', 'Can be relative or a URL.');
+		$config_tdb->add('homepage', 'http://www.myupb.com/', 'config', 'text', 'text', '1', '3', 'Homepage URL', 'Can be relative or a URL.');
+		$config_tdb->add('avatar_width', '60', 'config', 'number', 'text', '1', '4', 'Avatars\' Width', 'The width (with respect to the height) of user avatars you want to be displayed at in pixels (Cannot be higher than 999)');
+		$config_tdb->add('avatar_height', '60', 'config', 'number', 'text', '1', '5', 'Avatars\' Height', 'The height (with respect to the width) of user avatars you want to be displayed at in pixels (Cannot be higher than 999)');
+		$config_tdb->add('table_width_main', '98%', 'config', 'text', 'text', '1', '6', 'Table Width', 'This will change the table width of the main section of the forums.');
+		$config_tdb->add('skin_dir', './skins/default', 'config', 'text', 'test', '1', '7', 'Skin Directory', 'Leave it unless you upload another skin.');
+		$config_tdb->add('servicemessage', '', 'config', 'text', 'textarea', '1', '8', 'Service Message', 'Service Messages appear above the forum, if nothing input, Announcements will not be displayed. Html is allowed.');
 
-    $tdb->add("ext_config", array("name" => "table_width_main", "value" => "98%", "type" => "config", "title" => "Table Width", "description" => "This will change the table width of the main section of the forums", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "10"));
-		$tdb->add("config", array("name" => "table_width_main", "value" => "98%", "type" => "config"));
-
-    $tdb->add("ext_config", array("name" => "posts_per_page", "value" => "20", "type" => "config", "title" => "Posts Per Page", "description" => "this is how many posts will be displays on each page for topics", "form_object" => "text", "data_type" => "number", "minicat" => "9", "sort" => "1"));
-		$tdb->add("config", array("name" => "posts_per_page", "value" => "20", "type" => "config"));
-
-    $tdb->add("ext_config", array("name" => "topics_per_page", "value" => "40", "type" => "config", "title" => "Topics per Page", "description" => "this is how many topics will be displays on each page for forums", "form_object" => "text", "data_type" => "number", "minicat" => "9", "sort" => "2"));
-		$tdb->add("config", array("name" => "topics_per_page", "value" => "40", "type" => "config"));
-
-    $tdb->add("ext_config", array("name" => "logo", "value" => "images/logo.gif", "type" => "config", "title" => "Logo Location", "description" => "can be relative or a url", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "2"));
-		$tdb->add("config", array("name" => "logo", "value" => "images/logo.gif", "type" => "config"));
-
-    $tdb->add("ext_config", array("name" => "homepage", "type" => "config", "title" => "Homepage URL", "description" => "can be relative or a url", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "3"));
-		$tdb->add("config", array("name" => "homepage", "type" => "config"));
-
-    $tdb->add("ext_config", array("name" => "admin_catagory_sorting", "type" => "config", "form_object" => "hidden", "data_type" => "string"));
-		$tdb->add("config", array("name" => "admin_catagory_sorting", "type" => "config"));
-
-    $tdb->add("ext_config", array("name" => "servicemessage", "type" => "config", "title" => "Service Messages", "description" => "Service Messages appear above the forum, if nothing input, Announcements will not be displayed. Html is allowed.", "form_object" => "textarea", "data_type" => "string", "minicat" => "1", "sort" => "18"));
-		$tdb->add("config", array("name" => "servicemessage", "type" => "config"));
-
-    $tdb->add("ext_config", array("name" => "skin_dir", "value" => "./skins/default", "type" => "config", "title" => "Skin Directory", "description" => "leave it unless you upload another skin", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "11"));
-		$tdb->add("config", array("name" => "skin_dir", "value" => "./skins/default", "type" => "config"));
-
-		//Since upload's name are gone, doesn't make much sense to let user pick the uploads location...
-    $tdb->add("ext_config", array("name" => "fileupload_location", "value" => './'.uniqid('uploads_', true), "type" => "config", "form_object" => "hidden", "data_type" => "text"));
-		$tdb->add("config", array("name" => "fileupload_location", "value" => './'.uniqid('uploads_', true), "type" => "config"));
-		$tdb->add("ext_config", array("name" => "fileupload_size", "value" => "50", "type" => "config", "title" => "Size limits for file upload", "description" => "In kilobytes, type in the maximum size allowed for file uploads<br><i>Note: Setting to 0 will <b>disable</b> uploads</i>", "form_object" => "text", "data_type" => "number", "minicat" => "9", "sort" => "4"));
-		$tdb->add("config", array("name" => "fileupload_size", "value" => "50", "type" => "config"));
-		$tdb->add("ext_config", array("name" => "censor", "value" => "*censor*", "type" => "config", "title" => "Word to replace bad words", "description" => "Words that will replace bad words in a post", "form_object" => "text", "data_type" => "string", "minicat" => "9", "sort" => "5"));
-		$tdb->add("config", array("name" => "censor", "value" => "*censor*", "type" => "config"));
-		$tdb->add("ext_config", array("name" => "sticky_note", "value" => "[Stick Note]", "type" => "config", "title" => "Sticky Note Text", "description" => "Text that appends the title indicating it is a \"Stickied Topic\" (HTML Tags Allowed)", "form_object" => "text", "data_type" => "string", "minicat" => "9", "sort" => "6"));
-		$tdb->add("config", array("name" => "sticky_note", "value" => "[Stick Note]", "type" => "config"));
-		$tdb->add("ext_config", array("name" => "sticky_after", "value" => "0", "type" => "config", "title" => "Sticky Note Before or After Title", "description" => "If this is checked, the \"sticky note\" text will appear after the title.  Unchecking this will display it before the title.", "form_object" => "checkbox", "minicat" => "9", "sort" => "7"));
-		$tdb->add("config", array("name" => "sticky_after", "value" => "0", "type" => "config"));
-		$tdb->add("ext_config", array("name" => "pm_max_outbox_msg", "value" => "50", "type" => "config", "title" => "Max Number of Private Msgs in a Users OutBox", "description" => "Can be set to 0 to infinity", "form_object" => "text", "data_object" => "number", "minicat" => "1", "sort" => "19"));
-		$tdb->add("config", array("name" => "pm_max_outbox_msg", "value" => "50", "type" => "config"));
-		$tdb->add("ext_config", array("name" => "avatar_width", "value" => "60", "type" => "config", "title" => "Avatars' Width", "description" => "The width (with respect to the height) of user avatars you want to be displayed at in pixels (Cannot be higher than 999)", "form_object" => "text", "data_object" => "number", "minicat" => "1", "sort" => "8"));
-		$tdb->add("config", array("name" => "avatar_width", "value" => "60", "type" => "config"));
-		$tdb->add("ext_config", array("name" => "avatar_height", "value" => "60", "type" => "config", "title" => "Avatars' Height", "description" => "The height (with respect to the width) of user avatars you want to be displayed at in pixels (Cannot be higher than 999)", "form_object" => "text", "data_object" => "number", "minicat" => "1", "sort" => "9"));
-		$tdb->add("config", array("name" => "avatar_height", "value" => "60", "type" => "config"));
-
-        $tdb->add("ext_config", array("name" => "security_code", "value" => "1", "type" => "regist", "title" => "Enable Security Code", "description" => "Enable the security code image for new user registration<br><strong>Enabling this is recommended</strong>", "form_object" => "checkbox", "minicat" => "1", "sort" => "16"));
-		$tdb->add("config", array("name" => "security_code", "value" => "1", "type" => "regist"));
-
-		$tdb->add("ext_config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config", "form_object" => "hidden", "data_type" => "string"));
-        $tdb->add("config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config"));
+		$config_tdb->add('posts_per_page', '20', 'config', 'number', 'text', '9', '1', 'Posts Per Page', 'this is how many posts will be displays on each page for topics.');
+		$config_tdb->add('topics_per_page', '40', 'config', 'number', 'text', '9', '2', 'Topics Per Page', 'this is how many topics will be displays on each page for forums.');
+		$config_tdb->add('fileupload_size', '50', 'config', 'number', 'text', '9', '3', 'Size Limits For File Uploads', 'In kilobytes, type in the maximum size allowed for file uploads<br><i>Note: Setting to 0 will <b>disable</b> uploads</i>');
+		$config_tdb->add('censor', '*censor*', 'config', 'text', 'text', '9', '4', 'Word to replace bad words', 'Words that will replace bad words in a post');
+		$config_tdb->add('sticky_note', '[Stick Note]', 'config', 'text', 'text', '9', '5', 'Sticky Note Text', 'Text that appends the title indicating it is a \"Stickied Topic\" (HTML Tags Allowed)');
+		$config_tdb->add('sticky_after', '0', 'config', 'bool', 'checkbox', '9', '6', 'Sticky Note Before or After Title', 'If this is checked, the \"sticky note\" text will appear after the title.  Unchecking this will display it before the title.');
 
 		//$_REGISTER
-		$tdb->add("ext_config", array("name" => "register_sbj", "value" => '', "type" => "regist", "title" => "Register Email Subject", "description" => "this is the subject for confirmation of registration", "form_object" => "text", "data_type" => "string", "minicat" => "7", "sort" => "2"));
-		$tdb->add("config", array("name" => "register_sbj", "value" => '', "type" => "regist"));
-		$tdb->add("ext_config", array("name" => "register_msg", "value" => '', "type" => "regist", "title" => "Register Email Message", "description" => "this is the message for confirmation of registration (options: &lt;login&gt; &lt;password&gt;)", "form_object" => "textarea", "data_type" => "string", "minicat" => "7", "sort" => "3"));
-		$tdb->add("config", array("name" => "register_msg", "value" => '', "type" => "regist"));
-		$tdb->add("ext_config", array("name" => "admin_email", "value" => '', "type" => "regist", "title" => "Admin E-mail", "description" => "this is the return address for confirmation of registration", "form_object" => "text", "data_type" => "string", "minicat" => "7", "sort" => "1"));
-		$tdb->add("config", array("name" => "admin_email", "value" => '', "type" => "regist"));
+        $config_tdb->add('security_code', '1', 'regist', 'bool', 'checkbox', '1', '16', 'Enable Security Code', 'Enable the security code image for new user registration<br><strong>Enabling this is recommended.</strong>'); //Need to find a place to put this in the 'regist' area
+        $config_tdb->add('admin_email', '', 'regist', 'text', 'text', '7', '1', 'Admin E-mail', 'This is the return address for confirmation of registration.');
+        $config_tdb->add('register_sbj', '', 'regist', 'text', 'text', '7', '2', 'Register Email Subject', 'This is the subject for confirmation of registration.');
+        $config_tdb->add('register_msg', '', 'regist', 'text', 'textarea', '7', '3', 'Register Email Message', 'This is the message for confirmation of registration.<br>(options: &lt;login&gt; &lt;password&gt;)');
+        $config_tdb->add('newuseravatars', '50', 'regist', 'number', 'text', '8', '1', 'Custom Avatars', 'Allow users to choose their own avatars instead of the list in images/avatars directory after they have at least the number of posts indicated in this field');
 
-		$tdb->add("ext_config", array("name" => "newuseravatars", "value" => "50", "type" => "regist", "title" => "Custom Avatars", "description" => "Allow users to choose their own avatars instead of the list in images/avatars directory after they have at least the number of posts indicated in this field", "form_object" => "text", "minicat" => "8", "sort" => "1"));
-		$tdb->add("config", array("name" => "newuseravatars", "value" => "50", "type" => "regist"));
-
-    //$_STATUS
+        //$_STATUS
 		$tdb->add("ext_config", array("name" => "member_status1", "value" => "n00b", "type" => "status", "title" => "Member post status 1", "description" => "According to post count", "form_object" => "text", "data_type" => "string", "minicat" => "2", "sort" => "1"));
 		$tdb->add("config", array("name" => "member_status1", "value" => "n00b", "type" => "status"));
 		$tdb->add("ext_config", array("name" => "member_status2", "value" => "Toilet Cleaner", "type" => "status", "title" => "Member post status 2", "description" => "According to post count", "form_object" => "text", "data_type" => "string", "minicat" => "2", "sort" => "3"));
@@ -319,16 +284,16 @@
 		//$tdb->sortAndBuild("ext_config", "sort", "ASC");
 
 
-    $tdb->tdb(DB_DIR.'/', 'bbcode.tdb');
-    $tdb->createTable('smilies',array(array('id','id'),array('bbcode','memo'),array('replace','memo'),array('type','string',4)));
-    $tdb->createTable('icons',array(array('id','id'),array('filename','memo')));
-    $tdb->setFp("smilies","smilies");
-    $tdb->setFp("icons","icons");
-    for ($i = 1;$i<22;$i++)
-    {
-      $filename = 'icon'.$i.'.gif';
-      $tdb->add('icons',array("filename"=>$filename));
-    }
+        $tdb->tdb(DB_DIR.'/', 'bbcode.tdb');
+        $tdb->createTable('smilies',array(array('id','id'),array('bbcode','memo'),array('replace','memo'),array('type','string',4)));
+        $tdb->createTable('icons',array(array('id','id'),array('filename','memo')));
+        $tdb->setFp("smilies","smilies");
+        $tdb->setFp("icons","icons");
+        for ($i = 1;$i<22;$i++)
+        {
+          $filename = 'icon'.$i.'.gif';
+          $tdb->add('icons',array("filename"=>$filename));
+        }
 
       //SMILIES
 	     $tdb->add('smilies',array("bbcode"=>" :)","replace"=> " <img src='./smilies/smile.gif' border='0' alt=':)'> ","type" => "main"));

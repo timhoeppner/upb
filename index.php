@@ -45,7 +45,7 @@
 			echo " Please contact an Administrator";
 			if ($_COOKIE["power_env"] > 0) {
                 echo " via <a href='newpm.php?id=1'>PM Message</a>";
-                if (EMAIL_MODE)
+                if ($_CONFIG['email_mode'])
                 echo "or <a href='email.php?id=1'>web email</a>";
 		    }
         } else {
@@ -105,7 +105,7 @@
     						echo " Please contact an Administrator";
                             if ($_COOKIE["power_env"] > 0) {
                                 echo " via <a href='newpm.php?id=1'>PM Message</a>";
-                                if (EMAIL_MODE) echo " or <a href='email.php?id=1'>web email</a>";
+                                if ($_CONFIG['email_mode']) echo " or <a href='email.php?id=1'>web email</a>";
         					}
     					} else {
     						echo " To add a forum, <a href='admin_forums.php?action=add_forum&cat_id=".$cRec["id"]."'>click here</a>.";

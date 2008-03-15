@@ -15,8 +15,8 @@
 		$recs = $PrivMsg->query("CuBox", "box='outbox'&&from='".$_COOKIE["id_env"]."'", 1);
 		$recs = array_reverse($recs);
 		$c_outbox_recs = count($recs); //extra one for the pm just added to the outbox.
-		if ($c_outbox_recs > $_CONFIG["pm_max_outbox_msg"] && $recs[0]["id"] != "") {
-			for($i = ($_CONFIG["pm_max_outbox_msg"]); $i < ($c_outbox_recs); $i++) {
+		if ($c_outbox_recs > 50 && $recs[0]["id"] != "") {
+			for($i = 50; $i < ($c_outbox_recs); $i++) {
 				$PrivMsg->delete("CuBox", $recs[$i]["id"], false);
 			}
 			$PrivMsg->reBuild("CuBox");

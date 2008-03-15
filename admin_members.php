@@ -180,9 +180,9 @@
 			if (isset($_POST["reason"])) $msg .= "\n\n".$_COOKIE["user_env"]."'s reason was this:\n".$_POST["reason"];
 
       if(!@mail($user[0]["email"], "Password Change Notification", "Password Changed by :".$_COOKIE["user_env"]."\n\n".$msg, "From: ".$_REGISTER["admin_email"]))
-        $email_status = email_status(false);
+        if(!$_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '0'));
       else
-        $email_status = email_status(true);
+        if($_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '1'));
 			echoTableHeading("Password changed!", $_CONFIG);
       echo "
 		<tr>
@@ -223,7 +223,7 @@
 				<td class='area_1' style='padding:8px;'><strong>Reason</strong></td>
 				<td class='area_2'><textarea name=reason></textarea></td>
 			</tr>";
-			if (EMAIL_MODE)
+			if ($_CONFIG['email_mode'])
 			echo "<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>

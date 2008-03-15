@@ -99,15 +99,14 @@ else if($_POST['next'] == 2)
     echo "Super Admin Set<p>";
 }
 
-$del_list = array('pm_version', 'avatar1', 'avatar2', 'avatar3', 'avatar4', 'avatar5', 'avatar6', 'avatar7', 'avatar8', 'avatar9');
+$del_list = array('pm_version', 'avatar1', 'avatar2', 'avatar3', 'avatar4', 'avatar5', 'avatar6', 'avatar7', 'avatar8', 'avatar9', 'pm_max_outbox_msg');
 foreach($del_list as $string) {
     $config_tdb->delete($string);
 }
 //Make Forum/Users Settings Area, Make another sub category for users for "other" to put security_code in.
-$config_tdb->add("ext_config", array("name" => "security_code", "value" => "1", "type" => "regist", "title" => "Enable Security Code", "description" => "Enable the security code image for new user registration<br><strong>Enabling this is recommended</strong>", "form_object" => "checkbox", "minicat" => "7", "sort" => "4"));
-$config_tdb->add("config", array("name" => "security_code", "value" => "1", "type" => "regist"));
-$config_tdb->add("ext_config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config", "form_object" => "hidden", "data_type" => "string"));
-$config_tdb->add("config", array("name" => "banned_words", "value" => "shit,fuck,cunt,pussy,bitch,arse", "type" => "config"));
+$config_tdb->add('security_code', '1', 'regist', 'bool', 'checkbox', '7', '4', 'Enable Security Code', 'Enable the security code image for new user registration<br><strong>Enabling this is recommended</strong>');
+$config_tdb->add('banned_words', 'shit,fuck,cunt,pussy,bitch,arse', 'config', 'text', 'hidden', '', '', '', '');
+$config_tdb->add('email_mode', 'true', 'config', 'bool', 'hidden', '', '', '', '');
 
 /*  Correct way to edit values in config */
 $config = array();
