@@ -64,7 +64,6 @@
 			if (!headers_sent()) {
         $uniquekey = generateUniqueKey();
 				$tdb->edit('users', $_COOKIE['id_env'], array('uniquekey' => $uniquekey));
-				//setcookie("thisvisit", $v_date);
 				setcookie("lastvisit", $ses_info); //time of this login/view
 				setcookie("previousvisit",$r['lastvisit']); //time of previous login/view
 				setcookie("timezone", $_COOKIE["timezone"], (time() + (60 * 60 * 24 * 7)));
@@ -128,25 +127,24 @@
 		$loginlink = "login.php?ref=";
 		$pm_display = "login.php?ref=pmsystem.php";
 	} else {
-		lastread();
-    $login = "Welcome, ".$_COOKIE["user_env"]."!";
+        $login = "Welcome, ".$_COOKIE["user_env"]."!";
 		$loginlink = "logoff.php";
 		$pm_display = "pmsystem.php";
 		$f = fopen(DB_DIR."/new_pm.dat", 'r');
 		fseek($f, (((int)$_COOKIE["id_env"] * 2) - 2));
 		$new_pm = fread($f, 2);
 		fclose($f);
-		if ((int)$new_pm != 0) $pm_alert .= "-&nbsp;<a href='pmsystem.php?section=inbox'><strong>".$new_pm."</strong> new PMs in your inbox</a>";
-		else $pm_alert .= "-&nbsp;No new messages";
-		$mark_all_read .= "<a href='setallread.php'>Mark all posts read</a>";
-		if ($_COOKIE["power_env"] >= 3) $adminlink .= "<a href='admin.php'>Admin Panel</a>&nbsp;&middot;";
+		if ((int)$new_pm != 0) $pm_alert = "-&nbsp;<a href='pmsystem.php?section=inbox'><strong>".$new_pm."</strong> new PMs in your inbox</a>";
+		else $pm_alert = "-&nbsp;No new messages";
+		$mark_all_read = "<a href='setallread.php'>Mark all posts read</a>";
+		if ($_COOKIE["power_env"] >= 3) $adminlink = "<a href='admin.php'>Admin Panel</a>&nbsp;&middot;";
 	}
 	//Start Header
   echo "
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>".(($where == '') ? $_CONFIG['title'] : (strip_tags(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where))))."</title>
+<title>".((!isset($where) || $where == '') ? $_CONFIG['title'] : (strip_tags(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where))))."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 <link rel='stylesheet' type='text/css' href='".$_CONFIG["skin_dir"]."/css/style.css' />
 <script type='text/javascript' language='Javascript' src='./includes/scripts.js'></script>
@@ -235,7 +233,7 @@
 			</tr>";
 			echoTableFooter($_CONFIG['skin_dir']);
 	}
-	if ($_GET['SHOW'] == 'COOKIES') {
+/*    if ($_GET['SHOW'] == 'COOKIES') {
 		print '<pre>';
 		foreach($GLOBALS["_COOKIE"] as $varname => $varvalue) {
 			print $varname."\t= ".$varvalue."\n";
@@ -247,5 +245,5 @@
 		//echo "\$uniquekey_env = ".$_COOKIE["uniquekey_env"]."<br>\$power_env = ".$_COOKIE["power_env"]."<br>\$id_env = ".$_COOKIE["id_env"]."<br><br>";
 		//echo "\$remember = ".$_COOKIE['remember']."<br>";
 		//echo "\$lastvisit = ".gmdate("M d, Y g:i:s a", $_COOKIE["lastvisit"])." (".$_COOKIE["lastvisit"].")<br><br>";
-	}
+	}*/
 ?>

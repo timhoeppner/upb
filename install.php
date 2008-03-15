@@ -99,7 +99,6 @@
 			array("level", "number", 1),
 			array("email", "memo"),
 			array("view_email", "number", 1),
-			array("mail_list", "number", 1),
 			array("status", "memo"),
 			array("location", "memo"),
 			array("url", "memo"),
@@ -208,9 +207,10 @@
     $tdb->add("ext_config", array("name" => "skin_dir", "value" => "./skins/default", "type" => "config", "title" => "Skin Directory", "description" => "leave it unless you upload another skin", "form_object" => "text", "data_type" => "string", "minicat" => "1", "sort" => "11"));
 		$tdb->add("config", array("name" => "skin_dir", "value" => "./skins/default", "type" => "config"));
 
-    $tdb->add("ext_config", array("name" => "fileupload_location", "value" => "./uploads", "type" => "config", "title" => "Location for file attachments", "description" => "Put the path to the directory for file attachments.<br />e.g. If your forums are located at http://forum.myupb.com, and your uploads directory is at http://forum.myupb.com/uploads, you would simply put 'uploads' (without quotes) in the box.", "form_object" => "text", "data_type" => "number", "minicat" => "9", "sort" => "3"));
-		$tdb->add("config", array("name" => "fileupload_location", "value" => "./uploads", "type" => "config"));
-		$tdb->add("ext_config", array("name" => "fileupload_size", "value" => "50", "type" => "config", "title" => "Size limits for file upload", "description" => "In kilobytes, type in the maximum size allowed for file uploads", "form_object" => "text", "data_type" => "number", "minicat" => "9", "sort" => "4"));
+		//Since upload's name are gone, doesn't make much sense to let user pick the uploads location...
+    $tdb->add("ext_config", array("name" => "fileupload_location", "value" => './'.uniqid('uploads_', true), "type" => "config", "form_object" => "hidden", "data_type" => "text"));
+		$tdb->add("config", array("name" => "fileupload_location", "value" => './'.uniqid('uploads_', true), "type" => "config"));
+		$tdb->add("ext_config", array("name" => "fileupload_size", "value" => "50", "type" => "config", "title" => "Size limits for file upload", "description" => "In kilobytes, type in the maximum size allowed for file uploads<br><i>Note: Setting to 0 will <b>disable</b> uploads</i>", "form_object" => "text", "data_type" => "number", "minicat" => "9", "sort" => "4"));
 		$tdb->add("config", array("name" => "fileupload_size", "value" => "50", "type" => "config"));
 		$tdb->add("ext_config", array("name" => "censor", "value" => "*censor*", "type" => "config", "title" => "Word to replace bad words", "description" => "Words that will replace bad words in a post", "form_object" => "text", "data_type" => "string", "minicat" => "9", "sort" => "5"));
 		$tdb->add("config", array("name" => "censor", "value" => "*censor*", "type" => "config"));
@@ -494,7 +494,7 @@
 			$_POST["add"] = 1;
 		} else {
 			$_POST["add"] = "3";
-			$admin = array("user_name" => $_POST["username"], "password" => generateHash($_POST["pass1"]), "level" => 9, "email" => $_POST["email"], "view_email" => $_POST["view_email"], "mail_list" => $_POST["mail_list"], "location" => $_POST["location"], "url" => $_POST["url"], "avatar" => $_POST["avatar"], "icq" => $_POST["icq"], "aim" => $_POST["aim"], "msn" => $_POST["msn"], "sig" => $_POST["sig"], "posts" => 0, "date_added" => mkdate(),"lastvisit" => mkdate());
+			$admin = array("user_name" => $_POST["username"], "password" => generateHash($_POST["pass1"]), "level" => 9, "email" => $_POST["email"], "view_email" => $_POST["view_email"], "mail_list" => $_POST["mail_list"], "location" => $_POST["location"], "url" => $_POST["url"], "avatar" => $_POST["avatar"], "icq" => $_POST["icq"], "aim" => $_POST["aim"], "msn" => $_POST["msn"], "sig" => $_POST["sig"], "posts" => 0, "date_added" => mkdate(),"lastvisit" => mkdate(), 'timezone' => '0');
 			$tdb->add("users", $admin);
 			$f = fopen(DB_DIR."/new_pm.dat", 'w');
 			fwrite($f, " 0");
@@ -516,7 +516,7 @@
 		//
 		$where = "Installation ".$_CONFIG["where_sep"]." Complete";
 		require_once('./includes/header.php');
-		$edit_config = array("title" => $_POST["title"], "fileupload_location" => $_POST["fileupload_location"], "fileupload_size" => $_POST["fileupload_size"], "homepage" => $_POST["homepage"]);
+		$edit_config = array("title" => $_POST["title"], "fileupload_size" => $_POST["fileupload_size"], "homepage" => $_POST["homepage"]);
 		$edit_regist = array("register_sbj" => $_POST["register_sbj"], "register_msg" => $_POST["register_msg"], "admin_email" => $_POST["admin_email"]);
 		if ($config_tdb->editVars("config", $edit_config) && $config_tdb->editVars("regist", $edit_regist)) {
 			$config_file = file('config.php');
@@ -596,11 +596,6 @@
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
-			</tr>
-			<tr>
-				<td class='area_1'><strong>Location for file attachments</strong><br />
-					Put the path to the directory for file attachments.&nbsp;</td>
-				<td class='area_2'><input type='text' name='fileupload_location' size='40' value='".$_POST["fileupload_location"]."' tabindex='4'></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Size limits for file upload</strong><br />

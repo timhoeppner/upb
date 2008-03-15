@@ -94,11 +94,15 @@
 			if ($tRec["icon"] != "") {
 			    $posts_tdb->set_topic(array($tRec));
 				if ($tdb->is_logged_in()) {
-					if($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']] == 2) {
-					    $tRec['icon'] = 'star.gif';
-					} elseif($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']] == 1 || ($tRec['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$_GET['id']] && $_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']] != 0)) {
+				    if(($tRec['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$_GET['id']] && !isset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']]))) {
 						$tRec['icon'] = 'new.gif';
-					}
+				    } elseif(isset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']])) {
+    				    if($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']] == 1) {
+    						$tRec['icon'] = 'new.gif';
+    					} elseif($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']] == 2) {
+    					    $tRec['icon'] = 'star.gif';
+    					}
+				    }
 				}
 				if ($tRec["sticky"] == "1") {
 					if ($_CONFIG["sticky_after"] == "1") $tRec["subject"] = "<a href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."'>".$tRec["subject"]."</a>&nbsp;".stripslashes($_CONFIG["sticky_note"]);
@@ -118,6 +122,7 @@
 					$r_ext .= ")</div>";
 				}
 				if ($tRec["topic_starter"] == "guest") $tRec["topic_starter"] = "<i>guest</i>";
+				$statuscolor = '9d865e';    //Temporary fix.  Fix to use "status($userRec)
 				echo "
 		<tr>
 			<td class='area_2' style=\"cursor:pointer;\" onclick=\"window.location.href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."';\" onmouseover=\"this.className='area_2_over'\" onmouseout=\"this.className='area_2'\">

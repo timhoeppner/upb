@@ -1,10 +1,5 @@
 <?php
 // Ultimate PHP Board's Custom Error Hander
-
-$errorHandler = &new errorhandler();
-set_error_handler(array(&$errorHandler, 'add_error'));
-error_reporting(E_ALL ^ E_NOTICE);
-
 class errorhandler {
     var $error = array();
     var $errortype = array (

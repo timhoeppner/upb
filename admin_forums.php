@@ -9,6 +9,7 @@
 	require_once('./includes/header.php');
 	$post_tdb = new functions(DB_DIR, "posts.tdb");
 	if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
+	    if(!isset($_GET['action'])) $_GET['action'] = '';
 		if ($_GET["action"] == "edit_cat") {
 			//edit categories
 			if (isset($_GET["id"])) {
@@ -84,13 +85,17 @@
 			}
 		} elseif($_GET["action"] == "add_cat") {
 			//add new category
-			if (isset($_POST['a'])) {
+			if (isset($_POST['command'])) {
 				$cat_id = $tdb->add("cats", array("name" => $_POST["u_cat"], "view" => $_POST["u_view"]));
-        $sort = $_CONFIG['admin_catagory_sorting'];
-        $sort = explode(",",$sort);
-        $sort[] = $cat_id;
-        $sort = implode(",",$sort);
-        $config_tdb->editVars('config', array('admin_catagory_sorting' => $sort));
+				if($_CONFIG['admin_catagory_sorting'] != '') {
+                    $sort = $_CONFIG['admin_catagory_sorting'];
+                    $sort = explode(",",$sort);
+                    $sort[] = $cat_id;
+                    $sort = implode(",",$sort);
+				} else {
+				    $sort = $cat_id;
+				}
+                $config_tdb->editVars('config', array('admin_catagory_sorting' => $sort));
 				echo "
 					<div class='alert_confirm'>
 					<div class='alert_confirm_text'>
@@ -99,7 +104,7 @@
 					</div>
 					</div>";
 				if ($_POST['command'] == 'Add and Add another Category') redirect($_SERVER['PHP_SELF'].'?action=add_cat', 2);
-				elseif ($_POST['command'] == 'Add and Add forums to this category') redirect('admin_forums.php?action=add_cat&cat_id='.$cat_id, 2);
+				elseif ($_POST['command'] == 'Add and Add forums to this category') redirect('admin_forums.php?action=add_forum&cat_id='.$cat_id, 2);
 				else redirect($_SERVER['PHP_SELF'], 2);
 			} else {
 				echo "<form action='admin_forums.php?action=add_cat' method=POST>";
@@ -121,7 +126,7 @@
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit name='a' value='Add'> <input type=submit name='command' value='Add and Add another Category'> <input type=submit name='command' value='Add and Add forums to this category'></td>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit name='command' value='Add'> <input type=submit name='command' value='Add and Add another Category'> <input type=submit name='command' value='Add and Add forums to this category'></td>
 			</tr>";
 			echoTableFooter($_CONFIG['skin_dir']);
 		echo "</form>";
@@ -163,7 +168,7 @@
 					$whoPost = "<select size='1' name='u_post'>".createUserPowerMisc($fRec[0]["post"], 1)."</select>";
 					$whoReply = "<select size='1' name='u_reply'>".createUserPowerMisc($fRec[0]["reply"], 1)."</select>";
 					echo "<form action='".$_SERVER['PHP_SELF']."?action=edit_forum&id=".$_GET["id"]."' method=POST>";
-		echoTableHeading("Editing a forum", $_CONFIG);
+		  echoTableHeading("Editing a forum", $_CONFIG);
 					echo "
 			<tr>
 				<th colspan='2'>&nbsp;</th>
@@ -206,9 +211,9 @@
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Edit'></td>
 			</tr>
 		";
-    echoTableFooter($_CONFIG['skin_dir']);
-    echo "
-	</form>";
+        echoTableFooter($_CONFIG['skin_dir']);
+        echo "
+	   </form>";
 				}
 			} else {
 				echo "No id selected.";
@@ -384,6 +389,7 @@
     		$i = 0;
     		$sorted = array();
     		while ($i < count($cRecs)) {
+    		    if($k >= count($cSorting)) break;
     			if ($cSorting[$k] == $cRecs[$i]["id"]) {
     				$sorted[] = $cRecs[$i];
     				//unset($cRecs[$i]);

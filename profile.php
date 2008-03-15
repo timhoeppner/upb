@@ -171,7 +171,7 @@ if (isset($_POST["u_edit"])) {
 		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
 		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
 		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
-		echo "<form action='$PHP_SELF' id='newentry' name='newentry' method='post'>";
+		echo "<form action='{$_SERVER['PHP_SELF']}' id='newentry' name='newentry' method='post'>";
         echo "
         <div id='tabstyle_2'>
         	<ul>
@@ -213,18 +213,12 @@ if (isset($_POST["u_edit"])) {
 		}
 		if ((bool) $rec[0]["view_email"]) $email_checked = "CHECKED";
 		else $email_checked = "";
-		if ((bool) $rec[0]["mail_list"]) $mail_checked = "CHECKED";
-		else $mail_checked = "";
 		echo "
 			<tr>
 				<td class='area_1'>Make email address public in profile?&nbsp;&nbsp;&nbsp;
 					<a href=\"javascript: window.open('privacy.php','','status=no, width=800,height=50'); void('');\">
 					Privacy Policy</a></td>
 				<td class='area_2'><input type=checkbox name='show_email' value = '1' $email_checked></td>
-			</tr>
-			<tr>
-				<td class='area_1'>Add email to UPB discussion forums mailing list?</td>
-				<td class='area_2'><input type=checkbox name=email_list value='1' $mail_checked></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>location:</strong></td>
@@ -323,7 +317,7 @@ if (isset($_POST["u_edit"])) {
 			<tr>
 				<td class='area_1'><strong>Timezone Setting:</strong></td>
 				<td class='area_2'>";
-      timezonelist($rec[0]["timezone"]);
+      print timezonelist($rec[0]["timezone"]);
 			echo "</tr>
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=reset name='reset' value='Reset' onClick=\"javascript:sigPreview(document.getElementById('newentry'),'".$_COOKIE['id_env']."','reset');\"'><input type='submit' name='u_edit' value='Submit'></td>

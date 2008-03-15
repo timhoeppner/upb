@@ -10,6 +10,7 @@
 	if (!$tdb->is_logged_in() || $_COOKIE["power_env"] < 3) exitPage("
 		<div class='alert'><div class='alert_text'>
 		<strong>Access Denied!</strong></div><div style='padding:4px;'>you are not authorized to be here.</div></div>");
+	if(!isset($_GET["action"])) $_GET["action"] = '';
 	if ($_GET["action"] == "edit") {
 		if (!isset($_GET["id"])) exitPage("
 				<div class='alert'><div class='alert_text'>
@@ -50,19 +51,7 @@
 				</div>
 				</div>";
 		} else {
-		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
-			echo "
-			<tr>
-				<th>Admin Panel Navigation</th>
-			</tr>";
-			echo "
-			<tr>
-				<td class='area_2' style='padding:20px;' valign='top'>";
-			require_once("admin_navigation.php");
-			echo "</td>
-			</tr>";
-			echoTableFooter($_CONFIG['skin_dir']);
-			echo "<form method='POST' action=".$PHP_SELF."?action=edit&id=".$_GET["id"]."&page=".$_GET["page"]."><input type='hidden' name='a' value='1'>";
+			echo "<form method='POST' action={$_SERVER['PHP_SELF']}?action=edit&id={$_GET["id"]}&page={$_GET["page"]}><input type='hidden' name='a' value='1'>";
 		echoTableHeading("Editing member: ".$rec[0]["user_name"]."", $_CONFIG);
 			echo "
 			<tr>
@@ -91,18 +80,13 @@
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
-			</tr>
-			<tr>
-				<td class='area_1' style='padding:8px;'><strong>Sign up on the Mailing List?</strong></td>
-				<td class='area_2'>";
-			if ($rec[0]["mail_list"] == 1) echo "YES";
-			else echo "NO";
+			</tr>";
 			$f = fopen(DB_DIR."/new_pm.dat", 'r');
 			fseek($f, (((int)$rec[0]["id"] * 2) - 2));
 			$tmp_new_pm = fread($f, 2);
 			fclose($f);
       $lastvisit = $rec[0]['lastvisit'];
-			echo "</td>
+			echo "
 			</tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>No. of Unread Private Messages:</strong></td>
@@ -290,7 +274,7 @@
 		echoTableHeading("Search", $_CONFIG);
         ?><tr><td class='area_1' style='padding:8px;'><form action="admin_members.php#skip_nav" method="GET">Username: <input name="u" type="text" value="<?php print ((isset($_GET['u'])) ? $_GET['u'] : ''); ?>"><p><input type="submit" name="action" value="Search">&nbsp;&nbsp;<input type="submit" name="action" value="Clear"<?php print (($_GET['action'] == 'Search') ? '' : ' DISABLED'); ?>></form></td></tr><?php
         echoTableFooter(SKIN_DIR);
-		if ($_GET["page"] == "") $_GET["page"] = 1;
+		if (!isset($_GET['page']) || $_GET["page"] == "") $_GET["page"] = 1;
 		$start = ($_GET["page"] * $_CONFIG["topics_per_page"] - $_CONFIG["topics_per_page"] + 1);
 		if($_GET['action'] != 'Search') {
     		$users = $tdb->listRec("users", $start, $_CONFIG["topics_per_page"]);

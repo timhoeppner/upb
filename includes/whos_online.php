@@ -54,7 +54,7 @@
 			} else {
 				if ($wUser['user_power'] == '1') $color = "#".$_STATUS['userColor'];
 				elseif($wUser['user_power'] == '2') $color = "#".$_STATUS['modColor'];
-				elseif($wUser['user_power'] == '3') $color = "#".$_STATUS['adminColor'];
+				elseif($wUser['user_power'] >= '3') $color = "#".$_STATUS['adminColor'];
 				$return['who'][] = '<a href="profile.php?action=get&amp;id='.$wUser['user_id'].'"><span style="color:'.$color.';">'.$wUser['user_name'].'</span></a>';
 			}
 		}

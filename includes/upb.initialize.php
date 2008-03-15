@@ -28,6 +28,10 @@ if(!empty($GLOBALS['_ENV'])) foreach($GLOBALS["_REQUEST"] as $varname => $varval
 }
 
 require_once("./includes/class/error.class.php");
+$errorHandler = &new errorhandler();
+set_error_handler(array(&$errorHandler, 'add_error'));
+error_reporting(E_ALL ^ E_NOTICE);
+
 require_once("./config.php");
 require_once("./includes/class/tdb.class.php");
 require_once("./includes/class/config.class.php");

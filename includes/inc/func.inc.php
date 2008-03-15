@@ -147,6 +147,7 @@ function createPageNumbers($current_page, $total_number_of_pages, $url_string=''
     else $url_string = '?';
     $url_string = str_replace('&&', '&', $url_string);
 
+    $pageStr = '';
     if($num_pages == 1) $pageStr = "<span class='pagination_current'>$num_pages</span>";
     else {
         //$pageStr = "<font face='$font_face' size='$font_s'><span class=pagenumstatic>";
@@ -222,24 +223,6 @@ function strmstr($haystack, $needle, $before_needle=FALSE) {
  if($before_needle) return substr($haystack,0,($pos-1)+strlen($needle));
  else return substr($haystack,$pos);
  }
-
-function lastread($pid = '')
-{
-  $tdb = &$GLOBALS['tdb'];
-  $posts = &$GLOBALS['posts'];
-  $cats = $tdb->listRec("cats",1);
-
-  if ($cats !== false)
-  {
-    foreach ($cats as $cat)
-    {
-      $cat_id = $cat['id'];
-      $_SESSION['cats'][$cat['id']] = array('forums'=>$cat['sort']);
-    }
-    $_SESSION['lastread'] = "hello";
-  }
-  //dump($_SESSION);
-}
 
 //for debugging
 function dump($array)
@@ -337,7 +320,7 @@ $newline = "define('EMAIL_MODE', false, true);\n";
 else
 $newline = "define('EMAIL_MODE', true,true);\n";
 $file = file('config.php');
-for($i=0,$c=count($file);$i<$c;$i++) 
+for($i=0,$c=count($file);$i<$c;$i++)
 {
   if(strpos($file[$i], 'EMAIL_MODE')) $file[$i] = $newline;
 }

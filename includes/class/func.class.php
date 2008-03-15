@@ -51,7 +51,7 @@ class functions extends tdb {
         if($_COOKIE["user_env"] == $rec[0]["user_name"] && $_COOKIE["uniquekey_env"] == $rec[0]["uniquekey"] && $_COOKIE["power_env"] == $rec[0]["level"]) {
             $this->_cache["is_logged_in"][$_COOKIE["id_env"]] = array(
             "user" => $_COOKIE["user_env"],
-            "uniquekey" => $_COOKIE["uniquekey"],
+            "uniquekey" => $_COOKIE["uniquekey_env"],
             "power" => $_COOKIE["power_env"]);
             return true;
         }

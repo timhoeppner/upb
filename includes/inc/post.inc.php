@@ -84,7 +84,7 @@ function UPBcoding($text) {
 
     //start script for delete.php
     if (EMAIL_MODE)
-      $msg = str_replace("(emailadmin)", "<a href='email.php?id=$adminid' target='_blank'><img src='images/email.gif' border='0'></a>", $msg);
+      $msg = str_replace("(emailadmin)", "<a href='email.php?id=1' target='_blank'><img src='images/email.gif' border='0'></a>", $msg); //$adminid undefined, changed back to "1"
     //end script for delete.php
     //start upb code
     $msg = preg_replace("/\[center\](.*?)\[\/center\]/si", "<div align='center'>\\1</div>", $msg);
@@ -103,7 +103,7 @@ function UPBcoding($text) {
     $msg = preg_replace("/\[email\](.*?)\[\/email\]/si", "<a href=\"mailto:\\1\">\\1</a>", $msg);
     $msg = preg_replace("/\[email=(.*?)\](.*?)\[\/email\]/si", "<a href=\"mailto:\\1\">\\2</a>", $msg);
     $msg = preg_replace("/\[img\](.*?)\[\/img\]/si", "<img src=\"\\1\" border=\"0\">", $msg);
-    $msg = preg_replace("/\[offtopic\](.*?)\[\/offtopic\]/si", "<font color='blue' size='$font_s' face='$font_face'>Offtopic: \\1</font>", $msg);
+    $msg = preg_replace("/\[offtopic\](.*?)\[\/offtopic\]/si", "<font color='blue'>Offtopic: \\1</font>", $msg);
     $msg = preg_replace("/\[small\](.*?)\[\/small\]/si", "<small>\\1</small>", $msg);
 
     while (preg_match("/\[quote(.*?)\](.*?)\[\/quote\]/si", $msg))

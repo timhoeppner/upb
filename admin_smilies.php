@@ -15,6 +15,7 @@ if(!($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3)) exitPage("you are not 
 require_once('./includes/header.php');
 
 //REMOVE ALL TRACES OF $_GET['word']
+if(!isset($_GET["action"])) $_GET["action"] = '';
 if($_GET["action"] == "addnew") {
 
 	$bbcodes = $bdb->query('smilies', "id>'0'",1,-1,array('bbcode'));

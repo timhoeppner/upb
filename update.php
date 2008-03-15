@@ -101,11 +101,7 @@ else if($_POST['next'] == 2)
 
 $del_list = array('pm_version', 'avatar1', 'avatar2', 'avatar3', 'avatar4', 'avatar5', 'avatar6', 'avatar7', 'avatar8', 'avatar9');
 foreach($del_list as $string) {
-    $query = $config_tdb->query('config', "name='$string'", 1, 1);
-    if(!empty($query[0])) {
-        $config_tdb->delete('config', $query[0]['id']);
-        $config_tdb->delete('ext_config', $query[0]['id']);
-    }
+    $config_tdb->delete($string);
 }
 //Make Forum/Users Settings Area, Make another sub category for users for "other" to put security_code in.
 $config_tdb->add("ext_config", array("name" => "security_code", "value" => "1", "type" => "regist", "title" => "Enable Security Code", "description" => "Enable the security code image for new user registration<br><strong>Enabling this is recommended</strong>", "form_object" => "checkbox", "minicat" => "7", "sort" => "4"));
@@ -120,8 +116,8 @@ $config[] = array('name' => 'ver', 'value' => '2.2.1');
 $config[] = array("name" => "admin_catagory_sorting", "form_object" => "hidden", "data_type" => "string");
 $config[] = array("name" => "posts_per_page", 'minicat'=>9,'sort'=>1);
 $config[] = array("name" => "topics_per_page", 'minicat'=>9,'sort'=>2);
-$config[] = array('name' => 'fileupload_location', 'minicat'=>9,'sort'=>3);
-$config[] = array('name' => 'fileupload_size', 'minicat'=>9,'sort'=>4);
+$config[] = array('name' => 'fileupload_location', "form_object" => "hidden", "data_type" => "string");
+$config[] = array('name' => 'fileupload_size', 'description' => 'In kilobytes, type in the maximum size allowed for file uploads<br><i>Note: Setting to 0 will <b>disable</b> uploads</i>', 'minicat'=>9,'sort'=>4);
 $config[] = array('name' => 'censor', 'minicat'=>9,'sort'=>5);
 $config[] = array('name' => 'sticky_note', 'minicat'=>9,'sort'=>6);
 $config[] = array('name' => 'sticky_after', 'minicat'=>9,'sort'=>7);
@@ -129,7 +125,7 @@ $config_tdb->editVars('config', $config, true);
 $f = fopen(DB_DIR.'/config_org.dat', 'a');
 fwrite($f, "config".chr(30)."9".chr(30)."Posting Settings".chr(31));
 fclose($f);
-/* Clark: I dunno what else you tried to do here...
+/* To Clark: I dunno what else you tried to do here...
 $tdb->edit("ext_config",20,array('sort'=>'17'));
 $tdb->edit("ext_config",16,array('sort'=>'19'));
 $tdb->edit("ext_config",10,array('sort'=>'11'));
@@ -164,6 +160,7 @@ if (file_exists(DB_DIR."/bbcode.tdb"))
 $tdb->tdb(DB_DIR.'/', 'bbcode.tdb');
 //$tdb->createTable('smilies', array(array('id', 'id'), array('bbcode', 'memo'),array('replace','memo'),array('type','string',4)));
 //$tdb->createTable('icons',array(array('id','id'),array('filename','memo')));
+$tdb->removeField('users', 'mail_list');
 //$tdb->cleanUp();
 $tdb->setFp("smilies","smilies");
 $tdb->setFp("icons","icons");

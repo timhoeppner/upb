@@ -8,7 +8,7 @@
 	require_once('./includes/upb.initialize.php');
 	require_once('./includes/class/posts.class.php');
 	$posts_tdb = new posts(DB_DIR."/", "posts.tdb");
-	$vars['page'] = $_GET['page'];
+	$vars['page'] = ((isset($_GET['page'])) ? $_GET['page'] : '');
 	//check if the id exists
 	if (!(is_numeric($_GET["id"]) && $posts_tdb->isTable($_GET["id"]))) exitPage("Forum does not exist.", true);
 	if (FALSE === ($fRec = $tdb->get("forums", $_GET["id"]))) exitPage("Forum does not exist.", true);
@@ -33,8 +33,10 @@
 	$sess_name = 'view_'.$_GET['id'].'_'.$_GET['t_id'];
 	if(!isset($_SESSION[$sess_name]) || $_SESSION[$sess_name]+300 < time()) $posts_tdb->edit("topics", $_GET["t_id"], array("views" => ((int)$tRec[0]["views"] + 1)));
 	$_SESSION[$sess_name] = time();
-    if($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] == 1) unset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']]);
-    if($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] == 0 && $_SESSION['newTopics']['lastVisitForums'][$_GET['id']] > $tRec[0]['last_post']) unset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']]);
+	if(isset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']])) {
+        if($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] == 1) unset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']]);
+        if($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] == 0 && $_SESSION['newTopics']['lastVisitForums'][$_GET['id']] > $tRec[0]['last_post']) unset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']]);
+	}
     if($tRec[0]['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$_GET['id']]) $_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] = 0;
     $tdb->updateVisitedTopics();
     //if($tRec[0]['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$_GET['id']]) echo 'true'; else echo  'false';
@@ -63,11 +65,11 @@
 			<table class='main_table' cellspacing='1'>";
 		if ($x == 0) {
 			$table_color = 'area_1';
-			$table_font = $font1;
+			//$table_font = $font1;        // PHP is complaining about $font1, is it defined?
 			$x++;
 		} else {
 			$table_color = 'area_2';
-			$table_font = $font2;
+			//$table_font = $font2;        // PHP is complaining about $font2, is it defined?
 			$x--;
 		}
 		unset($user, $status, $statuscolor);

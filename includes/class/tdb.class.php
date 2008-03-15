@@ -1163,7 +1163,7 @@ class tdb {
 
         $ref_data = $this->get_ref_data($fp);
         $ref_data = chr(31).$ref_data;
-        
+
         if(FALSE !== ($pos1 = strpos($ref_data, chr(31).$id.':'))) {
             $pos1 = $pos1 + strlen(chr(31).$id.':');
             $length = strpos($ref_data, chr(31), $pos1) - $pos1;
@@ -1420,14 +1420,13 @@ class tdb {
         $fieldOffsets[$header[1]["fName"]]["type"] = $header[1]["fType"];
         $total = 0;
         //if($getAllFields) $reqFields[$header[1]["fName"]] = true;
-        for($i=1;$i<=count($header)-6;$i++) {
-            $fieldOffsets[$header[$i+1]["fName"]]["offset"] = $total + $header[$i]["fLength"];
-            $fieldOffsets[$header[$i+1]["fName"]]["length"] = $header[$i+1]["fLength"];
-            $fieldOffsets[$header[$i+1]["fName"]]["type"] = $header[$i+1]["fType"];
-            $total += $header[$i]["fLength"];
+        for($i=2;$i<count($header)-7;$i++) {
+            $fieldOffsets[$header[$i]["fName"]]["offset"] = $total + $header[$i-1]["fLength"];
+            $fieldOffsets[$header[$i]["fName"]]["length"] = $header[$i]["fLength"];
+            $fieldOffsets[$header[$i]["fName"]]["type"] = $header[$i]["fType"];
+            $total += $header[$i-1]["fLength"];
             //if($getAllFields) $reqFields[$header[1]["fName"]] = true;
         }
-
         $return = array();
 
         $start_c = 1;
@@ -1548,11 +1547,11 @@ class tdb {
         }
         $cHeader = count($header) - 8;
         $pos = 0;
-        
+
         for($i=1;$i<=$cHeader;$i++) {
             if(isset($reqFields[$header[$i]["fName"]]) || $reqFields[0] == "*") {
                 $value = rtrim(substr($rawRecord, $pos, $header[$i]["fLength"]));
-                
+
                 if($header[$i]["fType"] == "memo") $value = $this->readMemo($fp, $value, $header);
                 $fRec[$header[$i]["fName"]] = $value;
             }
@@ -1597,22 +1596,22 @@ class tdb {
      */
     function readMemo($fp, $index, $header) {
         $readIndexes = array();
-        
+
         $return = '';
         $next = $index;
         $f = fopen($this->fp[$fp].'.memo', 'rb');
         while(!empty($next) && $next > 0) {
             if(!ctype_digit($next)) die('<b>Fatal Error</b>(line '.__LINE__.'):The Script encountered a non-numeric value for readMemo(): readMemo("'.$this->fp[$fp].'", "'.$index.'", $header) literally at "'.$next.'"position ('.$next.' of '.(filesize($this->fp[$fp].'.memo') / $header["blockLength"]).' block) in the memo file.<br />');
-            
+
             // Store read index to make sure we don't loop forever if indexes are messed up
             $readIndexes[$next] = true;
-            
+
             fseek($f, ($next * $header["blockLength"]));
             $next = trim(fread($f, 7));
-            
+
             // Make sure the next index hasn't already been read
             if(isset($readIndexes[$next])) die('<b>Fatal Error</b>(line '.__LINE__.'): There is an error in '.$this->fp[$fp].'.memo, this needs to be corrected. The error starts on index <b>'.$index.'</b>');
-            
+
             if((ftell($f) - 7) == $next * $header["blockLength"]) die('<b>Fatal Error</b>(line '.__LINE__.'): Script entered an endless loop in readMemo("'.$this->fp[$fp].'", "'.$index.'", $header) at "'.$next.'" position ('.$next.' of '.(filesize($this->fp[$fp].'.memo') / $header["blockLength"]).' block) in the memo file.<br />');
             $return .= substr(rtrim(fread($f, $header["blockLength"] - 7)), 0, -1);
         }
@@ -1632,7 +1631,7 @@ class tdb {
         if($index == '0') die('<b>Fatal Error</b>(line '.__LINE__.'): Tried to delete 0th memo record in '.$this->fp[$fp].'. Literally: '.$index);
         if(!(ctype_digit($index) && !empty($index))) return true;
         $readIndexes = array();
-        
+
         $next = $index;
         $f = fopen($this->fp[$fp].'.memo', 'r+b');
         if(empty($this->_firstBlankMemoBlockRef[$fp])) $first_blank_memo_block_ref = trim(fread($f, 7));
@@ -1640,13 +1639,13 @@ class tdb {
         while(ctype_digit($next) && !empty($next)) {
             // Store read index to make sure we don't loop forever if indexes are messed up
             $readIndexes[$next] = true;
-            
+
             fseek($f, $next * $header["blockLength"]);
             $next = trim(fread($f, 7));
-            
+
             // Make sure the next index hasn't already been read
             if(isset($readIndexes[$next])) die('<b>Fatal Error</b>(line '.__LINE__.'): There is an error in '.$this->fp[$fp].'.memo, this needs to be corrected. The error starts on index <b>'.$index.'</b>');
-            
+
             if((ftell($f) - 7) == $next * $header["blockLength"]) die('<b>Fatal Error</b>(line '.__LINE__.'): Script entered an endless loop in deleteMemo("'.$this->fp[$fp].'", "'.$index.'", $header) at ('.$next.' of '.(filesize($this->fp[$fp].'.memo') / $header["blockLength"]).' block) in the memo file.<br />');
         }
         fseek($f, -7, SEEK_CUR);
@@ -1668,27 +1667,27 @@ class tdb {
     function writeMemo($fp, $oriData, $header) {
         $data = trim($oriData);
         if(strlen($data) == 0) return;
-        
+
         $f = fopen($this->fp[$fp].'.memo', 'r+b');
         if(empty($this->_firstBlankMemoBlockRef[$fp])) {
             $next = trim(fread($f, 7));
             $this->_firstBlankMemoBlockRef[$fp] = $next;
         } else $next = $this->_firstBlankMemoBlockRef[$fp];
-        
+
         $readIndexes = array();
-        
+
         while(ctype_digit($next) && !empty($next) && !(strlen($data) == 0)) {
             if(!isset($return)) $return = $next;
-            
+
             // Store read index to make sure we don't loop forever if indexes are messed up
             $readIndexes[$next] = true;
-            
+
             fseek($f, $next * $header["blockLength"]);
             $next = trim(fread($f, 7));
-            
+
             // Make sure the next index hasn't already been read
             if(isset($readIndexes[$next])) die('<b>Fatal Error</b>(line '.__LINE__.'): There is an error in '.$this->fp[$fp].'.memo, this needs to be corrected. The error starts on index <b>'.$index.'</b>');
-            
+
             if(ftell($f) == $next * $header["blockLength"]) die('<b>Fatal Error</b>(line '.__LINE__.'): Script entered an endless loop in writeMemo("'.$this->fp[$fp].'", "'.$oriData.'", $header) at "'.$next.'" position in the memo file.<br />');
             if(strlen($data) > ($header["blockLength"] - 8)) { //if it won't fit
                 fwrite($f, substr($data, 0, $header["blockLength"] - 8).chr(3));
@@ -1715,7 +1714,7 @@ class tdb {
         fseek($f, 0, SEEK_END);
         while(!(strlen($data) == 0)) {
             $next = (ftell($f) / $header["blockLength"]) + 1;
-            
+
             if(!isset($return)) $return = $next - 1;
             if(!is_integer($next) || $next < 0) die('<b>Fatal Error</b>(line '.__LINE__.'):The Script encountered a non-numeric value for writeMemo(): writeMemo("'.$this->fp[$fp].'", "'.$oriData.'", $header) literally at "'.$next.'" position ('.($next / $header["blockLength"]).' of '.(filesize($this->fp[$fp].'.memo') / $header["blockLength"]).' block) in the memo file.<br />');
 
@@ -1728,7 +1727,7 @@ class tdb {
             }
         }
         fclose($f);
-        
+
         return $return;
     }
 
