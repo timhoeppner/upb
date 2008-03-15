@@ -107,10 +107,10 @@ foreach($del_list as $string) {
 $config_tdb->add('security_code', '1', 'regist', 'bool', 'checkbox', '7', '4', 'Enable Security Code', 'Enable the security code image for new user registration<br><strong>Enabling this is recommended</strong>');
 $config_tdb->add('banned_words', 'shit,fuck,cunt,pussy,bitch,arse', 'config', 'text', 'hidden', '', '', '', '');
 $config_tdb->add('email_mode', 'true', 'config', 'bool', 'hidden', '', '', '', '');
+$config_tdb->add('custom_avatars', '1', 'regist', 'a:3:{i:0;s:7:"Disable";i:1;s:4:"Link";i:2;s:6:"Upload";}', 'dropdownlist', '8', '2', 'Custom Avatars', 'Allow users to link or upload their own avatars instead of choosing them locally in images/avatars/');
 
 /*  Correct way to edit values in config */
 $config = array();
-$config[] = array('name' => 'ver', 'value' => '2.2.1');
 $config[] = array('name' => 'ver', 'value' => '2.2.1');
 $config[] = array("name" => "admin_catagory_sorting", "form_object" => "hidden", "data_type" => "string");
 $config[] = array("name" => "posts_per_page", 'minicat'=>9,'sort'=>1);
@@ -120,6 +120,7 @@ $config[] = array('name' => 'fileupload_size', 'description' => 'In kilobytes, t
 $config[] = array('name' => 'censor', 'minicat'=>9,'sort'=>5);
 $config[] = array('name' => 'sticky_note', 'minicat'=>9,'sort'=>6);
 $config[] = array('name' => 'sticky_after', 'minicat'=>9,'sort'=>7);
+$config[] = array('name' => 'newuseravatars', 'value' => '50', 'data_type' => 'number', 'form_object' => 'text', 'minicat' => '8', 'sort' => '1', 'title' => 'New User Avatars', 'description' => 'Prevent new users from choosing their own avatars (if "Custom Avatars" is enabled), by defining a minimum post count they must have (Set to 0 to disable)');
 $config_tdb->editVars('config', $config, true);
 $f = fopen(DB_DIR.'/config_org.dat', 'a');
 fwrite($f, "config".chr(30)."9".chr(30)."Posting Settings".chr(31));

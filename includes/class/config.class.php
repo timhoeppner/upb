@@ -24,6 +24,8 @@
       array("data_type", "string", 7)
       //Determines what kind of data is acceptable in the object.  Options: "number", "text" aka "string", "_blank", "_parent", bool, or boolean
       //"data_type" is the target of links.
+      //"data_type" is used to populate lists (serialized array($value => $text), empty values are NOT supported, if you wish to create an optgroup, $value should be set to "optgroup" followed by a number (ex: "optgroup1" => "categories").
+                    Dynamically populated lists are NOT supported yet
     ));
 *//*
 
@@ -156,8 +158,15 @@ class configSettings extends tdb {
 
     function add($varName, $initialValue, $type, $dataOjbect, $formObject,  $category, $sort, $pageTitle, $pageDescription) {
         // Add checks here
-		parrent::add("ext_config", array("name" => $varName, "value" => $initialValue, "type" => $type, "title" => $pageTitle, "description" => $pageDescription, "form_object" => $formObject, "data_object" => $dataObject, "minicat" => $category, "sort" => $sort));
-		return parrent::add("config", array("name" => $varName, "value" => $initialValue, "type" => $type));
+        $query = $this->query('config', "name='$varName'", 1, 1);
+        if(!empty($query[0])) return false;
+        $query = $this->query('ext_config', "minicat='$category'&&sort>'$sort'");
+        foreach($query as $r) {
+            if(empty($r)) continue;
+            $this->edit('ext_config', $r['id'], array('sort' => ($r['sort']+1)));
+        }
+        parrent::add("ext_config", array("name" => $varName, "value" => $initialValue, "type" => $type, "title" => $pageTitle, "description" => $pageDescription, "form_object" => $formObject, "data_object" => $dataObject, "minicat" => $category, "sort" => $sort));
+        return parrent::add("config", array("name" => $varName, "value" => $initialValue, "type" => $type));
     }
 
     function rename($oldVarName, $newVarName) {

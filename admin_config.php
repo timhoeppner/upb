@@ -5,14 +5,14 @@
 // Version: 2.0
 // Using textdb Version: 4.3.2
 
-require_once("./includes/class/func.class.php");
+require_once("./includes/upb.initialize.php");
 $where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_config.php'>Config Settings</a>";
 require_once('./includes/header.php');
-if($_GET['action'] == '') $_GET['action'] = 'config';
+if(!isset($_GET['action']) || $_GET['action'] == '') $_GET['action'] = 'config';
 
 if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_COOKIE["id_env"])) {
 	if($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
-		if($_POST["action"] != "") {
+		if(isset($_POST['action']) && $_POST["action"] != "") {
 			if(file_exists('./includes/admin/'.$_POST['action'].'.config.php')) include('./includes/admin/'.$_POST['action'].'.config.php');
       if($result = $config_tdb->editVars($_POST["action"], $_POST))
       {
@@ -60,7 +60,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 		for($i=0, $max=count($raws1);$i<$max;$i++) {
 			$rec = explode(chr(30), $raws1[$i]);
 			print "
-			        <li><a href='admin_config.php?action=".$rec[0]."' title='".$rec[1]."'><span>".$rec[1]."</span></a></li>";
+			        <li><a href='admin_config.php?action=".$rec[0]."#skip_nav' title='".$rec[1]."'><span>".$rec[1]."</span></a></li>";
 		}
 		echo "
 			        <li><a href='admin_config.php?action=installation_mode' title='Toggle Installation Mode'><span>Installation Mode</span></a></li>
@@ -102,9 +102,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 		} else {
 			$raws2 = explode(chr(31), $raws[1]);
       $configVars = $config_tdb->getVars($_GET["action"], true);
-			//dump($configVars);
       echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
-			echo "<input type=\"hidden\" name=\"neworder\" value=\"\">";
 		echoTableHeading("&nbsp;", $_CONFIG);
 			foreach($raws2 as $raw) {
 				$rec = explode(chr(30), $raw);
@@ -115,8 +113,8 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 				<th colspan='2'>".$rec[2]."</th>
 			</tr>";
 					for($i=0, $j=1, $max=count($configVars);$j<$max;$i++) {
-						if($i>$max) { $j++; $i=-1; }//Current Sorting Rec not found after cycling through all available recs, skipping on to find the next sorting rec
-						if($configVars[$i]["minicat"] == $rec[1] && $configVars[$i]["sort"] == $j && $configVars[$i]["form_object"] != "hidden" && $configVars[$i]["name"] != "admin_catagory_sorting") {
+						if($i>=$max) { $j++; $i=0; }//Current Sorting Rec not found after cycling through all available recs, skipping on to find the next sorting rec
+						if($configVars[$i]["minicat"] == $rec[1] && $configVars[$i]["sort"] == $j && $configVars[$i]["form_object"] != "hidden") {
 							echo "
 			<tr>
 				<td class='area_1' style='width:35%;padding:8px;'><strong>".$configVars[$i]["title"]."</strong>";
@@ -125,56 +123,41 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 				<td class='area_2'>";
 
 							switch($configVars[$i]["form_object"]) {
+							    default:
 								case "text":
-								echo "<input type=\"text\" name=\"".$configVars[$i]["name"]."\" value=\"".stripslashes($configVars[$i]["value"])."\" size='40'>";
-								break 1;
+								    echo "<input type=\"text\" name=\"".$configVars[$i]["name"]."\" value=\"".stripslashes($configVars[$i]["value"])."\" size='40'>";
+								    break 1;
 								case "password":
-								echo "<input type=\"password\" name=\"".$configVars[$i]["name"]."\" value=\"".$configVars[$i]["value"]."\" size='40'>";
-								break 1;
+								    echo "<input type=\"password\" name=\"".$configVars[$i]["name"]."\" value=\"".$configVars[$i]["value"]."\" size='40'>";
+								    break 1;
 								case "checkbox":
-                if((bool) $configVars[$i]["value"]) $checked = " checked";
-								else $checked = "";
-								echo "<input type=\"checkbox\" name=\"".$configVars[$i]["name"]."\" value=\"1\" size='40'".$checked.">";
-								break 1;
+                                    if((bool) $configVars[$i]["value"]) $checked = " checked";
+    								else $checked = "";
+								    echo "<input type=\"checkbox\" name=\"".$configVars[$i]["name"]."\" value=\"1\" size='40'".$checked.">";
+								    break 1;
 								case "textarea":
-								echo "<textarea cols=30 rows=10 name=\"".$configVars[$i]["name"]."\">".$configVars[$i]["value"]."</textarea>";
-								break 1;
+    								echo "<textarea cols=30 rows=10 name=\"".$configVars[$i]["name"]."\">".$configVars[$i]["value"]."</textarea>";
+								    break 1;
 								case "link":
 								case "url":
 								case "URL":
-								if($configVars[$i]["data_type"] != "") $target = " target=\"".$configVars[$i]["data_type"]."\"";
-								else $target = "";
-								echo "<a href=\"".$configVars[$i]["value"]."\"".$target.">".$configVars[$i]["name"]."</a>";
-								break 1;
-
-								case "drop":
-								  $sdir = './skins/';
-								  $contents = array(); //array for valid skin directories
-                  if (is_dir($sdir))
-                  {
-                    $dir = directory($sdir);
-                    foreach ($dir as $subdir)
-                    {
-                      if (is_dir($sdir.$subdir))
-                      {
-                        if (file_exists($sdir.$subdir.'/index.html'))
-                          $contents[] = $subdir;
-                      }
-                    }
-                  }
-
-                  echo "<select id='".$configVars[$i]["name"]."' name=\"".$configVars[$i]["name"]."\" size=\"1\">";
-                  $explode = explode("/",$configVars[$i]["value"]);
-                  $current = array_reverse($explode);
-
-                  echo "<option value='".$sdir.$current[0]."' selected>".ucwords($current[0])."</option>";
-                  foreach ($contents as $skindir)
-								  {
-                    if ($sdir.$skindir != $configVars[$i]["value"])
-                      echo "<option value='".$sdir.$skindir."'>".ucwords($skindir)."</option>";
-                  }
-                  echo "</select>";
-                  break 1;
+    								if($configVars[$i]["data_type"] != "") $target = " target=\"".$configVars[$i]["data_type"]."\"";
+    								else $target = "";
+    								echo "<a href=\"".$configVars[$i]["value"]."\"".$target.">".$configVars[$i]["name"]."</a>";
+								    break 1;
+								case "dropdownlist":
+								case "dropdown":
+								case "list":
+								    if(FALSE !== ($arr = unserialize($configVars[$i]['data_type']))) {
+								        print "<select name=\"{$configVars[$i]['name']}\">\n";
+								        while(list($val, $text) = each($arr)) {
+								            if(preg_match("/^optgroup\d*$/i", $val)) print "<optgroup label=\"$text\">";
+								            else print "<option value=\"$val\">$text</option>";
+								        }
+								    } else print "<i>Unable to display dropdown list</i>";
+								    break 1;
+								case "hidden":
+								    break 1;
 							}
 							echo "</td>
 			</tr>";

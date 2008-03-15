@@ -201,11 +201,12 @@
 		$config_tdb->add('sticky_after', '0', 'config', 'bool', 'checkbox', '9', '6', 'Sticky Note Before or After Title', 'If this is checked, the \"sticky note\" text will appear after the title.  Unchecking this will display it before the title.');
 
 		//$_REGISTER
-        $config_tdb->add('security_code', '1', 'regist', 'bool', 'checkbox', '1', '16', 'Enable Security Code', 'Enable the security code image for new user registration<br><strong>Enabling this is recommended.</strong>'); //Need to find a place to put this in the 'regist' area
         $config_tdb->add('admin_email', '', 'regist', 'text', 'text', '7', '1', 'Admin E-mail', 'This is the return address for confirmation of registration.');
         $config_tdb->add('register_sbj', '', 'regist', 'text', 'text', '7', '2', 'Register Email Subject', 'This is the subject for confirmation of registration.');
         $config_tdb->add('register_msg', '', 'regist', 'text', 'textarea', '7', '3', 'Register Email Message', 'This is the message for confirmation of registration.<br>(options: &lt;login&gt; &lt;password&gt;)');
-        $config_tdb->add('newuseravatars', '50', 'regist', 'number', 'text', '8', '1', 'Custom Avatars', 'Allow users to choose their own avatars instead of the list in images/avatars directory after they have at least the number of posts indicated in this field');
+        $config_tdb->add('security_code', '1', 'regist', 'bool', 'checkbox', '7', '4', 'Enable Security Code', 'Enable the security code image for new user registration<br><strong>Enabling this is recommended.</strong>'); //Need to find a place to put this in the 'regist' area
+        $config_tdb->add('newuseravatars', '50', 'regist', 'number', 'text', '8', '1', 'New User Avatars', 'Prevent new users from choosing their own avatars (if "Custom Avatars" is enabled), by defining a minimum post count they must have (Set to 0 to disable)');
+        $config_tdb->add('custom_avatars', '1', 'regist', 'a:3:{i:0;s:7:"Disable";i:1;s:4:"Link";i:2;s:6:"Upload";}', 'dropdownlist', '8', '2', 'Custom Avatars', 'Allow users to link or upload their own avatars instead of choosing them locally in images/avatars/');
 
         //$_STATUS
 		$tdb->add("ext_config", array("name" => "member_status1", "value" => "n00b", "type" => "status", "title" => "Member post status 1", "description" => "According to post count", "form_object" => "text", "data_type" => "string", "minicat" => "2", "sort" => "1"));

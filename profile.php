@@ -45,6 +45,7 @@ if (isset($_POST["u_edit"])) {
 		if ($user[0]["view_email"] != $_POST["show_email"]) $rec["view_email"] = $_POST["show_email"];
 		if ($user[0]["mail_list"] != $_POST["email_list"]) $rec["mail_list"] = $_POST["email_list"];
 		if ($user[0]["location"] != $_POST["u_loca"]) $rec["location"] = $_POST["u_loca"];
+		//TODO: Handle avatar2
 		if (FALSE === mod_avatar::verify_avatar($_POST['avatar'], $user[0]['avatar_hash'])) {
 			$new_avatar = mod_avatar::new_parameters($_POST['avatar'], $_CONFIG['avatar_width'], $_CONFIG['avatar_height']);
 			$rec = array_merge($rec, $new_avatar);
@@ -171,7 +172,7 @@ if (isset($_POST["u_edit"])) {
 		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
 		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
 		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
-		echo "<form action='{$_SERVER['PHP_SELF']}' id='newentry' name='newentry' method='post'>";
+		echo "<form action='{$_SERVER['PHP_SELF']}' id='newentry' name='newentry' method='post' enctype=\"multipart/form-data\">";
         echo "
         <div id='tabstyle_2'>
         	<ul>
@@ -228,24 +229,25 @@ if (isset($_POST["u_edit"])) {
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
 		echoTableFooter($_CONFIG['skin_dir']);
+		$custom_avatar = (($rec[0]['post_count'] > $_REGIST['newuseravatars'] || $_COOKIE['power_env'] > 1) && $_REGIST['custom_avatars']);
 		echoTableHeading("Avatar Options", $_CONFIG);
 		echo "
 			<tr>
 				<th style='text-align:center;'>Current avatar</th>
-				<th style='text-align:center;'>Select a new avatar</th>
+				<th style='text-align:center;'>Select a local avatar</th>".(($custom_avatar) ? "
+				<th style='text-align:center;'>".(($_REGIST['custom_avatars'] == '2') ? 'Upload' : 'Link')." an avatar</th>" : "")."
 			</tr>
 			<tr>
 				<td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'>";
 		if (@$rec[0]["avatar"] != "") echo "<img src=\"".$rec[0]["avatar"]."\" border='0' width='".$rec[0]['avatar_width']."' height='".$rec[0]['avatar_height']."'><br />";
 		else echo "<img src='images/avatars/noavatar.gif' alt='' title='' />";
-		//Add coding use$_REGIST[newuseravatar] OR check if user level > 1
 		echo "</td>
 				<td class='area_2'>
 					<table cellspacing='0px' style='width:100%;'>
 						<tr>
 							<td style='text-align:center;width:50%;'>
 								<img src='images/avatars/blank.gif' name='myImage' alt='' title='' /></td>
-							<td><select class='select' size='5' name='avatar' onChange='swap(this.options[selectedIndex].value)'>";
+							<td><select class='select' size='5' name='avatar' onChange='swap(this.options[selectedIndex].value)'>\n";
 		function returnimages($dirname = "images/avatars/") {
 			$pattern = "\.(jpg|jpeg|png|gif|bmp)$";
 			$files = array();
@@ -261,14 +263,15 @@ if (isset($_POST["u_edit"])) {
 			}
 			return($files);
 		}
-		echo "" . "\n";
 		returnimages();
-		echo "</select></td>
-						</tr>
+		echo "</select></td></tr>
 					</table>
-				</td>
+				</td>";
+		if($custom_avatar) echo "
+                  <td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input type='".(($_REGIST['custom_avatars'] == '2') ? 'file' : 'text\' value=\''.$rec[0]['avatar'])."' name='avatar2'><p><i>Only 60x60 pictures are allowed.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is 5Kb.' : '')."</i></td>";
+		echo "
 			<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='".(($custom_avatar) ? '3' : '2')."'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
 		echoTableFooter($_CONFIG['skin_dir']);
 		echoTableHeading("Other Information", $_CONFIG);
