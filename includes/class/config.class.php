@@ -151,7 +151,7 @@ class configSettings extends tdb {
         $query = $config_tdb->query('config', "name='$varName'", 1, 1);
         if(!empty($query[0])) {
             parent::delete('config', $query[0]['id']);
-            return parrent::delete('ext_config', $query[0]['id']);
+            return parent::delete('ext_config', $query[0]['id']);
         }
         return false;
     }
@@ -165,8 +165,8 @@ class configSettings extends tdb {
             if(empty($r)) continue;
             $this->edit('ext_config', $r['id'], array('sort' => ($r['sort']+1)));
         }
-        parrent::add("ext_config", array("name" => $varName, "value" => $initialValue, "type" => $type, "title" => $pageTitle, "description" => $pageDescription, "form_object" => $formObject, "data_object" => $dataObject, "minicat" => $category, "sort" => $sort));
-        return parrent::add("config", array("name" => $varName, "value" => $initialValue, "type" => $type));
+        parent::add("ext_config", array("name" => $varName, "value" => $initialValue, "type" => $type, "title" => $pageTitle, "description" => $pageDescription, "form_object" => $formObject, "data_object" => $dataObject, "minicat" => $category, "sort" => $sort));
+        return parent::add("config", array("name" => $varName, "value" => $initialValue, "type" => $type));
     }
 
     function rename($oldVarName, $newVarName) {

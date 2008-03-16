@@ -121,9 +121,19 @@
 					}
 					$r_ext .= ")</div>";
 				}
-				if ($tRec["topic_starter"] == "guest") $tRec["topic_starter"] = "<i>guest</i>";
-				$statuscolor = '9d865e';    //Temporary fix.  Fix to use "status($userRec)
-				echo "
+				if ($tRec["topic_starter"] == "guest") 
+        {
+          $tRec["topic_starter"] = "<i>guest</i>";
+				  $statuscolor = '9d865e';    //Temporary fix.  Fix to use "status($userRec)
+				}
+				else
+				{
+          //the status colour is only used for the first instance of a user name in the list.
+          $user = $tdb->basicQuery('users','user_name',"{$tRec['topic_starter']}");
+          $status_config = status($user);
+			    $statuscolor = $status_config['statuscolor'];
+        }
+        echo "
 		<tr>
 			<td class='area_2' style=\"cursor:pointer;\" onclick=\"window.location.href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."';\" onmouseover=\"this.className='area_2_over'\" onmouseout=\"this.className='area_2'\">
 				<span class='link_1'>".$tRec["subject"].$r_ext."</span>
