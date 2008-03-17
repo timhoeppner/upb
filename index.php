@@ -127,7 +127,7 @@
     								$v_icon = "off.png";
     							} else {
     								$when = "<span class='date'>".gmdate("M d, Y g:i:s a", user_date($tRec[0]["last_post"]))."</span><br /><strong>In:</strong>&nbsp;<strong><a href='viewtopic.php?id=".$fRec["id"]."&amp;t_id=".$tRec[0]["id"]."'>".$tRec[0]["subject"]."</a></strong><br /><strong>By:</strong> ";
-    								if ($tRec[0]["user_id"] != "0") $when .= "<span class='link_2'><a href='profile.php?action=get&amp;id=".$tRec[0]["user_id"]."'>".$tRec[0]["user_name"]."</a></span>";
+    								if ($tRec[0]["user_id"] != "0") $when .= "<span class='link_2'><a href='profile.php?action=get&amp;id=".$tRec[0]["user_id"]."'  style='color : #".username_status($tRec[0]["user_name"]).";'>".$tRec[0]["user_name"]."</a></span>";
     								else $when .= "a ".$tRec[0]["user_name"]."";
 			    					if($_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']] == 2) {
                 					    $v_icon = 'star.gif';

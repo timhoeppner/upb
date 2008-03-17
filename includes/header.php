@@ -21,7 +21,9 @@
 		}
 	}
 	is_secure();
-
+  
+  if (isset($_COOKIE['javascript']))
+    setcookie('javascript','',time()-3600); //remove any existing javascript cookie to prevent false positives
   if (!defined('DB_DIR')) die('The constant, DB_DIR has not been defined.  Go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.');
 	if (!is_array($_CONFIG)) die('UPB Arrays have not been initialized.  Go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.');
 	if ($_CONFIG['skin_dir'] == '') die('SKIN_DIR not set ("'.SKIN_DIR.'").  This may be an indication that your config data was not set.');
@@ -30,7 +32,7 @@
 	if (trim($address) == $HTTP_SERVER_VARS['REMOTE_ADDR']) {
 		if (!headers_sent()) {
 			setcookie("banned", "User is banned", time()+9999 * 99999 * 999999);
-			header("location: http://www.google.com/");
+			header("location: about:blank");
 		}
 		exit;
 	}
@@ -162,7 +164,7 @@
 	<br />
 	<div id='tabstyle_1'>
 		<ul>";
-	if ($tdb->is_logged_in()) echo "
+  if ($tdb->is_logged_in()) echo "
 			<li><a href='index.php' title='Forum Home'><span>Forum Home</span></a></li>
 			<li><a href='".$_CONFIG["homepage"]."' title='Site Home'><span>Site Home</span></a></li>
 			<li><a href='showmembers.php' title='Members'><span>Members</span></a></li>
@@ -232,7 +234,9 @@
 			<td class='area_1' style='text-align:left;'>".$_CONFIG["servicemessage"]."</td>
 			</tr>";
 			echoTableFooter($_CONFIG['skin_dir']);
+		
 	}
+		
 /*    if ($_GET['SHOW'] == 'COOKIES') {
 		print '<pre>';
 		foreach($GLOBALS["_COOKIE"] as $varname => $varvalue) {

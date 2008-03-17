@@ -99,8 +99,16 @@
 				if (TRUE !== (in_array($_COOKIE["id_env"], $user_blList))) $pm = "<div class='button_pro2'><a href='newpm.php?to=".$pRec["user_id"]."'>Send ".$pRec["user_name"]." a PM</a></div>";
 			}
 		}
-		if (($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) $edit = "<div class='button_pro1'><a href=\"javascript:getPost('{$pRec["user_id"]}','{$_GET["id"]}-{$_GET["t_id"]}-{$pRec["id"]}','edit');\">Edit</a></div>";
-		else $edit = "";
+		if (($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) 
+    {
+      $edit = "<div class='button_pro1'>";
+      if ($_COOKIE['javascript'] == 'true')
+        $edit .= "<a href=\"javascript:getPost('{$pRec["user_id"]}','{$_GET["id"]}-{$_GET["t_id"]}-{$pRec["id"]}','edit');\">";
+      else
+        $edit .= "<a href='editpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."'>";
+      $edit .= "Edit</a></div>";
+		}
+    else $edit = "";
 		if ((($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) && $pRec['id'] != $first_post) $delete = "<div class='button_pro1'><a href='delete.php?action=delete&t=0&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."'>X</a></div>";
 		else $delete = "";
 
@@ -185,10 +193,11 @@
 	$p = createPageNumbers($vars['page'], $num_pages, $_SERVER['QUERY_STRING']);
 	echo "<div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,$vars['page'],"bottom") . "</div>";
 
-	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0))
+	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0) and isset($_COOKIE['javascript']))
 {
   echo "<div id='quickreplyform' name='quickreplyform'>";
   echo "<form name='quickreply' action='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$vars["page"]."' id='quickreply' method='POST'>\n";
+  
   echoTableHeading("Quick Reply", $_CONFIG);
   echo "<table class='main_table' cellspacing='1'>";
   foreach ($_GET as $key => $value)

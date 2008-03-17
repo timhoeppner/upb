@@ -144,6 +144,9 @@ function parse_quote($matches)
 }
 
 function bbcodebuttons($txtarea='message',$type='post') {
+    if (!isset($_COOKIE['javascript']))
+      return "Please enable Javascript to use text formatting and smilies<p>";
+
     $bb_buttons = "<p>";
     $bb_buttons .= "<select class='bbselect' onChange=\"bb_dropdown(this.form.colors,'colors','$txtarea')\" name='colors'>";
     $bb_buttons .= "<option value='' selected>Choose color</option>";
@@ -200,6 +203,8 @@ function bbcodebuttons($txtarea='message',$type='post') {
 
 function getSmilies($field = 'message')
 {
+  if (!isset($_COOKIE['javascript']))
+    return "";
   $tdb = new tdb(DB_DIR.'/', 'bbcode.tdb');
   $tdb->setFP("smilies","smilies");
   $smilies = $tdb->query("smilies","id>'0'&&type='main'");
@@ -211,6 +216,16 @@ function getSmilies($field = 'message')
       $output .= "<br>";
   }
   return $output;
+}
+
+function username_status($username)
+{
+  $tdb = new tdb(DB_DIR.'/', 'main.tdb');
+  $tdb->setFP("users","members");
+  $user = $tdb->basicQuery('users','user_name',$username);
+  $status_config = status($user);
+	$statuscolor = $status_config['statuscolor'];
+  return $statuscolor;
 }
 
 function status($user)

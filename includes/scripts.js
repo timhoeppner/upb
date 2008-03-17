@@ -777,4 +777,5 @@ function removeBBcode(areaId) {
    document.getElementById( areaId ).value = text2;
 }
 
+document.cookie = 'javascript=true'; //sets a cookie if javascript is enabled
 //END OF MISCELLANEOUS SCRIPTS

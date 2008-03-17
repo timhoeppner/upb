@@ -123,16 +123,11 @@
 				}
 				if ($tRec["topic_starter"] == "guest") 
         {
-          $tRec["topic_starter"] = "<i>guest</i>";
-				  $statuscolor = '9d865e';    //Temporary fix.  Fix to use "status($userRec)
+          $tRec["topic_starter"] = "<i>a guest</i>";
+				  $statuscolor = '9d865e';
 				}
 				else
-				{
-          //the status colour is only used for the first instance of a user name in the list.
-          $user = $tdb->basicQuery('users','user_name',"{$tRec['topic_starter']}");
-          $status_config = status($user);
-			    $statuscolor = $status_config['statuscolor'];
-        }
+			    $statuscolor = username_status($tRec['topic_starter']);
         echo "
 		<tr>
 			<td class='area_2' style=\"cursor:pointer;\" onclick=\"window.location.href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."';\" onmouseover=\"this.className='area_2_over'\" onmouseout=\"this.className='area_2'\">
@@ -145,7 +140,7 @@
 				<span class='latest_topic'><span class='date'>".gmdate("M d, Y g:i:s a", user_date($tRec["last_post"]))."</span>
 				<br />
 				<strong>By:</strong> ";
-				if ($tRec["user_id"] != "0") echo "<span class='link_2'><a href='profile.php?action=get&id=".$tRec["user_id"]."'>".$tRec["user_name"]."</a></span></td>
+				if ($tRec["user_id"] != "0") echo "<span class='link_2'><a href='profile.php?action=get&id=".$tRec["user_id"]."' style='color : #".username_status($tRec["user_name"]).";'>".$tRec["user_name"]."</a></span></td>
 		</tr>";
 				else echo "a ".$tRec["user_name"]."</span></td>
 		</tr>";
