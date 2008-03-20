@@ -10,8 +10,7 @@
 	require('./includes/inc/date.inc.php');
 	if (isset($_COOKIE['id_env'])) $user_id = $_COOKIE['id_env'];
 	else $user_id = getenv("REMOTE_ADDR");
-	$u_name = $_COOKIE['user_env'];
-  $old = mkdate() - 3600;
+    $old = mkdate() - 3600;
 	$old = $old.str_repeat(' ', 14 - strlen($old));
 	//$whos_online_array = explode("\n", substr($whos_online_log, 0, -1));
 	$whos_online_array = file(DB_DIR.'/whos_online.dat');
@@ -30,14 +29,13 @@
 	setcookie("uniquekey_env", "", time() - 3600);
 	setcookie("power_env", "", time() - 3600);
 	setcookie("id_env", "", time() - 3600);
-	echo "
-<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+?><!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
 <title>Logoff</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
-<meta http-equiv='refresh' content='2;URL=".$_GET["ref"]."'>
+<meta http-equiv='refresh' content='2;URL=<?php print $_GET["ref"]; ?>'>
 </head>
 <body>
 <div id='upb_container'>
@@ -52,15 +50,11 @@
 	<br />
 					<div class='alert_confirm'>
 					<div class='alert_confirm_text'>
-					<strong>Redirecting:</strong></div><div style='padding:4px;'>Logging off user:
-					<br />
-					".$u_name."
+					<strong>Attention:</strong></div><div style='padding:4px;'>You have successfully logged off.
 					</div>
 					</div>
 	<div class='copy'>Powered by myUPB&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href='http://www.myupb.com/'>PHP Outburst</a>
-		&nbsp;&nbsp;&copy;2002 - 2008</div>
+		&nbsp;&nbsp;&copy;2002 - <?php print date("Y",time()); ?></div>
 </div>
 </body>
-</html>";
-?>
-
+</html>
