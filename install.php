@@ -38,9 +38,7 @@
 		}
 		//end
 		//create *.dat files and folders
-		$f = fopen(DB_DIR.'/banneduser.dat', 'w');
-		fwrite($f, '');
-		fclose($f);
+		touch(DB_DIR.'/banneduser.dat');
 		$f = fopen(DB_DIR.'/hits.dat', 'w');
 		fwrite($f, '0');
 		fclose($f);
@@ -50,9 +48,7 @@
 		$f = fopen(DB_DIR.'/hits_today.dat', 'w');
 		fwrite($f, '1112852091:1');
 		fclose($f);
-		$f = fopen(DB_DIR.'/iplog', 'w');
-		fwrite($f, '');
-		fclose($f);
+		touch(DB_DIR.'/ip.log');
 		$f = fopen(DB_DIR.'/.htaccess', 'w');
 		fwrite($f, 'Order deny,allow
 			Deny from all');
@@ -77,9 +73,7 @@
 		fclose($f);
       ?><?php
     //allows syntax highlighting to be work again for coding purposes
-		$f = fopen(DB_DIR.'/whos_online.dat', 'w');
-		fwrite($f, '');
-		fclose($f);
+        touch(DB_DIR.'/whos_online.dat');
 		$f = fopen(DB_DIR.'/constants.php', 'w');
 		fwrite($f, 'define("TABLE_WIDTH_MAIN", $_CONFIG["table_width_main"], true);'."\n".'define("SKIN_DIR", $_CONFIG["skin_dir"], true);>');
 		fclose($f);
@@ -159,6 +153,14 @@
 			array("sort", "number", 2),
 			array("id", "id")
 		), 20);
+		$tdb->createTable("uploads", array(
+    	    array("name", "string", 80),
+    		array("size", "number", 9),
+    		array("downloads", "number", 10),
+            array("file_loca", 'string', 80),
+            array("user_level", 'number', 1),
+    		array("id", "id")
+    	), 2048);
 		$tdb->setFp("config", "config");
 		$tdb->setFp("ext_config", "ext_config");
 		$tdb->tdb(DB_DIR."/", "privmsg.tdb");
@@ -172,9 +174,7 @@
 			array("message", "memo"),
 			array("id", "id")
 		));
-		$f = fopen(DB_DIR."/blockedlist.dat", "w");
-		fwrite($f, "");
-		fclose($f);
+		touch(DB_DIR."/blockedlist.dat");
 		//$_CONFIG
 		?><?php
 		$config_tdb = new configSettings();
@@ -370,19 +370,10 @@
 	     $tdb->add("smilies",array("bbcode"=>"[img]smilies/drunk.gif[/img]","replace"=>"<img src='./smilies/drunk.gif' border='0' alt='drunk.gif'>","type"=>"more"));
 	     $tdb->add("smilies",array("bbcode"=>"[img]smilies/finger.gif[/img]","replace"=>"<img src='./smilies/finger.gif' border='0' alt='finger.gif'>","type"=>"more"));
 
-
-    $tdb->tdb(DB_DIR.'/', 'posts.tdb');
 		//$tdb->tdb(DB_DIR.'/', 'privmsg.tdb');
 		//$tdb->createTable('1', array(array("box", "string", 6), array("from", "number", 7), array("to", "number", 7), array("icon", "string", 10), array("subject", "memo"), array("date", "number", 14), array("message", "memo"), array("id", "id")));
 		// Add the new table to main.tdb
 		$tdb->tdb(DB_DIR, "main.tdb");
-		$tdb->createTable("uploads", array(
-		array("name", "string", 4096),
-			array("size", "number", 9),
-			array("downloads", "number", 10),
-			array("data", "memo"),
-			array("id", "id")
-		), 2048);
 		if (!headers_sent()) {
 			echo "
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>

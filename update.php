@@ -79,6 +79,9 @@ else if($_POST['next'] == 2)
 			<td class='area_2'>";
     $tdb->addField('users', array('newTopicsData', 'memo'));
     $tdb->addField('users', array('lastvisit', 'number', 14));
+    $tdb->addField('uploads', array('file_loca', 'string', 80));
+    $tdb->addField('uploads', array('user_level', 'number', 1));
+
     if($post_tdb->isTable('trackforums')) $post_tdb->removeTable('trackforums');
     if($post_tdb->isTable('tracktopics')) $post_tdb->removeTable('tracktopics');
     echo "</td></tr>";
@@ -98,6 +101,18 @@ else if($_POST['next'] == 2)
     $tdb->edit('users', $_POST['superad'], array('level' => 9));
     echo "Super Admin Set<p>";
 }
+
+//Move the file OUT of the database and into the uploads directory
+//Note: UNTESTED!
+$uploads = $tdb->listRec('uploads', 1, -1);
+foreach($uploads as $file) {
+    $file_name = md5(uniqid(rand(), true));
+    $f = fopen($_CONFIG['fileupload_location'], 'xb');
+    fwrite($f, $file['data']);
+    fclose($f);
+    $tdb->edit('uploads', $file['id'], array('user_level' => 0, 'file_loca' => $file_name));
+}
+$tdb->removeField('uploads', 'data');
 
 $del_list = array('pm_version', 'avatar1', 'avatar2', 'avatar3', 'avatar4', 'avatar5', 'avatar6', 'avatar7', 'avatar8', 'avatar9', 'pm_max_outbox_msg');
 foreach($del_list as $string) {

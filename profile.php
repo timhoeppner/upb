@@ -5,6 +5,7 @@
 // Version: 2.0
 // Using textdb Version: 4.3.2
 require_once('./includes/upb.initialize.php');
+
 if(!isset($_GET['action']) || $_GET['action'] == '') $_GET['action'] = 'edit';
 if ($_GET['action'] == "get" || $_GET['action'] == 'view') $where = "Member Profile";
 elseif ($_GET['action'] == "bookmarks") $where = "Favorited Topics";
@@ -46,11 +47,66 @@ if (isset($_POST["u_edit"])) {
 		if ($user[0]["mail_list"] != $_POST["email_list"]) $rec["mail_list"] = $_POST["email_list"];
 		if ($user[0]["location"] != $_POST["u_loca"]) $rec["location"] = $_POST["u_loca"];
 		//TODO: Handle avatar2
-		if (FALSE === mod_avatar::verify_avatar($_POST['avatar'], $user[0]['avatar_hash'])) {
-			$new_avatar = mod_avatar::new_parameters($_POST['avatar'], $_CONFIG['avatar_width'], $_CONFIG['avatar_height']);
-			$rec = array_merge($rec, $new_avatar);
-			unset($new_avatar);
-		}
+print "start avatar handling<br>";
+print '<pre>'; print_r($_POST); print_r($_FILES); print '</pre>';
+print "Custom_avatar settings:".$_REGIST['custom_avatars'].'<br>';
+	    if($_REGIST['custom_avatars'] == 2 && isset($_FILES["avatar2"]["name"]) && trim($_FILES["avatar2"]["name"]) != "") {
+	        if($_FILES['avatar2']['error'] == UPLOAD_ERR_OK) {
+print "uploading...<br>";
+                require_once('./includes/class/upload.class.php');
+    			$upload = new upload(DB_DIR, $_CONFIG["fileupload_size"], $_CONFIG["fileupload_location"]);
+    			$uploadId = $upload->storeFile($_FILES["avatar2"]);
+    			if ($uploadId !== false) {
+    			    $rec['avatar'] = 'downloadattachment.php?id='.$uploadId;
+    			    print "SUCCESS<br>";
+    			}
+	        } else {
+	            $upload_err = "The uploaded avatar ";
+	            switch ($_FILES['avatar2']['error']) {
+	                case UPLOAD_ERR_INI_SIZE:
+	                    $upload_err .= "exceeds the <strong>upload_max_filesize</strong> directive in <i>php.ini.</i>";
+	                    break;
+	                case UPLOAD_ERR_FORM_SIZE:
+	                    $upload_err .= "exceeds the <b><i>MAX_FILE_SIZE</i></b> directive that was specified in the HTML form.";
+	                    break;
+	                case UPLOAD_ERR_PARTIAL:
+	                    $upload_err .= "was only partially uploaded.";
+	                    break;
+	                case UPLOAD_ERR_NO_FILE:
+	                    $upload_err .= "was not uploaded.";
+	                    break;
+	                case UPLOAD_ERR_NO_TMP_DIR:
+	                    $upload_err = "Uploaded Avatar Error: Missing a temporary folder.";
+	                    break;
+	                case 7: //UPLOAD_ERR_CANT_WRITE (PHP Version >= 5.1.0)
+	                   $upload_err = "Uploaded Avatar Error: Failed to write file to disk.";
+	                   break;
+	                case 8: //UPLOAD_ERR_EXTENSION (PHP Version >= 5.2.0)
+	                   $upload_err = "The avatar upload stopped by extension.";
+	                default:
+	                    $upload_err .= "encountered an unknown error while trying to upload";
+	            }
+	        }
+	    } elseif($_CONFIG['custom_avatars'] == 1) {
+	        $rec['avatar'] = $_POST['avatar2'];
+print "URL<br>";
+	    } else {
+	        $rec['avatar'] = $_POST['avatar'];
+print "local<br>";
+	    }
+        if(isset($rec['avatar']) && FALSE !== strpos($user[0]['avatar'], 'downloadattachment.php?id=')) {
+print "must delete<br>";
+            $id = substr($user[0]['avatar'], 26);
+            if(ctype_digit($id)) {
+                if(!isset($upload)) {
+                    require_once('./includes/class/upload.class.php');
+                    $upload = new upload(DB_DIR, $_CONFIG["fileupload_size"], $_CONFIG["fileupload_location"]);
+                }
+                $upload->deleteFile($id);
+print "deleted<br>";
+            }
+else print "ID not digit<br>";
+        }
 		if ($user[0]["icq"] != $_POST["u_icq"]) $rec["icq"] = $_POST["u_icq"];
 		if ($user[0]["aim"] != $_POST["u_aim"]) $rec["aim"] = $_POST["u_aim"];
 		if ($user[0]["yahoo"] != $_POST["u_yahoo"]) $rec["yahoo"] = $_POST["u_yahoo"];
@@ -242,7 +298,7 @@ if (isset($_POST["u_edit"])) {
 		if (@$rec[0]["avatar"] != "") echo "<img src=\"".$rec[0]["avatar"]."\" border='0' width='".$rec[0]['avatar_width']."' height='".$rec[0]['avatar_height']."'><br />";
 		else echo "<img src='images/avatars/noavatar.gif' alt='' title='' />";
 		echo "</td>
-				<td class='area_2'>
+				<td class='area_2' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'>
 					<table cellspacing='0px' style='width:100%;'>
 						<tr>
 							<td style='text-align:center;width:50%;'>
@@ -268,7 +324,7 @@ if (isset($_POST["u_edit"])) {
 					</table>
 				</td>";
 		if($custom_avatar) echo "
-                  <td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input type='".(($_REGIST['custom_avatars'] == '2') ? 'file' : 'text\' value=\''.$rec[0]['avatar'])."' name='avatar2'><p><i>Only 60x60 pictures are allowed.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is 5Kb.' : '')."</i></td>";
+                  <td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input type='".(($_REGIST['custom_avatars'] == '2') ? 'file' : 'text\' value=\''.$rec[0]['avatar'])."' name='avatar2'><p><i>Consult the forum admin for acceptable dimensions.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is 5Kb.' : '')."</i></td>";
 		echo "
 			<tr>
 				<td class='footer_3' colspan='".(($custom_avatar) ? '3' : '2')."'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
