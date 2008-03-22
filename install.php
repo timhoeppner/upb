@@ -3,7 +3,7 @@
 	// designed for Ultimate PHP Board
 	// Author: Jerroyd Moore, aka Rebles
 	// Website: http://www.myupb.com
-	// Version: 2.2.1
+	// Version: 2.1.2
 	// Using textdb Version: 4.4.1
 	ignore_user_abort();
 	if (TRUE !== is_writable('config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
@@ -16,18 +16,92 @@
 			if (isset($_COOKIE['id_env'])) $msg .= '(User ID:'.$_COOKIE['id_env'].')';
 			if (isset($_SERVER['REMOTE_ADDR'])) $msg .= 'with the IP Address "'.$_SERVER['REMOTE_ADDR'].'"';
 			$msg .= 'tried to initiate an installation or upgrade file.  Since the installation and upgrade files pose a risk, this could be an attempted hack.  The administrator, you, were notified.  It is advised you delete installation and upgrade files, which are no long use, and ban the IP Address and username, if given.';
-			@mail(ADMIN_EMAIL, 'SECURITY ALERT on your forum', $msg);
+			if(defined(ADMIN_EMAIL)) @mail(ADMIN_EMAIL, 'SECURITY ALERT on your forum', $msg);
 			die('<strong>Security Risk</strong>:  Unable to initiate installation. An Administrater must put the forum in Installation Mode.  You\'re IP Address has been sent to the administrater aswell as login information.');
 		}
 	}
 	if(!isset($_POST['add'])) $_POST['add'] = '';
 	if ($_POST["add"] == "") {
+	    ?><!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+<title>UPB v2.1.2 Installer</title>
+<link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
+</head>
+<body>
+<div id='upb_container'>
+	<div class='main_cat_wrapper2'>
+		<table class='main_table_2' cellspacing='1'>
+			<tr>
+				<td id='logo'><img src='skins/default/images/logo.png' alt='' title='' /></td>
+			</tr>
+		</table>
+	</div>
+	<br />
+	<br />
+<form action='<?php print $_SERVER['PHP_SELF']; ?>' method='post'>
+	<div class='main_cat_wrapper'>
+		<div class='cat_area_1'>myUPB v2.1.2 Installer</div>
+		<table class='main_table' cellspacing='1'>
+			<tr>
+				<th style='text-align:center;'>&nbsp;</th>
+			</tr>
+			<tr>
+				<td class='area_welcome'><div class='welcome_text'>If you have any problems, please seek support at <a href='http://www.myupb.com/'>myupb.com's support forums!</a></div></td>
+			</tr>
+			<tr>
+				<td class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
+			</tr>
+			<tr>
+				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;'>
+					Thank you for choosing my Ultimate PHP Board.<br /><br />
+					This script will guide you through the process of installing your new myUPB bulletin board.<br /><?php
+					$dir_777 = is_readable('./') && is_writable('./');
+					if(!$dir_777) print "You have to chmod upb's root directory to 0777 before you can proceed";
+					else {
+					    print 'Just select \"Proceed\" below and follow the instructions.<br />';
+					    /*
+					    $mysql_disabled = ((extension_loaded('mysql')) ? '' : ' disabled');
+					    $pgsql_disabled = ((extension_loaded('pgsql')) ? '' : ' disabled');
+					    $sqlite_disabled = ((extension_loaded('sqlite')) ? '' : ' disabled');
+					   ?>Pick the type of database you wish to use, then select \"Proceed\" below and follow the instructions.<br />
+					   <select name="db_type">
+					     <option value="tdb">TextDB</option>
+					     <option value="mysql"<?php print $mysql_disabled; ?>>MySQL</option>
+					     <option value="pgsql"<?php print $pgsql_disabled; ?>>PostgreSQL</option>
+					     <option value="sqlite"<?php print $sqlite_disabled; ?>>SQLite</option>
+					     <?php
+					   print '</select>';
+					   */
+					} ?><br /><br />
+			<input type='hidden' name='add' value='1' /><input type='submit' value='Proceed'<?php print (($dir_777) ? '': ' DISABLED');?>>
+			</td>
+			</tr>
+			<tr>
+				<td class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
+			</tr>
+		</table>
+		<div class='footer'><img src='skins/default/images/spacer.gif' alt='' title='' /></div>
+	</div>
+</form>
+<br />
+<div class='copy'>Powered by myUPB&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href='http://www.myupb.com/'>PHP Outburst</a>
+	&nbsp;&nbsp;&copy;2002 - 2008</div>
+</div>
+</body>
+</html><?php
+	} else if($_POST['add'] == '1') {
+	    //Set the errorHandler
+	    require_once('./includes/class/error.class.php');
+        $errorHandler = &new errorhandler();
+        set_error_handler(array(&$errorHandler, 'add_error'));
+        error_reporting(E_ALL ^ E_NOTICE);
 
 		//define and create the new database folder
 		if (!defined('DB_DIR')) {
 			define('DB_DIR', './'.uniqid('data_', true), true);
 			$f = fopen('config.php', 'w');
-			fwrite($f, "<?php\ndefine('INSTALLATION_MODE', true, true);\ndefine('UPB_VERSION', '2.1.1b', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
+			fwrite($f, "<?php\ndefine('INSTALLATION_MODE', true, true);\ndefine('UPB_VERSION', '2.1.2', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
       ?><?php
       //allows syntax highlighting to be work again for coding purposes
 			fclose($f);
@@ -75,7 +149,7 @@
     //allows syntax highlighting to be work again for coding purposes
         touch(DB_DIR.'/whos_online.dat');
 		$f = fopen(DB_DIR.'/constants.php', 'w');
-		fwrite($f, 'define("TABLE_WIDTH_MAIN", $_CONFIG["table_width_main"], true);'."\n".'define("SKIN_DIR", $_CONFIG["skin_dir"], true);>');
+		fwrite($f, 'define("TABLE_WIDTH_MAIN", $_CONFIG["table_width_main"], true);'."\n".'define("SKIN_DIR", $_CONFIG["skin_dir"], true);');
 		fclose($f);
 		//end
 		//begin db files
@@ -151,6 +225,7 @@
 			array("data_type", "string", 7),
 			array("minicat", "number", 2),
 			array("sort", "number", 2),
+			array('data_list', 'memo'),
 			array("id", "id")
 		), 20);
 		$tdb->createTable("uploads", array(
@@ -177,8 +252,9 @@
 		touch(DB_DIR."/blockedlist.dat");
 		//$_CONFIG
 		?><?php
+		require_once('./includes/class/config.class.php');
 		$config_tdb = new configSettings();
-		$config_tdb->add('ver', '2.2.1', 'config', 'text', 'hidden', '','','','');
+		$config_tdb->add('ver', '2.1.2', 'config', 'text', 'hidden', '','','','');
 		$config_tdb->add('email_mode', '1', 'config', 'bool', 'hidden','','','','');
 		$config_tdb->add('admin_catagory_sorting', '', 'config', 'text', 'hidden', '', '', '', '');
 		$config_tdb->add('banned_words', 'shit,fuck,cunt,pussy,bitch,arse', 'config', 'text', 'hidden', '','','','');
@@ -372,14 +448,10 @@
 
 		//$tdb->tdb(DB_DIR.'/', 'privmsg.tdb');
 		//$tdb->createTable('1', array(array("box", "string", 6), array("from", "number", 7), array("to", "number", 7), array("icon", "string", 10), array("subject", "memo"), array("date", "number", 14), array("message", "memo"), array("id", "id")));
-		// Add the new table to main.tdb
-		$tdb->tdb(DB_DIR, "main.tdb");
-		if (!headers_sent()) {
-			echo "
-<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+		?><!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.1.1b Installer</title>
+<title>UPB v2.1.2 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>
@@ -394,10 +466,10 @@
 	<br />
 	<br />";
 			echo "
-<form action='".$_SERVER['PHP_SELF']."' method='post'>";
+<form action='<?php print $_SERVER['PHP_SELF']; ?>' method='post'>";
 			echo "
 	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.1.1b Installer</div>
+		<div class='cat_area_1'>myUPB v2.1.2 Installer</div>
 		<table class='main_table' cellspacing='1'>
 			<tr>
 				<th style='text-align:center;'>&nbsp;</th>
@@ -410,16 +482,20 @@
 			</tr>
 			<tr>
 				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;'>
-					Thank you for choosing my Ultimate PHP Board.<br /><br />
-					This script will guide you through the process of installing your new myUPB bulletin board.<br />
-					Just select \"Proceed\" below and follow the instructions.<br /><br />";
-			echo "<input type='hidden' name='add' value='1' /><input type='submit' value='Proceed' />";
-			echo "</td>
+					Installing the Database...
+					<?php
+					if($errorHandler->error_exists()) {
+					    print "<br /><br /><div style='text-align:left'>";
+					    $errorHandler->print_errors(true);
+					    print '<p>error(s) have ocurred in the script.  Please see above for details on the error to try to remody the problem.</p></div>';
+					} else print '  Done!<br /><br />';
+					?>
+			<input type='hidden' name='add' value='2' /><input type='submit' value='Next'<?php print (($errorHandler->error_exists()) ? ' DISABLED' : '') ?>>
+			</td>
 			</tr>
 			<tr>
 				<td class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
-			</tr>";
-			echo "
+			</tr>
 		</table>
 		<div class='footer'><img src='skins/default/images/spacer.gif' alt='' title='' /></div>
 	</div>
@@ -429,15 +505,11 @@
 	&nbsp;&nbsp;&copy;2002 - 2008</div>
 </div>
 </body>
-</html>";
-		} else {
-			echo "
-				<p>An error has ocurred in the script.  Please see above for details on the error to try to remody the problem.</p>";
-		}
+</html><?php
 	} else {
 		require_once('./includes/upb.initialize.php');
 	}
-	if ($_POST["add"] == "2") {
+	if ($_POST["add"] == "3") {
 		//Verify admin account
 		$error = "";
 		if ($_POST["username"] == "" || strlen($_POST["username"]) > 20) $error .= "<div style='text-align:center;font-weight:bold;'>Your Username is either too short or too long (max 20 chars, min 1 char)</div><br /><br />";
@@ -448,9 +520,9 @@
 		else $_POST["view_email"] = "0";
 		if (strlen($_POST["sig"]) > 200) $error .= "<div style='text-align:center;font-weight:bold;'>Your signature is too long (max 200 chars)</div><br /><br />";
 		if ($error != "") {
-			$_POST["add"] = 1;
+			$_POST["add"] = 2;
 		} else {
-			$_POST["add"] = "3";
+			$_POST["add"] = "4";
 			$admin = array("user_name" => $_POST["username"], "password" => generateHash($_POST["pass1"]), "level" => 9, "email" => $_POST["email"], "view_email" => $_POST["view_email"], "mail_list" => $_POST["mail_list"], "location" => $_POST["location"], "url" => $_POST["url"], "avatar" => $_POST["avatar"], "icq" => $_POST["icq"], "aim" => $_POST["aim"], "msn" => $_POST["msn"], "sig" => $_POST["sig"], "posts" => 0, "date_added" => mkdate(),"lastvisit" => mkdate(), 'timezone' => '0');
 			$tdb->add("users", $admin);
 			$f = fopen(DB_DIR."/new_pm.dat", 'w');
@@ -469,48 +541,69 @@
 			unset($config_file);
 		}
 	}
-	if ($_POST['add'] == "4") {
-		//
-		$where = "Installation ".$_CONFIG["where_sep"]." Complete";
-		require_once('./includes/header.php');
-		$edit_config = array("title" => $_POST["title"], "fileupload_size" => $_POST["fileupload_size"], "homepage" => $_POST["homepage"]);
-		$edit_regist = array("register_sbj" => $_POST["register_sbj"], "register_msg" => $_POST["register_msg"], "admin_email" => $_POST["admin_email"]);
-		if ($config_tdb->editVars("config", $edit_config) && $config_tdb->editVars("regist", $edit_regist)) {
-			$config_file = file('config.php');
-			for($i = 0; $i < count($config_file); $i++) {
-				if (empty($config_file[$i])) unset($config_file[$i]);
-				if (strchr($config_file[$i], "INSTALLATION_MODE")) {
-					$config_file[$i] = "define('INSTALLATION_MODE', false, true);";
-					break;
-				}
-			}
-			$config_file = implode("\n", $config_file);
-			$f = fopen('config.php', 'w');
-			fwrite($f, $config_file);
-			fclose($f);
-			unset($config_file);
-			echo "
-			<div class='alert_confirm'>
-				<div class='alert_confirm_text'>
-					<strong>myUPB Installation Complete!</div><div style='padding:4px;'>
-					If you had any errors or you find that your forum is not working correctly, visit myUPB's support forums at <a href='http://www.myupb.com/' target='_blank'>www.myupb.com</a><br /><br />
-					Delete the install.php and update1.x-2.0.php NOW, as it is a security risk to leave it in your server.<br /><br />
-					<a href='javascript:window.close()'>Close Window</a> -or- <a href='index.php'>Go To Forum</a> -or- <a href='login.php?ref=admin_forums.php?action=add_cat'>Login and add categories</a>
-				</div>
-			</div>";
-			require_once('./includes/footer.php');
-		} else {
-			echo "<div class='alert'><div class='alert_text'><strong>Step Five Failed!</strong></div><div style='padding:4px;'>Please seek help from <a href='http://www.myupb.com/' target='_blank'>www.myupb.com</a>.</div></div>";
-			require_once('./includes/footer.php');
-		}
+	if ($_POST['add'] == "5") {
+	    $error = array();
+		if($_POST['title'] == '') $error[] = 'You cannot leave the <b>title</b> field blank.';
+		if($_POST['register_sbj'] == '') $error[] = 'You cannot leave the <b>Register E-mail Subject</b> field blank.';
+		if($_POST['register_msg'] == '') $error[] = 'You cannot leave the <b>Register E-mail Message</b> field blank.';
+		if($_POST['register_msg'] != '' && FALSE === strpos($_POST['register_msg'], '<login>')) $error[] = 'You must include the tag &lt;login&gt; in the <b>Register E-mail Message</b> field.';
+        if($_POST['register_msg'] != '' && FALSE === strpos($_POST['register_msg'], '<password>')) $error[] = 'You must include the tag &lt;password&gt; in the <b>Register E-mail Message</b> field.';
+        if($_POST['fileupload_size'] == '') $error[] = 'You cannot leave the <b>Size limites for file upload</b> field blank.';
+        if($_POST['fileupload_size'] != '' && !ctype_digit($_POST['fileupload_size'])) $error[] = 'You must provide a number to the <b>Size limits for file upload</b> field.';
+        if($_POST['admin_email'] == '') $error[] = 'You cannot leave the <b>Admin E-mail</b> field blank.';
+        if($_POST['admin_email'] != '' && !eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["admin_email"])) $error[] = 'You must provide a <i>valid</i> email for the <b>Admin E-mail</b> field.';
+        if($_POST['homepage'] == '') $error[] = 'You cannot leave the <b>Homepage URL</b> field blank.';
+        if(!empty($error)) {
+            $_POST['add'] = '4';
+        } else {
+    		$where = "Installation ".$_CONFIG["where_sep"]." Complete";
+    		require_once('./includes/header.php');
+    		$edit_config = array("title" => $_POST["title"], "fileupload_size" => $_POST["fileupload_size"], "homepage" => $_POST["homepage"]);
+    		$edit_regist = array("register_sbj" => $_POST["register_sbj"], "register_msg" => $_POST["register_msg"], "admin_email" => $_POST["admin_email"]);
+    		if ($config_tdb->editVars("config", $edit_config) && $config_tdb->editVars("regist", $edit_regist)) {
+    			$config_file = file('config.php');
+    			for($i = 0; $i < count($config_file); $i++) {
+    				if (empty($config_file[$i])) unset($config_file[$i]);
+    				if (strchr($config_file[$i], "INSTALLATION_MODE")) {
+    					$config_file[$i] = "define('INSTALLATION_MODE', false, true);";
+    					break;
+    				}
+    			}
+    			$config_file = implode("\n", $config_file);
+    			$f = fopen('config.php', 'w');
+    			fwrite($f, $config_file);
+    			fclose($f);
+    			unset($config_file);
+    			echo "
+    			<div class='alert_confirm'>
+    				<div class='alert_confirm_text'>
+    					<strong>MyUPB Installation Complete!</div><div style='padding:4px;'>
+    					If you had any errors or you find that your forum is not working correctly, visit myUPB's support forums at <a href='http://www.myupb.com/' target='_blank'>www.myupb.com</a><br />
+    					Delete the install.php and update1.x-2.0.php NOW, as it is a security risk to leave it in your server.<br />
+    					<a href='javascript:window.close()'>Close Window</a> -or- <a href='index.php'>Go To Forum</a> -or- <a href='login.php?ref=admin_forums.php?action=add_cat'>Login and add categories</a>
+    				</div>
+    			</div>";
+    			require_once('./includes/footer.php');
+    		} else {
+    			echo "<div class='alert'><div class='alert_text'><strong>Step Five Failed!</strong></div><div style='padding:4px;'>Please seek help from <a href='http://www.myupb.com/' target='_blank'>www.myupb.com</a>.</div></div>";
+    			require_once('./includes/footer.php');
+    		}
+        }
 	}
-	if ($_POST["add"] == "3") {
+	if ($_POST["add"] == "4") {
+	    if(!isset($_POST['title'])) $_POST['title'] = 'UPB Forum';
+	    if(!isset($_POST['register_sbj'])) $_POST['register_sbj'] = 'Welcome to the UPB Forums!';
+	    if(!isset($_POST['register_msg'])) $_POST['register_msg'] = "Hello <login>!\n\nWelcome to the UPB Forums!  You password is \"<password>\".  You can change your password and other settings by visiting the user:cp portal after you log in.\n\n--The UPB Team";
+	    if(!isset($_POST['fileupload_size'])) $_POST['fileupload_size'] = '50';
+	    if(!isset($_POST['admin_email'])) $_POST['admin_email'] = '';
+	    if(!isset($_POST["homepage"])) $_POST["homepage"] = 'http://www.myupb.com';
+
 		$where = "Installation ".$_CONFIG["where_sep"]." Initial Config Setup";
 		echo "
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.1.1b Installer</title>
+<title>UPB v2.1.2 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>
@@ -524,6 +617,10 @@
 	</div>
 	<br />
 	<br />";
+		if(isset($error) && !empty($error)) {
+		    print str_replace('__TITLE__', 'The follow error(s) occurred:', str_replace('__MSG__', implode('<br />', $error), ALERT_MSG));
+		    print '<br /><br />';
+		}
 		echo "
 <form method='post' action='".$_SERVER['PHP_SELF']."'>";
 		echo "
@@ -582,7 +679,7 @@
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='hidden' name='add' value='4'><input type='submit' value='Submit' name='B1'><input type='reset' value='Reset' name='B2'></td>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='hidden' name='add' value='5'><input type='submit' value='Submit' name='B1'><input type='reset' value='Reset' name='B2'></td>
 			</tr>
 		</table>
 		<div class='footer'><img src='skins/default/images/spacer.gif' alt='' title='' /></div>
@@ -595,7 +692,7 @@
 </body>
 </html>";
 	}
-	if ($_POST["add"] == "1") {
+	if ($_POST["add"] == "2") {
 		//Set up admin acccount
 		$where = "Step #1: Setting up your admin account";
 		$required = "#ff0000";
@@ -606,7 +703,7 @@
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.1.1b Installer</title>
+<title>UPB v2.1.2 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>
@@ -690,7 +787,7 @@
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='hidden' name='add' value='2'><input type='submit' value='Submit' name='B1'><input type='reset' value='Reset' name='B2'></td>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='hidden' name='add' value='3'><input type='submit' value='Submit' name='B1'><input type='reset' value='Reset' name='B2'></td>
 			</tr>
 		</table>
 		<div class='footer'><img src='skins/default/images/spacer.gif' alt='' title='' /></div>

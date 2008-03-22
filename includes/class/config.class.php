@@ -107,6 +107,8 @@ class configSettings extends tdb {
             }
         }
         foreach($oriVars as $oriVar) {
+            if(!$editOptionalData && !isset($varArr[$oriVar['name']])) continue;
+            elseif($editOptionalData && $nameRef[$oriVar['name']]) continue;
             switch ($oriVar['data_type']) {
                 case 'number':
                     if($editOptionalData) {  //$field = eregi_replace("[^0-9.-]", "", $field);
@@ -141,10 +143,7 @@ class configSettings extends tdb {
                 }
             }
         }
-        //$this->defragMemo("ext_config");
-        //$this->defragMemo("config");
         return true;
-        //return $output;
     }
 
     function delete($varName) {
@@ -161,12 +160,24 @@ class configSettings extends tdb {
         $query = $this->query('config', "name='$varName'", 1, 1);
         if(!empty($query[0])) return false;
         $query = $this->query('ext_config', "minicat='$category'&&sort>'$sort'");
-        foreach($query as $r) {
-            if(empty($r)) continue;
-            $this->edit('ext_config', $r['id'], array('sort' => ($r['sort']+1)));
+        if(!empty($query[0])) {
+            foreach($query as $r) {
+                if(empty($r)) continue;
+                $this->edit('ext_config', $r['id'], array('sort' => ($r['sort']+1)));
+            }
         }
-        parent::add("ext_config", array("name" => $varName, "value" => $initialValue, "type" => $type, "title" => $pageTitle, "description" => $pageDescription, "form_object" => $formObject, "data_object" => $dataObject, "minicat" => $category, "sort" => $sort));
-        return parent::add("config", array("name" => $varName, "value" => $initialValue, "type" => $type));
+        $recArr = array("name" => $varName,
+                "value" => $initialValue,
+                "type" => $type,
+                "title" => $pageTitle,
+                "description" => $pageDescription,
+                "form_object" => $formObject,
+                "data_type" => $dataOjbect,
+                "minicat" => $category,
+                "sort" => $sort
+               );
+        parent::add("ext_config", $recArr);
+        return parent::add("config", $recArr); //This is okay because elements in array NOT in the table are IGNORED
     }
 
     function rename($oldVarName, $newVarName) {

@@ -5,11 +5,6 @@
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
 	header ("refresh: 600");
-	if (!file_exists("./db/main.tdb") && file_exists("./db/config2.php")) die("updater has not been run yet. click <a href='update1.x-2.0.php'>here</a> to update.");
-	if (file_exists("config.php")) {
-		require_once("config.php");
-		if (!defined('DB_DIR')) die("installer has not been run yet. click <a href='install.php'>here</a> to install.");
-	}
 	require_once("./includes/upb.initialize.php");
 
 	if(!isset($_GET['action'])) $_GET['action'] = '';      //PHP sends Notices if you don't do this first

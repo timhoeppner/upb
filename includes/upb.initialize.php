@@ -27,12 +27,52 @@ if(!empty($GLOBALS['_ENV'])) foreach($GLOBALS["_REQUEST"] as $varname => $varval
     if(isset($$varname)) unset($$varname);
 }
 
+//Move to constants.php
+define("ALERT_MSG", "
+	<div class='alert'>
+		<div class='alert_text'><strong>__TITLE__</strong></div>
+		<div style='padding:4px;'>__MSG__</div>
+	</div>", true);
+define('ALERT_GENERIC_TITLE', 'Attention:', true);
+define('ALERT_GENERIC_MSG', 'If you feel you\'ve reached this message in error, contact the forum administrator or web master.', true);
+define('MINIMAL_BODY_HEADER', "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+<title>MyUPB</title>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
+</head>
+<body>
+<div id='upb_container'>
+	<div class='main_cat_wrapper2'>
+		<table class='main_table_2' cellspacing='1'>
+			<tr>
+				<td id='logo'><img src='skins/default/images/logo.png' alt='' title='' /></td>
+			</tr>
+		</table>
+	</div>
+	<br />
+	<br />", true);
+define('MINIMAL_BODY_FOOTER', "
+	<div class='copy'>Powered by myUPB&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href='http://www.myupb.com/'>PHP Outburst</a>
+		&nbsp;&nbsp;&copy;2002 - ".date("Y",time())."</div>
+</div>
+</body>
+</html>", true);
+
 require_once("./includes/class/error.class.php");
 $errorHandler = &new errorhandler();
 set_error_handler(array(&$errorHandler, 'add_error'));
 error_reporting(E_ALL ^ E_NOTICE);
 
-require_once("./config.php");
+//Verify that we're not using a ver. 1 database, otherwise prompt the admin to run the updater
+if (!file_exists("./db/main.tdb") && file_exists("./db/config2.php")) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Update Available:', str_replace('__MSG__', 'A major update has not been run yet.  Please <a href="update1.x-2.0.php">run this</a> to continue.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
+if (file_exists("config.php")) {
+	require_once("config.php");
+}
+//Verify that a database exists, otherwise prompt the admin to run the installer
+if (!defined('DB_DIR')) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'The installer has not been run it.  Please <a href="install.php">run this</a> to continue.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
+
 require_once("./includes/class/tdb.class.php");
 require_once("./includes/class/config.class.php");
 require_once("./includes/class/func.class.php");
@@ -70,42 +110,13 @@ if(file_exists(DB_DIR."/main.tdb")) {
     $_CONFIG["where_sep"] = "<b>&gt;</b>";
     $_CONFIG["table_sep"] = "<b>::</b>";
     $_REGIST['custom_avatars'] = 2;
-    $_REGIST['newuseravatars'] = 0;
 
     eval(file_get_contents(DB_DIR.'/constants.php'));
+
+    if (!defined('DB_DIR')) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Fatal Error:', str_replace('__MSG__', 'The DB_DIR constant is undefined.<br>Please go to <a href="http://myupb.com/" target="_blank">MyUPB.com</a> for support.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
+	if (!is_array($_CONFIG)) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Fatal Error:', str_replace('__MSG__', 'Unable to correctly access UPB\'s configuration.<br>Please go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
+	if ($_CONFIG['skin_dir'] == '' || !defined('SKIN_DIR')) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Fatal Error:', str_replace('__MSG__', 'The SKIN_DIR constant is undefined.<br>This may be an indication UPB was unable to correctly access its configuration.<br>Please go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
+
     require_once('./includes/whos_online.php');
 }
-
-//Move to constants.php
-define("ALERT_MSG", "
-	<div class='alert'>
-		<div class='alert_text'><strong>__TITLE__</strong></div>
-		<div style='padding:4px;'>__MSG__</div>
-	</div>", true);
-define('ALERT_GENERIC_TITLE', 'Attention:', true);
-define('ALERT_GENERIC_MSG', 'If you feel you\'ve reached this message in error, contact the forum administrator or web master.', true);
-define('MINIMAL_BODY_HEADER', "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
-<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
-<head>
-<title>MyUPB</title>
-<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-<link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
-</head>
-<body>
-<div id='upb_container'>
-	<div class='main_cat_wrapper2'>
-		<table class='main_table_2' cellspacing='1'>
-			<tr>
-				<td id='logo'><img src='skins/default/images/logo.png' alt='' title='' /></td>
-			</tr>
-		</table>
-	</div>
-	<br />
-	<br />", true);
-define('MINIMAL_BODY_FOOTER', "
-	<div class='copy'>Powered by myUPB&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href='http://www.myupb.com/'>PHP Outburst</a>
-		&nbsp;&nbsp;&copy;2002 - ".date("Y",time())."</div>
-</div>
-</body>
-</html>", true);
 ?>

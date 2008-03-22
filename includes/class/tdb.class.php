@@ -1387,7 +1387,7 @@ class tdb {
                 $cached_query["start"] == $start &&
                 $cached_query["howmany"] == $howmany &&
                 $cached_query["fields"] == $tmpfields)
-                return $cached_query["results"];
+                return $cached_query["result"];
             }
         }
         $original_start = $start;
