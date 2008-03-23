@@ -106,11 +106,11 @@ else if($_POST['next'] == 2)
 }
 
 //Move the file OUT of the database and into the uploads directory
-//Note: UNTESTED!
+
 $uploads = $tdb->listRec('uploads', 1, -1);
 foreach($uploads as $file) {
     $file_name = md5(uniqid(rand(), true));
-    $f = fopen($_CONFIG['fileupload_location'], 'xb');
+    $f = fopen($_CONFIG['fileupload_location'].'/'.$file_name, 'xb'); //needed to add filename to fopen
     fwrite($f, $file['data']);
     fclose($f);
     $tdb->edit('uploads', $file['id'], array('user_level' => 0, 'file_loca' => $file_name));
@@ -150,54 +150,25 @@ $config[] = array('name' => 'sticky_after', 'minicat'=>$post_settings_id,'sort'=
 $config[] = array('name' => 'newuseravatars', 'value' => '50', 'type' => 'regist', 'data_type' => 'number', 'form_object' => 'text', 'minicat' => '8', 'sort' => '1', 'title' => 'New User Avatars', 'description' => 'Prevent new users from choosing their own avatars (if "Custom Avatars" is enabled), by defining a minimum post count they must have (Set to 0 to disable)');
 $regist[] = array('name' => 'register_msg', 'description' => 'This is the message for confirmation of registration.<br>(options: &lt;login&gt;, &lt;password&gt;, and &lt;url&gt;)');
 $config_tdb->editVars('config', $config, true);
-/* To Clark: I dunno what else you tried to do here...
-$tdb->edit("ext_config",20,array('sort'=>'17'));
-$tdb->edit("ext_config",16,array('sort'=>'19'));
-$tdb->edit("ext_config",10,array('sort'=>'11'));
 
-$tdb->edit("ext_config",10,array('form_object'=>'drop','title'=>'Skin Selection','description'=>'Choose a skin'));
-
-$tdb->edit("ext_config",11,array('form_object'=>'text'));
-die();
-$res = $tdb->query('ext_config',"id>'0'");
-dump($res);
-$tdb->edit("ext_config",21,array('value'=>'1'));
-$tdb->edit("config",21,array('value'=>'1'));
-die();
-
-echo "Super-user created<p>";
-
-$array = array("title" => "Category Sorting","description" => "Sort the categories in the order you want them to appear on the main page","form_object" => "list");
-
-if($tdb->edit('ext_config',8,$array))
-  echo "Settings for Category Sorting updated<p>";
-
-
-if (file_exists(DB_DIR."/bbcode.tdb"))
-{
-  $tdb->tdb(DB_DIR."/", "bbcode.tdb");
-  $tdb->removeDatabase('bbcode.tdb');
-}
-//die();
-
-//$tdb = new tdb('', '');
-//$tdb->createDatabase(DB_DIR."/", "bbcode.tdb");
+$tdb = new tdb('', '');
+$tdb->createDatabase(DB_DIR."/", "bbcode.tdb");
 $tdb->tdb(DB_DIR.'/', 'bbcode.tdb');
-//$tdb->createTable('smilies', array(array('id', 'id'), array('bbcode', 'memo'),array('replace','memo'),array('type','string',4)));
-//$tdb->createTable('icons',array(array('id','id'),array('filename','memo')));
+$tdb->createTable('smilies', array(array('id', 'id'), array('bbcode', 'memo'),array('replace','memo'),array('type','string',4)));
+$tdb->createTable('icons',array(array('id','id'),array('filename','memo')));
 $tdb->removeField('users', 'mail_list');
-//$tdb->cleanUp();
+$tdb->cleanUp();
 $tdb->setFp("smilies","smilies");
 $tdb->setFp("icons","icons");
-//for ($i = 1;$i<22;$i++)
-//{
-//  $filename = 'icon'.$i.'.gif';
-//  $tdb->add('icons',array("filename"=>$filename));
-//}
+for ($i = 1;$i<22;$i++)
+{
+  $filename = 'icon'.$i.'.gif';
+  $tdb->add('icons',array("filename"=>$filename));
+}
 
 //type has two possible values
 //main is shown on main page, more is shown on more smilies page
-/*$tdb->add('smilies',array("bbcode"=>" :)","replace"=> " <img src='./smilies/smile.gif' border='0' alt=':)'> ","type" => "main"));
+$tdb->add('smilies',array("bbcode"=>" :)","replace"=> " <img src='./smilies/smile.gif' border='0' alt=':)'> ","type" => "main"));
 $tdb->add('smilies',array("bbcode"=>" :(", "replace"=>" <img src='./smilies/frown.gif' border='0' alt=':('> ","type" => "main"));
 $tdb->add('smilies',array("bbcode"=>" ;)","replace"=> " <img src='./smilies/wink.gif' border='0' alt=';)'> ","type" => "main"));
 $tdb->add('smilies',array("bbcode"=>" :P","replace"=> " <img src='./smilies/tongue.gif' border='0' alt=':P'> ","type" => "main"));
@@ -220,11 +191,10 @@ $tdb->add('smilies',array("bbcode"=>" LOL","replace"=> " <img src='./smilies/lol
 
 //MORE SMILIES -- need to add code to check for custom smilies added to more smilies folder.
 $more = directory("./smilies/moresmilies/","gif,jpg");
-dump($more);
+
 foreach ($more as $smiley)
 {
   $tdb->add("smilies",array("bbcode"=>"[img]".$smiley."[/img]","replace"=>"<img src='./smilies/".$smiley."' border='0' alt='".$smiley."'>","type"=>"more"));
-  echo "\$tdb->add(\"smilies\",array(\"bbcode\"=>\"[img]smilies/".$smiley."[/img]\",\"replace\"=>\"<img src='./smilies/".$smiley."' border='0' alt='".$smiley."'>\",\"type\"=>\"more\"))<p>";
   rename('./smilies/moresmilies/'.$smiley,'./smilies/'.$smiley);
 }
 $more = directory("./smilies/moresmilies/","gif,jpg");
@@ -240,7 +210,7 @@ if (file_exists(DB_DIR.'/smilies.dat'))
   unlink(DB_DIR.'/smilies.dat');
 echo "Smilie database created<p>";
 echo "More Smilies files converted<p>";
-*/
+
 echo "<tr>
 				<td colspan='2' class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
@@ -255,7 +225,7 @@ echo "<tr>
 				<td colspan='2' class='footer_3a' style='text-align:center;'><input type='hidden' name='next' value='$next'><input type='submit' value='Next >>' name='submit'></td>
 			</tr>";
 			}
-echoTableFooter($_CONFIG['skin_dir']);
+echoTableFooter(SKIN_DIR);
 echo "
 </form>
 <br />
