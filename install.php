@@ -142,6 +142,7 @@
         "status".chr(30)."5".chr(30)."Member status Colors".chr(31).
         "status".chr(30)."6".chr(30)."Who's Online User Colors".chr(31).
         "regist".chr(30)."7".chr(30)."New Users' Confirmation E-mail".chr(31).
+        "regist".chr(30)."10".chr(30)."Registration Settings".chr(31).
         "regist".chr(30)."8".chr(30)."Users' Avatars".chr(31));
         //.type.chr(30).minicat.chr(30).cat name.chr(31)
 		fclose($f);
@@ -183,8 +184,9 @@
 			array("date_added", "number", 14),
 			array("timezone", "string", 3),
 			array('newTopicsData', 'memo'),
-			array("id", "id"),
 			array("lastvisit","number",14),
+			array('reg_code', 'memo'),
+			array("id", "id"),
 		), 20);
 		$tdb->createTable("forums", array(
 		array("forum", "memo"),
@@ -195,13 +197,13 @@
 			array("des", "memo"),
 			array("topics", "number", 7),
 			array("posts", "number", 7),
-			array("id", "id")
+			array("id", "id"),
 		), 20);
 		$tdb->createTable("categories", array(
 		array("name", "memo"),
 			array("sort", "memo"),
 			array("view", "number", 1),
-			array("id", "id")
+			array("id", "id"),
 		), 20);
 		$tdb->createTable("getpass", array(
 		array("passcode_HASH", "string", 49),
@@ -213,6 +215,7 @@
 		array("name", "memo"),
 			array("value", "memo"),
 			array("type", "string", 6),
+			array('data_type', 'string', 7),
 			array("id", "id"),
 			), 20);
 		$tdb->createTable("ext_config", array(
@@ -279,10 +282,14 @@
 		//$_REGISTER
         $config_tdb->add('admin_email', '', 'regist', 'text', 'text', '7', '1', 'Admin E-mail', 'This is the return address for confirmation of registration.');
         $config_tdb->add('register_sbj', '', 'regist', 'text', 'text', '7', '2', 'Register Email Subject', 'This is the subject for confirmation of registration.');
-        $config_tdb->add('register_msg', '', 'regist', 'text', 'textarea', '7', '3', 'Register Email Message', 'This is the message for confirmation of registration.<br>(options: &lt;login&gt; &lt;password&gt;)');
-        $config_tdb->add('security_code', '1', 'regist', 'bool', 'checkbox', '7', '4', 'Enable Security Code', 'Enable the security code image for new user registration<br><strong>Enabling this is recommended.</strong>'); //Need to find a place to put this in the 'regist' area
+        $config_tdb->add('register_msg', '', 'regist', 'text', 'textarea', '7', '3', 'Register Email Message', 'This is the message for confirmation of registration.<br>(options: &lt;login&gt;, &lt;password&gt;, and &lt;url&gt;)');
+
+        $config_tdb->add('disable_reg', '0', 'regist', 'bool', 'checkbox', '10', '1', 'Disable Registration', 'Checking this will disable public registration (deny access to register.php), and only admins will be able to add users (Add button on "Manage Members" section)');
+        $config_tdb->add('security_code', ((extension_loaded('gd')) ? '1' : '0'), 'regist', 'bool', 'checkbox', '10', '2', 'Enable Security Code', 'Enable the CAPTCHA security code image for new user registration<br><strong>Enabling this is recommended.</strong>');
+        $config_tdb->add('reg_approval', '0', 'regist', 'bool', 'checkbox', '10', '3', 'Approve New Users', 'Checking this will mean after new users register, their account will be disabled until an admin approves their account via "Manage Members"');
+
         $config_tdb->add('newuseravatars', '50', 'regist', 'number', 'text', '8', '1', 'New User Avatars', 'Prevent new users from choosing their own avatars (if "Custom Avatars" is enabled), by defining a minimum post count they must have (Set to 0 to disable)');
-        $config_tdb->add('custom_avatars', '1', 'regist', 'a:3:{i:0;s:7:"Disable";i:1;s:4:"Link";i:2;s:6:"Upload";}', 'dropdownlist', '8', '2', 'Custom Avatars', 'Allow users to link or upload their own avatars instead of choosing them locally in images/avatars/');
+        $config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8', '2', 'Custom Avatars', 'Allow users to link or upload their own avatars instead of choosing them locally in images/avatars/', 'a:3:{i:0;s:7:"Disable";i:1;s:4:"Link";i:2;s:6:"Upload";}');
 
         //$_STATUS
 		$tdb->add("ext_config", array("name" => "member_status1", "value" => "n00b", "type" => "status", "title" => "Member post status 1", "description" => "According to post count", "form_object" => "text", "data_type" => "string", "minicat" => "2", "sort" => "1"));
@@ -548,6 +555,7 @@
 		if($_POST['register_msg'] == '') $error[] = 'You cannot leave the <b>Register E-mail Message</b> field blank.';
 		if($_POST['register_msg'] != '' && FALSE === strpos($_POST['register_msg'], '<login>')) $error[] = 'You must include the tag &lt;login&gt; in the <b>Register E-mail Message</b> field.';
         if($_POST['register_msg'] != '' && FALSE === strpos($_POST['register_msg'], '<password>')) $error[] = 'You must include the tag &lt;password&gt; in the <b>Register E-mail Message</b> field.';
+        if($_POST['register_msg'] != '' && FALSE === strpos($_POST['register_msg'], '<url>')) $error[] = 'You must include the tag &lt;url&gt; in the <b>Register E-mail Message</b> field.';
         if($_POST['fileupload_size'] == '') $error[] = 'You cannot leave the <b>Size limites for file upload</b> field blank.';
         if($_POST['fileupload_size'] != '' && !ctype_digit($_POST['fileupload_size'])) $error[] = 'You must provide a number to the <b>Size limits for file upload</b> field.';
         if($_POST['admin_email'] == '') $error[] = 'You cannot leave the <b>Admin E-mail</b> field blank.';
@@ -593,7 +601,7 @@
 	if ($_POST["add"] == "4") {
 	    if(!isset($_POST['title'])) $_POST['title'] = 'UPB Forum';
 	    if(!isset($_POST['register_sbj'])) $_POST['register_sbj'] = 'Welcome to the UPB Forums!';
-	    if(!isset($_POST['register_msg'])) $_POST['register_msg'] = "Hello <login>!\n\nWelcome to the UPB Forums!  You password is \"<password>\".  You can change your password and other settings by visiting the user:cp portal after you log in.\n\n--The UPB Team";
+	    if(!isset($_POST['register_msg'])) $_POST['register_msg'] = "Hello <login>!\n\nWelcome to the UPB Forums!  You password is \"<password>\".  You can change your password and other settings by visiting the user:cp portal after you log in.\nBut before you do that, you must verify your e-mail address by visiting this link: <url>\nSee you on the forums!\n\n--The UPB Team";
 	    if(!isset($_POST['fileupload_size'])) $_POST['fileupload_size'] = '50';
 	    if(!isset($_POST['admin_email'])) $_POST['admin_email'] = '';
 	    if(!isset($_POST["homepage"])) $_POST["homepage"] = 'http://www.myupb.com';
@@ -645,7 +653,7 @@
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Register Email Message</strong><br />
-					this is the message for confirmation of registration (options: &lt;login&gt; &lt;password&gt;)</td>
+					this is the message for confirmation of registration (options: &lt;login&gt;, &lt;password&gt;, and &lt;url&gt;)</td>
 				<td class='area_2'><textarea rows='5' name='register_msg' cols='25' tabindex='3'>".$_POST["register_msg"]."</textarea></td>
 			</tr>
 			<tr>

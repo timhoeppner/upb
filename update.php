@@ -79,6 +79,9 @@ else if($_POST['next'] == 2)
 			<td class='area_2'>";
     $tdb->addField('users', array('newTopicsData', 'memo'));
     $tdb->addField('users', array('lastvisit', 'number', 14));
+    $tdb->addField('users', array('reg_code', 'memo'));
+    $config_tdb->addField('config_ext', array('data_list', 'memo'));
+    $config_tdb->addField('config', array('data_type', 'string', 7)); //TODO: Add code to copy values from config_ext to config
     $tdb->addField('uploads', array('file_loca', 'string', 80));
     $tdb->addField('uploads', array('user_level', 'number', 1));
 
@@ -118,28 +121,35 @@ $del_list = array('pm_version', 'avatar1', 'avatar2', 'avatar3', 'avatar4', 'ava
 foreach($del_list as $string) {
     $config_tdb->delete($string);
 }
+//How to add more Mini Categories to the config_org.dat file
+$post_settings_id = $config_tdb->addMiniCategory('Posting Settings', 'config');
+$reg_setting_id = $config_tdb->addMiniCategory('Registration Settings', 'regist', '8', false);
+
 //Make Forum/Users Settings Area, Make another sub category for users for "other" to put security_code in.
-$config_tdb->add('security_code', '1', 'regist', 'bool', 'checkbox', '7', '4', 'Enable Security Code', 'Enable the security code image for new user registration<br><strong>Enabling this is recommended</strong>');
+$config_tdb->add('security_code', '1', 'regist', 'bool', 'checkbox', $reg_setting_id, '2', 'Enable Security Code', 'Enable the CAPTCHA security code image for new user registration<br><strong>Enabling this is recommended</strong>');
 $config_tdb->add('banned_words', 'shit,fuck,cunt,pussy,bitch,arse', 'config', 'text', 'hidden', '', '', '', '');
 $config_tdb->add('email_mode', 'true', 'config', 'bool', 'hidden', '', '', '', '');
-$config_tdb->add('custom_avatars', '1', 'regist', 'a:3:{i:0;s:7:"Disable";i:1;s:4:"Link";i:2;s:6:"Upload";}', 'dropdownlist', '8', '2', 'Custom Avatars', 'Allow users to link or upload their own avatars instead of choosing them locally in images/avatars/');
+$config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8', '2', 'Custom Avatars', 'Allow users to link or upload their own avatars instead of choosing them locally in images/avatars/', 'a:3:{i:0;s:7:"Disable";i:1;s:4:"Link";i:2;s:6:"Upload";}');
+
+$config_tdb->add('disable_reg', '0', 'regist', 'bool', 'checkbox', $reg_setting_id, '1', 'Disable Registration', 'Checking this will disable public registration (deny access to register.php), and only admins will be able to add users (Add button on "Manage Members" section)');
+$config_tdb->add('reg_approval', '0', 'regist', 'bool', 'checkbox', $reg_setting_id, '3', 'Approve New Users', 'Checking this will mean after new users register, their account will be disabled until an admin approves their account via "Manage Members"');
 
 /*  Correct way to edit values in config */
+
 $config = array();
+$regist = array();
 $config[] = array('name' => 'ver', 'value' => '2.2.1');
 $config[] = array("name" => "admin_catagory_sorting", "form_object" => "hidden", "data_type" => "string");
-$config[] = array("name" => "posts_per_page", 'minicat'=>9,'sort'=>1);
-$config[] = array("name" => "topics_per_page", 'minicat'=>9,'sort'=>2);
+$config[] = array("name" => "posts_per_page", 'minicat'=>$post_settings_id,'sort'=>1);
+$config[] = array("name" => "topics_per_page", 'minicat'=>$post_settings_id,'sort'=>2);
 $config[] = array('name' => 'fileupload_location', "form_object" => "hidden", "data_type" => "string");
-$config[] = array('name' => 'fileupload_size', 'description' => 'In kilobytes, type in the maximum size allowed for file uploads<br><i>Note: Setting to 0 will <b>disable</b> uploads</i>', 'minicat'=>9,'sort'=>4);
-$config[] = array('name' => 'censor', 'minicat'=>9,'sort'=>5);
-$config[] = array('name' => 'sticky_note', 'minicat'=>9,'sort'=>6);
-$config[] = array('name' => 'sticky_after', 'minicat'=>9,'sort'=>7);
-$config[] = array('name' => 'newuseravatars', 'value' => '50', 'data_type' => 'number', 'form_object' => 'text', 'minicat' => '8', 'sort' => '1', 'title' => 'New User Avatars', 'description' => 'Prevent new users from choosing their own avatars (if "Custom Avatars" is enabled), by defining a minimum post count they must have (Set to 0 to disable)');
+$config[] = array('name' => 'fileupload_size', 'description' => 'In kilobytes, type in the maximum size allowed for file uploads<br><i>Note: Setting to 0 will <b>disable</b> uploads</i>', 'minicat'=>$post_settings_id,'sort'=>4);
+$config[] = array('name' => 'censor', 'minicat'=>$post_settings_id,'sort'=>5);
+$config[] = array('name' => 'sticky_note', 'minicat'=>$post_settings_id,'sort'=>6);
+$config[] = array('name' => 'sticky_after', 'minicat'=>$post_settings_id,'sort'=>7);
+$config[] = array('name' => 'newuseravatars', 'value' => '50', 'type' => 'regist', 'data_type' => 'number', 'form_object' => 'text', 'minicat' => '8', 'sort' => '1', 'title' => 'New User Avatars', 'description' => 'Prevent new users from choosing their own avatars (if "Custom Avatars" is enabled), by defining a minimum post count they must have (Set to 0 to disable)');
+$regist[] = array('name' => 'register_msg', 'description' => 'This is the message for confirmation of registration.<br>(options: &lt;login&gt;, &lt;password&gt;, and &lt;url&gt;)');
 $config_tdb->editVars('config', $config, true);
-$f = fopen(DB_DIR.'/config_org.dat', 'a');
-fwrite($f, "config".chr(30)."9".chr(30)."Posting Settings".chr(31));
-fclose($f);
 /* To Clark: I dunno what else you tried to do here...
 $tdb->edit("ext_config",20,array('sort'=>'17'));
 $tdb->edit("ext_config",16,array('sort'=>'19'));

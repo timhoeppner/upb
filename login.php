@@ -11,25 +11,19 @@
 	$e = 0;
 	if (isset($_POST["u_name"]) && isset($_POST["u_pass"])) {
 		// Attempt to login
-		if (($r = $tdb->login_user($_POST["u_name"], $_POST["u_pass"], $key)) === FALSE) {
+		if (($r = $tdb->login_user($_POST["u_name"], $_POST["u_pass"], $key, $error)) === FALSE) {
 			$error = "
 		<div class='alert'>
 			<div class='alert_text'>
-				<strong>Access Denied!</strong></div><div style='padding:4px;'>Either your Username or your Password was incorrect.</div>
+				<strong>Access Denied!</strong></div><div style='padding:4px;'>{$error}</div>
 		</div><br />";
 		} else {
-			//lastvisit info
-
-			//NEW VERSION
-      $ses_info = $r['lastvisit'];
-      if ($ses_info == 0)
-        $ses_info = mkdate();
-      $tdb->edit("users",$r["id"],array('lastvisit'=>mkdate()));
+            if (empty($r['lastvisit']))$r['lastvisit'] = mkdate();
 
 			if (headers_sent()) $error_msg = 'Could not login: headers sent.';
 			else
 			{
-				setcookie("lastvisit", $ses_info);
+				setcookie("lastvisit", $r['lastvisit']);
 				//end lastvisit info
 				$r['uniquekey'] = generateUniqueKey();
 				$tdb->edit('users', $r['id'], array('uniquekey' => $r['uniquekey']));

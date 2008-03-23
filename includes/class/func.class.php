@@ -14,13 +14,22 @@ class functions extends tdb {
         $this->tdb($dir, $db);
     }
 
-    function login_user($user, $pass, $key) {
+    function login_user($user, $pass, $key, &$error) {
         if($this->fp['users'] != 'members') $this->setFp("users", "members");
         $rec = $this->query("users", "user_name='".$user."'", 1, 1);
-        if($rec[0]["user_name"] != $user) return false;
+        if($rec[0]["user_name"] != $user) {
+            $error = 'Either your Username or your Password was incorrect.';
+            return false;
+        }
         if($rec[0]["password"]{0} != chr(21)) {
             if($rec[0]["password"] == generateHash($pass, $rec[0]["password"]))
             {
+              if($rec[0]['reg_code'] != '') {
+                  $error = 'Your account has not been validated yet.';
+                  if(!$_REGIST['reg_approval']) $error .= '  To resend your confirmation e-mail, <a href="register.php?action=resend&id='.$rec[0]['id'].'">click here</a>.';
+                  else $error .= '  The forum admin hasn\'t approved your account yet.';
+                  return false;
+              }
               $this->edit("users", $rec[0]["id"], array("lastvisit" => mkdate()));
               $rec[0]['lastvisit'] = mkdate();
               return $rec[0];
@@ -31,6 +40,7 @@ class functions extends tdb {
             $this->edit("users", $rec[0]["id"], array("lastvisit" => mkdate()));
             return $rec[0];
         }
+        $error = 'Either your Username or your Password was incorrect.';
         return false;
     }
 

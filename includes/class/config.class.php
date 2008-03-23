@@ -24,7 +24,7 @@
       array("data_type", "string", 7)
       //Determines what kind of data is acceptable in the object.  Options: "number", "text" aka "string", "_blank", "_parent", bool, or boolean
       //"data_type" is the target of links.
-      //"data_type" is used to populate lists (serialized array($value => $text), empty values are NOT supported, if you wish to create an optgroup, $value should be set to "optgroup" followed by a number (ex: "optgroup1" => "categories").
+      //"data_list" is used to populate lists (serialized array($value => $text), empty values are NOT supported, if you wish to create an optgroup, $value should be set to "optgroup" followed by a number (ex: "optgroup1" => "categories").
                     Dynamically populated lists are NOT supported yet
     ));
 *//*
@@ -86,6 +86,20 @@ class configSettings extends tdb {
         $rawVars = $this->query("config", "type='".$type."'");
         //print_r($rawVars);
         foreach($rawVars as $rawVar) {
+            switch($rawVars['data_type']) {
+                case 'string':
+                case 'text':
+                default:
+                    //do nothing
+                    break;
+                case 'bool':
+                case 'boolean':
+                    $rawVar['value'] = (($rawVar['value'] == '' || $rawVar['value'] == '0' || !$rawVar['value']) ? false : true);
+                    break;
+                case 'number':
+                    $rawVar['value'] = (int)$rawVar['value'];
+                    break;
+            }
             $return[$rawVar["name"]] = $rawVar["value"];
         }
         $this->_cache[$type] = $return;
@@ -118,8 +132,8 @@ class configSettings extends tdb {
                 case 'bool':
                 case 'boolean':
                     if($editOptionalData) {
-                        $nameRef[$oriVar["name"]]["value"] = (($nameRef[$oriVar["name"]]["value"] != false) ? '1' : '0');
-                    } else $varArr[$oriVar["name"]] = (($varArr[$oriVar["name"]] != false) ? '1' : '0');
+                        $nameRef[$oriVar["name"]]["value"] = (($nameRef[$oriVar["name"]]["value"] == '' || $nameRef[$oriVar["name"]]["value"] == '0' || $nameRef[$oriVar["name"]]["value"] == false) ? '0' : '1');
+                    } else $varArr[$oriVar["name"]] = (($varArr[$oriVar["name"]] == '' || $varArr[$oriVar["name"]] == '0' || $varArr[$oriVar["name"]] == false) ? '0' : '1');
                     break;
                 case 'text':
                 case 'string':
@@ -155,7 +169,7 @@ class configSettings extends tdb {
         return false;
     }
 
-    function add($varName, $initialValue, $type, $dataOjbect, $formObject,  $category, $sort, $pageTitle, $pageDescription) {
+    function add($varName, $initialValue, $type, $dataOjbect, $formObject,  $category, $sort, $pageTitle, $pageDescription, $dataList='') {
         // Add checks here
         $query = $this->query('config', "name='$varName'", 1, 1);
         if(!empty($query[0])) return false;
@@ -173,6 +187,7 @@ class configSettings extends tdb {
                 "description" => $pageDescription,
                 "form_object" => $formObject,
                 "data_type" => $dataOjbect,
+                "data_list" => $dataList,
                 "minicat" => $category,
                 "sort" => $sort
                );
@@ -187,6 +202,126 @@ class configSettings extends tdb {
             return $this->edit('ext_config', $query[0]['id'], array('name' => $newVarName));
         }
         return false;
+    }
+
+    function addCategory() {
+        //Place Holder
+    }
+
+    //if $placeBeforeMiniCat == '', place at the end
+    //if $placeBeforeMiniCat == '0', place at the beginning
+    //else use fetchMiniCategories, and use the $sort of the minicat as the third argument
+    function addMiniCategory($title, $type, $placeBeforeMiniCat='', $addingMoreMiniCats=true) {
+        switch ($type) { //TEMPORARY $type validation,
+            case 'config':
+            case 'status':
+            case 'regist':
+                break;
+            default:
+                trigger_error('Invalid configVar type provided to addMiniCategory('.$title.')', E_USER_NOTICE);
+                break;
+        }
+
+        $title = str_replace(array(chr(29), chr(30), chr(31)), array('', '', ''), $title); //Make sure there isn't any record injection
+
+        $file = file_get_contents(DB_DIR.'/config_org.dat');
+		$raws = explode(chr(29), $file);
+		$raws2 = explode(chr(31), rtrim($raws[1], chr(31)));
+
+		$minicat_id = 1;
+		foreach($raws2 as $rawRec) {  // Find the next $minicat_id available
+		    list($cat_type, $id) = explode(chr(30), $rawRec, 3);
+		    if($id >= $minicat_id) $minicat_id = $id + 1;
+		    if($placeBeforeMiniCat == $id && $cat_type != $type) {
+		        trigger_error("The minicat_id({$placeBeforeMiniCat}) provided as the third argument for addMiniCategory() does not belong to the same configVar type as the one added.({$title})", E_USER_NOTICE);
+		        return false;
+		    }
+		}
+
+		//Prepare $whereToWrite
+		if($placeBeforeMiniCat == '') {
+		    $whereToWrite = filesize(DB_DIR.'/config_org.dat');
+		    $raws2 = array_reverse($raws2);
+		} else {
+    		if(FALSE === ($whereToWrite = strpos($file, chr(29)))) return false;
+    		$whereToWrite += 1; //for the chr(29)
+		}
+
+		// Find out where to write it
+		foreach($raws2 as $rawRec) {
+		    list($cat_type, $id) = explode(chr(30), $rawRec, 3);
+		    if($cat_type == $type && // Check Conditions to BREAK out
+		       ($placeBeforeMiniCat == '' || // Place at the end
+		        $placeBeforeMiniCat == '0' || // Place at the beginning
+		        $id == $placeBeforeMiniCat) // Place in the middle
+		       ) break;
+		    else { // Else Add/Subtract the record
+		        if($placeBeforeMiniCat == '' // Place at the end
+		          ) $whereToWrite -= strlen($rawRec) + 1; //1 for the chr(31);
+		        else // Place in the middle or beginning
+		          $whereToWrite += strlen($rawRec) + 1; //1 for the chr(31);
+		    }
+		}
+
+		$rec = $type.chr(30).$minicat_id.chr(30).$title.chr(31);
+
+		if($addingMoreMiniCats) clearstatcache(); //FAILURE TO DO THIS RESULTS IN LOSS OF MINI-CATEGORIES
+		$f = fopen(DB_DIR.'/config_org.dat', 'r+');
+		fseek($f, $whereToWrite);
+
+		$restOfFileSize = filesize(DB_DIR.'/config_org.dat') - $whereToWrite;
+		if($restOfFileSize > 0) {
+		    $restOfFile = fread($f, $restOfFileSize);
+		    fseek($f, $whereToWrite);
+		} else $restOfFile = '';
+
+		//Good tool to debug:
+        //print "\n".str_replace(array(chr(29), chr(30), chr(31)), array('&lt;29&gt;'."\n", '&lt;30&gt;', '&lt;31&gt;'."\n"), $tmp.$restOfFile);
+		$success = fwrite($f, $rec.$restOfFile);
+		fclose($f);
+		return (($success === false) ? false : true);
+    }
+
+    function deleteCategory() {
+        //Place Holder
+    }
+
+    function deleteMiniCategory() {
+        //Place Holder
+    }
+
+    function fetchCategories() {
+		$raws = explode(chr(29), file_get_contents(DB_DIR.'/config_org.dat'));
+		$raws = explode(chr(31), rtrim($raws[0], chr(31)));
+		$cats = array();
+		foreach($raws as $rawRec) {
+		    list($key, $title) = explode(chr(30), $rawRec, 2);
+		    $cats[$key] = $title;
+		}
+		return $cats;
+    }
+
+    function fetchMiniCategories($category) {
+		$raws = explode(chr(29), file_get_contents(DB_DIR.'/config_org.dat'));
+		$raws = explode(chr(31), rtrim($raws[1], chr(31)));
+		$minicats = array();
+		foreach($raws as $rawRec) {
+		    list($key, $id, $title) = explode(chr(30), $rawRec, 3);
+		    if($key != $category) continue;
+		    $minicats[$id] = $title;
+		}
+		return $minicats;
+
+		for($i=0, $max=count($raws1);$i<$max;$i++) {
+			$rec = explode(chr(30), $raws1[$i]);
+       }
+    	$raws2 = explode(chr(31), $raws[1]);
+        $configVars = $config_tdb->getVars($_GET["action"], true);
+        echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
+        echoTableHeading("&nbsp;", $_CONFIG);
+    	foreach($raws2 as $raw) {
+    	   $rec = explode(chr(30), $raw);
+    	}
     }
 }
 ?>

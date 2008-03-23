@@ -39,7 +39,7 @@
 		if ($_COOKIE["power_env"] < 3) {
 			echo " Please contact an Administrator";
 			if ($_COOKIE["power_env"] > 0) {
-                echo " via <a href='newpm.php?id=1'>PM Message</a>";
+                echo " via <a href='newpm.php?to=1'>PM Message</a>";
                 if ($_CONFIG['email_mode'])
                 echo "or <a href='email.php?id=1'>web email</a>";
 		    }
@@ -74,7 +74,7 @@
     			<strong>Caution!</strong></div><div style='padding:4px;'>This is a private forum, which may require registration.<br />";
     		if ($_COOKIE["power_env"] < 3) {
     			echo " Please contact an Administrator";
-    			if ($_COOKIE["power_env"] > 0) echo " via <a href='newpm.php?id=1'>PM Message</a> or <a href='email.php?id=1'>web email</a>";
+    			if ($_COOKIE["power_env"] > 0) echo " via <a href='newpm.php?to=1'>PM Message</a> or <a href='email.php?id=1'>web email</a>";
     		} else {
     			echo " To add a Category, <a href='admin_forums.php?action=add_cat'>click here</a>.";
     		}
@@ -99,7 +99,7 @@
     					if ($_COOKIE["power_env"] != "3") {
     						echo " Please contact an Administrator";
                             if ($_COOKIE["power_env"] > 0) {
-                                echo " via <a href='newpm.php?id=1'>PM Message</a>";
+                                echo " via <a href='newpm.php?to=1'>PM Message</a>";
                                 if ($_CONFIG['email_mode']) echo " or <a href='email.php?id=1'>web email</a>";
         					}
     					} else {

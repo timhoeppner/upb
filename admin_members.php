@@ -6,12 +6,65 @@
 	// Using textdb Version: 4.3.2
 	require_once("./includes/upb.initialize.php");
 	$where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <A href='admin_members.php'>Manage Members</a>";
+	if($_GET['action'] == 'confirm') $where .= " ".$_CONFIG["where_sep"]." Confirm Newly Registered Users";
 	require_once("./includes/header.php");
 	if (!$tdb->is_logged_in() || $_COOKIE["power_env"] < 3) exitPage("
 		<div class='alert'><div class='alert_text'>
 		<strong>Access Denied!</strong></div><div style='padding:4px;'>you are not authorized to be here.</div></div>");
 	if(!isset($_GET["action"])) $_GET["action"] = '';
-	if ($_GET["action"] == "edit") {
+	if($_GET['action'] == 'confirm') {
+	    $users = $tdb->query('users', "reg_code?'reg_'", 1, -1);
+	    if(isst($_GET['a'])) {
+            //Leave off here
+            //Use Green for accepted, Red alert for rejected
+            //Deleted from $users, then use same array for the form
+	    }
+	    print '<form action="'.$_SERVER['PHP_SELF'].'" method="GET">';
+	    echoTableHeading('Unconfirmed Users', $_CONFIG);
+		echo "
+			<tr>
+			    <th style='width:5%;'>&nbsp;</th>
+				<th style='width:20%;'>Username</th>
+				<th style='width:20%;'>Email</th>
+				<th style='width:10%;text-align:center;'>Registered</th>
+				<th style='width:15%;'>Homepage</th>
+				<th style='width:30%;'>Signature</th>
+			</tr>";
+		if ($users[0] == "") {
+			echo "
+			<tr>
+				<td colspan='6'>No Users need to be confirmed at this time.</td>
+			</tr>";
+		} else {
+			foreach($users as $user) {
+				echo "
+			<tr>
+				<td class='area_1' style='padding:8px;'><input type='checkbox' name='sel_{$user['id']}'></td>
+				<td class='area_2'>{$user["user_name"]}</td>";
+				if ($user['view_email']) echo "
+				<td class='area_1'>".$user["email"]."</td>";
+				else echo "
+				<td class='area_1'><i>".$user["email"]."</i></td>";
+				echo "
+				<td class='area_2' style='text-align:center;'>";
+                if (gmdate('Y-m-d', user_date($user['date_added'])) == gmdate('Y-m-d'))
+                  echo '<i>today</i>';
+                else if (gmdate('Y-m-d', user_date($user['date_added'])) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y'))))
+                  echo "<i>yesterday</i>";
+                else
+                  echo gmdate("Y-m-d", user_date($user['date_added']))."</td>";
+                  $sig = str_replace('<br><br>', '',format_text(filterLanguage(UPBcoding($user["sig"]))));
+                print "<td class='area_1'><a href='{$user['homepage']}' target='_blank'>{$user['homepage']}</a></td>
+                <td class='area_2'><i>".substr($sig, 0, (50 - strlen(strip_tags($sig)))).(((50 - strlen(strip_tags($sig))) > 0) ? '': "...")."</i></td>
+			</tr>";
+			}
+		}
+		print "<tr>
+				<td class='footer_3' colspan='6'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+			</tr>";
+		print "<tr><td class='area_2' colspan=6><input type='submit' name='a' value='Validate'>&nbsp;&nbsp;&nbsp;<input type='submit' name='a' value='Reject'></td></tr>";
+		echoTableFooter(SKIN_DIR);
+	} elseif ($_GET["action"] == "edit") {
 		if (!isset($_GET["id"])) exitPage("
 				<div class='alert'><div class='alert_text'>
 				<strong>Error!</strong></div><div style='padding:4px;'>No id selected!</div></div>");
@@ -286,11 +339,19 @@
 		elseif (($c % $_CONFIG["topics_per_page"]) == 0) $num_pages = ($c / $_CONFIG["topics_per_page"]);
 		else $num_pages = ($c / $_CONFIG["topics_per_page"]) + 1;
 		$pageStr = createPageNumbers($_GET["page"], $num_pages, $_SERVER['QUERY_STRING']);
-		echo "<table class='pagenum_container' cellspacing='1'>
-			<tr>
-				<td style='text-align:left;height:23px;'><span class='pagination_current'>Pages: </span>".$pageStr."</td>
-			</tr>
-		</table>";
+        print "<br /><br />
+          <div id='tabstyle_pagenum'>
+            <span class='pagination_current'>Pages:</span>{$pageStr}
+          </div>
+
+          <div style='clear:both;'></div>
+          <div id='tabstyle_1'>
+            <ul>
+              <li><a href='admin_members.php?action=confirm' title='Confirm New Members'><span>Confirm New Members</span></a></li>
+              <li><a href='register.php' title='Add Member'><span>Add Member</span></a></li>
+            </ul>
+        </div>
+        <div style='clear:both;'></div>";
 		echoTableHeading("Current member management options", $_CONFIG);
 		echo "
 			<tr>

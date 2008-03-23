@@ -204,8 +204,7 @@
 	//End Header
 	//begining INSTALLATION MODE
 	if (INSTALLATION_MODE === TRUE && (FALSE === eregi('admin', $_SERVER['PHP_SELF'])) && (FALSE === strpos($_SERVER['PHP_SELF'], 'install')) && (FALSE === strpos($_SERVER['PHP_SELF'], 'update')) && (FALSE === strpos($_SERVER['PHP_SELF'], 'upgrade'))) {
-		echo 'The forum is in installation mode. Cannot continue.';
-		if ($tdb->is_logged_in() && $_COOKIE['power_env'] === 3) echo 'You may access the <a href="admin.php">Admin Panel</a> to switch INSTALLATION_MODE off.';
+	    print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'The bulletin board is in installation mode, and you cannot proceed.'.(($tdb->is_logged_in() && $_COOKIE['power_env'] === 3) ? 'You may access the <a href="admin.php">Admin Panel</a> to switch INSTALLATION_MODE off.' : ''), ALERT_MSG));
 		require('./includes/footer.php');
 		exit;
 	}
