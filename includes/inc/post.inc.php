@@ -13,16 +13,18 @@ function message_icons()
   //var_dump($smilies);
   $output = "";
   $checked = "";
+  $output .= "<table><tr>";
   foreach ($icons as $key => $icon)
   {
     if ($key == 0)
       $checked = 'checked';
     else
       $checked = "";
-    $output .= "<input type='radio' name='icon' value=".$icon['filename']." $checked><img src='./icon/".$icon['filename']."' border='0'>&nbsp;&nbsp;&nbsp;&nbsp;";
-    if ($key%10 == 9)
-      $output .= "<br>";
+    $output .= "<td><input type='radio' name='icon' value=".$icon['filename']." $checked><img src='./icon/".$icon['filename']."' border='0'></td>";
+    if ($key%12 == 11)
+      $output .= "</tr><tr>";
   }
+  $output .= "</tr></table>";
   return $output;
 }
 
@@ -209,12 +211,14 @@ function getSmilies($field = 'message')
   $tdb->setFP("smilies","smilies");
   $smilies = $tdb->query("smilies","id>'0'&&type='main'");
   //var_dump($smilies);
+  $output = "<table class='smilie_tb'><tr>";
   foreach ($smilies as $key => $smiley)
   {
-    $output .= "<A HREF=\"javascript:setsmilies(' ".$smiley['bbcode']." ','$field')\" ONFOCUS=\"filter:blur()\">".$smiley['replace']."</A>&nbsp;&nbsp;&nbsp;&nbsp;";
+    $output .= "<td class='smilie'><A HREF=\"javascript:setsmilies(' ".$smiley['bbcode']." ','$field')\" ONFOCUS=\"filter:blur()\">".$smiley['replace']."</A></td>";
     if ($key%10 == 9)
-      $output .= "<br>";
+      $output .= "</tr><tr>";
   }
+  $output .= "</tr><td colspan='10' class='more_smilie'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></table>";
   return $output;
 }
 

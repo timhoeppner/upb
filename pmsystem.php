@@ -21,13 +21,14 @@
 	else $pmRecs = $PrivMsg->query("CuBox", "box='outbox'&&from='".$_COOKIE["id_env"]."'");
 	if (!empty($pmRecs) && $pmRecs[0] != '') $pmRecs = array_reverse($pmRecs);
 	elseif($_GET['section'] != '') {
-		echo "
+		//PM Blocking system commented out
+    echo "
 			<div id='tabstyle_2'>
 				<ul>
 					<li><a href='pmsystem.php?section=inbox'><span>View Inbox</span></a></li>
 					<li><a href='pmsystem.php?section=outbox'><span>View Outbox</span></a></li>
-					<li><a href='pmblocklist.php'><span>Manage Blocked Users</span></a></li>
-					<li><a href='pmblocklist.php?action=adduser'><span>Block a User</span></a></li>
+					<!--<li><a href='pmblocklist.php'><span>Manage Blocked Users</span></a></li>
+					<li><a href='pmblocklist.php?action=adduser'><span>Block a User</span></a></li>-->
 				</ul>
 			</div>
 			<div style='clear:both;'></div>";
@@ -115,8 +116,8 @@
 				<ul>
 					<li><a href='pmsystem.php?section=inbox'><span>View Inbox</span></a></li>
 					<li><a href='pmsystem.php?section=outbox'><span>View Outbox</span></a></li>
-					<li><a href='pmblocklist.php'><span>Manage Blocked Users</span></a></li>
-					<li><a href='pmblocklist.php?action=adduser'><span>Block a User</span></a></li>
+					<!--<li><a href='pmblocklist.php'><span>Manage Blocked Users</span></a></li>
+					<li><a href='pmblocklist.php?action=adduser'><span>Block a User</span></a></li>-->
 				</ul>
 			</div>
 			<div style='clear:both;'></div>";
@@ -154,8 +155,8 @@
 				<ul>
 					<li><a href='pmsystem.php?section=inbox'><span>View Inbox</span></a></li>
 					<li><a href='pmsystem.php?section=outbox'><span>View Outbox</span></a></li>
-					<li><a href='pmblocklist.php'><span>Manage Blocked Users</span></a></li>
-					<li><a href='pmblocklist.php?action=adduser'><span>Block a User</span></a></li>
+					<!--<li><a href='pmblocklist.php'><span>Manage Blocked Users</span></a></li>
+					<li><a href='pmblocklist.php?action=adduser'><span>Block a User</span></a></li>-->
 				</ul>
 			</div>
 			<div style='clear:both;'></div>";
@@ -196,8 +197,8 @@
 				<ul>
 					<li><a href='pmsystem.php?section=inbox'><span>View Inbox</span></a></li>
 					<li><a href='pmsystem.php?section=outbox'><span>View Outbox</span></a></li>
-					<li><a href='pmblocklist.php'><span>Manage Blocked Users</span></a></li>
-					<li><a href='pmblocklist.php?action=adduser'><span>Block a User</span></a></li>
+					<!--<li><a href='pmblocklist.php'><span>Manage Blocked Users</span></a></li>
+					<li><a href='pmblocklist.php?action=adduser'><span>Block a User</span></a></li>-->
 				</ul>
 			</div>
 			<div style='clear:both;'></div>";

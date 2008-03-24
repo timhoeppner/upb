@@ -200,7 +200,7 @@
 			<tr>
 				<td class='area_1' style='padding:8px;' valign='top'><strong>Message:</strong>";
 		echo "
-					<div style='text-align:center;'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=350,height=450,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></div></td>
+					<div style='text-align:center;'></div></td>
 				<td class='area_2'>
         ".bbcodebuttons('look1')."<textarea name='message' id='look1'>".$message."</textarea>
 					<div style='padding:8px;'>".getSmilies('look1')."</div></td>

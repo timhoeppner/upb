@@ -45,7 +45,7 @@
       $message = $_POST['newedit'];
     else
       $message = $pRec[0]['message'];
-		echo "<div style='text-align:center;'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></div></td>
+		echo "<div style='text-align:center;'></div></td>
 				<td class='area_2'>".bbcodebuttons('look1')."<textarea name='message' id='look1'>".$message."</textarea>
 					<div style='padding:8px;'>".getSmilies()."</div></td>
 			</tr>

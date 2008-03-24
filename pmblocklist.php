@@ -94,13 +94,14 @@
 	} elseif($_GET["action"] == "adduser") {
 		$where = "<a href='pmsystem.php'>Private Msg</a> ".$_CONFIG["where_sep"]." <a href='pmblocklist.php'>Manage Blocked Users</a> ".$_CONFIG["where_sep"]." Add User";
 		require_once('./includes/header.php');
-		echo "
+		//PM using blocking commented out
+    echo "
 			<div id='tabstyle_2'>
 				<ul>
 					<li><a href='pmsystem.php?section=inbox'><span>View Inbox</span></a></li>
 					<li><a href='pmsystem.php?section=outbox'><span>View Outbox</span></a></li>
-					<li><a href='pmblocklist.php'><span>Manage Blocked Users</span></a></li>
-					<li><a href='pmblocklist.php?action=adduser'><span>Block a User</span></a></li>
+					<!--<li><a href='pmblocklist.php'><span>Manage Blocked Users</span></a></li>
+					<li><a href='pmblocklist.php?action=adduser'><span>Block a User</span></a></li>-->
 				</ul>
 			</div>
 			<div style='clear:both;'></div>";
