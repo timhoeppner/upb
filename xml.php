@@ -1,5 +1,6 @@
 <?php
 //XML FEED PAGE
+header("Content-type: text/xml charset=utf8");
 require_once("./includes/upb.initialize.php");
 require_once('./includes/class/posts.class.php');
 $fRec = $tdb->get("forums", $_GET["id"]);
@@ -12,7 +13,7 @@ $posts_tdb->set_forum($fRec);
 //var_dump($_SERVER);
 $tRecs = $posts_tdb->query("topics", "id>'0'");
 $desc = $fRec[0]['forum'];
-$xml = "<?xml version=\"1.0\"?>";
+$xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 ?>
 <?php
 $xml .= "<rss version=\"2.0\"><channel>";
