@@ -5,7 +5,7 @@ require_once('./includes/class/posts.class.php');
 $fRec = $tdb->get("forums", $_GET["id"]);
 
 $posts_tdb = new posts(DB_DIR."/", "posts.tdb");
-if ($_GET['type'] == "forum")
+if (isset($_GET['id']) and !isset($_GET['t_id']))
 {
 $posts_tdb->setFp("topics", $_GET['id']."_topics");
 $posts_tdb->set_forum($fRec);
