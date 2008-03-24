@@ -5,13 +5,13 @@ require_once('./includes/class/posts.class.php');
 $fRec = $tdb->get("forums", $_GET["id"]);
 
 $posts_tdb = new posts(DB_DIR."/", "posts.tdb");
-if (isset($_GET['id']) and !isset($_GET['t_id']))
+if (!isset($_GET['t_id']))
 {
 $posts_tdb->setFp("topics", $_GET['id']."_topics");
 $posts_tdb->set_forum($fRec);
 //var_dump($_SERVER);
 $tRecs = $posts_tdb->query("topics", "id>'0'");
-$desc = $fRec[0]['des'];
+$desc = $fRec[0]['forum'];
 $xml = "<?xml version=\"1.0\"?>";
 ?>
 <?php
