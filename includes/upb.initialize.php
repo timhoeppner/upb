@@ -32,7 +32,12 @@ define("ALERT_MSG", "
 	<div class='alert'>
 		<div class='alert_text'><strong>__TITLE__</strong></div>
 		<div style='padding:4px;'>__MSG__</div>
-	</div>", true);
+	</div><br>", true);
+define("CONFIRM_MSG", "
+	<div class='alert_confirm'>
+		<div class='alert_confirm_text'><strong>__TITLE__</strong></div>
+		<div style='padding:4px;'>__MSG__</div>
+	</div><br>", true);
 define('ALERT_GENERIC_TITLE', 'Attention:', true);
 define('ALERT_GENERIC_MSG', 'If you feel you\'ve reached this message in error, contact the forum administrator or web master.', true);
 define('MINIMAL_BODY_HEADER', "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
@@ -62,11 +67,12 @@ define('MINIMAL_BODY_FOOTER', "
 
 require_once("./includes/class/error.class.php");
 $errorHandler = &new errorhandler();
-set_error_handler(array(&$errorHandler, 'add_error'));
+//set_error_handler(array(&$errorHandler, 'add_error'));
 error_reporting(E_ALL ^ E_NOTICE);
 
 //Verify that we're not using a ver. 1 database, otherwise prompt the admin to run the updater
-if (!file_exists("./db/main.tdb") && file_exists("./db/config2.php")) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Update Available:', str_replace('__MSG__', 'A major update has not been run yet.  Please <a href="update1.x-2.0.php">run this</a> to continue.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
+if (!file_exists("./db/main.tdb") && file_exists("./db/config2.php")) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Update Available:', str_replace('__MSG__', 'A major update has not been run yet.  Please <a href="update1.x-2.0.php">run it</a> to continue.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
+if (UPB_VERSION != "2.2.1") die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Update Available:', str_replace('__MSG__', 'An update has not been run yet.  Please follow the directions in the readme file to run it to continue.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
 if (file_exists("config.php")) {
 	require_once("config.php");
 }
@@ -76,7 +82,6 @@ if (!defined('DB_DIR')) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', ALERT_G
 require_once("./includes/class/tdb.class.php");
 require_once("./includes/class/config.class.php");
 require_once("./includes/class/func.class.php");
-require_once("./includes/class/mod_avatar.class.php");
 
 require_once('./includes/inc/post.inc.php');
 require_once("./includes/inc/func.inc.php");
@@ -109,7 +114,6 @@ if(file_exists(DB_DIR."/main.tdb")) {
     //integrate into admin_config
     $_CONFIG["where_sep"] = "<b>&gt;</b>";
     $_CONFIG["table_sep"] = "<b>::</b>";
-    $_REGIST['custom_avatars'] = 2;
 
     eval(file_get_contents(DB_DIR.'/constants.php'));
 

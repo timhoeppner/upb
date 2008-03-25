@@ -45,7 +45,7 @@ class upload extends tdb {
      * @param String[] $file - just send $_FILES["file_field"]
      * @return bool
      */
-    function storeFile($file, $userPerms) {
+    function storeFile($file) {
         if(!$this->initialized) { $this->notInitialized(); return false; }
         if($file["error"] != UPLOAD_ERR_OK) return false;
 
@@ -63,7 +63,6 @@ class upload extends tdb {
                     "size" => $file["size"],
                     "downloads" => 0,
                     "file_loca" => $file_name,
-                    "user_level" => $userPerm
                 ));
 
             return $id;
@@ -74,7 +73,7 @@ class upload extends tdb {
     function deleteFile($id) {
         $this->getFile($id);
         $this->delete('uploads', $id);
-        return unlink($this->file['file_loca']);
+        return unlink($this->uploadLoc."/".$this->file['file_loca']);
     }
 
     function getFile($id) {
@@ -96,11 +95,12 @@ class upload extends tdb {
         // Pre-dump checks
         if(empty($this->file)) { $this->sendError(E_USER_NOTICE, "No file loaded, cannot dump", __LINE__); return false; }
         if(headers_sent()) { $this->sendError(E_USER_NOTICE, "Headers have already been sent, unable to dump file", __LINE__); return false; }
+        if(!file_exists($this->uploadLoc."/".$this->file['file_loca'])) { $this->sendError("The file does not exist.", __LINE__); return false; }
 
         // Dump the file to the browser
         header("Content-type: application/octet-stream");
         header('Content-Length: ' . filesize($this->uploadLoc."/".$this->file['file_loca']));
-        header("Content-disposition: attachment; filename=".$this->file["name"]);
+        header("Content-disposition: attachment; filename=\"{$this->file["name"]}\"");
         readfile($this->uploadLoc."/".$this->file['file_loca']);
 
     }

@@ -218,12 +218,6 @@ switch ($ajax_type)
 				$sig = format_text(filterLanguage(UPBcoding($user[0]["sig"]), $_CONFIG));
 				$sig = "<div class='signature'>$sig</div>";
 			}
-			if (FALSE === mod_avatar::verify_avatar($user[0]['avatar'], $user[0]['avatar_hash'])) {
-				$new_avatar = mod_avatar::new_parameters($user[0]['avatar'], $_CONFIG['avatar_width'], $_CONFIG['avatar_height']);
-				$tdb->edit('users', $user[0]['id'], $new_avatar);
-				$user[0] = array_merge($user[0], $new_avatar);
-				unset($new_avatar);
-			}
 			$status_config = status($user);
 			$status = $status_config['status'];
 			$statuscolor = $status_config['statuscolor'];

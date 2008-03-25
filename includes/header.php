@@ -129,7 +129,18 @@
 		if ((int)$new_pm != 0) $pm_alert = "-&nbsp;<a href='pmsystem.php?section=inbox'><strong>".$new_pm."</strong> new PMs in your inbox</a>";
 		else $pm_alert = "-&nbsp;No new messages";
 		$mark_all_read = "<a href='setallread.php'>Mark all posts read</a>";
-		if ($_COOKIE["power_env"] >= 3) $adminlink = "<a href='admin.php'>Admin Panel</a>&nbsp;&middot;";
+		if ($_COOKIE["power_env"] >= 3) {
+		    $adminlink = "<a href='admin.php'>Admin Panel</a>&nbsp;&middot;";
+		    if($_REGIST['reg_approval']) {
+    		    if($_SESSION['reg_approval_count'] == 0 && mktime() > ($_SESSION['reg_approval_lastcheck']+300)) {//Check every 5 mins IF count == 0
+    	    	    $users = $tdb->query('users', "reg_code?'reg_'", 1, -1);
+    	            $_SESSION['reg_approval_count'] = ((!empty($users[0])) ? count($users) : 0);
+    		    }
+    		    if($_SESSION['reg_approval_count'] > 0) {
+    		        $adminlink .= "(<a href='admin_members.php?action=confirm#skip_nav'><b>{$_SESSION['reg_approval_count']} Unapproved User</b></a>)&nbsp;&middot;";
+    		    }
+		    }
+		}
 	}
 	//Start Header
   echo "
@@ -181,10 +192,13 @@
 				&middot;&nbsp;<a href='profile.php'>User CP</a>
 				&middot;&nbsp;<a href='$pm_display'>Messenger</a>
 				$pm_alert";
-	else echo "
-				<strong>$login</strong>
-				Please <a href='register.php'><strong>Register</strong></a>
-				or <a href='$loginlink'><strong>Login</strong></a>";
+	else {
+	    echo "
+				<strong>$login</strong>  Please ";
+    	if($_REGIST['disable_reg']) print '';
+    	else print "<a href='register.php'><strong>Register</strong></a> or ";
+    	print "<a href='$loginlink'><strong>Login</strong></a>.";
+	}
 	echo "
 			</div></td>
 		</tr>";

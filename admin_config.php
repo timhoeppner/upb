@@ -98,6 +98,15 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 		    $minicats = $config_tdb->fetchMiniCategories($_GET['action']);
             $configVars = $config_tdb->getVars($_GET["action"], true);
             echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
+            ?><script type="text/javascript">
+                function changeCheckboxValue(checked, object) {
+                    if(checked) {
+                        object.value = '1';
+                    } else {
+                        object.value = '0';
+                    }
+                }
+            </script><?php
 		    echoTableHeading("&nbsp;", $_CONFIG);
 		    while(list($minicat_id, $minicat_title) = each($minicats)) {
 				echo "
@@ -122,10 +131,11 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 							case "password":
 							    echo "<input type=\"password\" name=\"".$configVars[$i]["name"]."\" value=\"".$configVars[$i]["value"]."\" size='40'>";
 							    break 1;
-							case "checkbox":
+							case "checkbox": //checkbox won't send an empty value, so we use a hidden field and modify it with javascript
                                 if((bool) $configVars[$i]["value"]) $checked = " checked";
 								else $checked = "";
-							    echo "<input type=\"checkbox\" name=\"".$configVars[$i]["name"]."\" value=\"1\" size='40'".$checked.">";
+							    echo "<input type=\"checkbox\" name=\"".$configVars[$i]["name"]."_checkbox\" onChange=\"changeCheckboxValue(this.checked, document.form.".$configVars[$i]["name"].")\"size='40'".$checked.">";
+							    echo "<input type=\"hidden\" name=\"".$configVars[$i]["name"]."\" value=\"".(($configVars[$i]["value"]) ? '1':'0')."\">";
 							    break 1;
 							case "textarea":
 								echo "<textarea cols=30 rows=10 name=\"".$configVars[$i]["name"]."\">".$configVars[$i]["value"]."</textarea>";
@@ -142,9 +152,11 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 							case "list":
 							    if(FALSE !== ($arr = unserialize($configVars[$i]['data_list']))) {
 							        print "<select name=\"{$configVars[$i]['name']}\">\n";
+							        $glb_var = '_'.strtoupper($_GET['action']);
+							        $glb_var =& $$glb_var;
 							        while(list($val, $text) = each($arr)) {
 							            if(preg_match("/^optgroup\d*$/i", $val)) print "<optgroup label=\"$text\">";
-							            else print "<option value=\"$val\">$text</option>";
+							            else print "<option value=\"$val\"".(($glb_var[$configVars[$i]['name']] == $val) ? ' SELECTED':'').">$text</option>";
 							        }
 							    } else print "<i>Unable to display dropdown list</i>";
 							    break 1;

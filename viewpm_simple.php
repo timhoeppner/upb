@@ -18,14 +18,7 @@
 	$table_font = $font1;
 	$user = $tdb->get("users", $pmRec[0]["from"]);
 	if ($user[0]["sig"] != "") $user[0]["sig"] = "<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG))."</div>";
-	if (FALSE === mod_avatar::verify_avatar($user[0]['avatar'], $user[0]['avatar_hash'])) {
-		$new_avatar = array();
-		list($new_avatar['avatar_width'], $new_avatar['avatar_height']) = mod_avatar::calculate_dimensions($user[0]['avatar'], $_CONFIG['avatar_width'], $_CONFIG['avatar_height']);
-		$new_avatar['avatar_hash'] = mod_avatar::md5_file($user[0]['avatar']);
-		$tdb->edit('users', $user[0]['id'], $new_avatar);
-		$user[0] = array_merge($user[0], $new_avatar);
-		unset($new_avatar);
-	}
+
 	if ($user[0]["level"] == "1") {
 		$statuscolor = $_STATUS["userColor"];
 		if ($user[0]["posts"] >= $_STATUS["member_post1"]) $status = $_STATUS["member_status1"];

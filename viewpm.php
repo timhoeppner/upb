@@ -97,12 +97,6 @@
 		$table_font = $font1;
 		if ($user[0]["sig"] != "") $user[0]["sig"] = "
 			<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG))."</div>";
-			if (FALSE === mod_avatar::verify_avatar($user[0]['avatar'], $user[0]['avatar_hash'])) {
-				$new_avatar = mod_avatar::new_parameters($user[0]['avatar'], $_CONFIG['avatar_width'], $_CONFIG['avatar_height']);
-				$tdb->edit('users', $user[0]['id'], $new_avatar);
-				$user[0] = array_merge($user[0], $new_avatar);
-				unset($new_avatar);
-			}
 		$status_config = status($user);
 		$status = $status_config['status'];
 		$statuscolor = $status_config['statuscolor'];

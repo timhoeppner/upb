@@ -3,7 +3,7 @@
 	// designed for Ultimate PHP Board
 	// Author: Jerroyd Moore, aka Rebles
 	// Website: http://www.myupb.com
-	// Version: 2.1.2
+	// Version: 2.2.1
 	// Using textdb Version: 4.4.1
 	ignore_user_abort();
 	if (TRUE !== is_writable('config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
@@ -25,7 +25,7 @@
 	    ?><!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.1.2 Installer</title>
+<title>UPB v2.2.1 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>
@@ -41,7 +41,7 @@
 	<br />
 <form action='<?php print $_SERVER['PHP_SELF']; ?>' method='post'>
 	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.1.2 Installer</div>
+		<div class='cat_area_1'>myUPB v2.2.1 Installer</div>
 		<table class='main_table' cellspacing='1'>
 			<tr>
 				<th style='text-align:center;'>&nbsp;</th>
@@ -101,7 +101,7 @@
 		if (!defined('DB_DIR')) {
 			define('DB_DIR', './'.uniqid('data_', true), true);
 			$f = fopen('config.php', 'w');
-			fwrite($f, "<?php\ndefine('INSTALLATION_MODE', true, true);\ndefine('UPB_VERSION', '2.1.2', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
+			fwrite($f, "<?php\ndefine('INSTALLATION_MODE', true, true);\ndefine('UPB_VERSION', '2.2.1', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
       ?><?php
       //allows syntax highlighting to be work again for coding purposes
 			fclose($f);
@@ -109,6 +109,11 @@
 		if (!is_dir(DB_DIR)) {
 			if (!mkdir(DB_DIR, 0777)) die('The forum must be able to create a folder in the root forum folder.  Please chmod() the root folder to 777 and rerun the script');
 			@mkdir(DB_DIR.'/backup', 0777);
+		}
+		$uploads_dir = uniqid('uploads_', true);
+		if (!is_dir($uploads_dir)) {
+			if (!mkdir($uploads_dir, 0777)) die('The forum must be able to create a folder in the root forum folder.  Please chmod() the root folder to 777 and rerun the script');
+			touch($uploads_dir. '/index.html');
 		}
 		//end
 		//create *.dat files and folders
@@ -131,7 +136,7 @@
         fwrite($f,
         "config".chr(30)."General".chr(31).
         "status".chr(30)."Members' Statuses".chr(31).
-        "regist".chr(30)."New Users".chr(31).
+        "regist".chr(30)."New Members".chr(31).
         //.type.chr(30).type name.chr(31)
         chr(29).
         "config".chr(30)."1".chr(30)."Main Forum Config".chr(31).
@@ -236,7 +241,6 @@
     		array("size", "number", 9),
     		array("downloads", "number", 10),
             array("file_loca", 'string', 80),
-            array("user_level", 'number', 1),
     		array("id", "id")
     	), 2048);
 		$tdb->setFp("config", "config");
@@ -257,11 +261,11 @@
 		?><?php
 		require_once('./includes/class/config.class.php');
 		$config_tdb = new configSettings();
-		$config_tdb->add('ver', '2.1.2', 'config', 'text', 'hidden', '','','','');
+		$config_tdb->add('ver', '2.2.1', 'config', 'text', 'hidden', '','','','');
 		$config_tdb->add('email_mode', '1', 'config', 'bool', 'hidden','','','','');
 		$config_tdb->add('admin_catagory_sorting', '', 'config', 'text', 'hidden', '', '', '', '');
 		$config_tdb->add('banned_words', 'shit,fuck,cunt,pussy,bitch,arse', 'config', 'text', 'hidden', '','','','');
-		$config_tdb->add('fileupload_location', './'.uniqid('uploads_', true), 'config', 'text', 'hidden', '', '', '', ''); //Since upload's name are gone, doesn't make much sense to let user pick the uploads location...
+		$config_tdb->add('fileupload_location', './'.$uploads_dir, 'config', 'text', 'hidden', '', '', '', ''); //Since upload's name are gone, doesn't make much sense to let user pick the uploads location...
 
 		$config_tdb->add('title', 'Discussion Forums', 'config', 'text', 'text', '1', '1', 'Title', 'Title of the forum.');
 		$config_tdb->add('logo', 'images/logo.gif', 'config', 'text', 'text', '1', '2', 'Logo Location', 'Can be relative or a URL.');
@@ -458,7 +462,7 @@
 		?><!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.1.2 Installer</title>
+<title>UPB v2.2.1 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>
@@ -476,7 +480,7 @@
 <form action='<?php print $_SERVER['PHP_SELF']; ?>' method='post'>";
 			echo "
 	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.1.2 Installer</div>
+		<div class='cat_area_1'>myUPB v2.2.1 Installer</div>
 		<table class='main_table' cellspacing='1'>
 			<tr>
 				<th style='text-align:center;'>&nbsp;</th>
@@ -611,7 +615,7 @@
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.1.2 Installer</title>
+<title>UPB v2.2.1 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>
@@ -711,7 +715,7 @@
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.1.2 Installer</title>
+<title>UPB v2.2.1 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>

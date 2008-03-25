@@ -154,14 +154,14 @@ class posts extends tdb {
 				print_r($p_ids);
 				echo ") <br />";
 				continue;
-		}
-		if(FALSE === ($seekto = $this->bytesToSeek($fp, $header, $fileId))) {
-			echo 'tdb::bytestoseek() failed in posts::getPosts()...';
-			continue;
-		}
-		fseek($f, $seekto);
-		$return[] = $this->parseRecord($fp, fread($f, $header["recLen"]), $header);
-		$howmany--;
+    		}
+    		if(FALSE === ($seekto = $this->bytesToSeek($fp, $header, $fileId))) {
+    			echo 'tdb::bytestoseek() failed in posts::getPosts()...';
+    			continue;
+    		}
+    		fseek($f, $seekto);
+    		$return[] = $this->parseRecord($fp, fread($f, $header["recLen"]), $header);
+    		$howmany--;
 		}
 		fclose($f);
 		return $return;

@@ -65,14 +65,23 @@
 	$num_pages = (int) $num_pages;
 	$p = createPageNumbers($vars["page"], $num_pages, 'id='.$_GET['id']);
 	require_once('./includes/header.php');
-    $newVisitedTime = $_SESSION['newTopics']['lastVisitForums'][$_GET['id']];
+//$_SESSION['newTopics'] = array('lastVisitForums' => array());
+//print '<pre>'; print_r($_SESSION['newTopics']);
+    $newVisitedTime = (int)$_SESSION['newTopics']['lastVisitForums'][$_GET['id']];
+//print "\nfirst: {$newVisitedTime}";
     for($i=0,$c=count($tRecs);$i<$c;$i++) {
         if(empty($tRecs[$i])) continue;
-        if($_SESSION['newTopics']['lastVisitForums'][$_GET['id']] < $tRecs[$i]['last_post'] && $_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRecs[$i]['id']] != 0) {
-            if($tRecs[$i]['last_post'] > $newVisitedTime) $newVisitedTime = $tRecs[$i]['last_post'];
+//print "\n{$tRecs[$i]['last_post']} > {$newVisitedTime}";
+        if($tRecs[$i]['last_post'] > $newVisitedTime) $newVisitedTime = $tRecs[$i]['last_post'];
+//print "\n{$_SESSION['newTopics']['lastVisitForums'][$_GET['id']]} < {$tRecs[$i]['last_post']} && {$_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRecs[$i]['id']]} != 0";
+        if($_SESSION['newTopics']['lastVisitForums'][$_GET['id']] < $tRecs[$i]['last_post']
+           && (!isset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRecs[$i]['id']]))) {
+//               && $_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRecs[$i]['id']] != 0)) {
+//print "\nset";
             $_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRecs[$i]['id']] = 1;
         } elseif($tRecs[$i]['sticky'] == 0) break; //Since its sorted, once we find an old topic, they are all old (excluding stickied)
     }
+//print "\nfinal: {$newVisitedTime}</pre>";
     $_SESSION['newTopics']['lastVisitForums'][$_GET['id']] = $newVisitedTime;
     if(!empty($_SESSION['newTopics']['f'.$_GET['id']])) while(list($key, $val) = each($_SESSION['newTopics']['f'.$_GET['id']])) {
         //Have to move it here, or else it would be marked unread

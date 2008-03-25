@@ -29,7 +29,7 @@
 	    require_once('./includes/header.php');
 	    ?><div class='alert_confirm'>
 			<div class='alert_confirm_text'>
-			  <strong></strong>Attention:</div>
+			  <strong>Attention:</strong></div>
 			<div style='padding:4px;'>Your e-mail address was successfully confirmed.  You can now log into the bulletin board.
 			</div>
 		  </div><?php
@@ -63,7 +63,7 @@
 	    if($email_status) {
 	    ?><div class='alert_confirm'>
 			<div class='alert_confirm_text'>
-			  <strong></strong>Attention:</div>
+			  <strong>Attention:</strong></div>
 			<div style='padding:4px;'>A reconfirmation e-mail was successfully sent to your e-mail address on file.
 			</div>
 		  </div><?php
@@ -155,7 +155,8 @@
 		    "date_added" => mkdate(),
 		    "lastvisit" => mkdate(),
 		    "timezone" => $_POST["u_timezone"],
-		    'reg_code' => $reg_code
+		    'reg_code' => $reg_code,
+		    'newTopicsData' => serialize(array('lastVisitForums' => array()))
 		  ));
 
 		// If each user sends and receives one PM a day, their table will last 67.2 years
@@ -182,39 +183,40 @@
         }
 
 		require_once('./includes/header.php');
-        echoTableHeading("Thank you for registering!", $_CONFIG);
-        echo "
-		<tr>
-			<td class='area_1'><div class='description'>";
+		print "<div class='alert_confirm'>
+			<div class='alert_confirm_text'>
+			  <strong>Thank you for registering:</strong></div>
+			<div style='padding:4px;'>";
         if($tdb->is_logged_in()) {
             print "The user, <b>{$_POST['u_login']}</b>, has been registered.";
             if($email_status)
-                print "  An e-mail was sent to them, with their username and password.";
-            else print "  An e-mail could not be sent to them, so you must give them their username and password:
-                <p><strong>Username:</strong> ".$_POST['u_login'];
-    		    echo "<p><strong>Password:</strong> $u_pass";
+                print "&nbsp;&nbsp;An e-mail was sent to them, with their username and password.";
+            else print "&nbsp;&nbsp;An e-mail could not be sent to them, so you must give them their username and password:
+                <br /><strong>Username:</strong> ".$_POST['u_login'];
+    		    echo "<br /><strong>Password:</strong> $u_pass";
         } else {
             echo "<strong>You are now registered!</strong>";
             if($email_status && $_REGIST['reg_approval']) {
-                print "<p>An email has been sent to your email account with your username and password.
+                print "<br />An email has been sent to your email account with your username and password.
                 You won't be able to log in until an administrator approves your registration.
-                <p>It should arrive within 2 - 5 minutes.";
+                <br />It should arrive within 2 - 5 minutes.";
             } else if($email_status && !$_REGIST['reg_approval']) {
-                print "<p>A confirmation email has been sent to your email account with your username and password.
+                print "<br />A confirmation email has been sent to your email account with your username and password.
                 You must click on the URL in the e-mail to verify your e-mail address before you can log in.
-                <p>It should arrive within 2 - 5 minutes.
-                <p>If you haven't received your e-mail after a significant amount of time please contact an administrator.";
+                <br />It should arrive within 2 - 5 minutes.
+                <br />If you haven't received your e-mail after a significant amount of time please contact an administrator.";
             } else if(!$email_status && $_REGIST['reg_approval']) {
                 print "You won't be able to log in until an administrator approves your registration.
-                <p>It should arrive within 2 - 5 minutes.";
+                <br />It should arrive within 2 - 5 minutes.";
             } else {
-    	        echo "<p>Your login details:<p><strong>Username:</strong> ".$_POST['u_login'];
-    		    echo "<p><strong>Password:</strong> $u_pass";
-    		    echo "<p>Please make a note of your password and then login to change it<p>Click <a href='login.php'><strong>here</strong></a></a>";
+    	        echo "<br />Your login details:<br /><strong>Username:</strong> ".$_POST['u_login'];
+    		    echo "<br /><strong>Password:</strong> $u_pass";
+    		    echo "<br />Please make a note of your password and then login to change it<br />Click <a href='login.php'><strong>here</strong></a></a>";
             }
         }
-        echo "</div></td></tr>";
-        echoTableFooter(SKIN_DIR);
+		print "
+			</div>
+		  </div>";
         require_once('./includes/footer.php');
 		exit;
 	} else {
@@ -346,18 +348,27 @@
 		echoTableFooter(SKIN_DIR);
     echo "</form>";
 		require_once('./includes/footer.php');
-		if (empty($_COOKIE["user_env"])) $user = "guest";
-		else $user = $_COOKIE["user_env"];
-		$month = date("m", time());
-		$year = date("Y", time());
-		if ($HTTP_SERVER_VARS['REMOTE_HOST'] == "") $visitor_info = $HTTP_SERVER_VARS['REMOTE_ADDR'];
-		else $visitor_info = $HTTP_SERVER_VARS['REMOTE_HOST'];
-		$base = "http://" . $HTTP_SERVER_VARS['SERVER_NAME'] . $HTTP_SERVER_VARS['PHP_SELF'];
-		$x1 = "host {$HTTP_SERVER_VARS['REMOTE_ADDR']} |grep Name";
-		$x2 = $HTTP_SERVER_VARS['REMOTE_ADDR'];
-		$fp = fopen(DB_DIR."/iplog", "a");
-		$date = "$month $year";
-		fputs($fp, "$visitor_info -{$HTTP_SERVER_VARS['HTTP_USER_AGENT']} - $user - <br>Date/Time: $date $x1:$base:--------------------------------Next Person<p><br>\r\n");
-		fclose($fp);
+    	if(!isset($_SESSION['iplogged']) || ($_SESSION['iplogged']+300) < time()) {
+    	    $_SESSION['iplogged'] = time();
+            $user = ((empty($_COOKIE["user_env"])) ? "guest" : $_COOKIE["user_env"]);;
+        	$visitor_info = ((!isset($_SERVER['REMOTE_HOST']) || $_SERVER['REMOTE_HOST'] == "") ? $_SERVER['REMOTE_ADDR'] : $_SERVER['REMOTE_HOST']);
+        	$base = "http://" . $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'];
+            $date = date("r", time());
+
+            $fp = fopen(DB_DIR."/ip.log", "a");
+            fputs($fp, $visitor_info."\t".$user."\t".$base."\t".time()."\t".$_SERVER['HTTP_USER_AGENT']."\n");
+            //fputs($fp, "<strong>$visitor_info</strong> -<i>".$_SERVER['HTTP_USER_AGENT']."</i>- <strong>$user</strong>- <br />Accessed \"$base\" on: $date.--------------------------------Next Person<p><br />\r\n");
+            fclose($fp);
+
+            if(filesize(DB_DIR."/ip.log") > (1024 * 1024)) {
+                $fp = fopen(DB_DIR."/ip.log", 'r');
+                fseek($fp, (filesize(DB_DIR."/ip.log") - (1024 * 1024)));
+                $log = fread($fp, (1024 * 1024));
+                fclose($fp);
+                $fp = fopen(DB_DIR."/ip.log", 'w');
+                fwrite($fp, $log);
+                fclose($fp);
+            }
+        }
 	}
 ?>

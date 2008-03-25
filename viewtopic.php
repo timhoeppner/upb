@@ -83,12 +83,6 @@
 				$sig = format_text(filterLanguage(UPBcoding($user[0]["sig"]), $_CONFIG));
 				$sig = "<div class='signature'>$sig</div>";
 			}
-			if (FALSE === mod_avatar::verify_avatar($user[0]['avatar'], $user[0]['avatar_hash'])) {
-				$new_avatar = mod_avatar::new_parameters($user[0]['avatar'], $_CONFIG['avatar_width'], $_CONFIG['avatar_height']);
-				$tdb->edit('users', $user[0]['id'], $new_avatar);
-				$user[0] = array_merge($user[0], $new_avatar);
-				unset($new_avatar);
-			}
 			$status_config = status($user);
 			$status = $status_config['status'];
 			$statuscolor = $status_config['statuscolor'];
@@ -99,7 +93,7 @@
 				if (TRUE !== (in_array($_COOKIE["id_env"], $user_blList))) $pm = "<div class='button_pro2'><a href='newpm.php?to=".$pRec["user_id"]."'>Send ".$pRec["user_name"]." a PM</a></div>";
 			}
 		}
-		if (($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) 
+		if (($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2)
     {
       $edit = "<div class='button_pro1'>";
       if ($_COOKIE['javascript'] == 'true')
@@ -197,7 +191,7 @@
 {
   echo "<div id='quickreplyform' name='quickreplyform'>";
   echo "<form name='quickreply' action='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$vars["page"]."' id='quickreply' method='POST'>\n";
-  
+
   echoTableHeading("Quick Reply", $_CONFIG);
   echo "<table class='main_table' cellspacing='1'>";
   foreach ($_GET as $key => $value)

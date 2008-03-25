@@ -14,12 +14,104 @@
 	if(!isset($_GET["action"])) $_GET["action"] = '';
 	if($_GET['action'] == 'confirm') {
 	    $users = $tdb->query('users', "reg_code?'reg_'", 1, -1);
-	    if(isst($_GET['a'])) {
-            //Leave off here
-            //Use Green for accepted, Red alert for rejected
-            //Deleted from $users, then use same array for the form
-	    }
-	    print '<form action="'.$_SERVER['PHP_SELF'].'" method="GET">';
+	    $_SESSION['reg_approval_count'] = ((!empty($users[0])) ? count($users) : 0);
+
+	    if(isset($_POST['verify'])) {
+	        if($_POST['verify'] == 'Cancel') $_POST = array(); //do nothing, show the confirm menu
+            elseif($_POST['verify'] == 'Ok') {
+    	        if(isset($_POST['message'])) {
+    	            $bbc = array();
+    	            foreach($users as $user) {
+    	                if(in_array($user['id'], $_POST['ids'])) $bbc[] = $user['email'];
+    	            }
+    	            $bbc = implode(',', $bbc);
+    	            if(!empty($bbc)) {
+        				$e_hed = "From: ".$_REGISTER["admin_email"]."\r\n";
+        				$e_hed .= "Bcc: ".$bbc."\r\n"; //More efficient to send one e-mail with everyone on a BLANK CARBON COPY (see php.net's mail())
+        				@mail("", $_POST['subject'], $_POST['message'], $e_hed);
+    	            }
+
+    	        }
+	            for($i=0;$i<count($users);$i++) {
+	                if(in_array($users[$i]['id'], $_POST['ids'])) {
+        	            if($_POST['a'] == 'Validate') $tdb->edit('users', $users[$i]['id'], array('reg_code'=>''));
+    	                elseif($_POST['a'] == 'Reject') $tdb->delete('users', $users[$i]['id']);
+                        unset($users[$i]);
+                        $_SESSION['reg_approval_count']--;
+	                }
+	            }
+    	        $msg = "<div class='alert_confirm'>
+					<div class='alert_confirm_text'>
+					<strong>Attention:</strong></div><div style='padding:4px;'>Successfully ".(($_POST['a']=='Reject')?'rejected':'approved').' '.count($_POST['ids']).' user(s)</div></div>';
+	        }
+	    } elseif(isset($_POST['a']) && ($_POST['a'] == 'Validate' || $_POST['a'] == 'Reject')) {
+            $ids = array();
+	        while(list($key, $val) = each($_POST)) {
+	            if(substr($key, 0 , 4) != 'sel_') continue;
+	            $tmp = substr($key, 4);
+	            if(ctype_digit($tmp)) $ids[] = $tmp;
+	        }
+	        if(!empty($ids)) {
+    	        print '<form action="'.$_SERVER['PHP_SELF'].'?action=confirm#skip_nav" method="POST">';
+    	        $hidden = '<input type="hidden" name="a" value="'.$_POST['a'].'">';
+    	        foreach($ids as $id) {
+    	            $hidden .= "<input type='hidden' name='ids[]' value='{$id}'>\n";
+    	        }
+    	        if($_CONFIG['email_mode']) {
+    	            print $hidden;
+                    echoTableHeading('E-mail format', $_CONFIG);
+                    print '<tr>
+            			    <td class="area_1" style="width:50%;"><strong>Admin E-mail</strong><br />This is the return address for the e-mail.</td>
+            				<td class="area_2" style="width:50%;"><input type="text" name="email" value="'.$_REGIST['admin_email'].'" size="40"></td>
+            			   </tr>';
+                    print '<tr>
+            			    <td class="area_1" style="width:50%;"><strong>Email Subject</strong><br />This is the subject for the e-mail.</td>
+            				<td class="area_2" style="width:50%;"><input type="text" name="subject" value="'.$_CONFIG['title'].' Registration Status Update" size="40"></td>
+            			   </tr>';
+                    print '<tr>
+            			    <td class="area_1" style="width:50%;"><strong>Email Message</strong><br />This is the message for confirmation of registration.</td>
+            				<td class="area_2" style="width:50%;"><textarea cols=30 rows=10 name="message">';
+
+        	        if($_POST['a'] == 'Validate') {
+        	            print "Hello user,\n\nYou are receiving this e-mail because an administrator at http://".$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF'])." has approved your account!  You may log in at any time!\n\n--UPB Team";
+        	        } elseif($_POST['a'] == 'Reject') {
+        	            print "Greetings!\n\nWe regret to inform your account has not been approved at http://".$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']).".\n\n--UPB Team";
+        	        }
+        	        print '</textarea></td></tr>';
+		            print "<tr><td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td></tr>";
+        	        print "<tr><td class='area_2' colspan=2><input type=submit name='verify' value='Ok'> <input type=reset value='Reset'> <input type=submit name='verify' value='Cancel'></td></tr>";
+        	        echoTableFooter(SKIN_DIR);
+        	        print '</form>';
+    	        } else {
+    	            ok_cancel($_SERVER['PHP_SELF'].'?action=confirm#skip_nav', $hidden.'Are you sure you wish to <b>'.strtolower($_POST['a']).'</b> '.count($ids).' user(s)?');
+    	        }
+    	        require_once('./includes/footer.php');
+    	        exit;
+	        }
+    }
+	  echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
+		echo "
+		<tr>
+			<th>Admin Panel Navigation</th>
+		</tr>";
+		echo "
+		<tr>
+			<td class='area_2' style='padding:20px;' valign='top'>";
+		require_once("admin_navigation.php");
+		echo "</td>
+		</tr>";
+		echoTableFooter(SKIN_DIR);
+
+	    print '<a name="skip_nav">'.((isset($msg)) ? $msg : '&nbsp;').'</a><form action="'.$_SERVER['PHP_SELF'].'?action=confirm#skip_nav" method="POST">';
+        echo "
+        <div id='tabstyle_2'>
+        	<ul>
+        		<li><a href='register.php' title='Add Member'><span>Add Member</span></a></li>
+                <li><a href='admin_members.php#skip_nav' title='Manage Members'><span>Manage Members</span></a></li>
+                <li><a href='admin_banuser.php#skip_nav' title='Manage Banned Members'><span>Manage Banned Members</span></a></li>
+        	</ul>
+        </div>
+        <div style='clear:both;'></div>";
 	    echoTableHeading('Unconfirmed Users', $_CONFIG);
 		echo "
 			<tr>
@@ -30,10 +122,10 @@
 				<th style='width:15%;'>Homepage</th>
 				<th style='width:30%;'>Signature</th>
 			</tr>";
-		if ($users[0] == "") {
+		if (empty($users[0])) {
 			echo "
 			<tr>
-				<td colspan='6'>No Users need to be confirmed at this time.</td>
+				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='6'>No Users need to be confirmed at this time.</td>
 			</tr>";
 		} else {
 			foreach($users as $user) {
@@ -58,11 +150,11 @@
                 <td class='area_2'><i>".substr($sig, 0, (50 - strlen(strip_tags($sig)))).(((50 - strlen(strip_tags($sig))) > 0) ? '': "...")."</i></td>
 			</tr>";
 			}
+        	print "<tr>
+        			<td class='footer_3' colspan='6'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+        		</tr>";
+        	print "<tr><td class='area_2' colspan=6><input type='submit' name='a' value='Validate'>&nbsp;&nbsp;&nbsp;<input type='submit' name='a' value='Reject'></td></tr>";
 		}
-		print "<tr>
-				<td class='footer_3' colspan='6'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
-			</tr>";
-		print "<tr><td class='area_2' colspan=6><input type='submit' name='a' value='Validate'>&nbsp;&nbsp;&nbsp;<input type='submit' name='a' value='Reject'></td></tr>";
 		echoTableFooter(SKIN_DIR);
 	} elseif ($_GET["action"] == "edit") {
 		if (!isset($_GET["id"])) exitPage("
@@ -347,11 +439,12 @@
           <div style='clear:both;'></div>
           <div id='tabstyle_1'>
             <ul>
-              <li><a href='admin_members.php?action=confirm' title='Confirm New Members'><span>Confirm New Members</span></a></li>
               <li><a href='register.php' title='Add Member'><span>Add Member</span></a></li>
+              <li><a href='admin_members.php?action=confirm#skip_nav' title='Confirm New Members'><span>Confirm New Members</span></a></li>
+              <li><a href='admin_banuser.php#skip_nav' title='Manage Banned Members'><span>Manage Banned Members</span></a></li>
             </ul>
-        </div>
-        <div style='clear:both;'></div>";
+          </div>
+          <div style='clear:both;'></div>";
 		echoTableHeading("Current member management options", $_CONFIG);
 		echo "
 			<tr>
@@ -369,7 +462,7 @@
 		if ($users[0] == "") {
 			echo "
 			<tr>
-				<td colspan='10'>No records found</td>
+				<td colspan='10' class='area_2' style='padding:8px;text-align:center'>No records found</td>
 			</tr>";
 		} else {
 

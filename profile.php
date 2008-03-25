@@ -46,19 +46,14 @@ if (isset($_POST["u_edit"])) {
 		if ($user[0]["view_email"] != $_POST["show_email"]) $rec["view_email"] = $_POST["show_email"];
 		if ($user[0]["mail_list"] != $_POST["email_list"]) $rec["mail_list"] = $_POST["email_list"];
 		if ($user[0]["location"] != $_POST["u_loca"]) $rec["location"] = $_POST["u_loca"];
-		//TODO: Handle avatar2
-print "start avatar handling<br>";
-print '<pre>'; print_r($_POST); print_r($_FILES); print '</pre>';
-print "Custom_avatar settings:".$_REGIST['custom_avatars'].'<br>';
+
 	    if($_REGIST['custom_avatars'] == 2 && isset($_FILES["avatar2"]["name"]) && trim($_FILES["avatar2"]["name"]) != "") {
 	        if($_FILES['avatar2']['error'] == UPLOAD_ERR_OK) {
-print "uploading...<br>";
                 require_once('./includes/class/upload.class.php');
     			$upload = new upload(DB_DIR, $_CONFIG["fileupload_size"], $_CONFIG["fileupload_location"]);
     			$uploadId = $upload->storeFile($_FILES["avatar2"]);
     			if ($uploadId !== false) {
     			    $rec['avatar'] = 'downloadattachment.php?id='.$uploadId;
-    			    print "SUCCESS<br>";
     			}
 	        } else {
 	            $upload_err = "The uploaded avatar ";
@@ -87,15 +82,12 @@ print "uploading...<br>";
 	                    $upload_err .= "encountered an unknown error while trying to upload";
 	            }
 	        }
-	    } elseif($_CONFIG['custom_avatars'] == 1) {
+	    } elseif($_CONFIG['custom_avatars'] == 1 && isset($_POST['avatar2']) && $_POST['avatar2'] != '') {
 	        $rec['avatar'] = $_POST['avatar2'];
-print "URL<br>";
-	    } else {
+	    } elseif(isset($_POST['avatar']) && $_POST['avatar'] != '') {
 	        $rec['avatar'] = $_POST['avatar'];
-print "local<br>";
 	    }
         if(isset($rec['avatar']) && FALSE !== strpos($user[0]['avatar'], 'downloadattachment.php?id=')) {
-print "must delete<br>";
             $id = substr($user[0]['avatar'], 26);
             if(ctype_digit($id)) {
                 if(!isset($upload)) {
@@ -103,9 +95,7 @@ print "must delete<br>";
                     $upload = new upload(DB_DIR, $_CONFIG["fileupload_size"], $_CONFIG["fileupload_location"]);
                 }
                 $upload->deleteFile($id);
-print "deleted<br>";
             }
-else print "ID not digit<br>";
         }
 		if ($user[0]["icq"] != $_POST["u_icq"]) $rec["icq"] = $_POST["u_icq"];
 		if ($user[0]["aim"] != $_POST["u_aim"]) $rec["aim"] = $_POST["u_aim"];
@@ -131,12 +121,7 @@ else print "ID not digit<br>";
 		exit;
 	} else {
 		$rec = $tdb->get("users", $_GET["id"]);
-		if (FALSE === mod_avatar::verify_avatar($rec[0]['avatar'], $rec[0]['avatar_hash'])) {
-			$new_avatar = mod_avatar::new_parameters($rec[0]['avatar'], $_CONFIG['avatar_width'], $_CONFIG['avatar_height']);
-			$tdb->edit('users', $rec[0]['id'], $new_avatar);
-			$rec[0] = array_merge($rec[0], $new_avatar);
-			unset($new_avatar);
-		}
+
 		$status_config = status($rec);
 		$status = $status_config['status'];
 		$statuscolor = $status_config['statuscolor'];
@@ -323,8 +308,18 @@ else print "ID not digit<br>";
 		echo "</select></td></tr>
 					</table>
 				</td>";
-		if($custom_avatar) echo "
-                  <td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input type='".(($_REGIST['custom_avatars'] == '2') ? 'file' : 'text\' value=\''.$rec[0]['avatar'])."' name='avatar2'><p><i>Consult the forum admin for acceptable dimensions.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is 5Kb.' : '')."</i></td>";
+		if($custom_avatar) {
+		    ?><script type="text/javascript">
+		    function switchElementDisable(field1, field2) {
+		        if(field1.value != '') {
+		            field2.disabled = true;
+		        } else field2.disabled = false;
+		    }
+		    </script>
+		    <?php
+		    echo "
+                  <td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input onChange=\"switchElementDisable(this, document.newentry.avatar);\" type='".(($_REGIST['custom_avatars'] == '2') ? 'file' : 'text\' value=\''.$rec[0]['avatar'])."' name='avatar2'><p><i>Consult the forum admin for acceptable dimensions.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is 5Kb.' : '')."</i></td>";
+		}
 		echo "
 			<tr>
 				<td class='footer_3' colspan='".(($custom_avatar) ? '3' : '2')."'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>

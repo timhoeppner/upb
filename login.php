@@ -24,7 +24,18 @@
 			else
 			{
 				setcookie("lastvisit", $r['lastvisit']);
+				if($r['level'] >= 3) {
+				    if($_REGIST['reg_approval']) {
+    				    $reg_approvals = $tdb->query('users', "reg_code?'reg_'", 1, -1);
+    				    $_SESSION['reg_approval_count'] = ((!empty($reg_approvals[0])) ? count($reg_approvals) : 0);
+    				    $_SESSION['reg_approval_lastcheck'] = mktime(); //Use only if reg_approval_count == 0
+    				} else {
+    				    $_SESSION['reg_approval_count'] = 0;
+    				    $_SESSION['reg_approval_lastcheck'] = 0;
+    				}
+				}
 				//end lastvisit info
+				$_SESSION['newTopics'] = unserialize($r['newTopicsData']);
 				$r['uniquekey'] = generateUniqueKey();
 				$tdb->edit('users', $r['id'], array('uniquekey' => $r['uniquekey']));
 				if ($_POST["remember"] == "YES") {
@@ -80,7 +91,10 @@
 				<td class='area_2'><input type='checkbox' name='remember' value='YES' id='rememberme' ".$remember."><label for='rememberme'>&nbsp;&nbsp;Remember me?</label></td>
 			</tr>
 			<tr>
-				<td class='footer_3a' style='text-align:center;' colspan='2'><input type='submit' class='txtBox' value='Login'>&nbsp;&nbsp;&nbsp;<a href='getpass.php'>(Lost Password?)</a> <a href='register.php'>(Need to Register?)</a></td>
+				<td class='footer_3a' style='text-align:center;' colspan='2'><input type='submit' class='txtBox' value='Login'>&nbsp;&nbsp;&nbsp;<a href='getpass.php'>(Lost Password?)</a>";
+		if($_REGIST['disable_reg']) print '';
+		else print " <a href='register.php'>(Need to Register?)</a>";
+		print "</td>
 			</tr>";
       echoTableFooter($_CONFIG['skin_dir']);
       echo "</form>";

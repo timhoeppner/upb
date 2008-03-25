@@ -23,19 +23,23 @@
         while(list($key, $val) = each($_SESSION['newTopics']['lastVisitForums'])) {
             $_SESSION['newTopics']['lastVisitForums'][$key] = $now;
         }
-        if(!isset($_GET['ref'])) $_GET['ref'] = 'index.php';
-        redirect($_GET['ref'], 0);
+        $ref = ((isset($_GET['ref'])) ? urldecode($_GET['ref']) : 'index.php');
+        redirect($ref, 0);
 	}
 
 	if ($_COOKIE["power_env"] == "" || empty($_COOKIE["power_env"]) || trim($_COOKIE["power_env"]) == "") $_COOKIE["power_env"] = "0";
 	require_once("./includes/header.php");
+//print '<pre>'; print_r($_SESSION['newTopics']); print "\n".mkdate(); print '</pre>';
+	if($_COOKIE['power_env'] == '0' && $_REGIST['disable_reg']) {
+	    print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'Public Registration has been disabled.  This may be a private bulletin board.<br /> Please contact an Administrator if you would like to register.', ALERT_MSG));
+	}
 	$posts = new tdb(DB_DIR, "posts.tdb");
 	$cRecs = $tdb->listRec("cats", 1);
 	//$cRecs = $tdb->query("cats", "view<'".($_COOKIE["power_env"] + 1)."'");
 	if ($cRecs[0]["id"] == "") {
 		echo "
 			<div class='alert'><div class='alert_text'>
-			<strong>Caution!</strong></div><div style='padding:4px;'>No categories have been added yet.<br />";
+			<strong>Attention!</strong></div><div style='padding:4px;'>No categories have been added yet.<br />";
 		if ($_COOKIE["power_env"] < 3) {
 			echo " Please contact an Administrator";
 			if ($_COOKIE["power_env"] > 0) {
@@ -69,16 +73,19 @@
 		reset($cRecs);
 
     	if ($cRecs[0]["id"] == "") {
-    		echo "
-    			<div class='alert'><div class='alert_text'>
-    			<strong>Caution!</strong></div><div style='padding:4px;'>This is a private forum, which may require registration.<br />";
+
+    		$error = "You do not have enough power to view this bulletin board.<br />";
     		if ($_COOKIE["power_env"] < 3) {
-    			echo " Please contact an Administrator";
-    			if ($_COOKIE["power_env"] > 0) echo " via <a href='newpm.php?to=1'>PM Message</a> or <a href='email.php?id=1'>web email</a>";
+    			$error .= " If you feel you've reached this error by mistake, please contact an Administrator";
+    			if ($_COOKIE["power_env"] > 0) $error .= " via <a href='newpm.php?to=1'>PM Message</a> or <a href='email.php?id=1'>web email</a>";
     		} else {
-    			echo " To add a Category, <a href='admin_forums.php?action=add_cat'>click here</a>.";
+    			$error .= " To add a Category, <a href='admin_forums.php?action=add_cat'>click here</a>.";
     		}
-    		echo '</div></div>';
+    		print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', $error, ALERT_MSG));
+    		if($_COOKIE['power_env'] == '0') {
+    		    include './includes/footer.php';
+    		    exit;
+    		}
     	} else {
     		$t_t = 0;
     		$t_p = 0;
@@ -124,9 +131,18 @@
     								$when = "<span class='date'>".gmdate("M d, Y g:i:s a", user_date($tRec[0]["last_post"]))."</span><br /><strong>In:</strong>&nbsp;<strong><a href='viewtopic.php?id=".$fRec["id"]."&amp;t_id=".$tRec[0]["id"]."'>".$tRec[0]["subject"]."</a></strong><br /><strong>By:</strong> ";
     								if ($tRec[0]["user_id"] != "0") $when .= "<span class='link_2'><a href='profile.php?action=get&amp;id=".$tRec[0]["user_id"]."'  style='color : #".username_status($tRec[0]["user_name"]).";'>".$tRec[0]["user_name"]."</a></span>";
     								else $when .= "a ".$tRec[0]["user_name"]."";
-			    					if($_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']] == 2) {
+/*print "{$_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']]} == 1
+                					         || ({$tRec[0]['last_post']} > {$_SESSION['newTopics']['lastVisitForums'][$fRec['id']]}
+                					              && (!isset({$_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']]})
+                					                  || {$_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']]} != 0)))}<br />";
+*/			    					if($_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']] == 2) {
                 					    $v_icon = 'star.gif';
-                					} elseif($_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']] == 1 || ($tRec['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$fRec['id']] && $_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']] != 0)) {
+/*                					} elseif($_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']] == 1
+                					         || ($tRec[0]['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$fRec['id']]
+                					              && (!isset($_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']])
+                					                  || $_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']] != 0))) {
+*/                					} elseif(($tRec[0]['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$fRec['id']] && !isset($_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']]))
+                					         || $_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']] != 0) {
                 						$v_icon = 'new.gif';
                 					} else $v_icon = "off.png";
     							}

@@ -450,7 +450,7 @@
 					$view = createUserPowerMisc($cRecs[$i]["view"], 2);
 					echo "
 			<tr>
-			    <td class='area_1' style='padding:8px;'>".(($i>0) ? "<a href=\"javascript:forumSort('cat','up','".$cRecs[$i]['id']."');\"><img src='./images/up.gif'></a>&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;").(($i<($c1-1)) ? "<a href=\"javascript:forumSort('cat','down','".$cRecs[$i]['id']."');\"><img src='./images/down.gif'></a>" : "")."</td>
+			    <td class='area_1' style='padding:8px;text-align:center;'>".(($i>0) ? "<a href=\"javascript:forumSort('cat',  'up','".$cRecs[$i]['id']."');\"><img src='./images/up.gif'></a>" : "&nbsp;&nbsp;&nbsp;").(($i<($c1-1)) ? "<a href=\"javascript:forumSort('cat','down','".$cRecs[$i]['id']."');\"><img src='./images/down.gif'></a>" : "")."</td>
 				<td class='area_1' style='padding:8px;'><strong>".$cRecs[$i]["name"]."</strong></td>
 				<td class='area_1' style='padding:8px;text-align:center;' colspan=3>$view</td>
 				<td class='area_1' style='padding:8px;text-align:center;'><a href='admin_forums.php?action=edit_cat&id=".$cRecs[$i]["id"]."'>Edit</a></td>
