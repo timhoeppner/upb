@@ -312,4 +312,13 @@ function is_secure()
   }
   return true;
 }
+
+//replaces characters in strings to make xml compatible
+function xml_clean($string)
+{
+  $original = array("&","\"","\'",">","<");
+  $replace = array("&amp;","&quot;","&apos;","&gt;","&lt;");
+  $new = str_replace($original,$replace,$string);
+  return $new;
+}
 ?>
