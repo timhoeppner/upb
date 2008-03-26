@@ -222,7 +222,8 @@ if ($_POST['next'] == 0) {
     $delete_array = array('admin_forum.php', 'admin_cat.php', 'admin_reset_stats.php', 'install-uploads.php', 'more_smilies_create_list.php', 'setallread.php', './includes/wrapper_scripts_names.txt', './includes/class/mod_avatar.class.php');
     $c = count($delete_array);
     for($i=0;$i<$c;$i++) {
-        if(@unlink($delete_array[$i])) unset($delete_array[$i]);
+        if(!file_exists($delete_array[$i]) ||
+           @unlink($delete_array[$i])) unset($delete_array[$i]);
     }
     print '<P>Deleted obsolete files';
     if(!empty($delete_array)) {
