@@ -66,7 +66,7 @@
 	$p = createPageNumbers($vars["page"], $num_pages, 'id='.$_GET['id']);
 	require_once('./includes/header.php');
 //$_SESSION['newTopics'] = array('lastVisitForums' => array());
-//print '<pre>'; print_r($_SESSION['newTopics']);
+//print '<pre>'; print_r($_SESSION['newTopics']['f'.$_GET['id']]); print '</pre>';
     $newVisitedTime = (int)$_SESSION['newTopics']['lastVisitForums'][$_GET['id']];
 //print "\nfirst: {$newVisitedTime}";
     for($i=0,$c=count($tRecs);$i<$c;$i++) {
@@ -104,17 +104,15 @@
 		foreach($tRecs as $tRec) {
 			if ($tRec["icon"] != "") {
 			    $posts_tdb->set_topic(array($tRec));
-				if ($tdb->is_logged_in()) {
-				    if(($tRec['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$_GET['id']] && !isset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']]))) {
+			    if(($tRec['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$_GET['id']] && !isset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']]))) {
+					$tRec['icon'] = 'new.gif';
+			    } elseif(isset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']])) {
+				    if($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']] == 1) {
 						$tRec['icon'] = 'new.gif';
-				    } elseif(isset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']])) {
-    				    if($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']] == 1) {
-    						$tRec['icon'] = 'new.gif';
-    					} elseif($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']] == 2) {
-    					    $tRec['icon'] = 'star.gif';
-    					}
-				    }
-				}
+					} elseif($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']] == 2) {
+					    $tRec['icon'] = 'star.gif';
+					}
+			    }
 				if ($tRec["sticky"] == "1") {
 					if ($_CONFIG["sticky_after"] == "1") $tRec["subject"] = "<a href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."'>".$tRec["subject"]."</a>&nbsp;".stripslashes($_CONFIG["sticky_note"]);
 					else $tRec["subject"] = stripslashes($_CONFIG["sticky_note"])."&nbsp;<a href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."'>".$tRec["subject"]."</a>";

@@ -25,23 +25,15 @@
 	is_secure();
 
     if (isset($_COOKIE['javascript'])) setcookie('javascript','',time()-3600); //remove any existing javascript cookie to prevent false positives
+
 	$banned_addresses = file(DB_DIR.'/banneduser.dat');
 	foreach($banned_addresses as $address)
-	if (trim($address) == $HTTP_SERVER_VARS['REMOTE_ADDR']) {
-		if (!headers_sent())
+	if (trim($address) == $_SERVER['REMOTE_ADDR'] || (isset($_COOKIE["user_env"]) && trim($address) == $_COOKIE["user_env"])) {
+	    if (!headers_sent())
 			setcookie("banned", "User is banned", time()+9999 * 99999 * 999999);
 		die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Notice:', str_replace('__MSG__', 'You have been banned from this bulletin board.<br>'.ALERT_GENERIC_MSG, ALERT_MSG)).MINIMAL_BODY_FOOTER);
 	}
 
-	if (isset($_COOKIE["user_env"])) {
-		$banned_addresses = file(DB_DIR.'/banneduser.dat' );
-		foreach($banned_addresses as $address )
-		if (trim($address) == $_COOKIE["user_env"]) {
-			if (!headers_sent())
-				setcookie("banned", "User is banned", time()+9999 * 99999 * 999999);
-			die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Notice:', str_replace('__MSG__', 'You have been banned from this bulletin board.<br>'.ALERT_GENERIC_MSG, ALERT_MSG)).MINIMAL_BODY_FOOTER);
-		}
-	}
 	$mt = explode(' ', microtime());
 	$script_start_time = $mt[0] + $mt[1];
 	if ($tdb->is_logged_in() && INSTALLATION_MODE === FALSE) {

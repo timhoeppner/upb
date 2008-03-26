@@ -779,9 +779,9 @@ class tdb {
         $h_fields = array();
         $h_recLen = 0;
 
-        for($i=1;$i<=$cHeader;$i++) {
+        for($i=1,$j=1;$i<=$cHeader;$i++) {
             if($header[$i]["fName"] != $field) {
-                $h_fields[] = $i.chr(31).$header[$i]["fType"].chr(31).$header[$i]["fLength"].chr(31).$header[$i]["fName"];
+                $h_fields[] = $j++.chr(31).$header[$i]["fType"].chr(31).$header[$i]["fLength"].chr(31).$header[$i]["fName"];
                 $h_recLen += $header[$i]["fLength"];
             }
         }

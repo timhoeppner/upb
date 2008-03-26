@@ -113,6 +113,7 @@ class configSettings extends tdb {
             echo "<b>Warning:</b> second argument of editVars(), must be an array.  (type: ".$type.")";
             return false;
         }
+
         $oriVars = $this->getVars($type, true);
         if($editOptionalData) {
             $nameRef = array();
@@ -122,31 +123,35 @@ class configSettings extends tdb {
         }
         foreach($oriVars as $oriVar) {
             if(!$editOptionalData && !isset($varArr[$oriVar['name']])) continue;
-            elseif($editOptionalData && $nameRef[$oriVar['name']]) continue;
-            switch ($oriVar['data_type']) {
-                case 'number':
-                    if($editOptionalData) {  //$field = eregi_replace("[^0-9.-]", "", $field);
-                        $nameRef[$oriVar["name"]]["value"] = eregi_replace("[^0-9.-]", "", $nameRef[$oriVar["name"]]["value"]);
-                    } else $varArr[$oriVar["name"]] = eregi_replace("[^0-9.-]", "", $varArr[$oriVar["name"]]);
-                    break;
-                case 'bool':
-                case 'boolean':
-                    if($editOptionalData) {
-                        $nameRef[$oriVar["name"]]["value"] = (($nameRef[$oriVar["name"]]["value"] == '' || $nameRef[$oriVar["name"]]["value"] == '0' || $nameRef[$oriVar["name"]]["value"] == false) ? '0' : '1');
-                    } else $varArr[$oriVar["name"]] = (($varArr[$oriVar["name"]] == '' || $varArr[$oriVar["name"]] == '0' || $varArr[$oriVar["name"]] == false) ? '0' : '1');
-                    break;
-                case 'text':
-                case 'string':
-                default:
-                    if($editOptionalData) $nameRef[$oriVar["name"]]["value"] = stripslashes($nameRef[$oriVar["name"]]["value"]);
-                    else $varArr[$oriVar["name"]] = stripslashes($varArr[$oriVar["name"]]);
-                    break;
+            elseif($editOptionalData && !isset($nameRef[$oriVar['name']])) continue;
+            if(isset($nameRef[$oriVar['name']]['value'])) {
+                if(isset($nameRef[$oriVar['name']]['data_type'])) $data_type =& $nameRef[$oriVar['name']]['data_type'];
+                else $data_type =& $oriVar['data_type'];
+                switch ($data_type) {
+                    case 'number':
+                        if($editOptionalData) {  //$field = eregi_replace("[^0-9.-]", "", $field);
+                            $nameRef[$oriVar["name"]]["value"] = eregi_replace("[^0-9.-]", "", $nameRef[$oriVar["name"]]["value"]);
+                        } else $varArr[$oriVar["name"]] = eregi_replace("[^0-9.-]", "", $varArr[$oriVar["name"]]);
+                        break;
+                    case 'bool':
+                    case 'boolean':
+                        if($editOptionalData) {
+                            $nameRef[$oriVar["name"]]["value"] = (($nameRef[$oriVar["name"]]["value"] == '' || $nameRef[$oriVar["name"]]["value"] == '0' || $nameRef[$oriVar["name"]]["value"] == false) ? '0' : '1');
+                        } else $varArr[$oriVar["name"]] = (($varArr[$oriVar["name"]] == '' || $varArr[$oriVar["name"]] == '0' || $varArr[$oriVar["name"]] == false) ? '0' : '1');
+                        break;
+                    case 'text':
+                    case 'string':
+                    default:
+                        if($editOptionalData) $nameRef[$oriVar["name"]]["value"] = stripslashes($nameRef[$oriVar["name"]]["value"]);
+                        else $varArr[$oriVar["name"]] = stripslashes($varArr[$oriVar["name"]]);
+                        break;
+                }
             }
 
             if($editOptionalData) {
-                if(is_array($nameRef[$oriVar["name"]])) {
+                if(isset($nameRef[$oriVar['name']]) && is_array($nameRef[$oriVar["name"]])) {
                     $this->edit("ext_config", $oriVar["id"], array_diff_assoc($nameRef[$oriVar["name"]], $oriVar), false);
-                    if($nameRef[$oriVar["name"]]["value"] != $oriVar["value"]) $this->edit("config", $oriVar["id"], $nameRef[$oriVar["name"]], false);
+                    $this->edit("config",     $oriVar["id"], array_diff_assoc($nameRef[$oriVar["name"]], $oriVar), false);
                 }
             } else {
                 //if($varArr[$oriVar["name"]] != "" && $varArr[$oriVar["name"]] != $oriVar["value"]) {
@@ -161,7 +166,7 @@ class configSettings extends tdb {
     }
 
     function delete($varName) {
-        $query = $config_tdb->query('config', "name='$varName'", 1, 1);
+        $query = $this->query('config', "name='$varName'", 1, 1);
         if(!empty($query[0])) {
             parent::delete('config', $query[0]['id']);
             return parent::delete('ext_config', $query[0]['id']);
@@ -196,7 +201,7 @@ class configSettings extends tdb {
     }
 
     function rename($oldVarName, $newVarName) {
-        $query = $config_tdb->query('config', "name='$oldVarName'", 1, 1);
+        $query = $this->query('config', "name='$oldVarName'", 1, 1);
         if(!empty($query[0])) {
             $this->edit('config', $query[0]['id'], array('name' => $newVarName));
             return $this->edit('ext_config', $query[0]['id'], array('name' => $newVarName));
@@ -311,17 +316,6 @@ class configSettings extends tdb {
 		    $minicats[$id] = $title;
 		}
 		return $minicats;
-
-		for($i=0, $max=count($raws1);$i<$max;$i++) {
-			$rec = explode(chr(30), $raws1[$i]);
-       }
-    	$raws2 = explode(chr(31), $raws[1]);
-        $configVars = $config_tdb->getVars($_GET["action"], true);
-        echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
-        echoTableHeading("&nbsp;", $_CONFIG);
-    	foreach($raws2 as $raw) {
-    	   $rec = explode(chr(30), $raw);
-    	}
     }
 }
 ?>

@@ -15,13 +15,15 @@ require_once("./includes/upb.initialize.php");
 //FPs already set in func.class.php
 //dump($_POST);
 $proceed = true;
+$last_step = 7;
+if (!isset($_POST['next']) or $_POST['next'] == '') $_POST['next'] = 0;
 print MINIMAL_BODY_HEADER;
-echo "
+if($_POST['next'] != $last_step) echo "
 	<div class='main_cat_wrapper'>
 		<div class='cat_area_1'>myUPB v2.1.1b -> v2.2.1 Update</div>
 		<form method='POST' action='".$_SERVER['PHP_SELF']."'>
     <table class='main_table' cellspacing='1'><tbody>";
-if (!isset($_POST['next']) or empty($_POST)) {
+if ($_POST['next'] == 0) {
     $_POST['next'] = 1;
     echo "<tr>
 				<th colspan='2'><strong>Welcome to myUPB v2.2.1</strong></th>
@@ -44,11 +46,11 @@ if (!isset($_POST['next']) or empty($_POST)) {
 		A Super Administrator's account cannot be deleted or banned and it's usergroup can't be changed.<p>This is to prevent an administrator hijacking the forum and removing the admin rights of the board owner.<br><strong>Once selected it can't be changed.</strong>
 		</td></tr>";
         echo "
-      <tr><td class='area_1' style='width:35%;padding:8px;'>Super Administrator Account</td>
+      <tr><td class='area_1' style='width:35%;padding:8px;'><b>Super Administrator Account</b><br>Use Click to select one user<br>Use Ctrl+Click to select one users at a time<br>Use Shift+Click to select a row of users</td>
       <td class='area_2'>";
 
         $members = $tdb->query('users',"level='3'");
-        echo "<select id='superad' name='superad' size='1'>";
+        echo "<select id='superad' name='superad[]' multiple='multiple' size=5>";
         foreach ($members as $member) {
             echo "<option value='".$member['id']."'>".$member['user_name']."</option>";
         }
@@ -61,8 +63,7 @@ if (!isset($_POST['next']) or empty($_POST)) {
 				<th colspan='2'><strong>Updating Database</strong></th>
 			</tr>
 			<tr>
-			<td colspan='2' class='area_2'>
-			<td class='area_2'>";
+			<td colspan='2' class='area_2'>";
     $tdb->createDatabase(DB_DIR."/", "bbcode.tdb");
     $tdb->addField('users', array('newTopicsData', 'memo'));
     $tdb->addField('users', array('lastvisit', 'number', 14));
@@ -97,30 +98,44 @@ if (!isset($_POST['next']) or empty($_POST)) {
     echo "<P>Last Visit & new Topic information inserted.";
 
     //create superuser
-    $tdb->edit('users', $_POST['superad'], array('level' => 9));
+    foreach($_POST['superad'] as $id) {
+        $tdb->edit('users', $id, array('level' => 9));
+    }
     echo "<P>Super Admin Set.";
     echo "</td></tr>";
 } else if($_POST['next'] == 3) {
-    $config_types = $config_tdb->listRec('ext_config', 1, -1);
-    foreach($config_types as $config_type) {
-        $config_tdb->edit('config', $config_type['id'], array('data_type' => $config_type['data_type']));
-    }
-
+    print '<tr><td class="area_2">';
     //Move the file OUT of the database and into the uploads directory
     $uploads = $tdb->listRec('uploads', 1, -1);
+    $uploads_dir = uniqid('uploads_', true);
+	if (!is_dir($uploads_dir)) {
+		if (!mkdir($uploads_dir, 0777)) die('Unable to create an uploads directory.  The forum must be able to create a folder in the root forum folder.  Please chmod() the root folder to 777 and refresh the page.');
+		touch($uploads_dir. '/index.html');
+	}
+	print "<P>Created a new uploads directory";
     foreach($uploads as $file) {
         $file_name = md5(uniqid(rand(), true));
-        $f = fopen($_CONFIG['fileupload_location'].'/'.$file_name, 'xb'); //needed to add filename to fopen
+        $f = fopen($uploads_dir.'/'.$file_name, 'xb'); //needed to add filename to fopen
         fwrite($f, $file['data']);
         fclose($f);
         $tdb->edit('uploads', $file['id'], array('user_level' => 0, 'file_loca' => $file_name));
     }
     print "<P>Moving uploads files intro the uploads directory";
 
+    $config_types = $config_tdb->listRec('ext_config', 1, -1);
+    foreach($config_types as $config_type) {
+        $config_tdb->edit('config', $config_type['id'], array('data_type' => $config_type['data_type']));
+    }
+    print "<P>Added 'data_type' field to the fast access config table";
+} else if($_POST['next'] == 4) {
+    print '<tr><td class="area_2">';
     $del_list = array('pm_version', 'avatar1', 'avatar2', 'avatar3', 'avatar4', 'avatar5', 'avatar6', 'avatar7', 'avatar8', 'avatar9', 'pm_max_outbox_msg');
     foreach($del_list as $string) {
         $config_tdb->delete($string);
     }
+    print "<P>Deleted unneeded configVars";
+} else if($_POST['next'] == 5) {
+    print '<tr><td class="area_2">';
     //How to add more Mini Categories to the config_org.dat file
     $post_settings_id = $config_tdb->addMiniCategory('Posting Settings', 'config');
     $reg_setting_id = $config_tdb->addMiniCategory('Registration Settings', 'regist', '8', false);
@@ -140,7 +155,7 @@ if (!isset($_POST['next']) or empty($_POST)) {
     $config[] = array("name" => "admin_catagory_sorting", "form_object" => "hidden", "data_type" => "string");
     $config[] = array("name" => "posts_per_page", 'minicat'=>$post_settings_id,'sort'=>1);
     $config[] = array("name" => "topics_per_page", 'minicat'=>$post_settings_id,'sort'=>2);
-    $config[] = array('name' => 'fileupload_location', "form_object" => "hidden", "data_type" => "string");
+    $config[] = array('name' => 'fileupload_location', 'value' => $uploads_dir, "form_object" => "hidden", "data_type" => "string");
     $config[] = array('name' => 'fileupload_size', 'description' => 'In kilobytes, type in the maximum size allowed for file uploads<br><i>Note: Setting to 0 will <b>disable</b> uploads</i>', 'minicat'=>$post_settings_id,'sort'=>4);
     $config[] = array('name' => 'censor', 'minicat'=>$post_settings_id,'sort'=>5);
     $config[] = array('name' => 'sticky_note', 'minicat'=>$post_settings_id,'sort'=>6);
@@ -149,6 +164,7 @@ if (!isset($_POST['next']) or empty($_POST)) {
     $regist[] = array('name' => 'register_msg', 'description' => 'This is the message for confirmation of registration.<br>(options: &lt;login&gt;, &lt;password&gt;, and &lt;url&gt;)');
     $config_tdb->editVars('config', $config, true);
     $config_tdb->editVars('regist', $regist, true);
+    print "<P>Completed Modifying the extended config table";
 
     $tdb->tdb(DB_DIR.'/', 'bbcode.tdb');
     $tdb->createTable('smilies', array(array('id', 'id'), array('bbcode', 'memo'),array('replace','memo'),array('type','string',4)));
@@ -187,34 +203,62 @@ if (!isset($_POST['next']) or empty($_POST)) {
 
     //MORE SMILIES -- need to add code to check for custom smilies added to more smilies folder.
     $more = directory("./smilies/moresmilies/","gif,jpg");
-
-    foreach ($more as $smiley) {
-        $tdb->add("smilies",array("bbcode"=>"[img]".$smiley."[/img]","replace"=>"<img src='./smilies/".$smiley."' border='0' alt='".$smiley."'>","type"=>"more"));
-        rename('./smilies/moresmilies/'.$smiley,'./smilies/'.$smiley);
-    }
-    $more = directory("./smilies/moresmilies/","gif,jpg");
-    if (count($more) == 0) {
+    if (count($more) > 0) {
+        foreach ($more as $smiley) {
+            $tdb->add("smilies",array("bbcode"=>"[img]".$smiley."[/img]","replace"=>"<img src='./smilies/".$smiley."' border='0' alt='".$smiley."'>","type"=>"more"));
+            rename('./smilies/moresmilies/'.$smiley,'./smilies/'.$smiley);
+        }
       $contents = directory("./smilies/moresmilies/");
       foreach ($contents as $file)
         unlink("./smilies/moresmilies/".$file);
     }
-    rmdir("./smilies/moresmilies");
+    if(is_dir('./smilies/moresmilies')) rmdir("./smilies/moresmilies");
 
     if (file_exists(DB_DIR.'/smilies.dat')) unlink(DB_DIR.'/smilies.dat');
-    echo "Smilie database created<p>";
-    echo "More Smilies files converted<p>";
-}
-echo "<tr>
-			<td colspan='2' class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
-		</tr>";
-if ($proceed === true) {
-$next = (int) $_POST['next'] + 1;
+    echo "<p>Smilie database created";
+    echo "<p>More Smilies files converted";
+} else if($_POST['next'] == 6) {
+    print '<tr><td class="area_2">';
+    $delete_array = array('admin_forum.php', 'admin_cat.php', 'admin_reset_stats.php', 'install-uploads.php', 'more_smilies_create_list.php', 'setallread.php', './includes/wrapper_scripts_names.txt', './includes/class/mod_avatar.class.php');
+    $c = count($delete_array);
+    for($i=0;$i<$c;$i++) {
+        if(@unlink($delete_array[$i])) unset($delete_array[$i]);
+    }
+    print '<P>Deleted obsolete files';
+    if(!empty($delete_array)) {
+        print '<P><b>Unable to delete the following files<b>:<i><br>';
+        print implode('<br>', $delete_array);
+        print '</i><p>It is recommended to delete these files.';
+    }
+} else if($_POST['next'] == $last_step) {
+    $lines = explode("\n", file_get_contents('config.php'));
+    for($i=0;$i<count($lines);$i++) {
+        if(FALSE === strpos($lines[$i], 'UPB_VERSION')) continue;
+        $lines[$i] = "define('UPB_VERSION', '2.2.1', true);";
+        break;
+    }
+    $f = fopen('config.php', 'w');
+    fwrite($f, implode("\n", $lines));
+    fclose($f);
+    $msg = "If you had any errors or you find that your forum is not working correctly, visit myUPB's support forums at <a href='http://www.myupb.com/' target='_blank'>www.myupb.com</a><br />
+				Delete the update2.2.1.php file NOW, as it is a security risk to leave it in your server.<br />
+				<a href='javascript:window.close()'>Close Window</a> -or- <a href='index.php'>Go To Forum</a>";
+    print str_replace('__TITLE__', 'MyUPB Update Complete', str_replace('__MSG__', $msg, CONFIRM_MSG));
 
-    echo "<tr>
-			<td colspan='2' class='footer_3a' style='text-align:center;'><input type='hidden' name='next' value='$next'><input type='submit' value='Next >>' name='submit'></td>
-		</tr>";
 }
-echoTableFooter(SKIN_DIR);
+if($_POST['next'] != $last_step) {
+    echo "<tr>
+    			<td colspan='2' class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
+    		</tr>";
+    if ($proceed === true) {
+    $next = (int) $_POST['next'] + 1;
+
+        echo "<tr>
+    			<td colspan='2' class='footer_3a' style='text-align:center;'><input type='hidden' name='next' value='$next'><input type='submit' value='Next >>' name='submit'></td>
+    		</tr>";
+    }
+    echoTableFooter(SKIN_DIR);
+}
 echo "</form>";
 include_once('./includes/footer.php');
 ?>

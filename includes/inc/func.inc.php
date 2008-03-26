@@ -179,37 +179,28 @@ function strstr_after($haystack, $needle, $case_insensitive = false) {
     return $pos;
 }
 
-function directory($dir,$filters="all")
-{
-  $handle=opendir($dir);
-	$files = $filtered =array();
-
-  while(($file = readdir($handle))!==false)
-  {
-    if ($file != "." and $file != "..")
-      $files[] = $file;
-  }
-  closedir($handle);
-
-  if ($filters == "all")
-  {
-    $filtered = $files;
-  }
-
-  if ($filters != "all")
-	{
-		$filters=explode(",",$filters);
-		foreach ($files as $file)
-		{
-			for ($f=0;$f<sizeof($filters);$f++)
-			{
-        $system=explode(".",$file);
-				if (count($system) > 1)
-        {
-          if (strtolower($system[1]) == $filters[$f])
-            $filtered[] = $file;
+function directory($dir,$filters="all") {
+    $files = $filtered =array();
+    if(FALSE !== ($handle = @opendir($dir))) {
+        while(($file = readdir($handle))!==false)   {
+            if ($file != "." and $file != "..") $files[] = $file;
         }
-      }
+        closedir($handle);
+    }
+
+    if ($filters == "all") $filtered = $files;
+    else {
+		$filters=explode(",",$filters);
+		if(!empty($files)) {
+    		foreach ($files as $file) {
+    			for ($f=0;$f<sizeof($filters);$f++) {
+                    $system=explode(".",$file);
+    				if (count($system) > 1) {
+                        if (strtolower($system[1]) == $filters[$f])
+                            $filtered[] = $file;
+                    }
+                }
+    		}
 		}
 	}
 

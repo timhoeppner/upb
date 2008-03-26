@@ -143,7 +143,7 @@
                 					                  || $_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']] != 0))) {
 */                					} elseif(($tRec[0]['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$fRec['id']] && !isset($_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']]))
                 					         || $_SESSION['newTopics']['f'.$fRec['id']]['t'.$tRec[0]['id']] != 0) {
-                						$v_icon = 'new.gif';
+                						$v_icon = 'on.png';
                 					} else $v_icon = "off.png";
     							}
     							$t_t += $fRec["topics"];
