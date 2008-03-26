@@ -374,6 +374,35 @@
     echo "</form>";
 			}
 		}
+    elseif ($_GET['action'] == "shift") {
+    if($_GET['what'] == 'cat') {
+	            $sort = $_CONFIG['admin_catagory_sorting'];
+	        } elseif($_GET['what'] == 'forum') {
+                 $fRec = $tdb->get('forums', $_GET['id']);
+                 $cRec = $tdb->get('cats', $fRec[0]['cat']);
+	            $sort = $cRec[0]['sort'];
+ 	        }
+             $sort = explode(',', $sort);
+             if(FALSE !== ($index = array_search($_GET['id'], $sort))) {
+ 	            if($_GET['where'] == 'up' && $index > 0) {
+                     $tmp = $sort[$index-1];
+                     $sort[$index-1] = $sort[$index];
+                     $sort[$index] = $tmp;
+ 	            } elseif($_GET['where'] == 'down' && $index < (count($sort)-1)) {
+                     $tmp = $sort[$index+1];
+                     $sort[$index+1] = $sort[$index];
+                     $sort[$index] = $tmp;
+ 	            }
+ 	            $sort = implode(',', $sort);
+ 	            if($_GET['what'] == 'cat') {
+ 	                $config_tdb->editVars('config', array('admin_catagory_sorting' => $sort));
+                 } elseif($_GET['what'] == 'forum') {
+                     $tdb->edit('cats', $cRec[0]['id'], array('sort' => $sort));
+                 }
+              redirect('admin_forums.php#skip_nav', 0);
+ 	        }
+    
+    }
     else {
 		    //Main
 		    //
@@ -450,8 +479,27 @@
 					$view = createUserPowerMisc($cRecs[$i]["view"], 2);
 					echo "
 			<tr>
-			    <td class='area_1' style='padding:8px;text-align:center;'>".(($i>0) ? "<a href=\"javascript:forumSort('cat',  'up','".$cRecs[$i]['id']."');\"><img src='./images/up.gif'></a>" : "&nbsp;&nbsp;&nbsp;").(($i<($c1-1)) ? "<a href=\"javascript:forumSort('cat','down','".$cRecs[$i]['id']."');\"><img src='./images/down.gif'></a>" : "")."</td>
-				<td class='area_1' style='padding:8px;'><strong>".$cRecs[$i]["name"]."</strong></td>
+			    <td class='area_1' style='padding:8px;text-align:center;'>";
+          if ($i>0) {
+            if (isset($_COOKIE['javascript']))
+              echo "<a href=\"javascript:forumSort('cat',  'up','".$cRecs[$i]['id']."');\">";
+            else
+              echo "<a href='admin_forums.php?action=shift&what=cat&where=up&id=".$cRecs[$i]['id']."'>";
+            echo "<img src='./images/up.gif'></a>";
+          }
+          else 
+            echo "&nbsp;&nbsp;&nbsp;";
+          if ($i<($c1-1)) {
+            if (isset($_COOKIE['javascript'])) 
+              echo "<a href=\"javascript:forumSort('cat','down','".$cRecs[$i]['id']."');\">";
+            else
+              echo "<a href='admin_forums.php?action=shift&what=cat&where=down&id=".$cRecs[$i]['id']."'>";
+            echo "<img src='./images/down.gif'></a>";
+          }
+          else
+            echo "";
+        echo "</td>";
+				echo "<td class='area_1' style='padding:8px;'><strong>".$cRecs[$i]["name"]."</strong></td>
 				<td class='area_1' style='padding:8px;text-align:center;' colspan=3>$view</td>
 				<td class='area_1' style='padding:8px;text-align:center;'><a href='admin_forums.php?action=edit_cat&id=".$cRecs[$i]["id"]."'>Edit</a></td>
 				<td class='area_1' style='padding:8px;text-align:center;'><a href='admin_forums.php?action=delete_cat&id=".$cRecs[$i]["id"]."'>Delete</a></td>
@@ -474,7 +522,27 @@
                 			//show each forum
                 			echo "
 			<tr>
-			    <td class='area_2' style='padding:8px;text-align:center;'>".(($j>0) ? "<a href=\"javascript:forumSort('forum','up','".$fRec[0]['id']."');\"><img src='./images/up.gif'></a>" : "&nbsp;&nbsp;&nbsp;").(($j<($c2-1)) ? "<a href=\"javascript:forumSort('forum','down','".$fRec[0]['id']."');\"><img src='./images/down.gif'></a>" : "")."</td>
+			    <td class='area_2' style='padding:8px;text-align:center;'>";
+          
+          if ($j>0) {
+            if (isset($_COOKIE['javascript']))
+              echo "<a href=\"javascript:forumSort('forum','up','".$fRec[0]['id']."');\">";
+            else
+              echo "<a href='admin_forums.php?action=shift&what=forum&where=up&id=".$fRec[0]['id']."'>";
+            echo "<img src='./images/up.gif'></a>";
+          }
+          else echo "&nbsp;&nbsp;&nbsp;";
+          
+          if ($j<($c2-1)) {
+            if (isset($_COOKIE['javascript']))
+              echo "<a href=\"javascript:forumSort('forum','down','".$fRec[0]['id']."');\">";
+            else
+              echo "<a href='admin_forums.php?action=shift&what=forum&where=down&id=".$fRec[0]['id']."'>";
+            echo "<img src='./images/down.gif'></a>";
+          }
+          else echo "";
+          
+        echo "</td>
 				<td class='area_2' style='padding:8px;'><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$fRec[0]["forum"]."</td>
 				<td class='area_2' style='padding:8px;text-align:center;'>$whoView</td>
 				<td class='area_2' style='padding:8px;text-align:center;'>$whoPost</td>
