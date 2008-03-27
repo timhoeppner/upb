@@ -40,6 +40,7 @@
 		$refresh = false;
 		if (!isset($_COOKIE["lastvisit"])) {
 			$r = $tdb->get("users", $_COOKIE['id_env']);
+      
       //NEW VERSION
       $ses_info = $r['lastvisit'];
       if ($ses_info == 0)
@@ -200,7 +201,8 @@
   if (!$tdb->is_logged_in() && isset($_COOKIE['user_env']) && isset($_COOKIE['uniquekey_env']) && isset($_COOKIE['id_env'])) {
 		$redirect = urlencode($_SERVER['REQUEST_URI']);
 		print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', "You or another person logged in on a different computer since the last time you've visited.<br /><a href=\"logoff.php?ref={$redirect}\">Don't show this message anymore</a> or <a href=\"login.php?ref={$redirect}\">Login</a>.", ALERT_MSG));
-	}
+    $_COOKIE['power_env'] = 0; //resets user to guest to prevent hidden category viewing
+  }
 	echo "
 
 	<div class='breadcrumb'><span class='breadcrumb_home'><a href='index.php'>".$_CONFIG["title"]."</a></span>";
