@@ -15,7 +15,8 @@ if (isset($_POST["u_edit"])) {
 		echo "<html><head><meta http-equiv='refresh' content='2;URL=login.php?ref=profile.php'></head></html>";
 		exit;
 	} else {
-		$rec = array();
+
+    $rec = array();
 		if (!isset($_POST["u_email"])) exitPage("please enter your email!", true);
 		if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["u_email"])) exitPage("please enter a valid email!", true);
 			$_POST['u_sig'] = stripslashes($_POST['u_sig']);
@@ -82,8 +83,8 @@ if (isset($_POST["u_edit"])) {
 	                    $upload_err .= "encountered an unknown error while trying to upload";
 	            }
 	        }
-	    } elseif($_CONFIG['custom_avatars'] == 1 && isset($_POST['avatar2']) && $_POST['avatar2'] != '') {
-	        $rec['avatar'] = $_POST['avatar2'];
+	    } elseif($_REGIST['custom_avatars'] == 1 && isset($_POST['avatar2']) && $_POST['avatar2'] != '') {
+          $rec['avatar'] = $_POST['avatar2'];
 	    } elseif(isset($_POST['avatar']) && $_POST['avatar'] != '') {
 	        $rec['avatar'] = $_POST['avatar'];
 	    }
@@ -105,6 +106,7 @@ if (isset($_POST["u_edit"])) {
 			$rec["timezone"] = $_POST["u_timezone"];
 			setcookie("timezone", $_POST["u_timezone"], (time() + (60 * 60 * 24 * 7)));
 		}
+
   $tdb->edit("users", $_COOKIE["id_env"], $rec);
 		require_once('./includes/header.php');
   echo "<div class='alert_confirm'>
@@ -289,34 +291,12 @@ if (isset($_POST["u_edit"])) {
 							<td style='text-align:center;width:50%;'>
 								<img src='images/avatars/blank.gif' name='myImage' alt='' title='' /></td>
 							<td><select class='select' size='5' name='avatar' onChange='swap(this.options[selectedIndex].value)'>\n";
-		function returnimages($dirname = "images/avatars/") {
-			$pattern = "\.(jpg|jpeg|png|gif|bmp)$";
-			$files = array();
-			$curimage = 0;
-			if ($handle = opendir($dirname)) {
-				while (false !== ($file = readdir($handle))) {
-					if (eregi($pattern, $file)) {
-						echo "<option value ='images/avatars/".$file."'>".$file."</option>";
-						$curimage++;
-					}
-				}
-				closedir($handle);
-			}
-			return($files);
-		}
+	
 		returnimages();
 		echo "</select></td></tr>
 					</table>
 				</td>";
 		if($custom_avatar) {
-		    ?><script type="text/javascript">
-		    function switchElementDisable(field1, field2) {
-		        if(field1.value != '') {
-		            field2.disabled = true;
-		        } else field2.disabled = false;
-		    }
-		    </script>
-		    <?php
 		    echo "
                   <td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input onChange=\"switchElementDisable(this, document.newentry.avatar);\" type='".(($_REGIST['custom_avatars'] == '2') ? 'file' : 'text\' value=\''.$rec[0]['avatar'])."' name='avatar2'><p><i>Consult the forum admin for acceptable dimensions.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is 5Kb.' : '')."</i></td>";
 		}

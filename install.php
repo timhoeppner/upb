@@ -59,7 +59,7 @@
 					$dir_777 = is_readable('./') && is_writable('./');
 					if(!$dir_777) print "You have to chmod upb's root directory to 0777 before you can proceed";
 					else {
-					    print 'Just select \"Proceed\" below and follow the instructions.<br />';
+					    print 'Just select "Proceed" below and follow the instructions.<br />';
 					    /*
 					    $mysql_disabled = ((extension_loaded('mysql')) ? '' : ' disabled');
 					    $pgsql_disabled = ((extension_loaded('pgsql')) ? '' : ' disabled');

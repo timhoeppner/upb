@@ -200,7 +200,7 @@
 	if (!empty($resultPosts)) {
 		echo "<div style='padding:8px;'>Showing the first 10 posts in topic results...</div>";
 		$table_color = $table1;
-		$table_font = $font1;
+		
 		foreach($resultPosts as $fID => $result) {
 			foreach($result["records"] as $post) {
 				$msg = format_text(filterLanguage(UPBcoding($post["message"]), $_CONFIG));

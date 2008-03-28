@@ -98,15 +98,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 		    $minicats = $config_tdb->fetchMiniCategories($_GET['action']);
             $configVars = $config_tdb->getVars($_GET["action"], true);
             echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
-            ?><script type="text/javascript">
-                function changeCheckboxValue(checked, object) {
-                    if(checked) {
-                        object.value = '1';
-                    } else {
-                        object.value = '0';
-                    }
-                }
-            </script><?php
+         
 		    echoTableHeading("&nbsp;", $_CONFIG);
 		    while(list($minicat_id, $minicat_title) = each($minicats)) {
 				echo "

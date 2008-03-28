@@ -65,11 +65,11 @@
 			<table class='main_table' cellspacing='1'>";
 		if ($x == 0) {
 			$table_color = 'area_1';
-			//$table_font = $font1;        // PHP is complaining about $font1, is it defined?
+
 			$x++;
 		} else {
 			$table_color = 'area_2';
-			//$table_font = $font2;        // PHP is complaining about $font2, is it defined?
+
 			$x--;
 		}
 		unset($user, $status, $statuscolor);
@@ -113,8 +113,8 @@
 		$uploadId = (int) $pRec["upload_id"];
         if($uploadId > 0) {
             //check information is in the upload database
-            $q = $tdb->get("uploads", $uploadId, array("name", "downloads","data"));
-            if(!empty($q[0]) && file_exists($_CONFIG['fileupload_location']."/".$q[0]['data'])) {
+            $q = $tdb->get("uploads", $uploadId, array("name", "downloads","file_loca"));
+            if(!empty($q[0]) && file_exists($_CONFIG['fileupload_location']."/".$q[0]['file_loca'])) {
                 $attachName = $q[0]["name"];
                 $attachDownloads = $q[0]["downloads"];
 
@@ -167,7 +167,7 @@
 
         //echo "<div name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' style='float: right;'>";
 		if (!empty($pRec['edited_by']) && !empty($pRec['edited_by_id']) && !empty($pRec['edited_date'])) echo "
-					<div class='post_edited' name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>Last edited by: <a href='profile.php?action=get&id=".$pRec['edited_by_id']." target='_new'><strong>".$pRec['edited_by']."</strong></a> on ".gmdate("M d, Y g:i:s a", user_date($pRec['edited_date']))."</div>";
+					<div class='post_edited' name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>Last edited by: <a href='profile.php?action=get&id=".$pRec['edited_by_id']." target='_blank'><strong>".$pRec['edited_by']."</strong></a> on ".gmdate("M d, Y g:i:s a", user_date($pRec['edited_date']))."</div>";
 		else
       	echo "<div name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' class='post_edited'></div>";
 		if ($pRec['user_id'] != 0)

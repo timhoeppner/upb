@@ -94,7 +94,7 @@
 		echo $pm_navegate;
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		$table_color = $table1;
-		$table_font = $font1;
+		
 		if ($user[0]["sig"] != "") $user[0]["sig"] = "
 			<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG))."</div>";
 		$status_config = status($user);

@@ -140,7 +140,7 @@
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>".((!isset($where) || $where == '') ? $_CONFIG['title'] : (strip_tags(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where))))."</title>
+<title>".((!isset($where) || $where == '') ? stripslashes($_CONFIG['title']) : (strip_tags(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], stripslashes($where)))))."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 <link rel='stylesheet' type='text/css' href='".$_CONFIG["skin_dir"]."/css/style.css' />
 <script type='text/javascript' language='Javascript' src='./includes/scripts.js'></script>
@@ -174,7 +174,7 @@
 	</div>
 	<div style='clear:both;'></div>
 		";
-	echoTableHeading($_CONFIG['title'], $_CONFIG);
+	echoTableHeading(stripslashes($_CONFIG['title']), $_CONFIG);
 	echo "
 		<tr>
 			<td class='area_welcome'><div class='welcome_text'>";
@@ -205,7 +205,7 @@
   }
 	echo "
 
-	<div class='breadcrumb'><span class='breadcrumb_home'><a href='index.php'>".$_CONFIG["title"]."</a></span>";
+	<div class='breadcrumb'><span class='breadcrumb_home'><a href='index.php'>".stripslashes($_CONFIG["title"])."</a></span>";
 	if (isset($where)) echo "&nbsp;<span class='breadcrumb_page'>".$_CONFIG["where_sep"]." ".$where."</span>";
 	echo "
 	</div>";

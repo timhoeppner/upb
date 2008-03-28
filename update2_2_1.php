@@ -35,7 +35,7 @@ if ($_POST['next'] == 0) {
         echo "<p>You will need to update to version 2.1.1b first in order to update to version 2.2.1<br>This is due to configuration changes that have been implemented";
         $proceed = false;
     } else {
-		echo "<p>This release contains many new features and bug fixes. For the changelog, please see the readme or visit MyUPB.com";
+		echo "<p>This release contains many new features,bug fixes and a new skin system.<br>Please ensure you have made a backup of your current skin directory before continuing<br>For the changelog, please see the readme or visit MyUPB.com";
 		echo "</td>
 		</tr>";
 		echo "<tr>
@@ -115,7 +115,7 @@ if ($_POST['next'] == 0) {
 	print "<P>Created a new uploads directory";
     foreach($uploads as $file) {
         $file_name = md5(uniqid(rand(), true));
-        $f = fopen($uploads_dir.'/'.$file_name, 'xb'); //needed to add filename to fopen
+        $f = fopen($uploads_dir.'/'.$file_name, 'xb');
         fwrite($f, $file['data']);
         fclose($f);
         $tdb->edit('uploads', $file['id'], array('user_level' => 0, 'file_loca' => $file_name));
@@ -126,6 +126,27 @@ if ($_POST['next'] == 0) {
     foreach($config_types as $config_type) {
         $config_tdb->edit('config', $config_type['id'], array('data_type' => $config_type['data_type']));
     }
+    
+    //checks that the same number of cats are in admin_catagory_sorting and database
+    //2.1.1b had a bug that didn't create a value in admin_catagory_sorting if only one category existed
+    
+    $cats = $tdb->listRec("cats",1,-1);
+    $catsort = explode(',',$_CONFIG['admin_catagory_sorting']);
+    if ($catsort[0] == "")
+      unset($catsort[0]);
+      
+    if (count($cats) != count($catsort)) {
+      foreach ($cats as $value) {
+        if (!in_array($value['id'],$catsort))
+          $catsort[] = $value['id']; //adds missing category id to catsort array
+      }
+    }
+    
+    $cat_sort = implode(",",$catsort);
+    
+    //need to pass through two stages before editing
+    echo "<input type='hidden' name='cat_sort' value='$cat_sort'>";
+    
     print "<P>Added 'data_type' field to the fast access config table";
 } else if($_POST['next'] == 4) {
     print '<tr><td class="area_2">';
@@ -134,6 +155,9 @@ if ($_POST['next'] == 0) {
         $config_tdb->delete($string);
     }
     print "<P>Deleted unneeded configVars";
+    //need to pass through to next stage for editing
+    echo "<input type='hidden' name='cat_sort' value='".$_POST['cat_sort']."'>";
+    
 } else if($_POST['next'] == 5) {
     print '<tr><td class="area_2">';
     //How to add more Mini Categories to the config_org.dat file
@@ -152,7 +176,7 @@ if ($_POST['next'] == 0) {
     $config = array();
     $regist = array();
     $config[] = array('name' => 'ver', 'value' => '2.2.1');
-    $config[] = array("name" => "admin_catagory_sorting", "form_object" => "hidden", "data_type" => "string");
+    $config[] = array("name" => "admin_catagory_sorting", "form_object" => "hidden", "data_type" => "string","value" => $_POST['cat_sort']);
     $config[] = array("name" => "posts_per_page", 'minicat'=>$post_settings_id,'sort'=>1);
     $config[] = array("name" => "topics_per_page", 'minicat'=>$post_settings_id,'sort'=>2);
     $config[] = array('name' => 'fileupload_location', 'value' => $uploads_dir, "form_object" => "hidden", "data_type" => "string");
@@ -206,7 +230,8 @@ if ($_POST['next'] == 0) {
     if (count($more) > 0) {
         foreach ($more as $smiley) {
             $tdb->add("smilies",array("bbcode"=>"[img]".$smiley."[/img]","replace"=>"<img src='./smilies/".$smiley."' border='0' alt='".$smiley."'>","type"=>"more"));
-            rename('./smilies/moresmilies/'.$smiley,'./smilies/'.$smiley);
+            if (!file_exists('./smilies/'.$smiley))
+              rename('./smilies/moresmilies/'.$smiley,'./smilies/'.$smiley);
         }
       $contents = directory("./smilies/moresmilies/");
       foreach ($contents as $file)
@@ -219,7 +244,8 @@ if ($_POST['next'] == 0) {
     echo "<p>More Smilies files converted";
 } else if($_POST['next'] == 6) {
     print '<tr><td class="area_2">';
-    $delete_array = array('admin_forum.php', 'admin_cat.php', 'admin_reset_stats.php', 'install-uploads.php', 'more_smilies_create_list.php', 'setallread.php', './includes/wrapper_scripts_names.txt', './includes/class/mod_avatar.class.php');
+    $delete_array = array('admin_forum.php', 'admin_cat.php', 'admin_reset_stats.php', 'install-uploads.php', 'more_smilies_create_list.php', 'setallread.php', './includes/wrapper_scripts_names.txt', './includes/class/mod_avatar.class.php','./includes/board_help.php','./includes/board_post.php','./includes/board_view.php','./skins/default/coding.php','./skins/default/icons/deletetopic.gif','./skins/default/icons/head_but_pms.JPG','./skins/default/icons/closetopic.gif','./skins/default/icons/lastpost.jpg','./skins/default/icons/manage.gif','./skins/default/icons/monitor.gif','./skins/default/icons/nav.gif','./skins/default/icons/off.gif','./skins/default/icons/on.gif','./skins/default/icons/opentopic.gif','./skins/default/icons/pb_delete.JPG','./skins/default/icons/pb_edit.JPG','./skins/default/icons/pb_email.JPG','./skins/default/icons/pb_profile.JPG','./skins/default/icons/pb_quote.JPG','./skins/default/icons/pb_www.JPG','./skins/default/icons/redirect.png','./skins/default/icons/sendpm.jpg','./skins/default/icons/reply.gif','./skins/default/icons/replylocked.gif','./skins/default/icons/topic.gif','./skins/default/icons/stats.gif','./skins/default/icons/user.gif','./skins/default/images/footer_bg.JPG','./skins/default/images/footer_bg.PNG','./skins/default/images/head_but_donations.JPG','./skins/default/images/head_but_faq.JPG','./skins/default/images/head_but_loginout.JPG','./skins/default/images/head_but_members.JPG','./skins/default/images/head_but_pms.JPG','./skins/default/images/head_but_register.JPG','./skins/default/images/head_but_search.JPG','./skins/default/images/bead_but_usercp.JPG','./skins/default/images/head_logo.JPG','./skins/default/images/head_logo_right.JPG','./skins/default/images/head_top_left_bg.JPG','./skins/default/images/head_top_middle.JPG','./skins/default/images/head_top_right_bg.JPG','./skins/default/images/on.gif','./skins/default/images/sound.wav','./skins/default/images/cat_bottom_bg.jpg','./skins/default/images/cat_bottom_left.jpg','./skins/default/images/cat_bottom_left.gif','./skins/default/images/cat_bottom_right.gif','./skins/default/images/cat_bottom_right.JPG','./skins/default/images/cat_top_bg.gif','./skins/default/images/cat_top_left.gif','./skins/default/images/cat_top_right.gif','./skins/default/images/top_leftc.gif','./skins/default/images/top_rightc.gif','icons/bolt1.gif','icons/bolt2.gif','icons/bolt3.gif','icons/bolt4.gif','icons/bolt5.gif','icons/bolt6.gif','icons/lastpost.jpg','icons/new.gif','icons/off.gif','icons/on.gif','icons/stats.gif','icons/user.gif');
+
     $c = count($delete_array);
     for($i=0;$i<$c;$i++) {
         if(!file_exists($delete_array[$i]) ||

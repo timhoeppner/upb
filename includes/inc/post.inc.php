@@ -34,6 +34,7 @@ function format_text($text) {
     $text = str_replace("&amp;#", "&#", $text);
     return $text;
 }
+
 /* cOULD POTENTIALLY BREAK SETTING COOKIES AND SESSIONS */?><?php //<? added to allow for syntax highlighting in editors
 function encode_text($text)
 {
@@ -114,6 +115,7 @@ function UPBcoding($text) {
     }
     $msg = preg_replace("/\[code\](.*?)\[\/code\]/si", "<font color='red'>Code:<hr><pre>\\1<hr></pre></font>", $msg);
 
+    //loop to combine multiple span tags into a single span tag
     while (true)
     {
       $tmp_msg = $msg;
@@ -218,7 +220,7 @@ function getSmilies($field = 'message')
     if ($key%10 == 9)
       $output .= "</tr><tr>";
   }
-  $output .= "</tr><td colspan='10' class='more_smilie'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></table>";
+  $output .= "</tr><tr><td colspan='10' class='more_smilie'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></td></tr></table>";
   return $output;
 }
 

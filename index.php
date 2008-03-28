@@ -152,7 +152,10 @@
     							echo "
     			<tr>
     				<td class='area_2' style=\"cursor:pointer;\" onclick=\"window.location.href='viewforum.php?id=".$fRec["id"]."';\" onmouseover=\"this.className='area_2_over'\" onmouseout=\"this.className='area_2'\">
-    								<span class='link_1'><a href='viewforum.php?id=".$fRec["id"]."'>".$fRec["forum"]."</a></span>
+    								<span class='link_1'>";
+                    if ($tRec[0]["id"] != "")
+                      echo "<a href='xml.php?id=".$fRec["id"]."'><img src='images/rss.png' class='rss' alt='RSS Feed' title='RSS Feed'></a>";
+                    echo " <a href='viewforum.php?id=".$fRec["id"]."'>".$fRec["forum"]."</a></span>
     								<div class='description'>".$fRec["des"]."</div>
     								<div class='box_posts'><strong>Posts:</strong>&nbsp;".$fRec["posts"]."</div>
     								<div class='box_topics'><strong>Topics:</strong>&nbsp;".$fRec["topics"]."</div></td>

@@ -102,35 +102,14 @@
 			echo "";
 		echoTableHeading("Posted: ".gmdate("M d, Y g:i:s a", user_date($pRec[0]["date"]))."", $_CONFIG);
 			$table_color = $table1;
-			$table_font = $font1;
+
 			$user = $tdb->get("users", $pRec[0]["user_id"]);
 			if ($user[0]["sig"] != "") $user[0]["sig"] = "<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG))."</div>";
-			if ($user[0]["level"] == '1') {
-				$statuscolor = $userColor;
-				if ($user[0]["posts"] >= $member_post1) $status = $member_status1;
-				elseif($user[0]["posts"] >= $member_post2) $status = $member_status2;
-				elseif($user[0]["posts"] >= $member_post3) $status = $member_status3;
-				elseif($user[0]["posts"] >= $member_post4) $status = $member_status4;
-				elseif($user[0]["posts"] >= $member_post5) $status = $member_status5;
-			} elseif($user[0]["level"] == '2') {
-				$statuscolor = $modColor;
-				if ($user[0]["posts"] >= $mod_post1) $status = $mod_status1;
-				elseif($user[0]["posts"] >= $mod_post2) $status = $mod_status2;
-				elseif($user[0]["posts"] >= $mod_post3) $status = $mod_status3;
-				elseif($user[0]["posts"] >= $mod_post4) $status = $mod_status4;
-				elseif($user[0]["posts"] >= $mod_post5) $status = $mod_status5;
-			} elseif($user[0]["level"] >= 3) {
-				$statuscolor = $adminColor;
-				if ($user[0]["posts"] >= $admin_post1) $status = $admin_status1;
-				elseif($user[0]["posts"] >= $admin_post2) $status = $admin_status2;
-				elseif($user[0]["posts"] >= $admin_post3) $status = $admin_status3;
-				elseif($user[0]["posts"] >= $admin_post4) $status = $admin_status4;
-				elseif($user[0]["posts"] >= $admin_post5) $status = $admin_status5;
-			} else {
-				$status = 'Member';
-				$statuscolor = $membercolor;
-			}
-
+      
+      $status_config = status($user);
+			$status = $status_config['status'];
+			$statuscolor = $status_config['statuscolor'];
+      
 			$msg = UPBcoding(filterLanguage($pRec[0]["message"], $_CONFIG));
 			echo "
 			<tr>

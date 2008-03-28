@@ -251,11 +251,11 @@
 					$msg = format_text(UPBcoding(filterLanguage($pRec["message"], $_CONFIG)));
 					if ($x == 0) {
 						$table_color = $table1;
-						$table_font = $font1;
+
 						$x++;
 					} else {
 						$table_color = $table2;
-						$table_font = $font2;
+						
 						$x--;
 					}
 					echo "

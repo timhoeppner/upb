@@ -123,7 +123,7 @@ textarea#newentry {
 #upb_container {
 	margin : 0 auto 0 auto;
 	text-align : left;
-	width : 800px;
+	width : 850px;
   background-color : #f9f9f9;
 	border : 1px solid #7a8b9E;
 	color : #000;
@@ -228,6 +228,13 @@ th a:hover {
 	color : #222222;
 	padding : 4px 4px 4px 4px;
 }
+
+/* For RSS Button */
+.rss {
+border: 0px;
+vertical-align: middle;
+}
+
 
 /* These control the look of the footer for each section */
 .footer {

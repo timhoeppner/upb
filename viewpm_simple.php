@@ -14,37 +14,16 @@
 	$pmRec = $PrivMsg->get("CuBox", $_GET["id"]);
 	echo "
 		<div class='simple_head' colspan='2'><div style='float:left;margin-right:4px;'><img src='icon/".$pmRec[0]["icon"]."'></div><div style='line-height:15px;'>".$pmRec[0]["subject"]."</div></td>";
-	$table_color = $table1;
-	$table_font = $font1;
+	$table_color = "area_1";
+	
 	$user = $tdb->get("users", $pmRec[0]["from"]);
 	if ($user[0]["sig"] != "") $user[0]["sig"] = "<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG))."</div>";
-
-	if ($user[0]["level"] == "1") {
-		$statuscolor = $_STATUS["userColor"];
-		if ($user[0]["posts"] >= $_STATUS["member_post1"]) $status = $_STATUS["member_status1"];
-		if ($user[0]["posts"] >= $_STATUS["member_post2"]) $status = $_STATUS["member_status2"];
-		if ($user[0]["posts"] >= $_STATUS["member_post3"]) $status = $_STATUS["member_status3"];
-		if ($user[0]["posts"] >= $_STATUS["member_post4"]) $status = $_STATUS["member_status4"];
-		if ($user[0]["posts"] >= $_STATUS["member_post5"]) $status = $_STATUS["member_status5"];
-	} elseif($user[0]["level"] == "2") {
-		$statuscolor = $_STATUS["modColor"];
-		if ($user[0]["posts"] >= $_STATUS["mod_post1"]) $status = $_STATUS["mod_status1"];
-		if ($user[0]["posts"] >= $_STATUS["mod_post2"]) $status = $_STATUS["mod_status2"];
-		if ($user[0]["posts"] >= $_STATUS["mod_post3"]) $status = $_STATUS["mod_status3"];
-		if ($user[0]["posts"] >= $_STATUS["mod_post4"]) $status = $_STATUS["mod_status4"];
-		if ($user[0]["posts"] >= $_STATUS["mod_post5"]) $status = $_STATUS["mod_status5"];
-	} elseif($user[0]["level"] >= 3) {
-		$statuscolor = $_STATUS["adminColor"];
-		if ($user[0]["posts"] >= $_STATUS["admin_post1"]) $status = $_STATUS["admin_status1"];
-		if ($user[0]["posts"] >= $_STATUS["admin_post2"]) $status = $_STATUS["admin_status2"];
-		if ($user[0]["posts"] >= $_STATUS["admin_post3"]) $status = $_STATUS["admin_status3"];
-		if ($user[0]["posts"] >= $_STATUS["admin_post4"]) $status = $_STATUS["admin_status4"];
-		if ($user[0]["posts"] >= $_STATUS["admin_post5"]) $status = $_STATUS["admin_status5"];
-	} else {
-		$status = "Member";
-		$statuscolor = $_STATUS["membercolor"];
-	}
-	$message = format_text(filterLanguage(UPBcoding($pmRec[0]["message"]), $_CONFIG));
+	
+	$status_config = status($user);
+	$status = $status_config['status'];
+	$statuscolor = $status_config['statuscolor'];
+	
+  $message = format_text(filterLanguage(UPBcoding($pmRec[0]["message"]), $_CONFIG));
 	echo "
 		<table id='simple_table' style='background-color:#ffffff;' cellspacing='12'>
 			<tr>

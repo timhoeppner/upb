@@ -49,11 +49,11 @@
 			// display each post in the current topic
 			if ($x == 0) {
 				$table_color = area_1;
-				$table_font = $font1;
+				
 				$x++;
 			} else {
 				$table_color = area_2;
-				$table_font = $font2;
+				
 				$x--;
 			}
 			$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));

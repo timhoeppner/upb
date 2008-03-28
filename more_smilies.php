@@ -1,10 +1,7 @@
 <?php
 require_once('./includes/upb.initialize.php');
-$where = "<b>></b> More Smilies";
-
 $cols_n = 6; //how many columns per row of the table
 require_once('./includes/header_simple.php');
-echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 echo "<div id='simple_border'>
 			<div class='simple_head'>Viewing additional smilies</div>
 			<div class='simple_sub_smilie'>Click on a smilie image below to have it added to your post.</div>
@@ -22,7 +19,7 @@ foreach ($smilies as $key => $value)
     echo "</tr><tr>";
 }
 
-echo "</tr></table></tr></td></table></div></body></html>";
+echo "</tr><tr><td colspan='$cols_n' class='simple_sub_smilie'><a href='javascript:self.close();'>Close Window</a></td></tr></table></div></body></html>";
 include_once('./includes/footer_simple.php');
 
 ?>

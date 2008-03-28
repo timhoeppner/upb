@@ -752,6 +752,12 @@ function swap(source) {
     }
 }
 
+function switchElementDisable(field1, field2) {
+		        if(field1.value != '') {
+		            field2.disabled = true;
+		        } else field2.disabled = false;
+		    }
+
 function PopUp(where) {
 window.open("where", "This PM has been Recieved Within the Last 5 Minutes", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,width=500,height=350");
 }
@@ -772,10 +778,32 @@ function removeBBcode(areaId) {
    text1 = document.getElementById( areaId ).value;
    var pattern = new RegExp(/\[[^\]]*\]/g);
    var text2 = new String(document.getElementById( areaId ).value.replace(pattern,""));
-   alert('Before: '+text1);
-   alert('After: '+text2);
    document.getElementById( areaId ).value = text2;
 }
+
+function submitonce(theform){
+		if (document.all||document.getElementById){
+		for (i=0;i<theform.length;i++){
+		var tempobj=theform.elements[i]
+		if (tempobj.type.toLowerCase()=='submit'||tempobj.type.toLowerCase()=='reset')
+		tempobj.disabled=true
+		}
+		}
+		}
+		
+    
+function openChild(file,window) {
+		childWindow=open(file,window,'resizable=no,width=400,height=200');
+		if (childWindow.opener == null) childWindow.opener = self;
+		}
+
+function changeCheckboxValue(checked, object) {
+                    if(checked) {
+                        object.value = '1';
+                    } else {
+                        object.value = '0';
+                    }
+                }
 
 document.cookie = 'javascript=true'; //sets a cookie if javascript is enabled
 //END OF MISCELLANEOUS SCRIPTS
