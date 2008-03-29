@@ -30,7 +30,7 @@ echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $wher
 			</tr>";
 echoTableFooter($_CONFIG['skin_dir']);
 //REMOVE ALL TRACES OF $_GET['word']
-if(!($tdb->is_logged_in() && $_COOKIE["power_env"] < 3)) exitPage("you are not authorized to be here.");
+if(!($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3)) exitPage("you are not authorized to be here.");
 if($_GET["action"] == "addnew")
 {
   $error = $success = array();
@@ -74,7 +74,7 @@ if($_GET["action"] == "addnew")
     {
       if (empty($error[$key]))
       {
-        $upload_dir = "./icon/";
+        $upload_dir = SKIN_DIR."/icons/post_icons/";
         $upload_filename = $upload_dir.basename($_FILES['icon_file']['name'][$key]);
 
         if (!file_exists($upload_filename))
@@ -181,16 +181,14 @@ else if ($_GET['action'] == 'delete')
     $delete_array[] = $value;
   }
 
-  $icon_dir = './icon/';
-
   foreach ($delete_array as $value)
   {
     $result = $bdb->basicQuery('icons','id',$value);
 
     $icon_file = $result[0]['filename'];
-    if (@file_exists($icon_dir.$icon_file))
+    if (@file_exists(SKIN_DIR."/icons/post_icons/".$icon_file))
     {
-      if (@unlink($icon_dir.$icon_file))
+      if (@unlink(SKIN_DIR."/icons/post_icons/".$icon_file))
       {
         $bdb->delete('icons',$value);
         echo "<div class='alert_confirm'>
@@ -248,7 +246,7 @@ echo "<tr><th colspan='4'>Post Icon Management</th>";
     foreach ($icons as $key => $icon)
     {
       $id = $icon['id'];
-      echo "<td class='area_2' style='padding:8px;text-align:center;'><img src='./icon/".$icon['filename']."' border='0'><br>".$icon['filename']."</td>\n";
+      echo "<td class='area_2' style='padding:8px;text-align:center;'><img src='".SKIN_DIR."/icons/post_icons/".$icon['filename']."' border='0'><br>".$icon['filename']."</td>\n";
       echo "<td class='area_1' style='padding:8px;text-align:center;'>";
       if (count($icons) > 1)
         echo "<input type='checkbox' name='{$id}_delete' value='$id'>";

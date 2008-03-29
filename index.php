@@ -151,7 +151,7 @@
     							if ($fRec["topics"] == "0") $v_icon = "off.png";
     							echo "
     			<tr>
-    				<td class='area_2' style=\"cursor:pointer;\" onclick=\"window.location.href='viewforum.php?id=".$fRec["id"]."';\" onmouseover=\"this.className='area_2_over'\" onmouseout=\"this.className='area_2'\">
+    				<td class='area_2' onmouseover=\"this.className='area_2_over'\" onmouseout=\"this.className='area_2'\">
     								<span class='link_1'>";
                     if ($tRec[0]["id"] != "")
                       echo "<a href='xml.php?id=".$fRec["id"]."'><img src='images/rss.png' class='rss' alt='RSS Feed' title='RSS Feed'></a>";
@@ -159,7 +159,7 @@
     								<div class='description'>".$fRec["des"]."</div>
     								<div class='box_posts'><strong>Posts:</strong>&nbsp;".$fRec["posts"]."</div>
     								<div class='box_topics'><strong>Topics:</strong>&nbsp;".$fRec["topics"]."</div></td>
-    				<td class='area_1' style='text-align:center;'><div class='post_image'><img src='".$_CONFIG["skin_dir"]."/icons/$v_icon' alt='' title='' /></div><span class='latest_topic'>$when</span></td>
+    				<td class='area_1' style='text-align:center;'><img src='".SKIN_DIR."/icons/$v_icon' class='index_post_image' alt='' title='' /><span class='latest_topic'>$when</span></td>
     			</tr>";
     							unset($when);
     							/*} else {

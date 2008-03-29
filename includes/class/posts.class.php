@@ -89,8 +89,7 @@ class posts extends tdb {
 	function d_posting($page_string, $page, $position = "top")
   {
     if(!$this->check_topic() || !$this->check_forum() || !$this->check_user_info()) return false;
-    $output = "<br />
-      <div id='tabstyle_pagenum'>
+    $output = "<br><div id='tabstyle_pagenum'>
   <span class='pagination_current'>Page:</span>$page_string
    </div>
       <div style='clear:both;'></div>";
@@ -124,7 +123,8 @@ class posts extends tdb {
         </ul>
       </div>";
       }
-     $output .= "<div style='clear:both;'></div>";
+      else
+        $output .= "<div style='clear:both;'></div>";
   		return $output;
      }
 

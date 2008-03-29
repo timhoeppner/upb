@@ -131,7 +131,7 @@
 		if ($pRec["user_id"] != "0") echo "<a href='profile.php?action=get&id=".$pRec["user_id"]."'>".$pRec["user_name"]."</b>";
 		else echo $pRec["user_name"];
 		echo "</div></th>
-				<th><div style='float:left;'><img src='icon/".$pRec["icon"]."'></div><div align='right'>$delete $edit $quote $reply</div></th>
+				<th><div style='float:left;'><img src='".SKIN_DIR."/icons/post_icons/".$pRec["icon"]."'></div><div align='right'>$delete $edit $quote $reply</div></th>
 			</tr>
 			<tr>
 				<td class='$table_color' valign='top' style='width:15%;'>";

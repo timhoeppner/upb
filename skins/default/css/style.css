@@ -231,6 +231,7 @@ th a:hover {
 
 /* For RSS Button */
 .rss {
+padding : 0px 2px 2px 0px;
 border: 0px;
 vertical-align: middle;
 }
@@ -637,22 +638,24 @@ vertical-align: middle;
 /* Controls the look of the area below the forum name on the main page
 	that displays the number of topics within each forum.*/
 .box_topics {
+	font-size : 10px;
 	position : relative;
 	float : right;
 	width : 100px;
-	border : 1px solid #bccadf;
-	background-color : #c6d1e3;
+	border : 1px solid #fff;
+	background-color : #9db2cf;
 	padding : 2px 2px 2px 4px;
 }
 
 /* Controls the look of the area below the forum name on the main page
 	that displays the number of posts within each forum.*/
 .box_posts {
+	font-size : 10px;
 	position : relative;
 	float : right;
 	width : 100px;
-	border : 1px solid #bccadf;
-	background-color : #c6d1e3;
+	border : 1px solid #fff;
+	background-color : #9db2cf;
 	padding : 2px 2px 2px 4px;
 	margin-left : 2px;
 }
@@ -661,8 +664,17 @@ vertical-align: middle;
 	name on the main page.*/
 .post_image {
 	padding : 0px 4px 2px 0px;
-	float : left;
+	border: 0px;
+	vertical-align: middle;
 }
+
+/*Same as above but for the index page*/
+.index_post_image {
+	padding : 0px 4px 2px 0px;
+	border: 0px;
+	float: left;
+}
+
 
 /* This controls the description areas style  */
 .description { 

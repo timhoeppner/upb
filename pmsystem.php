@@ -80,7 +80,7 @@
 		foreach($pmRecs as $pmRec) {
 			if ($pmRec["id"] != "") {
 				if ($none) $none = FALSE;
-				if ($pmRec["date"] > $_COOKIE["lastvisit"]) $new = "<img src='icons/new.gif' alt='' title='' />";
+				if ($pmRec["date"] > $_COOKIE["lastvisit"]) $new = "<img src='".SKIN_DIR."/icons/post_icons/new.gif' alt='' title='' />";
 				else $new = "&nbsp;";
 				$user = $tdb->get("users", $pmRec["from"]);
 				if ($user[0]["level"] == "1") {
@@ -92,7 +92,7 @@
 				$echo .= "
 				<tr>
 					<td class='area_1' style='text-align:center;padding:8px;'>$new</td>
-					<td class='area_1' style='text-align:center;padding:8px;'><img src='./icon/".$pmRec["icon"]."'></td>
+					<td class='area_1' style='text-align:center;padding:8px;'><img src='".SKIN_DIR."/icons/post_icons/".$pmRec["icon"]."'></td>
 					<td class='area_2'><span class='link_1'><a href='viewpm.php?section=".$_GET["section"]."&id=".$pmRec["id"]."'>".$pmRec["subject"]."</a></span></td>
 					<td class='area_1'><a href='profile.php?action=get&id=".$pmRec["from"]."'>".$user[0]["user_name"]."</a> on ".gmdate("M d, Y g:i:s a", user_date($pmRec["date"]))."</td>
 					<td class='area_2' style='text-align:center;padding:8px;'>$ban_text</td>
@@ -172,7 +172,7 @@
 				$user = $tdb->get("users", $pmRec["to"]);
 				echo "
 				<tr>
-					<td class='area_1' style='text-align:center;padding:8px;'><img src='./icon/".$pmRec["icon"]."' alt='' title='' /></td>
+					<td class='area_1' style='text-align:center;padding:8px;'><img src='".SKIN_DIR."/icons/post_icons/".$pmRec["icon"]."' alt='' title='' /></td>
 					<td class='area_2'> <span class='link_1'><a href='viewpm.php?section=".$_GET["section"]."&id=".$pmRec["id"]."'>".$pmRec["subject"]."</a></span></td>
 					<td class='area_1'>Sent to <a href='profile.php?action=get&id=".$user[0]['id']."'>".$user[0]["user_name"]."</a> on ".gmdate("M d, Y g:i:s a", user_date($pmRec["date"]))."</td>
 				</tr>";

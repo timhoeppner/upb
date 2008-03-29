@@ -20,7 +20,7 @@ function message_icons()
       $checked = 'checked';
     else
       $checked = "";
-    $output .= "<td><input type='radio' name='icon' value=".$icon['filename']." $checked><img src='./icon/".$icon['filename']."' border='0'></td>";
+    $output .= "<td><input type='radio' name='icon' value=".$icon['filename']." $checked><img src='".SKIN_DIR."/icons/post_icons/".$icon['filename']."' border='0'></td>";
     if ($key%12 == 11)
       $output .= "</tr><tr>";
   }

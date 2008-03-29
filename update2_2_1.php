@@ -69,7 +69,6 @@ if ($_POST['next'] == 0) {
     $tdb->addField('users', array('lastvisit', 'number', 14));
     $tdb->addField('users', array('reg_code', 'memo'));
     $tdb->addField('uploads', array('file_loca', 'string', 80));
-    $tdb->removeField('uploads', 'data');
     $config_tdb->addField('ext_config', array('data_list', 'memo'));
     $config_tdb->addField('config', array('data_type', 'string', 7));
     print "<P>New fields added to the tables.";
@@ -120,7 +119,15 @@ if ($_POST['next'] == 0) {
         fclose($f);
         $tdb->edit('uploads', $file['id'], array('user_level' => 0, 'file_loca' => $file_name));
     }
-    print "<P>Moving uploads files intro the uploads directory";
+    $tdb->removeField('uploads', 'data');
+    
+    $old_upload = directory('./uploads/');
+    if (!empty($old_upload)) {
+      foreach ($old_upload as $file) 
+        unlink("./uploads/$file");
+    }
+    rmdir('./uploads');
+    print "<P>Moving uploads files into the uploads directory";
 
     $config_types = $config_tdb->listRec('ext_config', 1, -1);
     foreach($config_types as $config_type) {
@@ -146,6 +153,7 @@ if ($_POST['next'] == 0) {
     
     //need to pass through two stages before editing
     echo "<input type='hidden' name='cat_sort' value='$cat_sort'>";
+    echo "<input type='hidden' name='uploads_dir' value='$uploads_dir'>";
     
     print "<P>Added 'data_type' field to the fast access config table";
 } else if($_POST['next'] == 4) {
@@ -157,6 +165,7 @@ if ($_POST['next'] == 0) {
     print "<P>Deleted unneeded configVars";
     //need to pass through to next stage for editing
     echo "<input type='hidden' name='cat_sort' value='".$_POST['cat_sort']."'>";
+    echo "<input type='hidden' name='uploads_dir' value='".$_POST['uploads_dir']."'>";
     
 } else if($_POST['next'] == 5) {
     print '<tr><td class="area_2">';
@@ -179,7 +188,7 @@ if ($_POST['next'] == 0) {
     $config[] = array("name" => "admin_catagory_sorting", "form_object" => "hidden", "data_type" => "string","value" => $_POST['cat_sort']);
     $config[] = array("name" => "posts_per_page", 'minicat'=>$post_settings_id,'sort'=>1);
     $config[] = array("name" => "topics_per_page", 'minicat'=>$post_settings_id,'sort'=>2);
-    $config[] = array('name' => 'fileupload_location', 'value' => $uploads_dir, "form_object" => "hidden", "data_type" => "string");
+    $config[] = array('name' => 'fileupload_location', 'value' => $_POST['uploads_dir'], "form_object" => "hidden", "data_type" => "string");
     $config[] = array('name' => 'fileupload_size', 'description' => 'In kilobytes, type in the maximum size allowed for file uploads<br><i>Note: Setting to 0 will <b>disable</b> uploads</i>', 'minicat'=>$post_settings_id,'sort'=>4);
     $config[] = array('name' => 'censor', 'minicat'=>$post_settings_id,'sort'=>5);
     $config[] = array('name' => 'sticky_note', 'minicat'=>$post_settings_id,'sort'=>6);
@@ -237,26 +246,35 @@ if ($_POST['next'] == 0) {
       foreach ($contents as $file)
         unlink("./smilies/moresmilies/".$file);
     }
+    
     if(is_dir('./smilies/moresmilies')) rmdir("./smilies/moresmilies");
-
+    
     if (file_exists(DB_DIR.'/smilies.dat')) unlink(DB_DIR.'/smilies.dat');
     echo "<p>Smilie database created";
     echo "<p>More Smilies files converted";
 } else if($_POST['next'] == 6) {
     print '<tr><td class="area_2">';
-    $delete_array = array('admin_forum.php', 'admin_cat.php', 'admin_reset_stats.php', 'install-uploads.php', 'more_smilies_create_list.php', 'setallread.php', './includes/wrapper_scripts_names.txt', './includes/class/mod_avatar.class.php','./includes/board_help.php','./includes/board_post.php','./includes/board_view.php','./skins/default/coding.php','./skins/default/icons/deletetopic.gif','./skins/default/icons/head_but_pms.JPG','./skins/default/icons/closetopic.gif','./skins/default/icons/lastpost.jpg','./skins/default/icons/manage.gif','./skins/default/icons/monitor.gif','./skins/default/icons/nav.gif','./skins/default/icons/off.gif','./skins/default/icons/on.gif','./skins/default/icons/opentopic.gif','./skins/default/icons/pb_delete.JPG','./skins/default/icons/pb_edit.JPG','./skins/default/icons/pb_email.JPG','./skins/default/icons/pb_profile.JPG','./skins/default/icons/pb_quote.JPG','./skins/default/icons/pb_www.JPG','./skins/default/icons/redirect.png','./skins/default/icons/sendpm.jpg','./skins/default/icons/reply.gif','./skins/default/icons/replylocked.gif','./skins/default/icons/topic.gif','./skins/default/icons/stats.gif','./skins/default/icons/user.gif','./skins/default/images/footer_bg.JPG','./skins/default/images/footer_bg.PNG','./skins/default/images/head_but_donations.JPG','./skins/default/images/head_but_faq.JPG','./skins/default/images/head_but_loginout.JPG','./skins/default/images/head_but_members.JPG','./skins/default/images/head_but_pms.JPG','./skins/default/images/head_but_register.JPG','./skins/default/images/head_but_search.JPG','./skins/default/images/bead_but_usercp.JPG','./skins/default/images/head_logo.JPG','./skins/default/images/head_logo_right.JPG','./skins/default/images/head_top_left_bg.JPG','./skins/default/images/head_top_middle.JPG','./skins/default/images/head_top_right_bg.JPG','./skins/default/images/on.gif','./skins/default/images/sound.wav','./skins/default/images/cat_bottom_bg.jpg','./skins/default/images/cat_bottom_left.jpg','./skins/default/images/cat_bottom_left.gif','./skins/default/images/cat_bottom_right.gif','./skins/default/images/cat_bottom_right.JPG','./skins/default/images/cat_top_bg.gif','./skins/default/images/cat_top_left.gif','./skins/default/images/cat_top_right.gif','./skins/default/images/top_leftc.gif','./skins/default/images/top_rightc.gif','icons/bolt1.gif','icons/bolt2.gif','icons/bolt3.gif','icons/bolt4.gif','icons/bolt5.gif','icons/bolt6.gif','icons/lastpost.jpg','icons/new.gif','icons/off.gif','icons/on.gif','icons/stats.gif','icons/user.gif');
-
+    $delete_array = array('admin_forum.php', 'admin_cat.php', 'admin_reset_stats.php', 'install-uploads.php', 'more_smilies_create_list.php', 'setallread.php', './includes/wrapper_scripts_names.txt', './includes/class/mod_avatar.class.php','./includes/board_help.php','./includes/board_post.php','./includes/board_view.php','./skins/default/coding.php','./skins/default/icons/deletetopic.gif','./skins/default/icons/head_but_pms.JPG','./skins/default/icons/closetopic.gif','./skins/default/icons/lastpost.jpg','./skins/default/icons/manage.gif','./skins/default/icons/monitor.gif','./skins/default/icons/nav.gif','./skins/default/icons/off.gif','./skins/default/icons/on.gif','./skins/default/icons/opentopic.gif','./skins/default/icons/pb_delete.JPG','./skins/default/icons/pb_edit.JPG','./skins/default/icons/pb_email.JPG','./skins/default/icons/pb_profile.JPG','./skins/default/icons/pb_quote.JPG','./skins/default/icons/pb_www.JPG','./skins/default/icons/redirect.png','./skins/default/icons/sendpm.jpg','./skins/default/icons/reply.gif','./skins/default/icons/replylocked.gif','./skins/default/icons/topic.gif','./skins/default/icons/stats.gif','./skins/default/icons/user.gif','./skins/default/images/footer_bg.JPG','./skins/default/images/footer_bg.PNG','./skins/default/images/head_but_donations.JPG','./skins/default/images/head_but_faq.JPG','./skins/default/images/head_but_loginout.JPG','./skins/default/images/head_but_members.JPG','./skins/default/images/head_but_pms.JPG','./skins/default/images/head_but_register.JPG','./skins/default/images/head_but_search.JPG','./skins/default/images/bead_but_usercp.JPG','./skins/default/images/head_logo.JPG','./skins/default/images/head_logo_right.JPG','./skins/default/images/head_top_left_bg.JPG','./skins/default/images/head_top_middle.JPG','./skins/default/images/head_top_right_bg.JPG','./skins/default/images/on.gif','./skins/default/images/sound.wav','./skins/default/images/cat_bottom_bg.jpg','./skins/default/images/cat_bottom_left.jpg','./skins/default/images/cat_bottom_left.gif','./skins/default/images/cat_bottom_right.gif','./skins/default/images/cat_bottom_right.JPG','./skins/default/images/cat_top_bg.gif','./skins/default/images/cat_top_left.gif','./skins/default/images/cat_top_right.gif','./skins/default/images/top_leftc.gif','./skins/default/images/top_rightc.gif');
+    
+    $icons_dir = directory("./icon/");
+    foreach ($icons_dir as $icon) 
+      $delete_array[] = './icon/'.$icon;
+    
     $c = count($delete_array);
     for($i=0;$i<$c;$i++) {
         if(!file_exists($delete_array[$i]) ||
            @unlink($delete_array[$i])) unset($delete_array[$i]);
     }
+    
+    
     print '<P>Deleted obsolete files';
     if(!empty($delete_array)) {
         print '<P><b>Unable to delete the following files<b>:<i><br>';
         print implode('<br>', $delete_array);
         print '</i><p>It is recommended to delete these files.';
     }
+    
+    rm_dir('./icon/');
 } else if($_POST['next'] == $last_step) {
     $lines = explode("\n", file_get_contents('config.php'));
     for($i=0;$i<count($lines);$i++) {
