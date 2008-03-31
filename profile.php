@@ -413,13 +413,13 @@ if (isset($_POST["u_edit"])) {
 			if ($tRec[0]["topic_starter"] == "guest") $tRec[0]["topic_starter"] = "<i>guest</i>";
 			echo "
 	<tr>
-		<td class='area_2' style=\"cursor:pointer;\" onclick=\"window.location.href='viewtopic.php?id=".$f_id."&amp;t_id=".$tRec[0]["id"]."';\" onmouseover=\"this.className='area_2_over'\" onmouseout=\"this.className='area_2'\">
+		<td class='area_2' onmouseover=\"this.className='area_2_over'\" onmouseout=\"this.className='area_2'\">
 			<span class='link_1'>".$tRec[0]["subject"].$r_ext."</span>
 			<div class='description'>Started By:&nbsp;<span style='color:#".$statuscolor."'>".$tRec[0]["topic_starter"]."</span></div>
 			<div class='box_posts'><strong>Views:</strong>&nbsp;".$tRec[0]["views"]."</div>
 			<div class='box_posts'><strong>Replies:</strong>&nbsp;".$tRec[0]["replies"]."</div></td>
 		<td class='area_1' style='text-align:center;'>
-			<div class='post_image'><img src='icon/".$tRec[0]["icon"]."'></div>
+			<img src='icon/".$tRec[0]["icon"]."' class='post_image'>
 			<span class='latest_topic'><span class='date'>".gmdate("M d, Y g:i:s a", user_date($tRec[0]["last_post"]))."</span>
 			<br />
 			<strong>By:</strong> ";

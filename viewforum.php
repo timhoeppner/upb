@@ -88,7 +88,9 @@
         if($val == 0) unset($_SESSION['newTopics']['f'.$_GET['id']][$key]);
     }
     $tdb->updateVisitedTopics();
-	$posts_tdb->d_topic($p);
+	echo "<br>";
+  $posts_tdb->d_topic($p);
+	
 	echoTableHeading($fRec[0]["forum"], $_CONFIG);
 	echo "
 		<tr>
