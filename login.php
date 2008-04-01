@@ -75,23 +75,23 @@
 		if ($_COOKIE["remember"] != "") $remember = "checked";
 		else $remember = "";
 		echo "
-	<form action='login.php?ref=".$_GET["ref"]."' method=POST>";
+	<form action='login.php?ref=".$_GET["ref"]."' method='post'>";
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
 			<tr>
 				<td class='area_1' style='width:40%;text-align:right;'><strong>User Name:</strong></td>
-				<td class='area_2'><input class='txtBox' type=text name=u_name size=30 value=".$_POST["u_name"]."></td>
+				<td class='area_2'><input class='txtBox' type='text' name='u_name' size='30' value='".$_POST["u_name"]."' /></td>
 			</tr>
 			<tr>
 				<td class='area_1' style='text-align:right;'><strong>Password:</strong></td>
-				<td class='area_2'><input class='txtBox' type=password name=u_pass size=30></td>
+				<td class='area_2'><input class='txtBox' type='password' name='u_pass' size='30' /></td>
 			</tr>
 			<tr>
 				<td class='area_1' style='text-align:right;'>&nbsp;</td>
-				<td class='area_2'><input type='checkbox' name='remember' value='YES' id='rememberme' ".$remember."><label for='rememberme'>&nbsp;&nbsp;Remember me?</label></td>
+				<td class='area_2'><input type='checkbox' name='remember' value='YES' id='rememberme' ".$remember." /><label for='rememberme'>&nbsp;&nbsp;Remember me?</label></td>
 			</tr>
 			<tr>
-				<td class='footer_3a' style='text-align:center;' colspan='2'><input type='submit' class='txtBox' value='Login'>&nbsp;&nbsp;&nbsp;<a href='getpass.php'>(Lost Password?)</a>";
+				<td class='footer_3a' style='text-align:center;' colspan='2'><input type='submit' class='txtBox' value='Login' />&nbsp;&nbsp;&nbsp;<a href='getpass.php'>(Lost Password?)</a>";
 		if($_REGIST['disable_reg']) print '';
 		else print " <a href='register.php'>(Need to Register?)</a>";
 		print "</td>

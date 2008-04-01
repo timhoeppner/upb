@@ -22,45 +22,45 @@
 	foreach($form_cats as $form_c) {
 		if (FALSE !== ($form_forums = $tdb->query("forums", "cat='".$form_c["id"]."'"))) {
 			foreach($form_forums as $form_f) {
-				if ($form_f["view"] <= $_COOKIE["power_env"]) $form_select .= "<option value='".$form_f["id"]."'>".$form_c["name"]." -&#62; ".$form_f["forum"]."\n";
+				if ($form_f["view"] <= $_COOKIE["power_env"]) $form_select .= "<option value='".$form_f["id"]."'>".$form_c["name"]." -&#62; ".$form_f["forum"]."</option>\n";
 			}
 		}
 	}
 	//form
-	echo "<form action='search.php' method=GET>";
+	echo "<form action='search.php' method='get'>";
 	echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 	echo "
 		<tr>
 			<td class='area_1' style='width:40%;text-align:right;'><strong>Search Text:</strong></td>
-			<td class='area_2'><input type=text name=q size=30 value='".$sText."'></td>
+			<td class='area_2'><input type='text' name='q' size='30' value='".$sText."' /></td>
 		</tr>
 		<tr>
 			<td class='area_1' style='text-align:right;'><strong>Made by User:</strong></td>
-			<td class='area_2'><input type=text name=user size=30></td>
+			<td class='area_2'><input type='text' name='user' size='30' /></td>
 		</tr>
 		<tr>
 			<td class='area_1' style='text-align:right;'><strong>Require:</strong></td>
 			<td class='area_2'><select name='req'>
-				<option value='OR'>Any of the words
-				<option value='AND' selected>All of the words
+				<option value='OR'>Any of the words</option>
+				<option value='AND' selected='selected'>All of the words</option>
 				</select></td>
 		</tr>
 		<tr>
 			<td class='area_1' style='text-align:right;'><strong>Which forums to search:</strong></td>
 			<td class='area_2'><select name='forums_req'>
-				<option value='all' selected>All Forums
+				<option value='all' selected='selected'>All Forums</option>
 				$form_select
 			</select></td>
 		</tr>
 		<tr>
 			<td class='area_1' style='text-align:right;'><strong>Additional options:</strong></td>
-			<td class='area_2'><input type='checkbox' name='intopic'>Search in posts</td>
+			<td class='area_2'><input type='checkbox' name='intopic' />Search in posts</td>
 		</tr>
 		<tr>
-			<td class='footer_3a' style='text-align:center;' colspan='2'><input type=submit value='Search'></td>
-		</tr>
-	</form>";
+			<td class='footer_3a' style='text-align:center;' colspan='2'><input type='submit' value='Search' /></td>
+		</tr>";
 	echoTableFooter(SKIN_DIR);
+	echo "</form>";
 	//end form
 	if (isset($_GET['q']) && trim($_GET['q']) != "" || trim($_GET["q"]) == "" && trim($_GET["user"]) != "") {
 		$forums = array();

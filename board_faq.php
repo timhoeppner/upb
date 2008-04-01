@@ -12,7 +12,7 @@
 Smilies can be added to a post by clicking on the icons.
 <br />
 Using BBcode is simple. You can either enter them manually or use the list and buttons about. 
-Either select the text you wish to apply the formatting to or click the button and then place the text between the [] [/] tags e.g. [b]bold[/b]<br>
+Either select the text you wish to apply the formatting to or click the button and then place the text between the [] [/] tags e.g. [b]bold[/b]<br />
 Text can be made bold by putting the text between [b][/b] e.g. [b]bold text[/b]
 Text can also be made italic by putting the text between
 <br />
@@ -36,7 +36,7 @@ Another feauture is an offtopic comment. For this use [offtopic] offtopic commen
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
-echo "<tr><th>RSS Feeds</th></tr><tr><td class='area_2'>The <img src='images/rss.png' class='rss' alt='RSS'> icon indicates there is an RSS Feed available.<p>This allows you to keep track of new topics or posts without visiting the forum.<p>Just click on the image and subscribe to the feed using your browser or paste the URL into the RSS Reader software you are using.</td></tr>";
+echo "<tr><th>RSS Feeds</th></tr><tr><td class='area_2'>The <img src='images/rss.png' class='rss' alt='RSS' /> icon indicates there is an RSS Feed available.<p>This allows you to keep track of new topics or posts without visiting the forum.</p><p>Just click on the image and subscribe to the feed using your browser or paste the URL into the RSS Reader software you are using.</p></td></tr>";
 		echo "
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
