@@ -7,7 +7,9 @@ session_start();
 //prevent exploits for users who have registered globals on
 foreach($GLOBALS["_GET"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
+    if (((strpos($key, 'id') !== FALSE) || $key == 'page') && (!ctype_digit($value) && !empty($value))) die('Possible XSS attack detected');
 }
+
 foreach($GLOBALS["_POST"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
 }
@@ -80,6 +82,13 @@ if (!defined('DB_DIR')) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', ALERT_G
 if(!is_dir(DB_DIR)) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Fatal:', str_replace('__MSG__', 'The data directory is missing.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
 if (UPB_VERSION != "2.2.1" && (FALSE === strpos($_SERVER['PHP_SELF'], 'update'))) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Update Available:', str_replace('__MSG__', 'An update has not been run yet.  Please follow the directions in the readme file to run it to continue.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
 
+//Check to see if User is banned
+if(file_exists(DB_DIR.'/banneduser.dat')) {
+    $banned_addresses = explode("\n", file_get_contents(DB_DIR.'/banneduser.dat'));
+    if((isset($_COOKIE["user_env"]) && in_array($_COOKIE["user_env"], $banned_addresses)) || in_array($_SERVER['REMOTE_ADDR'], $banned_addresses))
+		die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Notice:', str_replace('__MSG__', 'You have been banned from this bulletin board.<br>'.ALERT_GENERIC_MSG, ALERT_MSG)).MINIMAL_BODY_FOOTER);
+}
+
 require_once("./includes/class/tdb.class.php");
 require_once("./includes/class/config.class.php");
 require_once("./includes/class/func.class.php");
@@ -119,9 +128,10 @@ if(file_exists(DB_DIR."/main.tdb")) {
     eval(file_get_contents(DB_DIR.'/constants.php'));
 
     if (!defined('DB_DIR')) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Fatal Error:', str_replace('__MSG__', 'The DB_DIR constant is undefined.<br>Please go to <a href="http://myupb.com/" target="_blank">MyUPB.com</a> for support.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
-	if (!is_array($_CONFIG)) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Fatal Error:', str_replace('__MSG__', 'Unable to correctly access UPB\'s configuration.<br>Please go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
-	if ($_CONFIG['skin_dir'] == '' || !defined('SKIN_DIR')) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Fatal Error:', str_replace('__MSG__', 'The SKIN_DIR constant is undefined.<br>This may be an indication UPB was unable to correctly access its configuration.<br>Please go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
+	  if (!is_array($_CONFIG)) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Fatal Error:', str_replace('__MSG__', 'Unable to correctly access UPB\'s configuration.<br>Please go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
+	  if ($_CONFIG['skin_dir'] == '' || !defined('SKIN_DIR')) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Fatal Error:', str_replace('__MSG__', 'The SKIN_DIR constant is undefined.<br>This may be an indication UPB was unable to correctly access its configuration.<br>Please go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
 
     require_once('./includes/whos_online.php');
 }
+if (isset($_COOKIE['javascript'])) setcookie('javascript','',time()-3600); //remove any existing javascript cookie to prevent false positives
 ?>

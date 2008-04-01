@@ -306,19 +306,6 @@ function timezonelist($current=0)
   return $output;
 }
 
-function is_secure()
-{
-  foreach ($_GET as $key => $value)
-  {
-    if ((substr_count($key,'id') > 0) or $key == 'page')
-    {
-      if (!ctype_digit($value) && !empty($value))
-        die('Possible XSS attack detected');
-    }
-  }
-  return true;
-}
-
 //replaces characters in strings to make xml compatible
 function xml_clean($string)
 {

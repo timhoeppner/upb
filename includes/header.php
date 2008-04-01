@@ -4,8 +4,6 @@
 	// Website: http://www.myupb.com
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
-    if (isset($_COOKIE["banned"]))
-    	die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You have been banned from this bulletin board.<br>'.ALERT_GENERIC_MSG, ALERT_MSG)).MINIMAL_BODY_FOOTER);
     if (!headers_sent()) {
 		switch (basename($_SERVER['PHP_SELF'])) {
 			case 'register.php':
@@ -21,17 +19,6 @@
 			header ("Pragma: no-cache");
 			break;
 		}
-	}
-	is_secure();
-
-    if (isset($_COOKIE['javascript'])) setcookie('javascript','',time()-3600); //remove any existing javascript cookie to prevent false positives
-
-	$banned_addresses = file(DB_DIR.'/banneduser.dat');
-	foreach($banned_addresses as $address)
-	if (trim($address) == $_SERVER['REMOTE_ADDR'] || (isset($_COOKIE["user_env"]) && trim($address) == $_COOKIE["user_env"])) {
-	    if (!headers_sent())
-			setcookie("banned", "User is banned", time()+9999 * 99999 * 999999);
-		die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Notice:', str_replace('__MSG__', 'You have been banned from this bulletin board.<br>'.ALERT_GENERIC_MSG, ALERT_MSG)).MINIMAL_BODY_FOOTER);
 	}
 
 	$mt = explode(' ', microtime());
