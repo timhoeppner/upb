@@ -728,7 +728,7 @@ vertical-align: middle;
 /* ----Special tab menu rowstyle start---- */
 /* ------------------------------------- */
 
-#tabstyle_1 {
+.tabstyle_1 {
 	position : relative;
 	top : -33px;
 	left : -32px;
@@ -738,24 +738,24 @@ vertical-align: middle;
 	border-bottom : 0px solid #3b424f;
 	height : 0px;
 	}
-#tabstyle_1 ul, #tabstyle_2 ul {
+.tabstyle_1 ul, #tabstyle_2 ul {
 	margin : 0;
 	padding : 10px 10px 0 50px;
 	list-style : none;
 	}
-#tabstyle_1 li, #tabstyle_2 li {
+.tabstyle_1 li, #tabstyle_2 li {
 	display : inline;
 	margin : 0;
 	padding : 0;
 	}
-#tabstyle_1 a, #tabstyle_2 a {
+.tabstyle_1 a, #tabstyle_2 a {
 	float : left;
 	background : url(../images/tab_left.gif) no-repeat left top;
 	margin : 0;
 	padding : 0 0 0 4px;
 	text-decoration : none;
 	}
-#tabstyle_1 a span, #tabstyle_2 a span {
+.tabstyle_1 a span, #tabstyle_2 a span {
 	font-family: arial, tahoma, verdana, helvetica, sans-serif;
 	font-weight: bold;
 	float : left;
@@ -765,16 +765,16 @@ vertical-align: middle;
 	color : #333333;
 	}
 	/* Commented Backslash Hack hides rule from IE5-Mac \*/
-#tabstyle_1 a span, #tabstyle_2 a span {
+.tabstyle_1 a span, #tabstyle_2 a span {
 	float : none;}
 	/* End IE5-Mac hack */
-#tabstyle_1 a:hover span, #tabstyle_2 a:hover span {
+.tabstyle_1 a:hover span, #tabstyle_2 a:hover span {
 	color : #394b63;
 	}
-#tabstyle_1 a:hover, #tabstyle_2 a:hover {
+.tabstyle_1 a:hover, #tabstyle_2 a:hover {
 	background-position : 0% -42px;
 	}
-#tabstyle_1 a:hover span, #tabstyle_2 a:hover span {
+.tabstyle_1 a:hover span, #tabstyle_2 a:hover span {
 	background-position : 100% -42px;
 	}
 

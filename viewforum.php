@@ -158,7 +158,8 @@
 			}
 		}
 	}
-  echo "</div>";
   echoTableFooter($_CONFIG['skin_dir']);
+  
+  
 	require_once('./includes/footer.php');
 ?>

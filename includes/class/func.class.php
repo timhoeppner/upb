@@ -45,7 +45,11 @@ class functions extends tdb {
     }
 
     function is_logged_in() {
-        if($_COOKIE["user_env"] == "" || $_COOKIE["uniquekey_env"] == "" || $_COOKIE["power_env"] == "" || $_COOKIE["id_env"] == "") return false;
+        if(!isset($_COOKIE['user_env']) || $_COOKIE["user_env"] == ""
+           !isset($_COOKIE['uniquekey_env']) || $_COOKIE["uniquekey_env"] == ""
+           !isset($_COOKIE['power_env']) || $_COOKIE["power_env"] == "" ||
+           !isset($_COOKIE['id_env']) || $_COOKIE["id_env"] == ""
+          ) return false;
         if(!empty($this->_cache["is_logged_in"][$_COOKIE["id_env"]])) {
             if($_COOKIE["user_env"] == $this->_cache["is_logged_in"][$_COOKIE["id_env"]]["user"]
             && $_COOKIE["uniquekey_env"] == $this->_cache["is_logged_in"][$_COOKIE["id_env"]]["uniquekey"]

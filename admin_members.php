@@ -40,12 +40,14 @@
                         $_SESSION['reg_approval_count']--;
 	                }
 	            }
+	            array_reset_keys($users);
     	        $msg = "<div class='alert_confirm'>
 					<div class='alert_confirm_text'>
 					<strong>Attention:</strong></div><div style='padding:4px;'>Successfully ".(($_POST['a']=='Reject')?'rejected':'approved').' '.count($_POST['ids']).' user(s)</div></div>';
 	        }
 	    } elseif(isset($_POST['a']) && ($_POST['a'] == 'Validate' || $_POST['a'] == 'Reject')) {
             $ids = array();
+          reset($_POST);
 	        while(list($key, $val) = each($_POST)) {
 	            if(substr($key, 0 , 4) != 'sel_') continue;
 	            $tmp = substr($key, 4);

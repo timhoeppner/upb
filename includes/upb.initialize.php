@@ -77,6 +77,7 @@ if (file_exists("config.php")) {
 }
 //Verify that a database exists, otherwise prompt the admin to run the installer
 if (!defined('DB_DIR')) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'The installer has not been run it.  Please <a href="install.php">run this</a> to continue.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
+if(!is_dir(DB_DIR)) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Fatal:', str_replace('__MSG__', 'The data directory is missing.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
 if (UPB_VERSION != "2.2.1" && (FALSE === strpos($_SERVER['PHP_SELF'], 'update'))) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Update Available:', str_replace('__MSG__', 'An update has not been run yet.  Please follow the directions in the readme file to run it to continue.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
 
 require_once("./includes/class/tdb.class.php");

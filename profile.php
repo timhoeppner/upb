@@ -215,7 +215,7 @@ if (isset($_POST["u_edit"])) {
 		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
 		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
 		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
-		echo "<form action='{$_SERVER['PHP_SELF']}' id='newentry' name='newentry' method='post' enctype=\"multipart/form-data\">";
+		echo "<form action='{$_SERVER['PHP_SELF']}' id='newentry' method='post' enctype=\"multipart/form-data\">";
         echo "
         <div id='tabstyle_2'>
         	<ul>
@@ -232,27 +232,27 @@ if (isset($_POST["u_edit"])) {
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Old password:</strong><br /><i>Submit your old password only if you are changing your password</i></td>
-				<td class='area_2'><input type='password' name='u_oldpass'></td>
+				<td class='area_2'><input type='password' name='u_oldpass' /></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>New password:</strong></td>
-				<td class='area_2'><input type='password' name='u_newpass'></td>
+				<td class='area_2'><input type='password' name='u_newpass' /></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>New password confirmation:</strong></td>
-				<td class='area_2'><input type='password' name='u_newpass2'></td>
+				<td class='area_2'><input type='password' name='u_newpass2' /></td>
 			</tr>";
 		if ($_COOKIE["power_env"] >= 2) {
 			echo "
 			<tr>
 				<td class='area_1'><strong>email:</strong></td>
-				<td class='area_2'><input type='text' name='u_email' value='".$rec[0]["email"]."'>&nbsp;".$rec[0]["email"]."</td>
+				<td class='area_2'><input type='text' name='u_email' value='".$rec[0]["email"]."' />&nbsp;".$rec[0]["email"]."</td>
 			</tr>";
 		} else {
 			echo "
 			<tr>
 				<td class='area_1'><strong>email:</strong><br /><font size='1' face='$font_face'>Email the Forum Administrator to change your email address.</a></td>
-				<td class='area_2'><input type='hidden' name='u_email' value='".$rec[0]["email"]."'>&nbsp;".$rec[0]["email"]."</td>
+				<td class='area_2'><input type='hidden' name='u_email' value='".$rec[0]["email"]."' />&nbsp;".$rec[0]["email"]."</td>
 			</tr>";
 		}
 		if ((bool) $rec[0]["view_email"]) $email_checked = "CHECKED";
@@ -262,11 +262,11 @@ if (isset($_POST["u_edit"])) {
 				<td class='area_1'>Make email address public in profile?&nbsp;&nbsp;&nbsp;
 					<a href=\"javascript: window.open('privacy.php','','status=no, width=800,height=50'); void('');\">
 					Privacy Policy</a></td>
-				<td class='area_2'><input type=checkbox name='show_email' value = '1' $email_checked></td>
+				<td class='area_2'><input type='checkbox' name='show_email' value = '1' $email_checked /></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>location:</strong></td>
-				<td class='area_2'><input type='text' name='u_loca' value='".$rec[0]["location"]."'></td>
+				<td class='area_2'><input type='text' name='u_loca' value='".$rec[0]["location"]."' /></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
@@ -289,8 +289,8 @@ if (isset($_POST["u_edit"])) {
 					<table cellspacing='0px' style='width:100%;'>
 						<tr>
 							<td style='text-align:center;width:50%;'>
-								<img src='images/avatars/blank.gif' name='myImage' alt='' title='' /></td>
-							<td><select class='select' size='5' name='avatar' onChange='swap(this.options[selectedIndex].value)'>\n";
+								<img src='images/avatars/blank.gif' id='myImage' alt='' title='' /></td>
+							<td><select class='select' size='5' name='avatar' onchange='swap(this.options[selectedIndex].value)'>\n";
 	
 		returnimages();
 		echo "</select></td></tr>
@@ -298,7 +298,7 @@ if (isset($_POST["u_edit"])) {
 				</td>";
 		if($custom_avatar) {
 		    echo "
-                  <td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input onChange=\"switchElementDisable(this, document.newentry.avatar);\" type='".(($_REGIST['custom_avatars'] == '2') ? 'file' : 'text\' value=\''.$rec[0]['avatar'])."' name='avatar2'><p><i>Consult the forum admin for acceptable dimensions.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is 5Kb.' : '')."</i></td>";
+                  <td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input onchange=\"switchElementDisable(this, document.newentry.avatar);\" type='".(($_REGIST['custom_avatars'] == '2') ? 'file' : 'text\' value=\''.$rec[0]['avatar'])."' name='avatar2' /><p><i>Consult the forum admin for acceptable dimensions.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is 5Kb.' : '')."</i></p></td></tr>";
 		}
 		echo "
 			<tr>
@@ -314,33 +314,33 @@ if (isset($_POST["u_edit"])) {
       echo "http://";
     else
       echo $rec[0]["url"];
-    echo "'></td>
+    echo "' /></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='bar_icq'><strong>ICQ:</strong></td>
-				<td class='area_2'><input type='text' name='u_icq' value='".$rec[0]["icq"]."'></td>
+				<td class='area_2'><input type='text' name='u_icq' value='".$rec[0]["icq"]."' /></td>
 			</tr>
 			<tr>
 				<td class='bar_aim'><strong>AIM:</strong></td>
-				<td class='area_2'><input type='text' name='u_aim' value='".$rec[0]["aim"]."'> </td>
+				<td class='area_2'><input type='text' name='u_aim' value='".$rec[0]["aim"]."' /> </td>
 			</tr>
 			<tr>
 				<td class='bar_yim'><strong>Yahoo!:</strong></td>
-				<td class='area_2'><input type='text' name='u_yahoo' value='".$rec[0]["yahoo"]."'></td>
+				<td class='area_2'><input type='text' name='u_yahoo' value='".$rec[0]["yahoo"]."' /></td>
 			</tr>
 			<tr>
 				<td class='bar_msnm'><strong>MSN:</strong></td>
-				<td class='area_2'><input type='text' name='u_msn' value='".$rec[0]["msn"]."'></td>
+				<td class='area_2'><input type='text' name='u_msn' value='".$rec[0]["msn"]."' /></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
     <tr>
 				<td class='area_1' valign='top'><strong>Signature:</strong></td>
-				<td class='area_2'>".bbcodebuttons('u_sig','sig')."<textarea id='u_sig' name='u_sig' cols=45 rows=10>".$rec[0]["sig"]."</textarea><br><input type='button' onClick=\"javascript:sigPreview(document.getElementById('newentry'),'".$_COOKIE['id_env']."','set');\" value='Preview Signature'></td></tr>
+				<td class='area_2'>".bbcodebuttons('u_sig','sig')."<textarea id='u_sig' name='u_sig' cols='45' rows='10'>".$rec[0]["sig"]."</textarea><br /><input type='button' onclick=\"javascript:sigPreview(document.getElementById('newentry'),'".$_COOKIE['id_env']."','set');\" value='Preview Signature' /></td></tr>
 			<tr>
 				<td class='area_1' valign='top'><div id='sig_title'><strong>Current Signature:</strong></div></td>
 				<td class='area_2'><div style='display:inline;' id='sig_preview'>".format_text(filterLanguage(UPBcoding($rec[0]["sig"]), $_CONFIG))."</div></td>
@@ -352,9 +352,9 @@ if (isset($_POST["u_edit"])) {
 				<td class='area_1'><strong>Timezone Setting:</strong></td>
 				<td class='area_2'>";
       print timezonelist($rec[0]["timezone"]);
-			echo "</tr>
+			echo "</td></tr>
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=reset name='reset' value='Reset' onClick=\"javascript:sigPreview(document.getElementById('newentry'),'".$_COOKIE['id_env']."','reset');\"'><input type='submit' name='u_edit' value='Submit'></td>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='reset' name='reset' value='Reset' onclick=\"javascript:sigPreview(document.getElementById('newentry'),'".$_COOKIE['id_env']."','reset');\" /><input type='submit' name='u_edit' value='Submit' /></td>
 			</tr>";
     echoTableFooter($_CONFIG['skin_dir']);
     echo "</form>";

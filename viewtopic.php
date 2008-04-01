@@ -48,7 +48,7 @@
 	if (empty($pRecs)) exitPage("Posts not found");
 	$num_pages = ceil(($tRec[0]["replies"] + 1) / $_CONFIG["posts_per_page"]);
 	$p = createPageNumbers($vars["page"], $num_pages, $_SERVER['QUERY_STRING']);
-  echo "<br><div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page']) . "</div>";
+  echo "<br /><div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page']) . "</div>";
 	if ($vars['page'] == 1) $first_post = $pRecs[0]['id'];
 	else $first_post = 0;
 	$x = +1;
@@ -127,7 +127,7 @@
 		echo "
 			<tr>
 				<th><div class='post_name'>";
-		if ($pRec["user_id"] != "0") echo "<a href='profile.php?action=get&id=".$pRec["user_id"]."'>".$pRec["user_name"]."</b>";
+		if ($pRec["user_id"] != "0") echo "<a href='profile.php?action=get&amp;id=".$pRec["user_id"]."'>".$pRec["user_name"]."</b>";
 		else echo $pRec["user_name"];
 		echo "</div></th>
 				<th><div style='float:left;'><img src='".SKIN_DIR."/icons/post_icons/".$pRec["icon"]."'></div><div align='right'>$delete $edit $quote $reply</div></th>

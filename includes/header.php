@@ -143,7 +143,7 @@
 <title>".((!isset($where) || $where == '') ? stripslashes($_CONFIG['title']) : (strip_tags(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], stripslashes($where)))))."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 <link rel='stylesheet' type='text/css' href='".$_CONFIG["skin_dir"]."/css/style.css' />
-<script type='text/javascript' language='Javascript' src='./includes/scripts.js'></script>
+<script type='text/javascript' src='./includes/scripts.js'></script>
 </head>
 <body>
 <div id='upb_container'>
@@ -156,7 +156,7 @@
 	</div>
 	<br />
 	<br />
-	<div id='tabstyle_1'>
+	<div class='tabstyle_1'>
 		<ul>";
   if ($tdb->is_logged_in()) echo "
 			<li><a href='index.php' title='Forum Home'><span>Forum Home</span></a></li>
@@ -201,7 +201,6 @@
   if (!$tdb->is_logged_in() && isset($_COOKIE['user_env']) && isset($_COOKIE['uniquekey_env']) && isset($_COOKIE['id_env'])) {
 		$redirect = urlencode($_SERVER['REQUEST_URI']);
 		print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', "You or another person logged in on a different computer since the last time you've visited.<br /><a href=\"logoff.php?ref={$redirect}\">Don't show this message anymore</a> or <a href=\"login.php?ref={$redirect}\">Login</a>.", ALERT_MSG));
-    $_COOKIE['power_env'] = 0; //resets user to guest to prevent hidden category viewing
   }
 	echo "
 

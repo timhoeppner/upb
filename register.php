@@ -47,7 +47,7 @@
 		$register_msg = $_REGISTER['register_msg'];
 		$register_msg = str_replace("<login>", $_POST['u_login'], $register_msg);
 		$register_msg = str_replace("<password>", $u_pass, $register_msg);
-		$register_msg = str_replace("<url>", $_SERVER['SERVER_NAME'] . 'register.php?action=validate&id='.$id.'&code='.$reg_code, $register_msg);
+		$register_msg = str_replace("<url>", "http://{$_SERVER['SERVER_NAME']}{$_SERVER['PHP_SELF']}?action=validate&id={$id}&code={$reg_code}", $register_msg);
         if (!@mail($_POST["u_email"], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"])) {
             $email_status = false;
             if($_CONFIG['email_mode']) {

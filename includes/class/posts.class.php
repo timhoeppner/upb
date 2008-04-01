@@ -76,9 +76,13 @@ class posts extends tdb {
 </div>
 
     <div style='clear:both;'></div>
-    <div id='tabstyle_1'>
+    <div class='tabstyle_1'>
         <ul>";
-		if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"]) echo "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=' title='Create a new topic?'><span>Create New Topic</span></a></li>";
+		if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"]){
+			echo "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=' title='Create a new topic?'><span>Create New Topic</span></a></li>";
+		}else{
+			echo "<li></li>";
+		}
 		echo "
         </ul>
     </div>

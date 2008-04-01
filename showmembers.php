@@ -42,14 +42,14 @@
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
 			<tr>
-				<th style='width:3%' style='text-align:center;'>ID</th>
+				<th style='width:3%; text-align:center;'>ID</th>
 				<th style='width:15%'>Username</th>
-				<th style='width:20%' style='text-align:center;'>Location</th>
-				<th style='width:5%' style='text-align:center;'>Posts</th>
-				<th style='width:15%' style='text-align:center;'>AIM</th>
-				<th style='width:15%' style='text-align:center;'>MSN</th>
-				<th style='width:15%' style='text-align:center;'>Yahoo!</th>
-				<th style='width:12%' style='text-align:center;'>ICQ</th>
+				<th style='width:20%; text-align:center;'>Location</th>
+				<th style='width:5%; text-align:center;'>Posts</th>
+				<th style='width:15%; text-align:center;'>AIM</th>
+				<th style='width:15%; text-align:center;'>MSN</th>
+				<th style='width:15%; text-align:center;'>Yahoo!</th>
+				<th style='width:12%; text-align:center;'>ICQ</th>
 			</tr>";
 		if ($users[0]["id"] == "") {
 			echo "
@@ -65,7 +65,7 @@
 				echo "
 			<tr>
 				<td class='area_1' style='padding:8px;'>".$user["id"]."</td>
-				<td class='area_2'><span class='link_1'><a href='profile.php?action=get&id=".$user["id"]."'>".$user["user_name"]."</a></span></td>
+				<td class='area_2'><span class='link_1'><a href='profile.php?action=get&amp;id=".$user["id"]."'>".$user["user_name"]."</a></span></td>
 				<td class='area_2' style='text-align:center;'>".$user["location"]."</td>
 				<td class='area_1' style='text-align:center;'>".$user["posts"]."</td>
 				<td class='area_2' style='text-align:center;'>";

@@ -205,7 +205,7 @@
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
 				<tr>
-					<th><strong>Messenger status</th>
+					<th><strong>Messenger status</strong></th>
 				</tr>
 				<tr>
 					<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;'>$new_pm New Private Msg(s) and <strong>$old_pm</strong> Old Private Msg(s)</td>

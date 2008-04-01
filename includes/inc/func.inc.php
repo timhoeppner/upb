@@ -33,6 +33,21 @@ function deleteWhiteIndex(&$array) {
     }
 }
 
+//UnTested!!
+function array_reset_keys(&$array) {
+    $keys = array_keys($array);
+    sort($keys, SORT_NUMERIC);
+    $i = 0;
+    foreach($keys as $key) {
+        if(!ctype_digit($key) continue;
+        if($key != $i) {
+            $array[$i] =& $array[$key];
+            unset($array[$key]);
+        }
+        $i++;
+    }
+}
+
 function createUserPowerMisc($user_power, $list_format, $exclude_guests=false) {
     //$list_format choices:
     //$list_format = 1; ==> dropdown list of current Power and above
