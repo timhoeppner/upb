@@ -39,7 +39,7 @@ function array_reset_keys(&$array) {
     sort($keys, SORT_NUMERIC);
     $i = 0;
     foreach($keys as $key) {
-        if(!ctype_digit($key) continue;
+        if(!ctype_digit($key)) continue;
         if($key != $i) {
             $array[$i] =& $array[$key];
             unset($array[$key]);
