@@ -439,7 +439,7 @@
           </div>
 
           <div style='clear:both;'></div>
-          <div id='tabstyle_1'>
+          <div id='tabstyle_2'>
             <ul>
               <li><a href='register.php' title='Add Member'><span>Add Member</span></a></li>
               <li><a href='admin_members.php?action=confirm#skip_nav' title='Confirm New Members'><span>Confirm New Members</span></a></li>

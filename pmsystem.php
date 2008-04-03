@@ -44,7 +44,12 @@
 		require_once('./includes/footer.php');
 		exit;
 	}
-	$count = count($pmRecs);
+	
+	if ($pmRecs === false) //if $pmRecs is false, count still evaluates to 1
+    $count = 0;
+  else
+    $count = count($pmRecs);
+        
 	if ($_GET["section"] == "inbox") {
 		if ($new_pm != 0) {
 			$f = fopen(DB_DIR."/new_pm.dat", 'r+');
@@ -78,7 +83,7 @@
 		$echo = "";
 		$blockedids = getUsersPMBlockedList($_COOKIE["id_env"]);
 		foreach($pmRecs as $pmRec) {
-			if ($pmRec["id"] != "") {
+      if ($pmRec["id"] != "") {
 				if ($none) $none = FALSE;
 				if ($pmRec["date"] > $_COOKIE["lastvisit"]) $new = "<img src='".SKIN_DIR."/icons/post_icons/new.gif' alt='' title='' />";
 				else $new = "&nbsp;";
@@ -106,7 +111,7 @@
 		if ($none) {
 			$echo = "
 				<tr>
-					<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='6'>No Messages in your ".$_GET["section"]."</td>
+					<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='6'>HiNo Messages in your ".$_GET["section"]."</td>
 				</tr>";
 			$disable = "DISABLED";
 		}
@@ -182,6 +187,7 @@
 			}
 			unset($pmRec);
 		}
+		
 		if ($none == $count) {
 			echo "
 				<tr>
@@ -191,7 +197,8 @@
 		}
 		echoTableFooter(SKIN_DIR);
 	} else {
-		$old_pm = ($count - $new_pm);
+		
+    $old_pm = ($count - $new_pm);
 		echo "
 			<div id='tabstyle_2'>
 				<ul>
