@@ -170,7 +170,7 @@
     						unset($when);
     					}
     				}
-    				echoTableFooter($_CONFIG['skin_dir']);
+    				echoTableFooter(SKIN_DIR);
     			}
     			unset($cRec);
     		}
@@ -213,9 +213,9 @@
 			<tr>
 				<td class='area_1'>
 					<div class='legend_2'>No New Posts</div>
-					<div class='legend_1'><img src='".$_CONFIG["skin_dir"]."/icons/off.png' alt='' title='' /></div>
+					<div class='legend_1'><img src='".SKIN_DIR."/icons/off.png' alt='' title='' /></div>
 					<div class='legend_2'>New Posts</div>
-					<div class='legend_1'><img src='".$_CONFIG["skin_dir"]."/icons/on.png' alt='' title='' /></div>
+					<div class='legend_1'><img src='".SKIN_DIR."/icons/on.png' alt='' title='' /></div>
 					<span class='stats'>
 					<strong>Total Topics:</strong> $t_t<br />
 					<strong>Total Posts:</strong> $t_p<br />
@@ -224,7 +224,7 @@
 					<strong>Forum Page Views:</strong> $hits_today<br />
 					<strong>Page Rendering Time:</strong> ".round($script_end_time - $script_start_time, 5)." seconds</span></td>
 			</tr>";
-      echoTableFooter($_CONFIG['skin_dir']);
+      echoTableFooter(SKIN_DIR);
 	//End Statistic Table
 	require_once("./includes/footer.php");
 

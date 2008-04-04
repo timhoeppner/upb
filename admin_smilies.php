@@ -187,7 +187,7 @@ if($_GET["action"] == "addnew") {
 			</tr>
 			<tr>
 				<td class='footer_3a' colspan='6' style='text-align:center;'><input type=submit value='Add Smilie(s)'></td></tr>";
-    echoTableFooter($_CONFIG['skin_dir']);
+    echoTableFooter(SKIN_DIR);
     echo "</form>";
 	}
 }
@@ -310,7 +310,7 @@ echo "<tr><th colspan='4'>Smilie Management</th>";
 		echo "<tr><td class='area_1' colspan='4' style='padding:8px;text-align:center;'><input type='submit' value='Submit Changes'><input type='reset' value='Reset Form'></td></tr>";
 	}
 	echo "</table>";
-	echoTableFooter($_CONFIG['skin_dir']);
+	echoTableFooter(SKIN_DIR);
 }
 require_once("./includes/footer.php");
 ?>

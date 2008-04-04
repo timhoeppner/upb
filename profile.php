@@ -201,7 +201,7 @@ if (isset($_POST["u_edit"])) {
 							<div class='pro_signature'>".format_text(UPBcoding(filterLanguage($rec[0]["sig"], $_CONFIG)))."</div>
 						</div></td>
 				</tr>";
-		echoTableFooter($_CONFIG['skin_dir']);
+		echoTableFooter(SKIN_DIR);
 		require_once('./includes/footer.php');
 	}
 } elseif($_GET['action'] == 'edit') {
@@ -269,9 +269,9 @@ if (isset($_POST["u_edit"])) {
 				<td class='area_2'><input type='text' name='u_loca' value='".$rec[0]["location"]."' /></td>
 			</tr>
 			<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
-		echoTableFooter($_CONFIG['skin_dir']);
+		echoTableFooter(SKIN_DIR);
 		$custom_avatar = (($rec[0]['post_count'] > $_REGIST['newuseravatars'] || $_COOKIE['power_env'] > 1) && $_REGIST['custom_avatars']);
 		echoTableHeading("Avatar Options", $_CONFIG);
 		echo "
@@ -302,9 +302,9 @@ if (isset($_POST["u_edit"])) {
 		}
 		echo "
 			<tr>
-				<td class='footer_3' colspan='".(($custom_avatar) ? '3' : '2')."'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='".(($custom_avatar) ? '3' : '2')."'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
-		echoTableFooter($_CONFIG['skin_dir']);
+		echoTableFooter(SKIN_DIR);
 		echoTableHeading("Other Information", $_CONFIG);
 		echo "
 			<tr>
@@ -317,7 +317,7 @@ if (isset($_POST["u_edit"])) {
     echo "' /></td>
 			</tr>
 			<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='bar_icq'><strong>ICQ:</strong></td>
@@ -336,7 +336,7 @@ if (isset($_POST["u_edit"])) {
 				<td class='area_2'><input type='text' name='u_msn' value='".$rec[0]["msn"]."' /></td>
 			</tr>
 			<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
     <tr>
 				<td class='area_1' valign='top'><strong>Signature:</strong></td>
@@ -346,7 +346,7 @@ if (isset($_POST["u_edit"])) {
 				<td class='area_2'><div style='display:inline;' id='sig_preview'>".format_text(filterLanguage(UPBcoding($rec[0]["sig"]), $_CONFIG))."</div></td>
 			</tr>
 			<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Timezone Setting:</strong></td>
@@ -356,7 +356,7 @@ if (isset($_POST["u_edit"])) {
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='reset' name='reset' value='Reset' onclick=\"javascript:sigPreview(document.getElementById('newentry'),'".$_COOKIE['id_env']."','reset');\" /><input type='submit' name='u_edit' value='Submit' /></td>
 			</tr>";
-    echoTableFooter($_CONFIG['skin_dir']);
+    echoTableFooter(SKIN_DIR);
     echo "</form>";
 		require_once('./includes/footer.php');
 	}

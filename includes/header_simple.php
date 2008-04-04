@@ -37,7 +37,7 @@
 <head>
 <title>".$_CONFIG["title"]."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1' />
-<link rel='stylesheet' type='text/css' href='".$_CONFIG["skin_dir"]."/css/style_simple.css' />
+<link rel='stylesheet' type='text/css' href='".SKIN_DIR."/css/style_simple.css' />
 <script type='text/javascript' src='./includes/scripts.js'></script>
 </head>
 <body>";

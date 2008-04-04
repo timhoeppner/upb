@@ -63,7 +63,7 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Edit'></td>
 			</tr>";
-			echoTableFooter($_CONFIG['skin_dir']);
+			echoTableFooter(SKIN_DIR);
 	echo "</form>";
 					}
 				} else {
@@ -130,7 +130,7 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 		require_once("admin_navigation.php");
 		echo "</td>
 			</tr>";
-			echoTableFooter($_CONFIG['skin_dir']);
+			echoTableFooter(SKIN_DIR);
 
 		echo "<form action='admin_banuser.php?action=addnew' method=POST><input type='hidden' name='ref' value='".$_GET["ref"]."'>";
 
@@ -150,7 +150,7 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Add to ban list'></td>
 			</tr>";
-			echoTableFooter($_CONFIG['skin_dir']);
+			echoTableFooter(SKIN_DIR);
 	echo "</form>";
 				}
 			}
@@ -170,7 +170,7 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 		require_once("admin_navigation.php");
 		echo "</td>
 			</tr>";
-			echoTableFooter($_CONFIG['skin_dir']);
+			echoTableFooter(SKIN_DIR);
 
 echo "
 	<div id='tabstyle_2'>
@@ -200,7 +200,7 @@ echo "
 			</tr>";
 				}
 			}
-			echoTableFooter($_CONFIG['skin_dir']);
+			echoTableFooter(SKIN_DIR);
 		}
 	} else {
 		echo "

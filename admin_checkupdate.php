@@ -19,13 +19,13 @@
 		require_once("admin_navigation.php");
 		echo "</td>
 			</tr>";
-			echoTableFooter($_CONFIG['skin_dir']);
+			echoTableFooter(SKIN_DIR);
 	echoTableHeading("Checking for myUPB updates", $_CONFIG);
 		echo "
 		<tr>
 			<td class='review_container'><div class='review_sub'><iframe src='http://www.myupb.com/upbcheckupdate.php?ver=".UPB_VERSION."' class='review_frame' scrolling='auto' frameborder='0'></iframe></div></td>
 		</tr>";
-		echoTableFooter($_CONFIG['skin_dir']);
+		echoTableFooter(SKIN_DIR);
 	} else {
 		echo "
 			<div class='alert'><div class='alert_text'>

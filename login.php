@@ -96,7 +96,7 @@
 		else print " <a href='register.php'>(Need to Register?)</a>";
 		print "</td>
 			</tr>";
-      echoTableFooter($_CONFIG['skin_dir']);
+      echoTableFooter(SKIN_DIR);
       echo "</form>";
 	} else {
 		echo "

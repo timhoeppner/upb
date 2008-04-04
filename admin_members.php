@@ -80,7 +80,7 @@
         	            print "Greetings!\n\nWe regret to inform your account has not been approved at http://".$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']).".\n\n--UPB Team";
         	        }
         	        print '</textarea></td></tr>';
-		            print "<tr><td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td></tr>";
+		            print "<tr><td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td></tr>";
         	        print "<tr><td class='area_2' colspan=2><input type=submit name='verify' value='Ok'> <input type=reset value='Reset'> <input type=submit name='verify' value='Cancel'></td></tr>";
         	        echoTableFooter(SKIN_DIR);
         	        print '</form>';
@@ -153,7 +153,7 @@
 			</tr>";
 			}
         	print "<tr>
-        			<td class='footer_3' colspan='6'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+        			<td class='footer_3' colspan='6'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
         		</tr>";
         	print "<tr><td class='area_2' colspan=6><input type='submit' name='a' value='Validate'>&nbsp;&nbsp;&nbsp;<input type='submit' name='a' value='Reject'></td></tr>";
 		}
@@ -314,7 +314,7 @@
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Submit' name='B1' /><input type='reset' value='Reset' name='B2' /></td>
 			</tr>";
-      echoTableFooter($_CONFIG['skin_dir']);
+      echoTableFooter(SKIN_DIR);
       echo "</form>";
 		}
 	} elseif($_GET["action"] == "pass" && isset($_GET["id"])) {

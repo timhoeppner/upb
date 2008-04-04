@@ -45,7 +45,7 @@
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr><tr><td class='footer_3a' style='text-align:center;' colspan='2'><input type='submit' value='Edit'></td></tr>";
 
-			echoTableFooter($_CONFIG['skin_dir']);
+			echoTableFooter(SKIN_DIR);
       echo "</form>";
 				}
 			} else {
@@ -128,7 +128,7 @@
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit name='command' value='Add'> <input type=submit name='command' value='Add and Add another Category'> <input type=submit name='command' value='Add and Add forums to this category'></td>
 			</tr>";
-			echoTableFooter($_CONFIG['skin_dir']);
+			echoTableFooter(SKIN_DIR);
 		echo "</form>";
 			}
 		} elseif ($_GET["action"] == "edit_forum") {
@@ -211,7 +211,7 @@
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Edit'></td>
 			</tr>
 		";
-        echoTableFooter($_CONFIG['skin_dir']);
+        echoTableFooter(SKIN_DIR);
         echo "
 	   </form>";
 				}
@@ -370,7 +370,7 @@
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Add'> <input type=submit name='command' value='Add and Add another forum' size='10'> <input type=submit name='command' value='Add and Add another forum to the selected Category' size='15'></td>
 			</tr>
 		";
-    echoTableFooter($_CONFIG['skin_dir']);
+    echoTableFooter(SKIN_DIR);
     echo "</form>";
 			}
 		}
@@ -446,7 +446,7 @@
 		    require_once("admin_navigation.php");
 		    echo "</td>
 			</tr>";
-			echoTableFooter($_CONFIG['skin_dir']);
+			echoTableFooter(SKIN_DIR);
 		    echo "<a name='skip_nav'>&nbsp;</a>
 			<div id='tabstyle_2'>
 			    <ul>
@@ -554,7 +554,7 @@
 					}
 				}
 			}
-    		echoTableFooter($_CONFIG['skin_dir']);
+    		echoTableFooter(SKIN_DIR);
     		echo "</div>";
     	}
     	require_once("./includes/footer.php");

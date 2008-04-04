@@ -18,7 +18,7 @@
 				<td class='area_2' style='padding:20px;' valign='top'>";
 			require_once("admin_navigation.php");
 			echo "</td></tr>";
-			echoTableFooter($_CONFIG['skin_dir']);
+			echoTableFooter(SKIN_DIR);
 		}
 		else echo "<div class='alert'><div class='alert_text'>
 <strong>Access Denied!!</strong></div><div style='padding:4px;'>You are not authorized to be here.</div></div>";

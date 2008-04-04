@@ -262,7 +262,7 @@
 			if ((bool)$_CONFIG['security_code'] && !$tdb->is_logged_in())
 			{
 			print "<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Security Code:</strong> <span style='color:$required;'>*</span><br />Please enter the code in the image: (all lower case)<br /><br />
@@ -271,7 +271,7 @@
 			</tr>";
 			}
 			if(!$tdb->is_logged_in()) print "<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='area_1'>
@@ -285,7 +285,7 @@
 				<td class='area_2'><input type=password name=u_pass2 size=40></td>
 			</tr>";
 			print "<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
 
 
@@ -310,7 +310,7 @@
 				<td class='area_2'>Choose an avatar in your UserCP after logging in.</td>
 			</tr>
 			<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='bar_icq'><strong>ICQ:</strong><br />If you have ICQ put your number here</td>
@@ -329,14 +329,14 @@
 				<td class='area_2'><input type=text name=u_msn size=40></td>
 			</tr>
 			<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Signature:</strong><br />Your signature is appended to each of your messages</td>
 				<td class='area_2'><textarea name=u_sig cols=45 rows=10></textarea></td>
 			</tr>
 			<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Timezone Setting:</strong></td>

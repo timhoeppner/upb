@@ -65,7 +65,7 @@
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Add'></td>
 			</tr>";
-			echoTableFooter($_CONFIG['skin_dir']);
+			echoTableFooter(SKIN_DIR);
 	echo "</form>";
 		}
 	} else {
@@ -82,7 +82,7 @@
 		require_once("admin_navigation.php");
 		echo "</td>
 			</tr>";
-		echoTableFooter($_CONFIG['skin_dir']);
+		echoTableFooter(SKIN_DIR);
 		echo "
 			<div id='tabstyle_2'>
 			<ul>
@@ -110,7 +110,7 @@
 			</tr>";
 			}
 		}
-		echoTableFooter($_CONFIG['skin_dir']);
+		echoTableFooter(SKIN_DIR);
 	}
 	require_once("./includes/footer.php");
 ?>

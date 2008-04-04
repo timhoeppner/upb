@@ -289,7 +289,7 @@
 				<td class='area_2'><input type='text' name='subject' size='20' value='".$tRec[0]["subject"]."'></td>
 			</tr>
 			<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Stickied: </strong></td>
@@ -330,7 +330,7 @@
 				<td class='area_2'><div class='button_pro1'><a href='delete.php?action=delete&t=1&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&ref=managetopic.php'>X</a></div></td>
 			</tr>
 			<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
 				$options = "
 			<tr>
@@ -410,7 +410,7 @@
 					$msg = format_text(UPBcoding(filterLanguage($pRec["message"], $_CONFIG)));
 					echo "
 			<tr>
-				<td class='footer_3' colspan='3'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='3'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr
 			<tr>
 				<td class='area_1' style='width:5%;text-align:center;padding:20px;' valign='top'><input type='checkbox' name='ids[]' value='{$pRec["id"]}'></td>

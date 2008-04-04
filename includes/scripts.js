@@ -574,6 +574,7 @@ var http_request = false;
       http_request.open('POST', url, true);
       http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
       http_request.setRequestHeader("Content-length", parameters.length);
+      http_request.setRequestHeader("Content-disposition",'form-data; name='+type)
       http_request.setRequestHeader("Connection", "close");
       http_request.send(parameters);
    }

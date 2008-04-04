@@ -101,7 +101,7 @@ switch ($ajax_type)
 
   case "reply" :
     //QUICK REPLY TO TOPIC, STORES POST IN DATABASE AND RETURNS THE USER TO THE NEW POST AND ADDS NEW QUICK REPLY FORM
-    $output = "<link rel=\"stylesheet\" href=\"".$_CONFIG["skin_dir"]."/css/style.css\" type=\"text/css\">";
+    $output = "<link rel=\"stylesheet\" href=\"".SKIN_DIR."/css/style.css\" type=\"text/css\">";
     $fRec = $tdb->get("forums", $_POST["id"]);
     $posts_tdb = new posts(DB_DIR."/", "posts.tdb");
     $posts_tdb->setFp("topics", $_POST["id"]."_topics");
@@ -261,7 +261,7 @@ switch ($ajax_type)
 		if ($pRec["user_id"] != "0") $output .= "<a href='profile.php?action=get&id=".$pRec["user_id"]."'>".$pRec["user_name"]."</b>";
 		else $output .= $pRec["user_name"];
 		$output .= "</div></th>
-				<th><div style='float:left;'><img src='icon/".$pRec["icon"]."'></div><div align='right'>$delete $edit $quote $reply</div></th>
+				<th><div style='float:left;'><img src='".SKIN_DIR."/icons/post_icons/".$pRec["icon"]."'></div><div align='right'>$delete $edit $quote $reply</div></th>
 			</tr>
 			<tr>
 				<td class='$table_color' valign='top' style='width:15%;'>";
@@ -311,7 +311,7 @@ switch ($ajax_type)
 			</tr>
 		</tbody>
 		</table>
-		<div class='footer'><img src='".$_CONFIG['skin_dir']."/images/spacer.gif' alt='' title='' /></div>
+		<div class='footer'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></div>
 	</div>
 	<br />";
 }
@@ -333,7 +333,7 @@ switch ($ajax_type)
     $qrform .= "
 		<tr><td class='area_1' style='padding:8px;'><strong>User Name:</strong></td><td class='area_2'>".$_COOKIE["user_env"]."</td></tr>\n
 		<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 		<tr><td class='area_1' style='padding:8px;' valign='top'><strong>Message:</strong></td>
     <td class='area_2'>\n
@@ -344,7 +344,7 @@ switch ($ajax_type)
     <input type='submit' name='submit' value='Advanced'>\n</td></tr></form></font>";
     $qrform .= "</tbody>
 		</table>
-		<div class='footer'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></div>
+		<div class='footer'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></div>
 	</div>
 	<br />";
 
@@ -484,7 +484,7 @@ switch ($ajax_type)
     		$output .= "
 		</tbody>
 		</table>
-		<div class='footer'><img src='".$_CONFIG['skin_dir']."/images/spacer.gif' alt='' title='' /></div>
+		<div class='footer'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></div>
 	</div>
 	<br />";
 	     echo $output;

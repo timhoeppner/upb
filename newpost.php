@@ -171,7 +171,7 @@
 									<iframe src='viewtopic_simple.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."' class='review_frame' scrolling='auto' frameborder='0'></iframe></div></td>
 							</tr>
 						</table>
-						<div class='footer'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></div>
+						<div class='footer'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></div>
 					</div><br />";
 		}
 		$icons = message_icons();
@@ -188,14 +188,14 @@
 			$tpc
 			$sticky
 			<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Message Icon:</strong></td>
 				<td class='area_2'><div style='width:610px;'>$icons</div></td>
 			</tr>
 			<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='area_1' style='padding:8px;' valign='top'><strong>Message:</strong>";
@@ -206,7 +206,7 @@
 					<div style='padding:8px;'>".getSmilies('look1')."</div></td>
 			</tr>
 			<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
 		if (!(($_CONFIG["fileupload_size"] == "0" || $_CONFIG["fileupload_size"] == "") && $_CONFIG["fileupload_location"] == "")) {
 			echo "
@@ -221,7 +221,7 @@
 			<tr>
 				<td class='footer_3a' style='text-align:center;' colspan='2'><input type=submit value='Submit' onclick='return check_submit()'></td>
 			</tr>";
-      echoTableFooter($_CONFIG['skin_dir']);
+      echoTableFooter(SKIN_DIR);
       echo "
 	</form>
 	".$iframe."";

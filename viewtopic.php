@@ -178,7 +178,7 @@
     echo "
 					<div class='button_pro2'><a href='email.php?id=".$pRec["user_id"]."'>email ".$pRec["user_name"]."</a></div>";
 		}
-    echo "</td></tr>".echoTableFooter($_CONFIG['skin_dir'])."</div>";
+    echo "</td></tr>".echoTableFooter(SKIN_DIR)."</div>";
 
   }
 	echo "</div>";
@@ -205,7 +205,7 @@
 	echo "
 		<tr><td class='area_1' style='padding:8px;'><strong>User Name:</strong></td><td class='area_2'>".$_COOKIE["user_env"]."</td></tr>\n
 		<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 		<tr><td class='area_1' style='padding:8px;' valign='top'><strong>Message:</strong></td>
     <td class='area_2'>\n
@@ -214,7 +214,7 @@
   echo "<tr><td class='footer_3a' style='text-align:center;' colspan='2'>\n
     <input type='button' name='quickreply' value='Quick Reply' onclick=\"javascript:getReply(document.getElementById('quickreply'))\">\n
     <input type='submit' name='submit' value='Advanced'>\n</td></tr></form></font>";
-    echoTableFooter($_CONFIG['skin_dir']);
+    echoTableFooter(SKIN_DIR);
   echo "</div>";
 }
 //END QUICK REPLY SEGMENT

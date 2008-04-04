@@ -26,7 +26,7 @@
 		require_once("admin_navigation.php");
 		echo "</td>
 			</tr>";
-		echoTableFooter($_CONFIG['skin_dir']);
+		echoTableFooter(SKIN_DIR);
 		echoTableHeading("Backup and Restore Data", $_CONFIG);
 		echo "
 			<tr>
@@ -210,6 +210,6 @@
 	// else echo 'Cannot process request: Invalid action.';
 	echo "</td>
 			</tr>";
-	echoTableFooter($_CONFIG['skin_dir']);
+	echoTableFooter(SKIN_DIR);
 	require_once('./includes/footer.php');
 ?>

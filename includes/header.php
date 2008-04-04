@@ -129,7 +129,7 @@
 <head>
 <title>".((!isset($where) || $where == '') ? stripslashes($_CONFIG['title']) : (strip_tags(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], stripslashes($where)))))."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-<link rel='stylesheet' type='text/css' href='".$_CONFIG["skin_dir"]."/css/style.css' />
+<link rel='stylesheet' type='text/css' href='".SKIN_DIR."/css/style.css' />
 <script type='text/javascript' src='./includes/scripts.js'></script>
 </head>
 <body>
@@ -137,7 +137,7 @@
 	<div class='main_cat_wrapper2'>
 		<table class='main_table_2' cellspacing='1'>
 			<tr>
-				<td id='logo'><img src='".$_CONFIG["skin_dir"]."/images/logo.png' alt='' title='' /></td>
+				<td id='logo'><img src='".SKIN_DIR."/images/logo.png' alt='' title='' /></td>
 			</tr>
 		</table>
 	</div>
@@ -182,7 +182,7 @@
 	echo "
 			</div></td>
 		</tr>";
-		echoTableFooter($_CONFIG['skin_dir']);
+		echoTableFooter(SKIN_DIR);
 	//login information
 
   if (!$tdb->is_logged_in() && isset($_COOKIE['user_env']) && isset($_COOKIE['uniquekey_env']) && isset($_COOKIE['id_env'])) {
@@ -210,7 +210,7 @@
 			<tr>
 			<td class='area_1' style='text-align:left;'>".$_CONFIG["servicemessage"]."</td>
 			</tr>";
-			echoTableFooter($_CONFIG['skin_dir']);
+			echoTableFooter(SKIN_DIR);
 
 	}
 

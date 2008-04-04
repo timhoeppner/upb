@@ -50,7 +50,7 @@
 					<div style='padding:8px;'>".getSmilies()."</div></td>
 			</tr>
 			<tr>
-				<td class='footer_3' colspan='2'><img src='".$_CONFIG["skin_dir"]."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='footer_3a' style='text-align:center;' colspan='2'>
@@ -59,7 +59,7 @@
         echo "<input type=button onClick=\"javascript:window.location='viewtopic.php?id=".$_GET['id']."&t_id=".$_GET['t_id']."#".$_GET['p_id']."' value='Cancel Edit'>
         </td>
 			</tr>";
-      echoTableFooter($_CONFIG['skin_dir']);
+      echoTableFooter(SKIN_DIR);
       echo "
 	</form>";
 	}

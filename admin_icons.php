@@ -28,7 +28,7 @@ echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $wher
 					require_once("admin_navigation.php");
 					echo "</td>
 			</tr>";
-echoTableFooter($_CONFIG['skin_dir']);
+echoTableFooter(SKIN_DIR);
 //REMOVE ALL TRACES OF $_GET['word']
 if(!($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3)) exitPage("you are not authorized to be here.");
 if($_GET["action"] == "addnew")
@@ -168,7 +168,7 @@ if($_GET["action"] == "addnew")
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Add Post Icon(s)'></td>
 			</tr>";
-echoTableFooter($_CONFIG['skin_dir']);
+echoTableFooter(SKIN_DIR);
 echo "
 	</form>";
 	}
@@ -264,7 +264,7 @@ echo "<tr><th colspan='4'>Post Icon Management</th>";
     echo "<tr><td class='area_1' colspan='4' style='padding:8px;text-align:center;'><input type='submit' value='Submit Changes'><input type='reset' value='Reset Form'></td></tr>";
 
 	echo "</table>";
-	echoTableFooter($_CONFIG['skin_dir']);
+	echoTableFooter(SKIN_DIR);
 }
 require_once("./includes/footer.php");
 ?>

@@ -46,7 +46,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 		require_once("admin_navigation.php");
 		echo "</td>
 			</tr>";
-    echoTableFooter($_CONFIG['skin_dir']);
+    echoTableFooter(SKIN_DIR);
 
 		echo "<a name='skip_nav'>&nbsp;</a>
 			<div id='tabstyle_2'>
@@ -172,7 +172,7 @@ echo "		<tr>
       echo "<input type=submit value='Edit'>";
       echo "</td>
 			</tr>";
-echoTableFooter($_CONFIG['skin_dir']);
+echoTableFooter(SKIN_DIR);
 echo "</form>";
 
 /*
