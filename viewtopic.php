@@ -189,8 +189,17 @@
 	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0) and isset($_COOKIE['javascript']))
 {
   echo "<div id='quickreplyform' name='quickreplyform'>";
-  echo "<form name='quickreply' action='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$vars["page"]."' id='quickreply' method='POST'>\n";
-
+  echo "<form name='quickreply' action='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$vars["page"]."' id='quickreply' method='POST' onSubmit='return validateField(this)'>\n";
+  ?><script type="text/javascript">
+  function validateField(theform) {
+    var theValue = theform.newentry.value;
+    if(-1 == theValue.search(/^\s*$/)) { //Return false if all there is whitespaces
+        return false;
+    }
+    submitonce(theform);
+    return true;
+  }
+  </script><?php
   echoTableHeading("Quick Reply", $_CONFIG);
   echo "<table class='main_table' cellspacing='1'>";
   foreach ($_GET as $key => $value)

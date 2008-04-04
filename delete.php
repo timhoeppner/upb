@@ -99,8 +99,7 @@
 			}
 		} elseif($_POST["verify"] == "Cancel") redirect("viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"], 0);
 		else {
-			echo "";
-		echoTableHeading("Posted: ".gmdate("M d, Y g:i:s a", user_date($pRec[0]["date"]))."", $_CONFIG);
+/*		echoTableHeading("Posted: ".gmdate("M d, Y g:i:s a", user_date($pRec[0]["date"]))."", $_CONFIG);
 			$table_color = $table1;
 
 			$user = $tdb->get("users", $pRec[0]["user_id"]);
@@ -160,8 +159,8 @@
 			<tr valign='bottom'>
 				<td height='1%'><br />".$user[0]["sig"]."</td>
 			</tr></table>";
-			echoTableFooter(SKIN_DIR);
-			ok_cancel("delete.php?action=".$_GET["action"]."&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$_GET["p_id"], "Delete Post?");
+			echoTableFooter(SKIN_DIR); */
+			ok_cancel("delete.php?action=".$_GET["action"]."&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$_GET["p_id"], "Are you sure you want to delete this post?");
 		}
 	} else {
 		echo "<div class='alert'><div class='alert_text'>
