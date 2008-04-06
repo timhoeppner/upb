@@ -164,8 +164,6 @@ function add_link_IE(type,areaId) {
   var range = txtArea.createTextRange();
 
 	if(aSelection) {
-	  var openerTag = '['+type+']';
-		var closerTag = '[/'+type+']';
 		select = aSelection;
   
     if (type == 'url' || type == 'img')
@@ -181,7 +179,7 @@ function add_link_IE(type,areaId) {
     else
       url = select;
 
-    document.selection.createRange().text = openerTag + url + closerTag;
+    document.selection.createRange().text = '['+type+']'+ url+'[/'+type+']';
     txtArea.focus();
 		range.move('textedit');
 
@@ -189,7 +187,8 @@ function add_link_IE(type,areaId) {
 	}
 	else 
   {
-		if (type == 'email')
+		var Tag = '['+type;
+    if (type == 'email')
 		{
       url = prompt('Enter the email address:','');
     }
@@ -202,7 +201,6 @@ function add_link_IE(type,areaId) {
       url = prompt('Enter the url of the image:','http://');
     }
     
-    var closerTag = "[/"+type+"]";
     if (url.length > 0)
     {
       if (type == 'url' || type == 'img')
@@ -225,20 +223,21 @@ function add_link_IE(type,areaId) {
       if (link.length > 0)
       {
         if (type == 'email')
-          var openerTag = '[email='+url+']';
+          Tag += '='+url+']'+link;
         else
-          var openerTag = '[url='+url+']';
+          Tag += '='+url+']'+link;
       }
       else
       {
-        var openerTag = "["+type+"]";
+        Tag += "]"+url;
       }
     }
     else
     {
-      var openerTag = "["+type+"]";
+      Tag += "["+type+"]"+url;
     }
-    var Tag = openerTag + url + closerTag;
+    
+    Tag += "[/"+type+"]";
     txtArea.value += Tag;
 		txtArea.focus();
 		range.collapse(false);
@@ -252,8 +251,6 @@ function add_link_nav(type,areaId)
 	var link = url = text = '';
   var txtArea = document.getElementById( areaId );
 	if (txtArea.selectionEnd && (txtArea.selectionEnd - txtArea.selectionStart > 0) ) {
-		var openerTag = '['+type+']';
-		var closerTag = '[/'+type+']';
     var preString = (txtArea.value).substring(0,txtArea.selectionStart);
 		url = (txtArea.value).substring(txtArea.selectionStart,txtArea.selectionEnd)
     if (type == 'url' || type == 'img')
@@ -268,7 +265,7 @@ function add_link_nav(type,areaId)
     }
     else
     link = url;
-    var newString = openerTag + link + closerTag;
+    var newString = '['+type+']' + link + '[/'+type+']';
 		var postString = (txtArea.value).substring(txtArea.selectionEnd);
 		txtArea.value = preString + newString + postString;
 		txtArea.focus();
@@ -276,8 +273,6 @@ function add_link_nav(type,areaId)
 	}
 	else 
   {
-		var openerTag = '['+type+']';
-		var closerTag = '[/'+type+']';
 		if (type == 'email')
 		  link = prompt('Enter the email address:','');
     else if (type == 'url')
@@ -309,7 +304,7 @@ function add_link_nav(type,areaId)
     {
       linktext = prompt('Enter the link text (optional):','');
       
-      if (text.length > 0)
+      if (linktext.length > 0)
         open += '='+link+"]"+linktext;
       else
         open += ']'+link;
@@ -360,7 +355,7 @@ function add_list_nav(type,areaId)
   var x;
   
 	while (item = prompt('Enter an item\r\nLeave the box empty or click cancel to complete the list',''))
-	 items.push("[*]"+item+"\r\n");
+	 items.push("[*]"+item+"[/*]\r\n");
 	
 	itemString = items.join('');
   itemsize = items.length;
@@ -395,7 +390,7 @@ function add_list_IE(type,areaId)
   var item;
   
   while (item = prompt('Enter an item\r\nLeave the box empty or click cancel to complete the list',''))
-	 items.push("[*]"+item+"\r\n");
+	 items.push("[*]"+item+"[/*]\r\n");
 	
 	itemString = items.join('');
   itemsize = items.length;

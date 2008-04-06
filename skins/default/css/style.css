@@ -49,6 +49,14 @@ a:hover {
 	background : transparent;
 }
 
+/*style for sample links in help pages such as Board FAQ where real links not needed*/
+.sample_link
+{
+  background : transparent;
+	color : #222;
+	text-decoration : underline;
+}
+
 /* This eliminates the border that some browsers place around an image
 	when it is used as a link */
 img {
@@ -64,7 +72,7 @@ form	{
 
 /* Disables resizing of the textareas in browsers. CSS3 only */
 textarea {
-     resize: none;
+  resize: none;
 }
 
 /* This controls the way that the post box looks on posting screens */
