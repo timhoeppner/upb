@@ -45,7 +45,7 @@
 			if ($_COOKIE["power_env"] > 0) {
                 echo " via <a href='newpm.php?to=1'>PM Message</a>";
                 if ($_CONFIG['email_mode'])
-                echo "or <a href='email.php?id=1'>web email</a>";
+                echo " or <a href='email.php?id=1'>web email</a>";
 		    }
         } else {
 			echo " To add a Category, <a href='admin_forums.php?action=add_cat'>click here</a>.";

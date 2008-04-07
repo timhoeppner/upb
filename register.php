@@ -20,8 +20,6 @@
 	    }
 
 	    if(!isset($_GET['code']) || $_GET['code'] == '' || $_GET['code'] != $rec[0]['reg_code']) {
-	        print $_GET[code] . '<br>';
-	        print $rec[0]['reg_code'];
 	        exitPage(str_replace('__TITLE__', 'Invalid Confirmation Code.', str_replace('__MSG__', ALERT_GENERIC_MSG, ALERT_MSG)), true);
 	    }
 
@@ -44,23 +42,27 @@
 	        exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'Confirmation Code already recieved.  You do not need to resend your Confirmation Code.', ALERT_MSG)), true);
 	    }
 	    $reg_code = uniqid('reg_', true);
-		$register_msg = $_REGISTER['register_msg'];
-		$register_msg = str_replace("<login>", $_POST['u_login'], $register_msg);
-		$register_msg = str_replace("<password>", $u_pass, $register_msg);
-		$register_msg = str_replace("<url>", "http://{$_SERVER['SERVER_NAME']}{$_SERVER['PHP_SELF']}?action=validate&id={$id}&code={$reg_code}", $register_msg);
-        if (!@mail($_POST["u_email"], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"])) {
+		// get the user's email address, NOTE: password is not available as it has already been encrypted.
+    $details = $tdb->query("users","id='{$_GET['id']}'",1,1,array('user_name','email')); 
+    $register_msg = $_REGISTER['register_msg'];
+		$register_msg = str_replace("<login>", $details[0]['user_name'], $register_msg);
+		$register_msg = str_replace("<password>", "encrypted in the database. If you can't remember it, please contact the forum administrator: ".ADMIN_EMAIL."\n", $register_msg);
+		$register_msg = str_replace("<url>", "http://{$_SERVER['SERVER_NAME']}{$_SERVER['PHP_SELF']}?action=validate&id={$_GET['id']}&code={$reg_code}", $register_msg);
+		echo $register_msg;
+        if (!@mail($details[0]['email'], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"])) {
             $email_status = false;
             if($_CONFIG['email_mode']) {
-                $config_tdb->editVars('config', array('email_mode' => false));
+                $config_tdb->editVars('config', array('email_mode' => '0'));
             }
         } else {
             $email_status = true;
-            if(!$_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => true));
+            if(!$_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '1'));
         }
         $tdb->edit('users', $_GET['id'], array('reg_code' => $reg_code));
 
 	    require_once('./includes/header.php');
-	    if($email_status) {
+	    
+      if($email_status) {
 	    ?><div class='alert_confirm'>
 			<div class='alert_confirm_text'>
 			  <strong>Attention:</strong></div>
@@ -134,8 +136,25 @@
 	   //call to checkdnsrr removed due to false negatives occuring. Some hosts use mail servers that use different domain names to the user email address.
 
 		if (substr(trim(strtolower($_POST["u_site"])), 0, 7) != "http://") $_POST["u_site"] = "http://" . $_POST["u_site"];
-
-		$reg_code = (((!$_CONFIG['email_mode'] && !$_REGIST['reg_approval']) || $tdb->is_logged_in()) ? '' : uniqid('reg_', true));
+    
+    $reg_code = (((!$_CONFIG['email_mode'] && !$_REGIST['reg_approval']) || $tdb->is_logged_in()) ? '' : uniqid('reg_', true)); //create reg_code
+    
+    //email code moved to before adding user to correctly configure reg_code before adding user to database
+    $register_msg = $_REGISTER['register_msg'];
+		$register_msg = str_replace("<login>", $_POST['u_login'], $register_msg);
+		$register_msg = str_replace("<password>", $u_pass, $register_msg);
+		$register_msg = str_replace("<url>", 'http://'.$_SERVER['SERVER_NAME'] . dirname($_SERVER['PHP_SELF']) . ((!$_REGIST['reg_approval'] && $_CONFIG['email_mode'] && !$tdb->is_logged_in()) ? '/register.php?action=validate&id='.$id : '').'&code='.$reg_code, $register_msg);
+        if (!@mail($_POST["u_email"], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"])) {
+            $email_status = false;
+            if($_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '0'));
+            $reg_code = ''; //remove reg_code if email not sent
+        } else {
+            $email_status = true;
+            if(!$_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '1'));
+        }
+    $_CONFIG['email_mode'] = $email_status;
+    //$_CONFIG['email_mode'] is changed after editing config table to allow correct insertion of $reg_code
+    
 		$id = $tdb->add("users",
 		  array("user_name" => $_POST["u_login"],
 		    "password" => generateHash($u_pass),
@@ -158,7 +177,7 @@
 		    'reg_code' => $reg_code,
 		    'newTopicsData' => serialize(array('lastVisitForums' => array()))
 		  ));
-
+    
 		// If each user sends and receives one PM a day, their table will last 67.2 years
 		$temp_tdb = new tdb(DB_DIR."/", "privmsg.tdb");
 		$pmT_num = ceil($id / 100);
@@ -169,18 +188,6 @@
 		$f = fopen(DB_DIR."/new_pm.dat", 'a');
 		fwrite($f, " 0");
 		fclose($f);
-
-		$register_msg = $_REGISTER['register_msg'];
-		$register_msg = str_replace("<login>", $_POST['u_login'], $register_msg);
-		$register_msg = str_replace("<password>", $u_pass, $register_msg);
-		$register_msg = str_replace("<url>", $_SERVER['SERVER_NAME'] . dirname($_SERVER['PHP_SELF']) . ((!$_REGIST['reg_approval'] && $_CONFIG['email_mode'] && !$tdb->is_logged_in()) ? '/register.php?action=validate&id='.$id : '').'&code='.$reg_code, $register_msg);
-        if (!@mail($_POST["u_email"], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"])) {
-            $email_status = false;
-            if($_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '0'));
-        } else {
-            $email_status = true;
-            if(!$_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '1'));
-        }
 
 		require_once('./includes/header.php');
 		print "<div class='alert_confirm'>

@@ -17,7 +17,7 @@
 			if (isset($_SERVER['REMOTE_ADDR'])) $msg .= 'with the IP Address "'.$_SERVER['REMOTE_ADDR'].'"';
 			$msg .= 'tried to initiate an installation or upgrade file.  Since the installation and upgrade files pose a risk, this could be an attempted hack.  The administrator, you, were notified.  It is advised you delete installation and upgrade files, which are no long use, and ban the IP Address and username, if given.';
 			if(defined(ADMIN_EMAIL)) @mail(ADMIN_EMAIL, 'SECURITY ALERT on your forum', $msg);
-			die('<strong>Security Risk</strong>:  Unable to initiate installation. An Administrater must put the forum in Installation Mode.  You\'re IP Address has been sent to the administrater aswell as login information.');
+			die('<strong>Security Risk</strong>:  Unable to initiate installation. An Administrater must put the forum in Installation Mode.  Your IP Address has been sent to the administrater aswell as login information.');
 		}
 	}
 	if(!isset($_POST['add'])) $_POST['add'] = '';
@@ -524,7 +524,7 @@
 		//Verify admin account
 		$error = "";
 		if ($_POST["username"] == "" || strlen($_POST["username"]) > 20) $error .= "<div style='text-align:center;font-weight:bold;'>Your Username is either too short or too long (max 20 chars, min 1 char)</div><br /><br />";
-		if ($_POST["pass1"] != $_POST["pass2"]) $error .= "<div style='text-align:center;font-weight:bold;'>your pass and pass confirm are not matching!</div><br /><br />";
+		if ($_POST["pass1"] != $_POST["pass2"]) $error .= "<div style='text-align:center;font-weight:bold;'>your password and password confirmation do not match!</div><br /><br />";
 		if (strlen($_POST["pass1"]) < 5) $error .= "<div style='text-align:center;font-weight:bold;'>your password has to be longer then 4 characters!</div><br /><br />";
 		if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["email"])) $error .= "<div style='text-align:center;font-weight:bold;'>Not a real e-mail address (ex. admin@host.com)</div><br /><br />";
 		if ($_POST["view_email"] == "1") $view_email_checked = "CHECKED";
@@ -605,7 +605,7 @@
 	if ($_POST["add"] == "4") {
 	    if(!isset($_POST['title'])) $_POST['title'] = 'UPB Forum';
 	    if(!isset($_POST['register_sbj'])) $_POST['register_sbj'] = 'Welcome to the UPB Forums!';
-	    if(!isset($_POST['register_msg'])) $_POST['register_msg'] = "Hello <login>!\n\nWelcome to the UPB Forums!  You password is \"<password>\".  You can change your password and other settings by visiting the user:cp portal after you log in.\nBut before you do that, you must verify your e-mail address by visiting this link: <url>\nSee you on the forums!\n\n--The UPB Team";
+	    if(!isset($_POST['register_msg'])) $_POST['register_msg'] = "Hello <login>!\n\nWelcome to the UPB Forums!  Your password is <password>.  You can change your password and other settings by visiting the user:cp portal after you log in.\nBut before you do that, you must verify your e-mail address by visiting this link: <url>\nSee you on the forums!\n\n--The UPB Team";
 	    if(!isset($_POST['fileupload_size'])) $_POST['fileupload_size'] = '50';
 	    if(!isset($_POST['admin_email'])) $_POST['admin_email'] = '';
 	    if(!isset($_POST["homepage"])) $_POST["homepage"] = 'http://www.myupb.com';
