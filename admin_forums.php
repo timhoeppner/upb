@@ -540,7 +540,7 @@
               echo "<a href='admin_forums.php?action=shift&what=forum&where=down&id=".$fRec[0]['id']."'>";
             echo "<img src='./images/down.gif'></a>";
           }
-          else echo "";
+          else echo "&nbsp;&nbsp;&nbsp;";
           
         echo "</td>
 				<td class='area_2' style='padding:8px;'><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$fRec[0]["forum"]."</td>

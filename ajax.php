@@ -396,10 +396,9 @@ switch ($ajax_type)
 
       $cRecs = $tdb->listRec("cats", 1);
       $config_tdb->clearcache();
-      $vars = $config_tdb->getVars('config', true);
+      $vars = $config_tdb->getVars('config');
     	// Sort categories in the order that they appear
-
-      $cSorting = explode(",", $vars[7]['value']);
+      $cSorting = explode(",", $vars['admin_catagory_sorting']);
       $k = 0;
     	$i = 0;
     	$sorted = array();
@@ -445,7 +444,7 @@ switch ($ajax_type)
 					$view = createUserPowerMisc($cRecs[$i]["view"], 2);
 					$output .= "
 			<tr>
-			    <td class='area_1' style='padding:8px;'>".(($i>0) ? "<a href=\"javascript:forumSort('cat','up','".$cRecs[$i]['id']."');\"><img src='./images/up.gif'></a>&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;").(($i<($c1-1)) ? "<a href=\"javascript:forumSort('cat','down','".$cRecs[$i]['id']."');\"><img src='./images/down.gif'></a>" : "")."</td>
+			    <td class='area_1' style='padding:8px;text-align:center;'>".(($i>0) ? "<a href=\"javascript:forumSort('cat','up','".$cRecs[$i]['id']."');\"><img src='./images/up.gif'></a>" : "&nbsp;&nbsp;&nbsp;").(($i<($c1-1)) ? "<a href=\"javascript:forumSort('cat','down','".$cRecs[$i]['id']."');\"><img src='./images/down.gif'></a>" : "")."</td>
 				<td class='area_1' style='padding:8px;'><strong>".$cRecs[$i]["name"]."</strong></td>
 				<td class='area_1' style='padding:8px;text-align:center;' colspan=3>$view</td>
 				<td class='area_1' style='padding:8px;text-align:center;'><a href='admin_forums.php?action=edit_cat&id=".$cRecs[$i]["id"]."'>Edit</a></td>
@@ -469,7 +468,7 @@ switch ($ajax_type)
                 			//show each forum
                 			$output .= "
 			<tr>
-			    <td class='area_2' style='padding:8px;text-align:center;'>".(($j>0) ? "<a href=\"javascript:forumSort('forum','up','".$fRec[0]['id']."');\"><img src='./images/up.gif'></a>" : "&nbsp;&nbsp;&nbsp;").(($j<($c2-1)) ? "<a href=\"javascript:forumSort('forum','down','".$fRec[0]['id']."');\"><img src='./images/down.gif'></a>" : "")."</td>
+			    <td class='area_2' style='padding:8px;text-align:center;'>".(($j>0) ? "<a href=\"javascript:forumSort('forum','up','".$fRec[0]['id']."');\"><img src='./images/up.gif'></a>" : "&nbsp;&nbsp;&nbsp;").(($j<($c2-1)) ? "<a href=\"javascript:forumSort('forum','down','".$fRec[0]['id']."');\"><img src='./images/down.gif'></a>" : "&nbsp;&nbsp;&nbsp;")."</td>
 				<td class='area_2' style='padding:8px;'><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$fRec[0]["forum"]."</td>
 				<td class='area_2' style='padding:8px;text-align:center;'>$whoView</td>
 				<td class='area_2' style='padding:8px;text-align:center;'>$whoPost</td>

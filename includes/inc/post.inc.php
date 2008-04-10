@@ -95,10 +95,7 @@ function UPBcoding($text) {
       $msg = str_replace("(emailadmin)", "<a href='email.php?id=1' target='_blank'><img src='images/email.gif' border='0'></a>", $msg); //$adminid undefined, changed back to "1"
     //end script for delete.php
     //start upb code
-    $msg = preg_replace("/\[center\](.*?)\[\/center\]/si", "<div align='center'>\\1</div>", $msg);
-    $msg = preg_replace("/\[left\](.*?)\[\/left\]/si", "<div align='left'>\\1</div>", $msg);
-    $msg = preg_replace("/\[right\](.*?)\[\/right\]/si", "<div align='right'>\\1</div>", $msg);
-    $msg = preg_replace("/\[justify\](.*?)\[\/justify\]/si", "<div align='justify'>\\1</div>", $msg);
+    
     $msg = preg_replace("/\[move\](.*?)\[\/move\]/si", "<marquee>\\1</marquee>", $msg);
     $msg = preg_replace("/\[color=(.*?)\](.*?)\[\/color\]/si", "<span style='color:\\1;'>\\2</span>", $msg);
     $msg = preg_replace("/\[font=(.*?)\](.*?)\[\/font\]/si", "<span style='font-family:\\1;'>\\2</span>", $msg);
@@ -119,6 +116,11 @@ function UPBcoding($text) {
     }
     $msg = preg_replace("/\[code\](.*?)\[\/code\]/si", "<font color='red'>Code:<hr><pre>\\1<hr></pre></font>", $msg);
 
+    $msg = preg_replace("/\[center\](.*?)\[\/center\]/si", "<span style='text-align:center';>\\1</span>", $msg);
+    $msg = preg_replace("/\[left\](.*?)\[\/left\]/si", "<span style='text-align:left;'>\\1</span>", $msg);
+    $msg = preg_replace("/\[right\](.*?)\[\/right\]/si", "<span style='text-align:right;'>\\1</span>", $msg);
+    $msg = preg_replace("/\[justify\](.*?)\[\/justify\]/si", "<span style='text-align:justify;'>\\1</span>", $msg);
+    
     //loop to combine multiple span tags into a single span tag
     while (true)
     {
@@ -129,6 +131,13 @@ function UPBcoding($text) {
       $msg = preg_replace("/style='(.*?)\' style='(.*?)\'/si","style='\\1\\2'",$msg);
       if ($msg == $tmp_msg)
         break;
+    }
+    
+    if (substr_count($msg,'text-align') > 0)
+    {
+      $search = array('#<span(\s[^>]*)>#i','#</span>#i');
+      $replace = array('<div\\1>','</div>');
+      $msg = preg_replace($search,$replace,$msg);
     }
     return $msg;
     //end upb code
