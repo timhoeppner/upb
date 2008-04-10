@@ -15,7 +15,7 @@
 	such as the background color and image */
 body { 
 	font-family : Verdana, Tahoma, Arial, Sans-Serif, Georgia, Courier, Serif;
-	font-size : 12px;
+	font-size : 11px;
 	margin : 10px 0px 10px 0px;
 	padding : 0;
 	background-color : #314663;
@@ -34,7 +34,7 @@ hr {
 /* Standard paragraph text style */
 p { 
 	font-family : Verdana, Tahoma, Arial, Sans-Serif, Georgia, Courier, Serif;
-	font-size : 10px;
+	font-size : 11px;
 	color : #333333;
 	line-height : 15px;
 }
@@ -61,6 +61,7 @@ a:hover {
 	when it is used as a link */
 img {
 	border : 0;
+	text-align: absmiddle;
 }
 
 /* Some browsers leave differing gaps around form elements.
@@ -1443,3 +1444,8 @@ height: 20px;
 /* --------------------------------------------- */
 /* ----Quick Class Text Colors For Spans End---- */
 /* --------------------------------------------- */
+
+/*Style for smilie example in faq*/
+.example {
+vertical-align:middle;
+}

@@ -745,13 +745,11 @@ var http_request = false;
 function swap(source) {
     if (document.images) {
         document.images['myImage'].src = source;
-        //alert(document.newentry.avatar2.value);
-        document.newentry.avatar2.value = source;
     }
 }
 
 function switchElementDisable(field1, field2) {
-		        if(field1.value != '') {
+            if(field1.value != '') {
 		            field2.disabled = true;
 		        } else field2.disabled = false;
 		    }

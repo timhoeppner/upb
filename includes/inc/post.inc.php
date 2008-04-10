@@ -200,11 +200,8 @@ function bbcodebuttons($txtarea='message',$type='post') {
     $bb_buttons .= "<a href=\"javascript:add_list('ol','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/ol.gif' border='0' title='ordered list' /></a>";
     $bb_buttons .= "<img src='".SKIN_DIR."/images/bbcode/separator.gif' border='0' title='' />";
     $bb_buttons .= "<a href=\"javascript:createBBtag('[move]','[/move]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/move.gif' border='0' title='moving text' /></a> ";
-    if ($type != 'sig')
-    {
-      $bb_buttons .= "<a href=\"javascript:createBBtag('[quote]','[/quote]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/quote.gif' border='0' title='quote' /></a> ";
-      $bb_buttons .= "<a href=\"javascript:createBBtag('[offtopic]','[/offtopic]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/offtopic.gif' border='0' title='off topic' /></a>";
-    }
+    $bb_buttons .= "<a href=\"javascript:createBBtag('[quote]','[/quote]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/quote.gif' border='0' title='quote' /></a> ";
+    $bb_buttons .= "<a href=\"javascript:createBBtag('[offtopic]','[/offtopic]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/offtopic.gif' border='0' title='off topic' /></a>";
     $bb_buttons .= "<img src='".SKIN_DIR."/images/bbcode/separator.gif' border='0' title='' />";
     $bb_buttons .= "<a href=\"javascript:removeBBcode('$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/removeformat.gif' border='0' title='remove bbcode' /></a>";
 

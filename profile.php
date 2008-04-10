@@ -215,7 +215,7 @@ if (isset($_POST["u_edit"])) {
 		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
 		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
 		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
-		echo "<form action='{$_SERVER['PHP_SELF']}' id='newentry' method='post' enctype=\"multipart/form-data\">";
+		echo "<form action='{$_SERVER['PHP_SELF']}' id='newentry' name='newentry' method='post' enctype=\"multipart/form-data\">";
         echo "
         <div id='tabstyle_2'>
         	<ul>
@@ -296,9 +296,9 @@ if (isset($_POST["u_edit"])) {
 		echo "</select></td></tr>
 					</table>
 				</td>";
-		if($custom_avatar) {
-		    echo "
-                  <td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input onchange=\"switchElementDisable(this, document.newentry.avatar);\" type='".(($_REGIST['custom_avatars'] == '2') ? 'file' : 'text\' value=\''.$rec[0]['avatar'])."' name='avatar2' /><p><i>Consult the forum admin for acceptable dimensions.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is 5Kb.' : '')."</i></p></td></tr>";
+		
+    if($custom_avatar) {
+		    echo "<td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input type='".(($_REGIST['custom_avatars'] == '2') ? "file'" : "text' value=''")." name='avatar2' /><p><i>Consult the forum admin for acceptable dimensions.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is 5Kb.' : '')."</i></p></td></tr>";
 		}
 		echo "
 			<tr>
