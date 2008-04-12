@@ -90,7 +90,7 @@ if ($_POST['next'] == 0) {
 				10
 			));
 		}
-		unset($tdb, $tableList, $table)
+		unset($tdb, $tableList, $table);
 	}
     $tdb->createDatabase(DB_DIR."/", "bbcode.tdb");
     $tdb->addField('users', array('newTopicsData', 'memo'));
