@@ -396,9 +396,7 @@ switch ($ajax_type)
 
       $cRecs = $tdb->listRec("cats", 1);
       $config_tdb->clearcache();
-      $vars = $config_tdb->getVars('config');
-    	// Sort categories in the order that they appear
-      $cSorting = explode(",", $vars['admin_catagory_sorting']);
+      $cSorting = explode(",", $_CONFIG['admin_catagory_sorting']);
       $k = 0;
     	$i = 0;
     	$sorted = array();

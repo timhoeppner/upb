@@ -9,24 +9,33 @@ foreach($GLOBALS["_GET"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
     if (((strpos($key, 'id') !== FALSE) || $key == 'page') && (!ctype_digit($value) && !empty($value))) die('Possible XSS attack detected');
 }
+reset($GLOBALS["_GET"]);
 
 foreach($GLOBALS["_POST"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
 }
+reset($GLOBALS["_POST"]);
 foreach($GLOBALS["_COOKIE"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
 }
+reset($GLOBALS["_COOKIE"]);
 foreach($GLOBALS["_SERVER"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
 }
+reset($GLOBALS["_SERVER"]);
 if(!empty($GLOBALS['_ENV'])) foreach($GLOBALS["_ENV"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
 }
+reset($GLOBALS["_SERVER"]);
 foreach($GLOBALS["_FILES"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
 }
-if(!empty($GLOBALS['_ENV'])) foreach($GLOBALS["_REQUEST"] as $varname => $varvalue) {
-    if(isset($$varname)) unset($$varname);
+reset($GLOBALS["_FILES"]);
+if(!empty($GLOBALS['_ENV'])) {
+    foreach($GLOBALS["_REQUEST"] as $varname => $varvalue) {
+        if(isset($$varname)) unset($$varname);
+    }
+    resset($GLOBALS["_REQUEST"]);
 }
 
 //Move to constants.php

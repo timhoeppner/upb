@@ -31,8 +31,8 @@ if ($_POST['next'] == 0) {
 			<tr>
 			<td class='area_2' colspan='2'>Welcome to myUPB v2.2.1<p>
 			You are currently using v".UPB_VERSION;
-	if (UPB_VERSION != "2.1.1b") {
-        echo "<p>You will need to update to version 2.1.1b first in order to update to version 2.2.1<br>This is due to configuration changes that have been implemented";
+	if (UPB_VERSION != "2.1.1b" && UPB_VERSION != "2.1.1") {
+        echo "<p>You will need to update to version 2.1.1 first in order to update to version 2.2.1<br>This is due to configuration changes that have been implemented";
         $proceed = false;
     } else {
 		echo "<p>This release contains many new features,bug fixes and a new skin system.<br>Please ensure you have made a backup of your current skin directory before continuing<br>For the changelog, please see the readme or visit MyUPB.com";
@@ -64,6 +64,34 @@ if ($_POST['next'] == 0) {
 			</tr>
 			<tr>
 			<td colspan='2' class='area_2'>";
+	$tdb = new tdb(DB_DIR, 'main');
+	if(!$tdb->isTable('uploads')) {
+		//For 2.2.1(a) compadibility
+		$main->createTable("uploads", array(
+			array("name", "string", 80),
+			array("size", "number", 9),
+			array("downloads", "number", 10),
+			array("data", "memo"),
+			array("id", "id")
+		), 2048);
+		
+		$tdb->tdb(DB_DIR, 'posts');
+		$tableList = $tdb->getTableList();
+		foreach($tableList as $table) {
+			// Remove the database name from the tablename
+			$table = str_replace("posts_", "", $table);
+			
+			// Make sure we don't get any topic tables
+			if(substr($table, -6) == "topics" || is_numeric($table)) continue;
+			$tdb->setFp("posts", $table);
+			$tdb->addField("posts", array(
+				"upload_id",
+				"number",
+				10
+			));
+		}
+		unset($tdb, $tableList, $table)
+	}
     $tdb->createDatabase(DB_DIR."/", "bbcode.tdb");
     $tdb->addField('users', array('newTopicsData', 'memo'));
     $tdb->addField('users', array('lastvisit', 'number', 14));
