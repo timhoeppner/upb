@@ -35,7 +35,7 @@ if(!empty($GLOBALS['_ENV'])) {
     foreach($GLOBALS["_REQUEST"] as $varname => $varvalue) {
         if(isset($$varname)) unset($$varname);
     }
-    resset($GLOBALS["_REQUEST"]);
+    reset($GLOBALS["_REQUEST"]);
 }
 
 //Move to constants.php
