@@ -758,7 +758,7 @@ vertical-align: middle;
 	}
 .tabstyle_1 a, #tabstyle_2 a {
 	float : left;
-	background : url(../images/tab_left.gif) no-repeat left top;
+	background : url(../images/tab_left_up.gif) no-repeat left top;
 	margin : 0;
 	padding : 0 0 0 4px;
 	text-decoration : none;
@@ -768,7 +768,7 @@ vertical-align: middle;
 	font-weight: bold;
 	float : left;
 	display : block;
-	background : url(../images/tab_right.gif) no-repeat right top;
+	background : url(../images/tab_right_up.gif) no-repeat right top;
 	padding : 5px 15px 4px 6px;
 	color : #333333;
 	}
@@ -780,10 +780,10 @@ vertical-align: middle;
 	color : #394b63;
 	}
 .tabstyle_1 a:hover, #tabstyle_2 a:hover {
-	background-position : 0% -42px;
+	background : url(../images/tab_left_down.gif) no-repeat left top;
 	}
 .tabstyle_1 a:hover span, #tabstyle_2 a:hover span {
-	background-position : 100% -42px;
+  background : url(../images/tab_right_down.gif) no-repeat right top;
 	}
 
 /* This is the tab id that controls the Mark as Read tab on the main page.
