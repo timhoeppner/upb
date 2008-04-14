@@ -662,8 +662,8 @@ var http_request = false;
             document.getElementById('current_posts').innerHTML = result_array[0];
             
             document.getElementById('pagelink1').innerHTML = result_array[1];
-            document.getElementById('pagelink2').innerHTML = result_array[2];
-            document.getElementById('quickreplyform').innerHTML = result_array[3];
+            //document.getElementById('pagelink2').innerHTML = result_array[2];
+            document.getElementById('quickreplyform').innerHTML = result_array[2];
          } else {
             alert(http_request.status)
             alert('There was a problem with the request.');

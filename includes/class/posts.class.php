@@ -99,9 +99,8 @@ class posts extends tdb {
       <div style='clear:both;'></div>";
       if ($position == "top")
       {
-      $output .= "<div id='tabstyle_1'>
+      $output .= "<div class='tabstyle_1'>
          <ul>";
-
   		if((int)$this->user["power"] >= (int)$this->fRec[0]["post"]) $output .= "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=' title='Create a new topic?'><span>Create New Topic</span></a></li>";
    		if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"]) {
   			if(!(bool)$this->tRec[0]["locked"]) $output .= "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=0&t_id=".$this->tRec[0]["id"]."&page=".$page."' title='Add a reply?'><span>Add Reply</span></a></li>";

@@ -184,7 +184,7 @@
 	echo "</div>";
 
 	$p = createPageNumbers($vars['page'], $num_pages, $_SERVER['QUERY_STRING']);
-	echo "<div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,$vars['page'],"bottom") . "</div>";
+	//echo "<div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,$vars['page'],"bottom") . "</div>";
 
 	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0) and isset($_COOKIE['javascript']))
 {

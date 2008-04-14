@@ -533,9 +533,8 @@ vertical-align: middle;
 	color : #333333;
 	background-color : #f9f9f9;
 	padding:4px;
-	border: 1px dashed #0b2a4f;
+	border: 1px solid #0b2a4f;
 	position:relative;
-	cursor: pointer;
 	cursor: pointer;
 }
 .pagination_link a:link, .pagination_link a:visited, .pagination_link a:active { 

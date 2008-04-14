@@ -182,7 +182,7 @@ switch ($ajax_type)
     $p = createPageNumbers($page, $num_pages, $query,true);
     $p = str_replace('ajax.php', 'viewtopic.php', $p);
     $pagelinks1 = $posts_tdb->d_posting($p,$page);
-    $pagelinks2 = $posts_tdb->d_posting($p,$page,"bottom");
+    //$pagelinks2 = $posts_tdb->d_posting($p,$page,"bottom");
 
     //BEGIN NEW REPLY OUTPUT
     $x = +1;
@@ -348,7 +348,7 @@ switch ($ajax_type)
 	</div>
 	<br />";
 
-    $output .= "<!--divider-->$pagelinks1<!--divider-->$pagelinks2<!--divider-->$qrform";
+    $output .= "<!--divider-->$pagelinks1<!--divider-->$qrform";
 
     echo $output;
 
