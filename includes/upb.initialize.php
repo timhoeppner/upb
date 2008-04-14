@@ -7,7 +7,7 @@ session_start();
 //prevent exploits for users who have registered globals on
 foreach($GLOBALS["_GET"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
-    if (((strpos($key, 'id') !== FALSE) || $key == 'page') && (!ctype_digit($value) && !empty($value))) die('Possible XSS attack detected');
+    if (((strpos($varname, 'id') !== FALSE) || $varname == 'page') && (!ctype_digit($varvalue) && !empty($varvalue))) die('Possible XSS attack detected');
 }
 reset($GLOBALS["_GET"]);
 
@@ -38,7 +38,6 @@ if(!empty($GLOBALS['_ENV'])) {
     reset($GLOBALS["_REQUEST"]);
 }
 
-//Move to constants.php
 define("ALERT_MSG", "
 	<div class='alert'>
 		<div class='alert_text'><strong>__TITLE__</strong></div>
@@ -82,7 +81,7 @@ $errorHandler = &new errorhandler();
 error_reporting(E_ALL ^ E_NOTICE);
 
 //Verify that we're not using a ver. 1 database, otherwise prompt the admin to run the updater
-if (!file_exists("./db/main.tdb") && file_exists("./db/config2.php")) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Update Available:', str_replace('__MSG__', 'A major update has not been run yet.  Please <a href="update1.x-2.0.php">run it</a> to continue.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
+if (!file_exists("./db/main.tdb") && file_exists("./db/config2.php")) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Update Available:', str_replace('__MSG__', 'An update has not been run yet.  Please follow the directions in the readme file to run it to continue.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
 if (file_exists("config.php")) {
 	require_once("config.php");
 }
@@ -134,7 +133,7 @@ if(file_exists(DB_DIR."/main.tdb")) {
     $_CONFIG["where_sep"] = "<b>&gt;</b>";
     $_CONFIG["table_sep"] = "<b>::</b>";
 
-    eval(file_get_contents(DB_DIR.'/constants.php'));
+    define('SKIN_DIR', $_CONFIG['skin_dir'], true);
 
     if (!defined('DB_DIR')) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Fatal Error:', str_replace('__MSG__', 'The DB_DIR constant is undefined.<br>Please go to <a href="http://myupb.com/" target="_blank">MyUPB.com</a> for support.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
 	  if (!is_array($_CONFIG)) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Fatal Error:', str_replace('__MSG__', 'Unable to correctly access UPB\'s configuration.<br>Please go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.', ALERT_MSG)).MINIMAL_BODY_FOOTER);

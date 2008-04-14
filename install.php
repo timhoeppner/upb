@@ -177,8 +177,6 @@
 			array("location", "memo"),
 			array("url", "memo"),
 			array("avatar", "memo"),
-			array("avatar_height", "number", 3),
-			array("avatar_width", "number", 3),
 			array("avatar_hash", "string", 32),
 			array("icq", "number", 20),
 			array("aim", "string", 24),
@@ -270,9 +268,6 @@
 		$config_tdb->add('title', 'Discussion Forums', 'config', 'text', 'text', '1', '1', 'Title', 'Title of the forum.');
 		$config_tdb->add('logo', 'images/logo.gif', 'config', 'text', 'text', '1', '2', 'Logo Location', 'Can be relative or a URL.');
 		$config_tdb->add('homepage', 'http://www.myupb.com/', 'config', 'text', 'text', '1', '3', 'Homepage URL', 'Can be relative or a URL.');
-		$config_tdb->add('avatar_width', '60', 'config', 'number', 'text', '1', '4', 'Avatars\' Width', 'The width (with respect to the height) of user avatars you want to be displayed at in pixels (Cannot be higher than 999)');
-		$config_tdb->add('avatar_height', '60', 'config', 'number', 'text', '1', '5', 'Avatars\' Height', 'The height (with respect to the width) of user avatars you want to be displayed at in pixels (Cannot be higher than 999)');
-		$config_tdb->add('table_width_main', '98%', 'config', 'text', 'text', '1', '6', 'Table Width', 'This will change the table width of the main section of the forums.');
 		$config_tdb->add('skin_dir', './skins/default', 'config', 'text', 'test', '1', '7', 'Skin Directory', 'Leave it unless you upload another skin.');
 		$config_tdb->add('servicemessage', '', 'config', 'text', 'textarea', '1', '8', 'Service Message', 'Service Messages appear above the forum, if nothing input, Announcements will not be displayed. Html is allowed.');
 

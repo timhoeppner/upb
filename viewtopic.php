@@ -134,7 +134,7 @@
 			</tr>
 			<tr>
 				<td class='$table_color' valign='top' style='width:15%;'>";
-		if (@$user[0]["avatar"] != "") echo "<br /><img src=\"".$user[0]["avatar"]."\" border='0' width='".$user[0]['avatar_width']."' height='".$user[0]['avatar_height']."' alt='' title=''><br />";
+		if (@$user[0]["avatar"] != "") echo "<br /><img src=\"".$user[0]["avatar"]."\" border='0' alt='' title=''><br />";
 		else if ($pRec["user_id"] != "0")
       echo "<br /><a href='profile.php'><img src='images/avatars/noavatar.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
 		if ($pRec["user_id"] != "0") echo "

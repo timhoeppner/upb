@@ -23,7 +23,7 @@
 
 	$mt = explode(' ', microtime());
 	$script_start_time = $mt[0] + $mt[1];
-	if ($tdb->is_logged_in() && INSTALLATION_MODE === FALSE) {
+	if ($tdb->is_logged_in()) {
 		$refresh = false;
 		if (!isset($_COOKIE["lastvisit"])) {
 			$r = $tdb->get("users", $_COOKIE['id_env']);
@@ -137,7 +137,7 @@
 	<div class='main_cat_wrapper2'>
 		<table class='main_table_2' cellspacing='1'>
 			<tr>
-				<td id='logo'><img src='".SKIN_DIR."/images/logo.png' alt='' title='' /></td>
+				<td id='logo'><img src='".$_CONFIG['logo']."' alt='' title='' /></td>
 			</tr>
 		</table>
 	</div>
@@ -196,12 +196,6 @@
 	echo "
 	</div>";
 	//End Header
-	//begining INSTALLATION MODE
-	if (INSTALLATION_MODE === TRUE && (FALSE === eregi('admin', $_SERVER['PHP_SELF'])) && (FALSE === strpos($_SERVER['PHP_SELF'], 'install')) && (FALSE === strpos($_SERVER['PHP_SELF'], 'update')) && (FALSE === strpos($_SERVER['PHP_SELF'], 'upgrade'))) {
-	    print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'The bulletin board is in installation mode, and you cannot proceed.'.(($tdb->is_logged_in() && $_COOKIE['power_env'] === 3) ? 'You may access the <a href="admin.php">Admin Panel</a> to switch INSTALLATION_MODE off.' : ''), ALERT_MSG));
-		require('./includes/footer.php');
-		exit;
-	}
 
 	if ($_CONFIG["servicemessage"] != "" && ($_SESSION['servicemessage'] != md5($_CONFIG['servicemessage']) || basename($_SERVER['PHP_SELF']) == 'index.php')) {
 	    $_SESSION['servicemessage'] = md5($_CONFIG['servicemessage']);

@@ -63,7 +63,7 @@ switch ($ajax_type)
     }
 
     $msg = format_text(filterLanguage(UPBcoding(utf8_decode(stripslashes($attach_msg.$_POST["newedit"]))), $_CONFIG));
-        
+
     $dbmsg = encode_text(stripslashes(utf8_decode($attach_msg.$_POST["newedit"])),ENT_NOQUOTES);
 
     $posts_tdb->edit("posts", $_POST["postid"], array("message" => $dbmsg, "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate()));
@@ -89,7 +89,7 @@ switch ($ajax_type)
         }
     }
     $msg = format_text(filterLanguage(utf8_decode(stripslashes($msg)), $_CONFIG));
-    
+
     $div = $_POST['forumid']."-".$_POST['threadid']."-".$_POST['postid'];
 
 
@@ -203,7 +203,7 @@ switch ($ajax_type)
 		} else
     {
 			$table_color = "area_2";
-			
+
 			$x--;
 		}
 		unset($user, $status, $statuscolor);
@@ -265,7 +265,7 @@ switch ($ajax_type)
 			</tr>
 			<tr>
 				<td class='$table_color' valign='top' style='width:15%;'>";
-		if (@$user[0]["avatar"] != "") $output .= "<br /><img src=\"".$user[0]["avatar"]."\" border='0' width='".$user[0]['avatar_width']."' height='".$user[0]['avatar_height']."' alt='' title=''><br />";
+		if (@$user[0]["avatar"] != "") $output .= "<br /><img src=\"".$user[0]["avatar"]."\" border='0' alt='' title=''><br />";
 		else $output .= "<br /><a href='profile.php'><img src='images/avatars/noavatar.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
 		if ($pRec["user_id"] != "0") $output .= "
 					<div class='post_info'><span style='color:#".$statuscolor."'><strong>".$status."</strong></span></div>

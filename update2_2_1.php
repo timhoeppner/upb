@@ -18,32 +18,51 @@ $proceed = true;
 $last_step = 7;
 if (!isset($_POST['next']) or $_POST['next'] == '') $_POST['next'] = 0;
 print MINIMAL_BODY_HEADER;
+if($_POST['next'] == 1) {
+    $_POST['next'] = 2;
+    if(FALSE === strpos($_POST['register_msg'], '<login>') || FALSE === strpos($_POST['register_msg'], '<password>') || FALSE === strpos($_POST['register_msg'], '<url>')) {
+        print(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You must use all three options in the register e-mail message', ALERT_MSG)));
+        $_POST['next'] = 0;
+    } elseif(empty($_POST['superad'])) {
+        print(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You must select at least one administrator to become a super administrator', ALERT_MSG)));
+        $_POST['next'] = 0;
+    }
+
+}
 if($_POST['next'] != $last_step) echo "
 	<div class='main_cat_wrapper'>
 		<div class='cat_area_1'>myUPB v2.1.1b -> v2.2.1 Update</div>
 		<form method='POST' action='".$_SERVER['PHP_SELF']."'>
     <table class='main_table' cellspacing='1'><tbody>";
 if ($_POST['next'] == 0) {
-    $_POST['next'] = 1;
     echo "<tr>
 				<th colspan='2'><strong>Welcome to myUPB v2.2.1</strong></th>
 			</tr>
 			<tr>
-			<td class='area_2' colspan='2'>Welcome to myUPB v2.2.1<p>
-			You are currently using v".UPB_VERSION;
-	if (UPB_VERSION != "2.1.1b" && UPB_VERSION != "2.1.1") {
-        echo "<p>You will need to update to version 2.1.1 first in order to update to version 2.2.1<br>This is due to configuration changes that have been implemented";
+			<td class='area_2' colspan='2'>Welcome to myUPB <b>v2.2.1</b><p>
+			You are currently using <b>v".UPB_VERSION."</b>";
+	if(UPB_VERSION == '2.2.1') {
+		echo '<P>The bulletin board is already using <b>v2.2.1</b>';
+		$proceed = false;
+	} else if (UPB_VERSION != "2.1.1b" && UPB_VERSION != "2.1.1") {
+        echo "<p>You will need to update to <b>v2.1.1</b> first in order to update to <b>v2.2.1</b><br>This is due to configuration changes that have been implemented";
         $proceed = false;
+	} else if(!is_writable('config.php') || !is_readable('config.php')) {
+		$proceed = false;
+		print '<P>You must chmod your config.php to 666 to proceed.';
+	} elseif(!is_writable(DB_DIR) || !is_readable(DB_DIR)) {
+		$proceed = false;
+		print '<P>Your DATA directory must be chmoded to 777 to proceed.';
     } else {
-		echo "<p>This release contains many new features,bug fixes and a new skin system.<br>Please ensure you have made a backup of your current skin directory before continuing<br>For the changelog, please see the readme or visit MyUPB.com";
+		echo "<p>This release contains many new features,bug fixes and a new skin system.<br><b>Before you proceed, backup your skin and data directory before continuing</b><br>For the changelog, please see the <a href='readme.txt' target='_blank'>readme</a> or visit <a href='http:/www.myupb.com/' target='_blank'>MyUPB.com</a>";
 		echo "</td>
 		</tr>";
 		echo "<tr>
 			<th colspan='2'><strong>Super Administrator Creation</strong></th>
 		</tr>
 		<tr>
-		<td colspan='2' class='area_2'>Please choose an administrator account to be a Super Administrator account.<p>
-		A Super Administrator's account cannot be deleted or banned and it's usergroup can't be changed.<p>This is to prevent an administrator hijacking the forum and removing the admin rights of the board owner.<br><strong>Once selected it can't be changed.</strong>
+		<td colspan='2' class='area_2'>Please choose the administrators to be super administrators.<p>
+		A super administrator's account cannot be deleted or banned and it's usergroup can't be changed.<p>This will prevent other administrators from demoting the board owner and hijacking the forum.<p><strong>Once selected it can't be changed.</strong>
 		</td></tr>";
         echo "
       <tr><td class='area_1' style='width:35%;padding:8px;'><b>Super Administrator Account</b><br>Use Click to select one user<br>Use Ctrl+Click to select one users at a time<br>Use Shift+Click to select a row of users</td>
@@ -57,6 +76,17 @@ if ($_POST['next'] == 0) {
         echo "</select>";
         //dump($members);
         echo "</td></tr>";
+		echo "<tr>
+			<th colspan='2'><strong>Update Register E-mail Message</strong></th>
+		</tr>
+		<tr>
+		<td colspan='2' class='area_2'>A new option has been added to the E-mail message sent to newly registered users.<p>The new option is <b>&lt;url&gt;</b>, which will be the link users naviate to, to verify their e-mail address, instead of recieving a generated password.</b>
+		</td></tr>
+			<tr>
+				<td class='area_1'><strong>Register Email Message</strong><br />
+					This is the message for confirmation of registration (options: &lt;login&gt;, &lt;password&gt;, and &lt;url&gt;)</td>
+				<td class='area_2'><textarea rows='5' name='register_msg' cols='25' tabindex='3'>".$_REGIST["register_msg"]."</textarea></td>
+			</tr>";
     }
 } else if($_POST['next'] == 2) {
     echo "<tr>
@@ -64,33 +94,32 @@ if ($_POST['next'] == 0) {
 			</tr>
 			<tr>
 			<td colspan='2' class='area_2'>";
-	$tdb = new tdb(DB_DIR, 'main');
 	if(!$tdb->isTable('uploads')) {
 		//For 2.2.1(a) compadibility
-		$main->createTable("uploads", array(
+		$tdb->createTable("uploads", array(
 			array("name", "string", 80),
 			array("size", "number", 9),
 			array("downloads", "number", 10),
 			array("data", "memo"),
 			array("id", "id")
 		), 2048);
-		
-		$tdb->tdb(DB_DIR, 'posts');
-		$tableList = $tdb->getTableList();
+
+		$post_tdb->tdb(DB_DIR, 'posts');
+		$tableList = $post_tdb->getTableList();
 		foreach($tableList as $table) {
 			// Remove the database name from the tablename
 			$table = str_replace("posts_", "", $table);
-			
+
 			// Make sure we don't get any topic tables
 			if(substr($table, -6) == "topics" || is_numeric($table)) continue;
-			$tdb->setFp("posts", $table);
-			$tdb->addField("posts", array(
+			$post_tdb->setFp("posts", $table);
+			$post_tdb->addField("posts", array(
 				"upload_id",
 				"number",
 				10
 			));
 		}
-		unset($tdb, $tableList, $table);
+		unset($post_tdb, $tableList, $table);
 	}
     $tdb->createDatabase(DB_DIR."/", "bbcode.tdb");
     $tdb->addField('users', array('newTopicsData', 'memo'));
@@ -125,10 +154,12 @@ if ($_POST['next'] == 0) {
     echo "<P>Last Visit & new Topic information inserted.";
 
     //create superuser
-    foreach($_POST['superad'] as $id) {
+    if(!empty($_POST['superad'])) foreach($_POST['superad'] as $id) {
         $tdb->edit('users', $id, array('level' => 9));
     }
     echo "<P>Super Admin Set.";
+    $config_tdb->editVars('regist', array('register_msg' => $_POST['register_msg']));
+    print '<P>Edited Register E-mail Message';
     echo "</td></tr>";
 } else if($_POST['next'] == 3) {
     print '<tr><td class="area_2">';
@@ -148,45 +179,45 @@ if ($_POST['next'] == 0) {
         $tdb->edit('uploads', $file['id'], array('user_level' => 0, 'file_loca' => $file_name));
     }
     $tdb->removeField('uploads', 'data');
-    
+
     $old_upload = directory('./uploads/');
     if (!empty($old_upload)) {
-      foreach ($old_upload as $file) 
-        unlink("./uploads/$file");
+      foreach ($old_upload as $file)
+        unlink($_CONFIG['fileupload_location'].'/'.$file);
     }
-    rmdir('./uploads');
     print "<P>Moving uploads files into the uploads directory";
+    if(!@rmdir($_CONFIG['fileupload_location'])) print "<P>Unable to remove the \"./uploads\" directory";
 
     $config_types = $config_tdb->listRec('ext_config', 1, -1);
     foreach($config_types as $config_type) {
         $config_tdb->edit('config', $config_type['id'], array('data_type' => $config_type['data_type']));
     }
-    
+
     //checks that the same number of cats are in admin_catagory_sorting and database
     //2.1.1b had a bug that didn't create a value in admin_catagory_sorting if only one category existed
-    
+
     $cats = $tdb->listRec("cats",1,-1);
     $catsort = explode(',',$_CONFIG['admin_catagory_sorting']);
     if ($catsort[0] == "")
       unset($catsort[0]);
-      
+
     if (count($cats) != count($catsort)) {
       foreach ($cats as $value) {
         if (!in_array($value['id'],$catsort))
           $catsort[] = $value['id']; //adds missing category id to catsort array
       }
     }
-    
+
     $cat_sort = implode(",",$catsort);
-    
+
     //need to pass through two stages before editing
     echo "<input type='hidden' name='cat_sort' value='$cat_sort'>";
     echo "<input type='hidden' name='uploads_dir' value='$uploads_dir'>";
-    
+
     print "<P>Added 'data_type' field to the fast access config table";
 } else if($_POST['next'] == 4) {
     print '<tr><td class="area_2">';
-    $del_list = array('pm_version', 'avatar1', 'avatar2', 'avatar3', 'avatar4', 'avatar5', 'avatar6', 'avatar7', 'avatar8', 'avatar9', 'pm_max_outbox_msg');
+    $del_list = array('pm_version', 'avatar1', 'avatar2', 'avatar3', 'avatar4', 'avatar5', 'avatar6', 'avatar7', 'avatar8', 'avatar9', 'pm_max_outbox_msg', 'Create List', 'avatar_width', 'avatar_height', 'table_width_main');
     foreach($del_list as $string) {
         $config_tdb->delete($string);
     }
@@ -194,9 +225,12 @@ if ($_POST['next'] == 0) {
     //need to pass through to next stage for editing
     echo "<input type='hidden' name='cat_sort' value='".$_POST['cat_sort']."'>";
     echo "<input type='hidden' name='uploads_dir' value='".$_POST['uploads_dir']."'>";
-    
+
 } else if($_POST['next'] == 5) {
     print '<tr><td class="area_2">';
+    $config_tdb->renameCategory('config', 'General');
+    $config_tdb->renameCategory('status', 'Members Statuses');
+    $config_tdb->renameCategory('regist', 'New Members');
     //How to add more Mini Categories to the config_org.dat file
     $post_settings_id = $config_tdb->addMiniCategory('Posting Settings', 'config');
     $reg_setting_id = $config_tdb->addMiniCategory('Registration Settings', 'regist', '8', false);
@@ -213,7 +247,10 @@ if ($_POST['next'] == 0) {
     $config = array();
     $regist = array();
     $config[] = array('name' => 'ver', 'value' => '2.2.1');
-    $config[] = array("name" => "admin_catagory_sorting", "form_object" => "hidden", "data_type" => "string","value" => $_POST['cat_sort']);
+    $config[] = array('name' => 'skin_dir', 'value' => './skins/default', 'sort' => '4');
+    $config[] = array('name' => 'logo', 'value' => './skins/default/images/logo.png');
+    $config[] = array('name' => 'servicemessage', 'sort' => '5');
+    $config[] = array("name" => "admin_catagory_sorting", "form_object" => "hidden", "data_type" => "string","value" => $_POST['cat_sort'], 'minicat' => '', 'sort' => '');
     $config[] = array("name" => "posts_per_page", 'minicat'=>$post_settings_id,'sort'=>1);
     $config[] = array("name" => "topics_per_page", 'minicat'=>$post_settings_id,'sort'=>2);
     $config[] = array('name' => 'fileupload_location', 'value' => $_POST['uploads_dir'], "form_object" => "hidden", "data_type" => "string");
@@ -231,6 +268,8 @@ if ($_POST['next'] == 0) {
     $tdb->createTable('smilies', array(array('id', 'id'), array('bbcode', 'memo'),array('replace','memo'),array('type','string',4)));
     $tdb->createTable('icons',array(array('id','id'),array('filename','memo')));
     $tdb->removeField('users', 'mail_list');
+    $tdb->removeField('users', 'avatar_width');
+    $tdb->removeField('users', 'avatar_height');
     $tdb->cleanUp();
     $tdb->setFp("smilies","smilies");
     $tdb->setFp("icons","icons");
@@ -274,38 +313,39 @@ if ($_POST['next'] == 0) {
       foreach ($contents as $file)
         unlink("./smilies/moresmilies/".$file);
     }
-    
+
     if(is_dir('./smilies/moresmilies')) rmdir("./smilies/moresmilies");
-    
+
     if (file_exists(DB_DIR.'/smilies.dat')) unlink(DB_DIR.'/smilies.dat');
     echo "<p>Smilie database created";
     echo "<p>More Smilies files converted";
 } else if($_POST['next'] == 6) {
     print '<tr><td class="area_2">';
-    $delete_array = array('admin_forum.php', 'admin_cat.php', 'admin_reset_stats.php', 'install-uploads.php', 'more_smilies_create_list.php', 'setallread.php', './includes/wrapper_scripts_names.txt', './includes/class/mod_avatar.class.php','./includes/board_help.php','./includes/board_post.php','./includes/board_view.php','./skins/default/coding.php','./skins/default/icons/deletetopic.gif','./skins/default/icons/head_but_pms.JPG','./skins/default/icons/closetopic.gif','./skins/default/icons/lastpost.jpg','./skins/default/icons/manage.gif','./skins/default/icons/monitor.gif','./skins/default/icons/nav.gif','./skins/default/icons/off.gif','./skins/default/icons/on.gif','./skins/default/icons/opentopic.gif','./skins/default/icons/pb_delete.JPG','./skins/default/icons/pb_edit.JPG','./skins/default/icons/pb_email.JPG','./skins/default/icons/pb_profile.JPG','./skins/default/icons/pb_quote.JPG','./skins/default/icons/pb_www.JPG','./skins/default/icons/redirect.png','./skins/default/icons/sendpm.jpg','./skins/default/icons/reply.gif','./skins/default/icons/replylocked.gif','./skins/default/icons/topic.gif','./skins/default/icons/stats.gif','./skins/default/icons/user.gif','./skins/default/images/footer_bg.JPG','./skins/default/images/footer_bg.PNG','./skins/default/images/head_but_donations.JPG','./skins/default/images/head_but_faq.JPG','./skins/default/images/head_but_loginout.JPG','./skins/default/images/head_but_members.JPG','./skins/default/images/head_but_pms.JPG','./skins/default/images/head_but_register.JPG','./skins/default/images/head_but_search.JPG','./skins/default/images/bead_but_usercp.JPG','./skins/default/images/head_logo.JPG','./skins/default/images/head_logo_right.JPG','./skins/default/images/head_top_left_bg.JPG','./skins/default/images/head_top_middle.JPG','./skins/default/images/head_top_right_bg.JPG','./skins/default/images/on.gif','./skins/default/images/sound.wav','./skins/default/images/cat_bottom_bg.jpg','./skins/default/images/cat_bottom_left.jpg','./skins/default/images/cat_bottom_left.gif','./skins/default/images/cat_bottom_right.gif','./skins/default/images/cat_bottom_right.JPG','./skins/default/images/cat_top_bg.gif','./skins/default/images/cat_top_left.gif','./skins/default/images/cat_top_right.gif','./skins/default/images/top_leftc.gif','./skins/default/images/top_rightc.gif');
-    
+    $delete_array = array('admin_forum.php', 'admin_cat.php', 'admin_reset_stats.php', 'install-uploads.php', 'more_smilies_create_list.php', 'setallread.php', './includes/wrapper_scripts_names.txt', './includes/class/mod_avatar.class.php','./includes/board_help.php','./includes/board_post.php','./includes/board_view.php','./skins/default/coding.php','./skins/default/icons/deletetopic.gif','./skins/default/icons/head_but_pms.JPG','./skins/default/icons/closetopic.gif','./skins/default/icons/lastpost.jpg','./skins/default/icons/manage.gif','./skins/default/icons/monitor.gif','./skins/default/icons/nav.gif','./skins/default/icons/off.gif','./skins/default/icons/on.gif','./skins/default/icons/opentopic.gif','./skins/default/icons/pb_delete.JPG','./skins/default/icons/pb_edit.JPG','./skins/default/icons/pb_email.JPG','./skins/default/icons/pb_profile.JPG','./skins/default/icons/pb_quote.JPG','./skins/default/icons/pb_www.JPG','./skins/default/icons/redirect.png','./skins/default/icons/sendpm.jpg','./skins/default/icons/reply.gif','./skins/default/icons/replylocked.gif','./skins/default/icons/topic.gif','./skins/default/icons/stats.gif','./skins/default/icons/user.gif','./skins/default/images/footer_bg.JPG','./skins/default/images/footer_bg.PNG','./skins/default/images/head_but_donations.JPG','./skins/default/images/head_but_faq.JPG','./skins/default/images/head_but_loginout.JPG','./skins/default/images/head_but_members.JPG','./skins/default/images/head_but_pms.JPG','./skins/default/images/head_but_register.JPG','./skins/default/images/head_but_search.JPG','./skins/default/images/bead_but_usercp.JPG','./skins/default/images/head_logo.JPG','./skins/default/images/head_logo_right.JPG','./skins/default/images/head_top_left_bg.JPG','./skins/default/images/head_top_middle.JPG','./skins/default/images/head_top_right_bg.JPG','./skins/default/images/on.gif','./skins/default/images/sound.wav','./skins/default/images/cat_bottom_bg.jpg','./skins/default/images/cat_bottom_left.jpg','./skins/default/images/cat_bottom_left.gif','./skins/default/images/cat_bottom_right.gif','./skins/default/images/cat_bottom_right.JPG','./skins/default/images/cat_top_bg.gif','./skins/default/images/cat_top_left.gif','./skins/default/images/cat_top_right.gif','./skins/default/images/top_leftc.gif','./skins/default/images/top_rightc.gif', DB_DIR.'/constants.php');
+
     $icons_dir = directory("./icon/");
-    foreach ($icons_dir as $icon) 
+    foreach ($icons_dir as $icon)
       $delete_array[] = './icon/'.$icon;
-    
+
     $c = count($delete_array);
     for($i=0;$i<$c;$i++) {
         if(!file_exists($delete_array[$i]) ||
            @unlink($delete_array[$i])) unset($delete_array[$i]);
     }
-    
-    
+
+
     print '<P>Deleted obsolete files';
     if(!empty($delete_array)) {
         print '<P><b>Unable to delete the following files<b>:<i><br>';
         print implode('<br>', $delete_array);
         print '</i><p>It is recommended to delete these files.';
     }
-    
-    rm_dir('./icon/');
+
+    if(is_dir('./icon') && @rmdir('./icon/')) print "<p>Unable to remove the \"./icon\" directory.";
 } else if($_POST['next'] == $last_step) {
     $lines = explode("\n", file_get_contents('config.php'));
     for($i=0;$i<count($lines);$i++) {
+		if(FALSE !== strpos($lines[$i], 'INSTALLATION_MODE')) unset($lines[$i]);
         if(FALSE === strpos($lines[$i], 'UPB_VERSION')) continue;
         $lines[$i] = "define('UPB_VERSION', '2.2.1', true);";
         break;

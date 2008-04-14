@@ -15,35 +15,21 @@
 	echo "
 		<div class='simple_head' colspan='2'><div style='float:left;margin-right:4px;'><img src='icon/".$pmRec[0]["icon"]."'></div><div style='line-height:15px;'>".$pmRec[0]["subject"]."</div></td>";
 	$table_color = "area_1";
-	
+
 	$user = $tdb->get("users", $pmRec[0]["from"]);
 	if ($user[0]["sig"] != "") $user[0]["sig"] = "<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG))."</div>";
-	
+
 	$status_config = status($user);
 	$status = $status_config['status'];
 	$statuscolor = $status_config['statuscolor'];
-	
+
   $message = format_text(filterLanguage(UPBcoding($pmRec[0]["message"]), $_CONFIG));
 	echo "
 		<table id='simple_table' style='background-color:#ffffff;' cellspacing='12'>
 			<tr>
 				<td class='simple_avarea'>";
-	//add avatar
 	if ($user[0]["avatar"] != "") {
-		$set_width = $avatar_width;
-		$set_height = $avatar_height;
-		if (@fclose(@fopen($user[0]["avatar"], "r"))) {
-			list($width, $height, $type, $attr) = getimagesize($user[0]["avatar"]);
-			if ($width > $height) {
-				$set_height = round(($avatar_width * $height) / $width);
-			} elseif($width < $height) {
-				$set_width = round(($avatar_height * $width) / $height);
-			} elseif($width <= $avatar_width && $height <= $avatar_height) {
-				$set_width = $width;
-				$set_height = $height;
-			}
-		}
-		echo "<br /> <img src=\"".$user[0]["avatar"]."\" border='0' width='$set_width' height='$set_height'><br />";
+		echo "<br /> <img src=\"".$user[0]["avatar"]."\" border='0'><br />";
 	}
 	else echo "<br /><img src='images/avatars/noavatar.gif' alt='' title='' /><br />";
 	//end avatar

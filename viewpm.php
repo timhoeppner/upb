@@ -82,7 +82,7 @@
 		require_once('./includes/header.php');
 		$pm_navegate = "
 		<form action='".$PHP_SELF."?section=".$_GET["section"]."&id=".$_GET["id"].$extra."' method='POST' onSubmit='submitonce(this)' enctype='multipart/form-data'>
-		<table border='0' width='".$_CONFIG["table_width_main"]."' align='center'>
+		<table border='0' align='center'>
 			<tr>
 				<td align='right'>
 					<input type='submit' name='action' value='<< Last Message' onclick='check_submit()' $back_disabled> $options
@@ -94,7 +94,7 @@
 		echo $pm_navegate;
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		$table_color = $table1;
-		
+
 		if ($user[0]["sig"] != "") $user[0]["sig"] = "
 			<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG))."</div>";
 		$status_config = status($user);
@@ -109,7 +109,7 @@
 			</tr>
 				<tr>
 					<td class='area_1' valign='top'>";
-		if ($user[0]["avatar"] != "") echo "<br /><img src=\"".$user[0]["avatar"]."\" width='".$user[0]['avatar_width']."' height='".$user[0]['avatar_height']."' alt='' title='' /><br />";
+		if ($user[0]["avatar"] != "") echo "<br /><img src=\"".$user[0]["avatar"]."\" alt='' title='' /><br />";
 		else echo "<br /><img src='images/avatars/noavatar.gif' alt='' title='' /><br />";
 		echo "
 						<div class='post_info'><span style='color:#".$statuscolor."'><strong>$status</strong></span></div>

@@ -138,7 +138,7 @@ if (isset($_POST["u_edit"])) {
 						<span style='color:#".$statuscolor.";font-size:14px;'>".$rec[0]["user_name"]."</span>
 						<br />
 						<br />
-						<img src=\"".$rec[0]["avatar"]."\" width=\"".$rec[0]['avatar_width']."\" height=\"".$rec[0]['avatar_height']."\" alt='' title='' />
+						<img src=\"".$rec[0]["avatar"]."\" alt='' title='' />
 						<br />
 						<div class='link_pm'>";
 		require_once('./includes/inc/privmsg.inc.php');
@@ -282,7 +282,7 @@ if (isset($_POST["u_edit"])) {
 			</tr>
 			<tr>
 				<td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'>";
-		if (@$rec[0]["avatar"] != "") echo "<img src=\"".$rec[0]["avatar"]."\" border='0' width='".$rec[0]['avatar_width']."' height='".$rec[0]['avatar_height']."'><br />";
+		if (@$rec[0]["avatar"] != "") echo "<img src=\"".$rec[0]["avatar"]."\" border='0'><br />";
 		else echo "<img src='images/avatars/noavatar.gif' alt='' title='' />";
 		echo "</td>
 				<td class='area_2' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'>
@@ -291,12 +291,12 @@ if (isset($_POST["u_edit"])) {
 							<td style='text-align:center;width:50%;'>
 								<img src='images/avatars/blank.gif' id='myImage' alt='' title='' /></td>
 							<td><select class='select' size='5' name='avatar' onchange='swap(this.options[selectedIndex].value)'>\n";
-	
+
 		returnimages();
 		echo "</select></td></tr>
 					</table>
 				</td>";
-		
+
     if($custom_avatar) {
 		    echo "<td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input type='".(($_REGIST['custom_avatars'] == '2') ? "file'" : "text' value=''")." name='avatar2' /><p><i>Consult the forum admin for acceptable dimensions.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is 5Kb.' : '')."</i></p></td></tr>";
 		}

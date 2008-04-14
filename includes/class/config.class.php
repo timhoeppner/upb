@@ -175,14 +175,16 @@ class configSettings extends tdb {
     }
 
     function add($varName, $initialValue, $type, $dataOjbect, $formObject,  $category, $sort, $pageTitle, $pageDescription, $dataList='') {
-        // Add checks here
         $query = $this->query('config', "name='$varName'", 1, 1);
         if(!empty($query[0])) return false;
-        $query = $this->query('ext_config', "minicat='$category'&&sort>'$sort'");
+        $query = $this->query('ext_config', "minicat='$category'&&sort='$sort'");
         if(!empty($query[0])) {
-            foreach($query as $r) {
-                if(empty($r)) continue;
-                $this->edit('ext_config', $r['id'], array('sort' => ($r['sort']+1)));
+            $query = $this->query('ext_config', "minicat='$category'&&sort>'$sort'");
+            if(!empty($query[0])) {
+                foreach($query as $r) {
+                    if(empty($r)) continue;
+                    $this->edit('ext_config', $r['id'], array('sort' => ($r['sort']+1)));
+                }
             }
         }
         $recArr = array("name" => $varName,
@@ -224,7 +226,7 @@ class configSettings extends tdb {
                 break;
             default:
                 trigger_error('Invalid configVar type provided to addMiniCategory('.$title.')', E_USER_NOTICE);
-                break;
+                return false;
         }
 
         $title = str_replace(array(chr(29), chr(30), chr(31)), array('', '', ''), $title); //Make sure there isn't any record injection
@@ -284,7 +286,7 @@ class configSettings extends tdb {
         //print "\n".str_replace(array(chr(29), chr(30), chr(31)), array('&lt;29&gt;'."\n", '&lt;30&gt;', '&lt;31&gt;'."\n"), $tmp.$restOfFile);
 		$success = fwrite($f, $rec.$restOfFile);
 		fclose($f);
-		return (($success === false) ? false : true);
+		return (($success === false) ? false : $minicat_id);
     }
 
     function deleteCategory() {
@@ -292,6 +294,39 @@ class configSettings extends tdb {
     }
 
     function deleteMiniCategory() {
+        //Place Holder
+    }
+
+    function renameCategory ($type, $title) {
+        switch ($type) { //TEMPORARY $type validation,
+            case 'config':
+            case 'status':
+            case 'regist':
+                break;
+            default:
+                trigger_error('Invalid configVar type provided to addMiniCategory('.$title.')', E_USER_NOTICE);
+                return false;
+        }
+
+        $title = str_replace(array(chr(29), chr(30), chr(31)), array('', '', ''), $title); //Make sure there isn't any record injection
+
+		clearstatcache();
+        $file = file_get_contents(DB_DIR.'/config_org.dat');
+		$raws = explode(chr(29), $file);
+		$raws2 = explode(chr(31), rtrim($raws[0], chr(31)));
+		for($i=0,$c=count($raws2);$i<$c;$i++) {
+		    if(FALSE === strpos($raws2[$i], $type.chr(30))) continue;
+		    $raws2[$i] = $type.chr(30).$title;
+
+		    $f = fopen(DB_DIR.'/config_org.dat', 'w');
+		    fwrite($f, implode(chr(31), $raws2).chr(29).$raws[1]);
+		    fclose($f);
+		    return true;
+		}
+		return false;
+    }
+
+    function renameMiniCategory() {
         //Place Holder
     }
 
