@@ -43,7 +43,7 @@
 	    }
 	    $reg_code = uniqid('reg_', true);
 		// get the user's email address, NOTE: password is not available as it has already been encrypted.
-    $details = $tdb->query("users","id='{$_GET['id']}'",1,1,array('user_name','email')); 
+    $details = $tdb->query("users","id='{$_GET['id']}'",1,1,array('user_name','email'));
     $register_msg = str_replace(
         array('<login>', '<password>', '<url>'),
         array($details[0]['user_name'], 'UNAVAILABLE', "http://{$_SERVER['SERVER_NAME']}{$_SERVER['PHP_SELF']}?action=validate&id={$_GET['id']}&code={$reg_code}"),
@@ -61,7 +61,7 @@
         $tdb->edit('users', $_GET['id'], array('reg_code' => $reg_code));
 
 	    require_once('./includes/header.php');
-	    
+
       if($email_status) {
 	    ?><div class='alert_confirm'>
 			<div class='alert_confirm_text'>
@@ -98,7 +98,7 @@
 		if($_POST['u_email'] != $_POST['u_email2'])
 		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You\'re e-mails do not match.', ALERT_MSG)), true);
 
-	    if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["u_email"]))
+	    if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*\+[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["u_email"]))
 		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'Please enter a valid e-mail (ex: you@host.com).', ALERT_MSG)), true);
 
 	    $q = $tdb->query("users", "user_name='".$_POST["u_login"]."'", 1, 1);
@@ -136,9 +136,9 @@
 	   //call to checkdnsrr removed due to false negatives occuring. Some hosts use mail servers that use different domain names to the user email address.
 
 		if (substr(trim(strtolower($_POST["u_site"])), 0, 7) != "http://") $_POST["u_site"] = "http://" . $_POST["u_site"];
-    
+
     $reg_code = (((!$_CONFIG['email_mode'] && !$_REGIST['reg_approval']) || $tdb->is_logged_in()) ? '' : uniqid('reg_', true)); //create reg_code
-    
+
     //email code moved to before adding user to correctly configure reg_code before adding user to database
     $register_msg = $_REGISTER['register_msg'];
 		$register_msg = str_replace("<login>", $_POST['u_login'], $register_msg);
@@ -154,7 +154,7 @@
         }
     $_CONFIG['email_mode'] = $email_status;
     //$_CONFIG['email_mode'] is changed after editing config table to allow correct insertion of $reg_code
-    
+
 		$id = $tdb->add("users",
 		  array("user_name" => $_POST["u_login"],
 		    "password" => generateHash($u_pass),
@@ -177,7 +177,7 @@
 		    'reg_code' => $reg_code,
 		    'newTopicsData' => serialize(array('lastVisitForums' => array()))
 		  ));
-    
+
 		// If each user sends and receives one PM a day, their table will last 67.2 years
 		$temp_tdb = new tdb(DB_DIR."/", "privmsg.tdb");
 		$pmT_num = ceil($id / 100);
