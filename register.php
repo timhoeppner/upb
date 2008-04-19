@@ -176,7 +176,7 @@
         $_CONFIG['email_mode'] = $email_status;
 
         //Set reg_code if e-mail is sent out
-        if($reg_code != '') $tdb->edit($id, array('reg_code' => $reg_code));
+        if($reg_code != '') $tdb->edit('users', $id, array('reg_code' => $reg_code));
 
 
 		// If each user sends and receives one PM a day, their table will last 67.2 years
