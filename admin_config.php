@@ -57,123 +57,89 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 			print "
 			        <li><a href='admin_config.php?action=".$type."#skip_nav' title='".$title."'><span>".$title."</span></a></li>";
 		}
-		echo "
-			        <li><a href='admin_config.php?action=installation_mode' title='Toggle Installation Mode'><span>Installation Mode</span></a></li>
-					    </ul>
+		echo "    </ul>
 			</div>
 			<div style='clear:both;'></div>";
 
-		if($_GET["action"] == "installation_mode") {
-			echoTableHeading('Installation Mode Interface', $_CONFIG);
-			if(isset($_POST['a'])) {
-			    if($_POST['a'] == 'Turn Off') {
-			        $newline = "define('INSTALLATION_MODE', false, true);\n";
-			    } elseif($_POST['a'] == 'Turn On') {
-			        $newline = "define('INSTALLATION_MODE', true, true);\n";
-			    }
-			    $file = file('config.php');
-			    for($i=0,$c=count($file);$i<$c;$i++) {
-			        if(strpos($file[$i], 'INSTALLATION_MODE')) $file[$i] = $newline;
-			    }
-			    $file = implode('', $file);
-			    if(FALSE !== ($f = @fopen('config.php', 'w'))) {
-    			    fwrite($f, $file);
-    			    fclose($f);
-    			    print "Successfully toggled the installation mode for the board";
-    			    redirect('admin_config.php?action=installation_mode#skip_nav', 0);
-			    } else {
-			        print "Unable to edit config.php.  Make sure permissions are set correctly (644)";
-			    }
-			} else {
-                print '<form action="admin_config.php?action=installation_mode" method="POST">';
-    		    if(INSTALLATION_MODE) {
-                    print '<div class="area_2" style="text-align:center;"><strong>Installation Mode is currently in effect<p><input type="submit" name="a" value="Turn Off"></strong></div>';
-    		    } else {
-    		        print '<div class="area_2" style="text-align:center;"><strong>Installation Mode is currently in off<p><input type="submit" name="a" value="Turn On"></strong></div>';
-    		    }
-    		    print '</form>';
-			}
-			echoTableFooter(SKIN_DIR);
-		} else {
-		    $minicats = $config_tdb->fetchMiniCategories($_GET['action']);
-            $configVars = $config_tdb->getVars($_GET["action"], true);
-            echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
-         
-		    echoTableHeading("&nbsp;", $_CONFIG);
-		    while(list($minicat_id, $minicat_title) = each($minicats)) {
-				echo "
-			<tr>
-				<th colspan='2'>{$minicat_title}</th>
-			</tr>";
-				for($i=0, $j=1, $max=count($configVars);$j<$max;$i++) {
-					if($i>=$max) { $j++; $i=0; }//Current Sorting Rec not found after cycling through all available recs, skipping on to find the next sorting rec
-					if($configVars[$i]["minicat"] == $minicat_id && $configVars[$i]["sort"] == $j && $configVars[$i]["form_object"] != "hidden") {
-						echo "
-			<tr>
-				<td class='area_1' style='width:35%;padding:8px;'><strong>".$configVars[$i]["title"]."</strong>";
-						if($configVars[$i]["description"] != "") echo "<br />".$configVars[$i]["description"]."";
-						echo "</td>
-				<td class='area_2'>";
+		$minicats = $config_tdb->fetchMiniCategories($_GET['action']);
+		$configVars = $config_tdb->getVars($_GET["action"], true);
+		echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
+	 
+		echoTableHeading("&nbsp;", $_CONFIG);
+		while(list($minicat_id, $minicat_title) = each($minicats)) {
+			echo "
+		<tr>
+			<th colspan='2'>{$minicat_title}</th>
+		</tr>";
+			for($i=0, $j=1, $max=count($configVars);$j<$max;$i++) {
+				if($i>=$max) { $j++; $i=0; }//Current Sorting Rec not found after cycling through all available recs, skipping on to find the next sorting rec
+				if($configVars[$i]["minicat"] == $minicat_id && $configVars[$i]["sort"] == $j && $configVars[$i]["form_object"] != "hidden") {
+					echo "
+		<tr>
+			<td class='area_1' style='width:35%;padding:8px;'><strong>".$configVars[$i]["title"]."</strong>";
+					if($configVars[$i]["description"] != "") echo "<br />".$configVars[$i]["description"]."";
+					echo "</td>
+			<td class='area_2'>";
 
-						switch($configVars[$i]["form_object"]) {
-						    default:
-							case "text":
-							    echo "<input type=\"text\" name=\"".$configVars[$i]["name"]."\" value=\"".stripslashes($configVars[$i]["value"])."\" size='40'>";
-							    break 1;
-							case "password":
-							    echo "<input type=\"password\" name=\"".$configVars[$i]["name"]."\" value=\"".$configVars[$i]["value"]."\" size='40'>";
-							    break 1;
-							case "checkbox": //checkbox won't send an empty value, so we use a hidden field and modify it with javascript
-                                if((bool) $configVars[$i]["value"]) $checked = " checked";
-								else $checked = "";
-							    echo "<input type=\"checkbox\" name=\"".$configVars[$i]["name"]."_checkbox\" onChange=\"changeCheckboxValue(this.checked, document.form.".$configVars[$i]["name"].")\"size='40'".$checked.">";
-							    echo "<input type=\"hidden\" name=\"".$configVars[$i]["name"]."\" value=\"".(($configVars[$i]["value"]) ? '1':'0')."\">";
-							    break 1;
-							case "textarea":
-								echo "<textarea cols=30 rows=10 name=\"".$configVars[$i]["name"]."\">".stripslashes($configVars[$i]["value"])."</textarea>";
-							    break 1;
-							case "link":
-							case "url":
-							case "URL":
-								if($configVars[$i]["data_type"] != "") $target = " target=\"".$configVars[$i]["data_type"]."\"";
-								else $target = "";
-								echo "<a href=\"".$configVars[$i]["value"]."\"".$target.">".$configVars[$i]["name"]."</a>";
-							    break 1;
-							case "dropdownlist":
-							case "dropdown":
-							case "list":
-							    if(FALSE !== ($arr = unserialize($configVars[$i]['data_list']))) {
-							        print "<select name=\"{$configVars[$i]['name']}\">\n";
-							        $glb_var = '_'.strtoupper($_GET['action']);
-							        $glb_var =& $$glb_var;
-							        while(list($val, $text) = each($arr)) {
-							            if(preg_match("/^optgroup\d*$/i", $val)) print "<optgroup label=\"$text\">";
-							            else print "<option value=\"$val\"".(($glb_var[$configVars[$i]['name']] == $val) ? ' SELECTED':'').">$text</option>";
-							        }
-							    } else print "<i>Unable to display dropdown list</i>";
-							    break 1;
-							case "hidden":
-							    break 1;
-						}
-						echo "</td>
-		  </tr>";
-						$i = -1;
-						$j++;
+					switch($configVars[$i]["form_object"]) {
+						default:
+						case "text":
+							echo "<input type=\"text\" name=\"".$configVars[$i]["name"]."\" value=\"".stripslashes($configVars[$i]["value"])."\" size='40'>";
+							break 1;
+						case "password":
+							echo "<input type=\"password\" name=\"".$configVars[$i]["name"]."\" value=\"".$configVars[$i]["value"]."\" size='40'>";
+							break 1;
+						case "checkbox": //checkbox won't send an empty value, so we use a hidden field and modify it with javascript
+							if((bool) $configVars[$i]["value"]) $checked = " checked";
+							else $checked = "";
+							echo "<input type=\"checkbox\" name=\"".$configVars[$i]["name"]."_checkbox\" onChange=\"changeCheckboxValue(this.checked, document.form.".$configVars[$i]["name"].")\"size='40'".$checked.">";
+							echo "<input type=\"hidden\" name=\"".$configVars[$i]["name"]."\" value=\"".(($configVars[$i]["value"]) ? '1':'0')."\">";
+							break 1;
+						case "textarea":
+							echo "<textarea cols=30 rows=10 name=\"".$configVars[$i]["name"]."\">".stripslashes($configVars[$i]["value"])."</textarea>";
+							break 1;
+						case "link":
+						case "url":
+						case "URL":
+							if($configVars[$i]["data_type"] != "") $target = " target=\"".$configVars[$i]["data_type"]."\"";
+							else $target = "";
+							echo "<a href=\"".$configVars[$i]["value"]."\"".$target.">".$configVars[$i]["name"]."</a>";
+							break 1;
+						case "dropdownlist":
+						case "dropdown":
+						case "list":
+							if(FALSE !== ($arr = unserialize($configVars[$i]['data_list']))) {
+								print "<select name=\"{$configVars[$i]['name']}\">\n";
+								$glb_var = '_'.strtoupper($_GET['action']);
+								$glb_var =& $$glb_var;
+								while(list($val, $text) = each($arr)) {
+									if(preg_match("/^optgroup\d*$/i", $val)) print "<optgroup label=\"$text\">";
+									else print "<option value=\"$val\"".(($glb_var[$configVars[$i]['name']] == $val) ? ' SELECTED':'').">$text</option>";
+								}
+							} else print "<i>Unable to display dropdown list</i>";
+							break 1;
+						case "hidden":
+							break 1;
 					}
+					echo "</td>
+	  </tr>";
+					$i = -1;
+					$j++;
 				}
 			}
-echo "		<tr>
+		}
+		echo "		<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
-			echo "
+		echo "
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'>";
 
-      echo "<input type=submit value='Edit'>";
-      echo "</td>
+        echo "<input type=submit value='Edit'>";
+        echo "</td>
 			</tr>";
-echoTableFooter(SKIN_DIR);
-echo "</form>";
+		echoTableFooter(SKIN_DIR);
+		echo "</form>";
 
 /*
 print '<pre>'; print_r($configVars);
@@ -200,7 +166,6 @@ echo '
 print_r($all_config);
 print '</pre>';
 */
-		}
 	} else {
 		echo "
 <div class='alert'><div class='alert_text'>
