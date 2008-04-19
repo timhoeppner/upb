@@ -98,7 +98,7 @@
 		if($_POST['u_email'] != $_POST['u_email2'])
 		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You\'re e-mails do not match.', ALERT_MSG)), true);
 
-	    if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*\+[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["u_email"]))
+	    if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[_a-z0-9-]+(\.[_a-z0-9-]+)*)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["u_email"]))
 		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'Please enter a valid e-mail (ex: you@host.com).', ALERT_MSG)), true);
 
 	    $q = $tdb->query("users", "user_name='".$_POST["u_login"]."'", 1, 1);
@@ -139,22 +139,6 @@
 
     $reg_code = (((!$_CONFIG['email_mode'] && !$_REGIST['reg_approval']) || $tdb->is_logged_in()) ? '' : uniqid('reg_', true)); //create reg_code
 
-    //email code moved to before adding user to correctly configure reg_code before adding user to database
-    $register_msg = $_REGISTER['register_msg'];
-		$register_msg = str_replace("<login>", $_POST['u_login'], $register_msg);
-		$register_msg = str_replace("<password>", $u_pass, $register_msg);
-		$register_msg = str_replace("<url>", 'http://'.$_SERVER['SERVER_NAME'] . dirname($_SERVER['PHP_SELF']) . ((!$_REGIST['reg_approval'] && $_CONFIG['email_mode'] && !$tdb->is_logged_in()) ? '/register.php?action=validate&id='.$id : '').'&code='.$reg_code, $register_msg);
-        if (!@mail($_POST["u_email"], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"])) {
-            $email_status = false;
-            if($_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '0'));
-            $reg_code = ''; //remove reg_code if email not sent
-        } else {
-            $email_status = true;
-            if(!$_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '1'));
-        }
-    $_CONFIG['email_mode'] = $email_status;
-    //$_CONFIG['email_mode'] is changed after editing config table to allow correct insertion of $reg_code
-
 		$id = $tdb->add("users",
 		  array("user_name" => $_POST["u_login"],
 		    "password" => generateHash($u_pass),
@@ -174,9 +158,26 @@
 		    "date_added" => mkdate(),
 		    "lastvisit" => mkdate(),
 		    "timezone" => $_POST["u_timezone"],
-		    'reg_code' => $reg_code,
 		    'newTopicsData' => serialize(array('lastVisitForums' => array()))
 		  ));
+
+        $register_msg = $_REGISTER['register_msg'];
+    		$register_msg = str_replace("<login>", $_POST['u_login'], $register_msg);
+    		$register_msg = str_replace("<password>", $u_pass, $register_msg);
+    		$register_msg = str_replace("<url>", 'http://'.$_SERVER['SERVER_NAME'] . dirname($_SERVER['PHP_SELF']) . (($reg_code != '') ? '/register.php?action=validate&id='.$id : '').'&code='.$reg_code, $register_msg);
+            if (!@mail($_POST["u_email"], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"])) {
+                $email_status = false;
+                if($_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '0'));
+                $reg_code = ''; //remove reg_code if email not sent
+            } else {
+                $email_status = true;
+                if(!$_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '1'));
+            }
+        $_CONFIG['email_mode'] = $email_status;
+
+        //Set reg_code if e-mail is sent out
+        if($reg_code != '') $tdb->edit($id, array('reg_code' => $reg_code));
+
 
 		// If each user sends and receives one PM a day, their table will last 67.2 years
 		$temp_tdb = new tdb(DB_DIR."/", "privmsg.tdb");
