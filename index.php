@@ -12,15 +12,16 @@
 	    $now = mkdate();
 	    if($tdb->is_logged_in()) {
 	        $tdb->edit('users', $_COOKIE['id_env'], array('lastvisit' => $now));   //Update lastvisit field for next time
+	        if (!headers_sent()) setcookie("lastvisit", $now);
 	    }
-        while(list($key_1, $val_1) = each($_SESSION['newTopics'])) {    //Loop through each forum
+        if(!empty($_SESSION['newTopics'])) while(list($key_1, $val_1) = each($_SESSION['newTopics'])) {    //Loop through each forum
             if($key_1 == 'lastVisitForums') continue;
             while(list($key_2, $val_2) = each($_SESSION['newTopics'][$key_1])) {    //Loop through each topic
                 if($val_2 == 2) continue;       // Do not erase bookmarked topics
                 unset($_SESSION['newTopics'][$key_1][$key_2]);
             }
         }
-        while(list($key, $val) = each($_SESSION['newTopics']['lastVisitForums'])) {
+        if(!empty($_SESSION['newTopics']['lastVisitForums'])) while(list($key, $val) = each($_SESSION['newTopics']['lastVisitForums'])) {
             $_SESSION['newTopics']['lastVisitForums'][$key] = $now;
         }
         $ref = ((isset($_GET['ref'])) ? urldecode($_GET['ref']) : 'index.php');
@@ -122,6 +123,7 @@
     						$fRec = $fRec[0];
     						if ((int)$fRec["view"] <= (int)($_COOKIE["power_env"])) {
     							//if($fRec["cat"] == $cRec["id"]) {
+    							$_SESSION['newTopics']['lastVisitForums'][$fRec['id']] = $_COOKIE['lastvisit'];
     							$posts->setFp("topics", $fRec["id"]."_topics");
     							$tRec = $posts->listRec("topics", 1, 1);
     							if ($tRec[0]["id"] == "") {

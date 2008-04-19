@@ -90,7 +90,7 @@
     $tdb->updateVisitedTopics();
 	echo "<br>";
   $posts_tdb->d_topic($p);
-	
+
 	echoTableHeading($fRec[0]["forum"], $_CONFIG);
 	echo "
 		<tr>
@@ -132,13 +132,10 @@
 					}
 					$r_ext .= ")</div>";
 				}
-				if ($tRec["topic_starter"] == "guest")
-        {
-          $tRec["topic_starter"] = "<i>a guest</i>";
+				if ($tRec["topic_starter"] == "guest") {
+                  $tRec["topic_starter"] = "<i>a guest</i>";
 				  $statuscolor = '9d865e';
-				}
-				else
-			    $statuscolor = username_status($tRec['topic_starter']);
+				} else $statuscolor = username_status($tRec['topic_starter']);
         echo "
 		<tr>
 			<td class='area_2' onmouseover=\"this.className='area_2_over'\" onmouseout=\"this.className='area_2'\">
@@ -159,7 +156,7 @@
 		}
 	}
   echoTableFooter(SKIN_DIR);
-  
-  
+
+
 	require_once('./includes/footer.php');
 ?>

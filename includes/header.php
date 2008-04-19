@@ -57,7 +57,12 @@
 		    $_SESSION['__newTopicsHash'] = md5($user[0]['newTopicsData']);
 		}
 	} else {
-		if (!isset($_COOKIE["timezone"]) && !headers_sent()) setcookie("timezone", "0", (time() + (60 * 60 * 24 * 7)));
+		$default_timezone = '0';
+		$now = mkdate();
+		if (!isset($_COOKIE["timezone"]) && !headers_sent()) setcookie("timezone", $default_timezone, (time() + (60 * 60 * 24 * 7)));
+		if (!isset($_COOKIE["lastvisit"]) && !headers_sent()) setcookie("timezone", $now, (time() + (60 * 60 * 24 * 7)));
+		$_COOKIE['lastvisit'] = $now;
+		$_COOKIE['timezone'] = $default_timezone;
 	}
 	if (isset($_COOKIE['password_env'])) {
 		setcookie('password_env', '', time() - 3600);

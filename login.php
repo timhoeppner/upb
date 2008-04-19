@@ -21,8 +21,7 @@
             if (empty($r['lastvisit']))$r['lastvisit'] = mkdate();
 
 			if (headers_sent()) $error_msg = 'Could not login: headers sent.';
-			else
-			{
+			else {
 				setcookie("lastvisit", $r['lastvisit']);
 				if($r['level'] >= 3) {
 				    if($_REGIST['reg_approval']) {
