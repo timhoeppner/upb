@@ -1528,7 +1528,7 @@ class tdb {
      * @return bool false on fail, array records on success
      */
     function basicQuery($fp, $field, $value, $start = 1, $howmany = -1, $fields=array('*')) {
-        return $this->query($fp, "$field='$value'", $start, $howmany);
+        return $this->query($fp, "$field='$value'", $start, $howmany,$fields);
     }
 
     /**

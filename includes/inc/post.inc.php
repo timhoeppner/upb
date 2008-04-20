@@ -236,22 +236,6 @@ function getSmilies($field = 'message')
   return $output;
 }
 
-//I think Openning a new connection to db to find the color will slow down the board,
-//1: Use $GLOBALS['tdb'] incase the user is in the cache
-//2: See if level and post count can be passed in to save an access to the db
-function username_status($username, $power='', $post_count='') {
-	if($power == '' || $post_count == '') {
-		//$tdb = new tdb(DB_DIR.'/', 'main.tdb');
-		//$tdb->setFP("users","members");
-		$tdb =& $GLOBALS['tdb'];
-		$user = $tdb->basicQuery('users','user_name',$username, 1, 1);
-		$status_config = status($user);
-	} else {
-		$status_config = status(array('level'=>$power,'posts'=>$post_count));
-	}
-	return $status_config['statuscolor'];
-}
-
 function status($user)
 {
 $_STATUS = $GLOBALS['_STATUS'];
