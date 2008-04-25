@@ -1137,6 +1137,27 @@ vertical-align: middle;
 	color : #666666;
 	text-decoration : none;
 }
+/* Download style, taken from "simple_pages" from style_simple.css */
+.download_link {
+	font-family : Arial, Verdana, Tahoma, Sans-Serif, Georgia, Courier, Serif;
+	font-size : 11px;
+	line-height : 30px;
+	text-indent : 15px;
+	font-weight : bold;
+	color : #333333;
+	height : 30px;
+	background-color : #transparent;
+	#background-image : url(../images/simple_pages_bg.png); <!-- Needs to be converted to be transparent -->
+	background-repeat : no-repeat;
+}
+.download_link a:link, .download_link a:visited, .download_link a:active {
+	color : #333333;
+	text-decoration : underline;
+}
+.download_link a:hover {
+	color : #eeeeee;
+	text-decoration : none;
+}
 
 /* ------------------------------------------------ */
 /* ----Viewing a Post Area Special Elements End---- */

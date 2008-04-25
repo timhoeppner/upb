@@ -48,7 +48,6 @@
         array('<login>', '<password>', '<url>'),
         array($details[0]['user_name'], 'UNAVAILABLE', "http://{$_SERVER['SERVER_NAME']}{$_SERVER['PHP_SELF']}?action=validate&id={$_GET['id']}&code={$reg_code}"),
         $_REGISTER['register_msg']);
-		echo $register_msg;
         if (!@mail($details[0]['email'], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"])) {
             $email_status = false;
             if($_CONFIG['email_mode']) {

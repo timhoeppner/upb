@@ -103,24 +103,28 @@ if ($_POST['next'] == 0) {
 			array("data", "memo"),
 			array("id", "id")
 		), 2048);
+	}
 
-		$post_tdb->tdb(DB_DIR, 'posts');
-		$tableList = $post_tdb->getTableList();
-		foreach($tableList as $table) {
-			// Remove the database name from the tablename
-			$table = str_replace("posts_", "", $table);
+	$post_tdb->tdb(DB_DIR, 'posts');
+	$tableList = $post_tdb->getTableList();
+	foreach($tableList as $table) {
+		// Remove the database name from the tablename
+		$table = str_replace("posts_", "", $table);
 
-			// Make sure we don't get any topic tables
-			if(substr($table, -6) == "topics" || is_numeric($table)) continue;
-			$post_tdb->setFp("posts", $table);
+		// Make sure we don't get any topic tables
+		if(substr($table, -6) == "topics" || is_numeric($table)) continue;
+		$post_tdb->setFp("posts", $table);
+		$fields = $post_tdb->getFieldList('posts');
+		if(!in_array('upload_id', $fields) {
 			$post_tdb->addField("posts", array(
 				"upload_id",
 				"number",
 				10
 			));
 		}
-		unset($post_tdb, $tableList, $table);
 	}
+	unset($post_tdb, $tableList, $table);
+	
     $tdb->createDatabase(DB_DIR."/", "bbcode.tdb");
     $tdb->addField('users', array('newTopicsData', 'memo'));
     $tdb->addField('users', array('lastvisit', 'number', 14));

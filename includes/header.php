@@ -4,6 +4,7 @@
 	// Website: http://www.myupb.com
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
+	if(!defined('DB_DIR')) die('This is a wrapper script!');
     if (!headers_sent()) {
 		switch (basename($_SERVER['PHP_SELF'])) {
 			case 'register.php':

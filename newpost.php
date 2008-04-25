@@ -115,7 +115,7 @@
 		$posts_tdb->sort("topics", "last_post", "DESC");
 		clearstatcache();
 		$p_id = $posts_tdb->add("posts", array(
-		"icon" => $_POST["icon"],
+			"icon" => $_POST["icon"],
 			"user_name" => $_COOKIE["user_env"],
 			"date" => mkdate(),
 			"message" => $uploadText.$_POST["message"],
