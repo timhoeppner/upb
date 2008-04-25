@@ -1147,7 +1147,7 @@ vertical-align: middle;
 	color : #333333;
 	height : 30px;
 	background-color : #transparent;
-	#background-image : url(../images/simple_pages_bg.png); <!-- Needs to be converted to be transparent -->
+	background-image : url(../images/simple_pages_bg.png);
 	background-repeat : no-repeat;
 }
 .download_link a:link, .download_link a:visited, .download_link a:active {
