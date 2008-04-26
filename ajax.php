@@ -265,7 +265,7 @@ switch ($ajax_type)
 		if (@$user[0]["avatar"] != "") $output .= "<br /><img src=\"".$user[0]["avatar"]."\" border='0' alt='' title=''><br />";
 		else $output .= "<br /><a href='profile.php'><img src='images/avatars/blank.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
         $output .= "<div class='post_info'><span style='color:#".$statuscolor."'><strong>".$status."</strong></span></div>";
-        if ($pRec["user_id"] != "0") echo "
+        if ($pRec["user_id"] != "0") $output .= "
 
 					<div class='post_info'>
 						<strong>Posts:</strong> ".$user[0]["posts"]."
