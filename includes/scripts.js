@@ -346,7 +346,7 @@ function add_list_nav(type,areaId)
   var minus = 0;
   var closerTag = "[/"+type+"]";
 
-  var openerTag = "["+type+"]\r\n";
+  var openerTag = "["+type+"]";
 
   minus +=1
   
@@ -355,7 +355,7 @@ function add_list_nav(type,areaId)
   var x;
   
 	while (item = prompt('Enter an item\r\nLeave the box empty or click cancel to complete the list',''))
-	 items.push("[*]"+item+"[/*]\r\n");
+	 items.push("[*]"+item+"[/*]");
 	
 	itemString = items.join('');
   itemsize = items.length;
@@ -381,7 +381,7 @@ function add_list_IE(type,areaId)
 	var minus = 0;
   var closerTag = "[/"+type+"]";
 
-  var openerTag = "["+type+"]\r\n";
+  var openerTag = "["+type+"]";
 
   minus +=1
   
@@ -390,7 +390,7 @@ function add_list_IE(type,areaId)
   var item;
   
   while (item = prompt('Enter an item\r\nLeave the box empty or click cancel to complete the list',''))
-	 items.push("[*]"+item+"[/*]\r\n");
+	 items.push("[*]"+item+"[/*]");
 	
 	itemString = items.join('');
   itemsize = items.length;
