@@ -9,16 +9,6 @@
 	if (TRUE !== is_writable('config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
 	if (filesize('config.php') > 0) {
 		require_once('config.php');
-		if (INSTALLATION_MODE === FALSE) {
-			$msg = '';
-			if (isset($_COOKIE['user_env'])) $msg .= $_COOKIE['user_env'];
-			else $msg .= 'Someone';
-			if (isset($_COOKIE['id_env'])) $msg .= '(User ID:'.$_COOKIE['id_env'].')';
-			if (isset($_SERVER['REMOTE_ADDR'])) $msg .= 'with the IP Address "'.$_SERVER['REMOTE_ADDR'].'"';
-			$msg .= 'tried to initiate an installation or upgrade file.  Since the installation and upgrade files pose a risk, this could be an attempted hack.  The administrator, you, were notified.  It is advised you delete installation and upgrade files, which are no long use, and ban the IP Address and username, if given.';
-			if(defined(ADMIN_EMAIL)) @mail(ADMIN_EMAIL, 'SECURITY ALERT on your forum', $msg);
-			die('<strong>Security Risk</strong>:  Unable to initiate installation. An Administrater must put the forum in Installation Mode.  Your IP Address has been sent to the administrater aswell as login information.');
-		}
 	}
 	if(!isset($_POST['add'])) $_POST['add'] = '';
 	if ($_POST["add"] == "") {
@@ -101,7 +91,7 @@
 		if (!defined('DB_DIR')) {
 			define('DB_DIR', './'.uniqid('data_', true), true);
 			$f = fopen('config.php', 'w');
-			fwrite($f, "<?php\ndefine('INSTALLATION_MODE', true, true);\ndefine('UPB_VERSION', '2.2.1', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
+			fwrite($f, "<?php\ndefine('UPB_VERSION', '2.2.1', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
       ?><?php
       //allows syntax highlighting to be work again for coding purposes
 			fclose($f);
@@ -265,7 +255,7 @@
 		$config_tdb->add('fileupload_location', './'.$uploads_dir, 'config', 'text', 'hidden', '', '', '', ''); //Since upload's name are gone, doesn't make much sense to let user pick the uploads location...
 
 		$config_tdb->add('title', 'Discussion Forums', 'config', 'text', 'text', '1', '1', 'Title', 'Title of the forum.');
-		$config_tdb->add('logo', 'images/logo.gif', 'config', 'text', 'text', '1', '2', 'Logo Location', 'Can be relative or a URL.');
+		$config_tdb->add('logo', 'skins/default/images/logo.png', 'config', 'text', 'text', '1', '2', 'Logo Location', 'Can be relative or a URL.');
 		$config_tdb->add('homepage', 'http://www.myupb.com/', 'config', 'text', 'text', '1', '3', 'Homepage URL', 'Can be relative or a URL.');
 		$config_tdb->add('skin_dir', './skins/default', 'config', 'text', 'test', '1', '7', 'Skin Directory', 'Leave it unless you upload another skin.');
 		$config_tdb->add('servicemessage', '', 'config', 'text', 'textarea', '1', '8', 'Service Message', 'Service Messages appear above the forum, if nothing input, Announcements will not be displayed. Html is allowed.');
@@ -469,10 +459,8 @@
 		</table>
 	</div>
 	<br />
-	<br />";
-			echo "
-<form action='<?php print $_SERVER['PHP_SELF']; ?>' method='post'>";
-			echo "
+	<br />
+<form action='<?php print $_SERVER['PHP_SELF']; ?>' method='post'>
 	<div class='main_cat_wrapper'>
 		<div class='cat_area_1'>myUPB v2.2.1 Installer</div>
 		<table class='main_table' cellspacing='1'>
@@ -567,19 +555,6 @@
     		$edit_config = array("title" => $_POST["title"], "fileupload_size" => $_POST["fileupload_size"], "homepage" => $_POST["homepage"]);
     		$edit_regist = array("register_sbj" => $_POST["register_sbj"], "register_msg" => $_POST["register_msg"], "admin_email" => $_POST["admin_email"]);
     		if ($config_tdb->editVars("config", $edit_config) && $config_tdb->editVars("regist", $edit_regist)) {
-    			$config_file = file('config.php');
-    			for($i = 0; $i < count($config_file); $i++) {
-    				if (empty($config_file[$i])) unset($config_file[$i]);
-    				if (strchr($config_file[$i], "INSTALLATION_MODE")) {
-    					$config_file[$i] = "define('INSTALLATION_MODE', false, true);";
-    					break;
-    				}
-    			}
-    			$config_file = implode("\n", $config_file);
-    			$f = fopen('config.php', 'w');
-    			fwrite($f, $config_file);
-    			fclose($f);
-    			unset($config_file);
     			echo "
     			<div class='alert_confirm'>
     				<div class='alert_confirm_text'>
