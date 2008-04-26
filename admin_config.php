@@ -96,7 +96,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 							echo "<input type=\"hidden\" name=\"".$configVars[$i]["name"]."\" value=\"".(($configVars[$i]["value"]) ? '1':'0')."\">";
 							break 1;
 						case "textarea":
-							echo "<textarea cols=30 rows=10 name=\"".$configVars[$i]["name"]."\">".stripslashes($configVars[$i]["value"])."</textarea>";
+							echo "<textarea cols=50 rows=10 name=\"".$configVars[$i]["name"]."\">".stripslashes($configVars[$i]["value"])."</textarea>";
 							break 1;
 						case "link":
 						case "url":
