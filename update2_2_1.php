@@ -124,7 +124,7 @@ if ($_POST['next'] == 0) {
 		}
 	}
 	unset($post_tdb, $tableList, $table);
-	
+
     $tdb->createDatabase(DB_DIR."/", "bbcode.tdb");
     $tdb->addField('users', array('newTopicsData', 'memo'));
     $tdb->addField('users', array('lastvisit', 'number', 14));
@@ -237,13 +237,14 @@ if ($_POST['next'] == 0) {
     $config_tdb->renameCategory('regist', 'New Members');
     //How to add more Mini Categories to the config_org.dat file
     $post_settings_id = $config_tdb->addMiniCategory('Posting Settings', 'config');
-    $reg_setting_id = $config_tdb->addMiniCategory('Registration Settings', 'regist', '8', false);
+    $reg_setting_id = $config_tdb->addMiniCategory('Registration Settings', 'regist', '8');
+    $avatar_setting_id = $config_tdb->addMiniCategory("Users' Avatars", 'regist', false);
 
     /*  Correct way to edit values in config */
     $config_tdb->add('security_code', '1', 'regist', 'bool', 'checkbox', $reg_setting_id, '2', 'Enable Security Code', 'Enable the CAPTCHA security code image for new user registration<br><strong>Enabling this is recommended</strong>');
     $config_tdb->add('banned_words', 'shit,fuck,cunt,pussy,bitch,arse', 'config', 'text', 'hidden', '', '', '', '');
     $config_tdb->add('email_mode', '1', 'config', 'bool', 'hidden', '', '', '', '');
-    $config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8', '2', 'Custom Avatars', 'Allow users to link or upload their own avatars instead of choosing them locally in images/avatars/', 'a:3:{i:0;s:7:"Disable";i:1;s:4:"Link";i:2;s:6:"Upload";}');
+    $config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', $avatar_setting_id, '2', 'Custom Avatars', 'Allow users to link or upload their own avatars instead of choosing them locally in images/avatars/', 'a:3:{i:0;s:7:"Disable";i:1;s:4:"Link";i:2;s:6:"Upload";}');
 
     $config_tdb->add('disable_reg', '0', 'regist', 'bool', 'checkbox', $reg_setting_id, '1', 'Disable Registration', 'Checking this will disable public registration (deny access to register.php), and only admins will be able to add users (Add button on "Manage Members" section)');
     $config_tdb->add('reg_approval', '0', 'regist', 'bool', 'checkbox', $reg_setting_id, '3', 'Approve New Users', 'Checking this will mean after new users register, their account will be disabled until an admin approves their account via "Manage Members"');
@@ -261,8 +262,8 @@ if ($_POST['next'] == 0) {
     $config[] = array('name' => 'fileupload_size', 'description' => 'In kilobytes, type in the maximum size allowed for file uploads<br><i>Note: Setting to 0 will <b>disable</b> uploads</i>', 'minicat'=>$post_settings_id,'sort'=>4);
     $config[] = array('name' => 'censor', 'minicat'=>$post_settings_id,'sort'=>5);
     $config[] = array('name' => 'sticky_note', 'minicat'=>$post_settings_id,'sort'=>6);
-    $config[] = array('name' => 'sticky_after', 'minicat'=>$post_settings_id,'sort'=>7);
-    $config[] = array('name' => 'newuseravatars', 'value' => '50', 'type' => 'regist', 'data_type' => 'number', 'form_object' => 'text', 'minicat' => '8', 'sort' => '1', 'title' => 'New User Avatars', 'description' => 'Prevent new users from choosing their own avatars (if "Custom Avatars" is enabled), by defining a minimum post count they must have (Set to 0 to disable)');
+    $config[] = array('name' => 'sticky_after', 'minicat'=>$post_settings_id,'sort'=>7, 'data_type'=>'bool');
+    $config[] = array('name' => 'newuseravatars', 'value' => '50', 'type' => 'regist', 'data_type' => 'number', 'form_object' => 'text', 'minicat' => $avatar_setting_id, 'sort' => '1', 'title' => 'New User Avatars', 'description' => 'Prevent new users from choosing their own avatars (if "Custom Avatars" is enabled), by defining a minimum post count they must have (Set to 0 to disable)');
     $regist[] = array('name' => 'register_msg', 'description' => 'This is the message for confirmation of registration.<br>(options: &lt;login&gt;, &lt;password&gt;, and &lt;url&gt;)');
     $config_tdb->editVars('config', $config, true);
     $config_tdb->editVars('regist', $regist, true);
@@ -274,6 +275,7 @@ if ($_POST['next'] == 0) {
     $tdb->removeField('users', 'mail_list');
     $tdb->removeField('users', 'avatar_width');
     $tdb->removeField('users', 'avatar_height');
+    $tdb->removeField('users', 'avatar_hash');
     $tdb->cleanUp();
     $tdb->setFp("smilies","smilies");
     $tdb->setFp("icons","icons");

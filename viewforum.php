@@ -135,11 +135,16 @@
 				if ($tRec["topic_starter"] == "guest") {
                   $tRec["topic_starter"] = "<i>a guest</i>";
 				  $statuscolor = '9d865e';
-				} 
-        else {
-        $user_data = $tdb->basicQuery('users','user_name',$tRec['topic_starter'], 1, 1,array('level','posts'));
-        $status_config = status($user_data);
-        }
+				} else {
+					$user_data = $tdb->get('users', $tRec["user_id"], array('level','posts'));
+					if($user_data === false) $status_config = array('statuscolor' => '9d865e');
+					else $status_config = status($user_data);
+					$status_config = status($user_data);
+					$statuscolor = $status_config['statuscolor'];
+				}
+				$user_data = $tdb->get('users', $tRec["user_id"], array('level','posts'));
+				if($user_data === false) $status_config = array('statuscolor' => '9d865e');
+				else $status_config = status($user_data);
         echo "
 		<tr>
 			<td class='area_2' onmouseover=\"this.className='area_2_over'\" onmouseout=\"this.className='area_2'\">

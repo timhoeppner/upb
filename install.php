@@ -177,7 +177,6 @@
 			array("location", "memo"),
 			array("url", "memo"),
 			array("avatar", "memo"),
-			array("avatar_hash", "string", 32),
 			array("icq", "number", 20),
 			array("aim", "string", 24),
 			array("yahoo", "memo"),

@@ -167,7 +167,7 @@
             if (!@mail($_POST["u_email"], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"])) {
                 $email_status = false;
                 if($_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '0'));
-                $reg_code = ''; //remove reg_code if email not sent
+                if(!$_REGIST['reg_approval']) $reg_code = ''; //remove reg_code if email not sent
             } else {
                 $email_status = true;
                 if(!$_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '1'));
@@ -175,7 +175,10 @@
         $_CONFIG['email_mode'] = $email_status;
 
         //Set reg_code if e-mail is sent out
-        if($reg_code != '') $tdb->edit('users', $id, array('reg_code' => $reg_code));
+        if($reg_code != '') {
+			clearstatcache();
+			$tdb->edit('users', $id, array('reg_code' => $reg_code));
+		}
 
 
 		// If each user sends and receives one PM a day, their table will last 67.2 years
@@ -195,10 +198,10 @@
 			  <strong>Thank you for registering:</strong></div>
 			<div style='padding:4px;'>";
         if($tdb->is_logged_in()) {
-            print "The user, <b>{$_POST['u_login']}</b>, has been registered.";
+            print "The user, <b>{$_POST['u_login']}</b>, has been registered.&nbsp;&nbsp;";
             if($email_status)
-                print "&nbsp;&nbsp;An e-mail was sent to them, with their username and password.";
-            else print "&nbsp;&nbsp;An e-mail could not be sent to them, so you must give them their username and password:
+                print "An e-mail was sent to them, with their username and password.";
+            else print "An e-mail could not be sent to them, so you must give them their username and password:
                 <br /><strong>Username:</strong> ".$_POST['u_login'];
     		    echo "<br /><strong>Password:</strong> $u_pass";
         } else {
@@ -213,8 +216,7 @@
                 <br />It should arrive within 2 - 5 minutes.
                 <br />If you haven't received your e-mail after a significant amount of time please contact an administrator.";
             } else if(!$email_status && $_REGIST['reg_approval']) {
-                print "You won't be able to log in until an administrator approves your registration.
-                <br />It should arrive within 2 - 5 minutes.";
+                print "You won't be able to log in until an administrator approves your registration.";
             } else {
     	        echo "<br />Your login details:<br /><strong>Username:</strong> ".$_POST['u_login'];
     		    echo "<br /><strong>Password:</strong> $u_pass";

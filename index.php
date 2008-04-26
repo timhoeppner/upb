@@ -123,7 +123,7 @@
     						$fRec = $fRec[0];
     						if ((int)$fRec["view"] <= (int)($_COOKIE["power_env"])) {
     							//if($fRec["cat"] == $cRec["id"]) {
-    							$_SESSION['newTopics']['lastVisitForums'][$fRec['id']] = $_COOKIE['lastvisit'];
+    							if(!isset($_SESSION['newTopics']['lastVisitForums'][$fRec['id']])) $_SESSION['newTopics']['lastVisitForums'][$fRec['id']] = $_COOKIE['lastvisit'];
     							$posts->setFp("topics", $fRec["id"]."_topics");
     							$tRec = $posts->listRec("topics", 1, 1);
     							if ($tRec[0]["id"] == "") {

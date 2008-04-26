@@ -1222,7 +1222,7 @@ class tdb {
             //return $this->parseRecord($fp, $buffer, $header); //new method
             return array($this->parseRecord($fp, $buffer, $header, $reqFields)); //old method
         }
-        $this->sendError(E_PARSE, 'Unable to parse record with recordId of '.$id.' at fileId:'.$fileId.' in get() at '.$this->fp[$fp], __LINE__);
+        $this->sendError(E_USER_NOTICE, 'Unable to parse record with recordId of '.$id.' at fileId:'.$fileId.' in get() at '.$this->fp[$fp], __LINE__);
         return false;
     }
 

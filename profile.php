@@ -123,6 +123,10 @@ if (isset($_POST["u_edit"])) {
 		exit;
 	} else {
 		$rec = $tdb->get("users", $_GET["id"]);
+		if($rec === false) {
+		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'This user was either deleted or not found.', ALERT_MSG)),
+		    true);
+		}
 
 		$status_config = status($rec);
 		$status = $status_config['status'];
@@ -141,6 +145,7 @@ if (isset($_POST["u_edit"])) {
 						<img src=\"".$rec[0]["avatar"]."\" alt='' title='' />
 						<br />
 						<div class='link_pm'>";
+		if($_COOKIE['power_env'] >= 3 && $rec[0]['level'] <= $_COOKIE['power_env']) print "<a href='admin_members.php?action=edit&id={$_GET['id']}'>Edit Member</a><br/>";
 		require_once('./includes/inc/privmsg.inc.php');
 		$blockedList = getUsersPMBlockedList($_GET["id"]);
 		if ($_GET["id"] == $_COOKIE["id_env"]) {
@@ -272,7 +277,8 @@ if (isset($_POST["u_edit"])) {
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
 		echoTableFooter(SKIN_DIR);
-		$custom_avatar = (($rec[0]['post_count'] > $_REGIST['newuseravatars'] || $_COOKIE['power_env'] > 1) && $_REGIST['custom_avatars']);
+
+		$custom_avatar = (($rec[0]['posts'] >= $_REGIST['newuseravatars'] || $_COOKIE['power_env'] > 1) && $_REGIST['custom_avatars']);
 		echoTableHeading("Avatar Options", $_CONFIG);
 		echo "
 			<tr>

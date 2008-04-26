@@ -90,8 +90,8 @@
     	        require_once('./includes/footer.php');
     	        exit;
 	        }
-    }
-	  echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
+		}
+	    echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
 		<tr>
 			<th>Admin Panel Navigation</th>
@@ -134,7 +134,7 @@
 				echo "
 			<tr>
 				<td class='area_1' style='padding:8px;'><input type='checkbox' name='sel_{$user['id']}'></td>
-				<td class='area_2'>{$user["user_name"]}</td>";
+				<td class='area_2'><a href='{$_SERVER['PHP_SELF']}?action=edit&id={$user['id']}'>{$user["user_name"]}</a></td>";
 				if ($user['view_email']) echo "
 				<td class='area_1'>".$user["email"]."</td>";
 				else echo "
@@ -163,13 +163,16 @@
 				<div class='alert'><div class='alert_text'>
 				<strong>Error!</strong></div><div style='padding:4px;'>No id selected!</div></div>");
 		$rec = $tdb->get("users", $_GET["id"]);
+		if($_COOKIE['power_env'] < $rec[0]['level']) exitPage("
+				<div class='alert'><div class='alert_text'>
+				<strong>Attention</strong></div><div style='padding:4px;'>You do not have enough access to edit this user.</div></div>");
 		if (isset($_POST["a"])) {
 			if (!isset($_POST["email"])) exitPage("
 				<div class='alert'><div class='alert_text'>
-				<strong>Error!</strong></div><div style='padding:4px;'>please enter a valid email!</div></div>");
+				<strong>Error!</strong></div><div style='padding:4px;'>Please enter a valid email!</div></div>");
 			if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["email"])) exitPage("
 				<div class='alert'><div class='alert_text'>
-				<strong>Error!</strong></div><div style='padding:4px;'>please enter a valid email!</div></div>");
+				<strong>Error!</strong></div><div style='padding:4px;'>Please enter a valid email!</div></div>");
 			if (strlen(chop($_POST["sig"])) > 200) exitPage("
 				<div class='alert'><div class='alert_text'>
 				<strong>Error!</strong></div><div style='padding:4px;'>You cannot have more than 200 characters in the signature.</div></div>");
@@ -194,7 +197,7 @@
 				<div class='alert_confirm'>
 				<div class='alert_confirm_text'>
 				<strong>Successfully edited: ".$rec[0]["user_name"]."!</div><div style='padding:4px;'>
-				<a href='admin_members.php?page=".$_GET["page"]."'>Go Back to Member's list</a>
+				<a href='admin_members.php?page=".$_GET["page"]."#skip_nav'>Go Back to Member's list</a>
 				</div>
 				</div>";
 		} else {
@@ -232,7 +235,7 @@
 			fseek($f, (((int)$rec[0]["id"] * 2) - 2));
 			$tmp_new_pm = fread($f, 2);
 			fclose($f);
-      $lastvisit = $rec[0]['lastvisit'];
+      $lastvisit = (int)$rec[0]['lastvisit'];
 			echo "
 			</tr>
 			<tr>
@@ -293,7 +296,8 @@
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Last login:</strong></td>
 				<td class='area_2'>";
-        if (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d'))
+		if($lastvisit == 0) print '<i>Never</i>';
+        else if (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d'))
           echo '<i>today</i>';
         else if (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y'))))
           echo '<i>yesterday</i>';
@@ -396,13 +400,13 @@
 				<div class='alert_confirm'>
 				<div class='alert_confirm_text'>
 				<strong>Redirecting:</div><div style='padding:4px;'>
-				Successfully deleted ".$rec[0]["user_name"].".<br /><a href='admin_members.php'>Go Back</a>
+				Successfully deleted ".$rec[0]["user_name"].".<br /><a href='admin_members.php?page={$_GET['page']}#skip_nav'>Go Back</a>
 				</div>
 				</div>";
 		} elseif($_POST["verify"] == "Cancel") {
-			echo "<meta http-equiv='refresh' content='0;URL=admin_members.php'>";
+			echo "<meta http-equiv='refresh' content='0;URL=admin_members.php?page={$_GET['page']}'>";
 		} else {
-			ok_cancel("admin_members.php?action=delete&id=".$_GET["id"], "Are you sure you want to delete <strong><a href='profile.php?action=get&id=".$_GET["id"]."' targer='_blank'>".$rec[0]["user_name"]."</a></strong>?");
+			ok_cancel("admin_members.php?action=delete&id={$_GET["id"]}&page={$_GET['page']}", "Are you sure you want to delete <strong><a href='profile.php?action=get&id=".$_GET["id"]."' targer='_blank'>".$rec[0]["user_name"]."</a></strong>?");
 		}
 	} else {
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
@@ -441,9 +445,9 @@
           <div style='clear:both;'></div>
           <div id='tabstyle_2'>
             <ul>
-              <li><a href='register.php' title='Add Member'><span>Add Member</span></a></li>
-              <li><a href='admin_members.php?action=confirm#skip_nav' title='Confirm New Members'><span>Confirm New Members</span></a></li>
-              <li><a href='admin_banuser.php#skip_nav' title='Manage Banned Members'><span>Manage Banned Members</span></a></li>
+              <li><a href='register.php' title='Add Member'><span>Add Member</span></a></li>";
+              if($_REGIST['reg_approval']) echo "<li><a href='admin_members.php?action=confirm#skip_nav' title='Confirm New Members'><span>Confirm New Members</span></a></li>";
+              echo "<li><a href='admin_banuser.php#skip_nav' title='Manage Banned Members'><span>Manage Banned Members</span></a></li>
             </ul>
           </div>
           <div style='clear:both;'></div>";
@@ -499,8 +503,8 @@
         if ($user['level'] != 9)
         {
           echo "<a href='admin_banuser.php?ref=admin_members.php?page=".$_GET["page"]."&action=";
-				  if (!in_array($user["user_name"], $bList)) echo 'addnew&newword='.$user["user_name"]."'>";
-				  else echo 'delete&word='.$user["user_name"]."'><strong>Un</strong>";
+				  if (!in_array($user["user_name"], $bList)) echo 'addnew&newword='.$user["user_name"]."&page={$_GET['page']}'>";
+				  else echo 'delete&word='.$user["user_name"]."&page={$_GET['page']}'><strong>Un</strong>";
 			 	  echo "Ban</a>";
         }
         echo "</td>";
@@ -510,7 +514,7 @@
         echo "</td>";
 				echo "<td class='area_2' style='text-align:center;'>";
         if ($user['level'] != 9)
-          echo "<a href='admin_members.php?action=delete&id=".$user["id"]."'>Delete</a>";
+          echo "<a href='admin_members.php?action=delete&id=".$user["id"]."&page={$_GET['page']}'>Delete</a>";
         echo "</td>
 			</tr>";
 			}

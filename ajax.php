@@ -111,8 +111,6 @@ switch ($ajax_type)
     $posts_tdb->set_forum($fRec);
     $tdb->setFp('users', 'members');
 
-    if (!isset($a)) $a = 0;
-
     if(!($tdb->is_logged_in()))
     {
       $_COOKIE["user_env"] = "guest";
@@ -122,29 +120,22 @@ switch ($ajax_type)
 
     $msg = encode_text(stripslashes($_POST["newentry"]));
     $tdb->edit("forums", $_POST["id"], array("posts" => ((int)$fRec[0]["posts"] + 1)));
-    $rec = $posts_tdb->get("topics", $_POST["t_id"]);
-
-    $posts_tdb->edit("topics", $_POST["t_id"], array("replies" => ((int)$rec[0]["replies"] + 1), "last_post" => mkdate(), "user_name" => $_COOKIE["user_env"], "user_id" => $_COOKIE["id_env"], "monitor" => ""));
-
-    $pre = $rec[0]["p_ids"].",";
-
-    clearstatcache();
-    $posts_tdb->sort("topics", "last_post", "DESC");
-    clearstatcache();
-
-    $post_date = mkdate();
 
     $p_id = $posts_tdb->add("posts", array(
         "icon" => $_POST["icon"],
         "user_name" => $_COOKIE["user_env"],
-        "date" => $post_date,
+        "date" => mkdate(),
         "message" => $msg,
         "user_id" => $_COOKIE["id_env"],
         "t_id" => $_POST["t_id"],
-        "upload_id" => $uploadId
+        "upload_id" => 0
     ));
 
-    $posts_tdb->edit("topics", $_POST["t_id"], array("p_ids" => $pre.$p_id));
+	$rec = $posts_tdb->get("topics", $_POST["t_id"]);
+    $posts_tdb->edit("topics", $_POST["t_id"], array("replies" => ((int)$rec[0]["replies"] + 1), "last_post" => mkdate(), "user_name" => $_COOKIE["user_env"], "user_id" => $_COOKIE["id_env"], "monitor" => "", "p_ids" => $rec[0]["p_ids"].",".$p_id));
+    clearstatcache();
+    $posts_tdb->sort("topics", "last_post", "DESC");
+    clearstatcache();
 
     if($_COOKIE["power_env"] != "0")
     {
@@ -166,6 +157,8 @@ switch ($ajax_type)
       $_COOKIE["power_env"] = 0;
     }
     else $posts_tdb->set_user_info($_COOKIE["user_env"], $_COOKIE["uniquekey_env"], $_COOKIE["power_env"], $_COOKIE["id_env"]);
+    $_SESSION['newTopics']['f'.$_POST['id']]['t'.$_POST['t_id']] = 0;
+	$_SESSION['view_'.$_POST['id'].'_'.$_POST['t_id']] = time();
     $page=1;
 
     $postids = $tRec[0]['p_ids'];
@@ -213,6 +206,10 @@ switch ($ajax_type)
 		$pm = "";
 		if ($pRec["user_id"] != "0") {
 			$user = $tdb->get("users", $pRec["user_id"]);
+            if($user === false) {
+                $user = array(array('level'=>0, 'status'=>'<i>Deleted Member</i>'));
+                $pRec['user_id'] = '0';
+            }
 			if ($user[0]["sig"] != "") {
 				$sig = format_text(filterLanguage(UPBcoding($user[0]["sig"]), $_CONFIG));
 				$sig = "<div class='signature'>$sig</div>";
@@ -266,9 +263,10 @@ switch ($ajax_type)
 			<tr>
 				<td class='$table_color' valign='top' style='width:15%;'>";
 		if (@$user[0]["avatar"] != "") $output .= "<br /><img src=\"".$user[0]["avatar"]."\" border='0' alt='' title=''><br />";
-		else $output .= "<br /><a href='profile.php'><img src='images/avatars/noavatar.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
-		if ($pRec["user_id"] != "0") $output .= "
-					<div class='post_info'><span style='color:#".$statuscolor."'><strong>".$status."</strong></span></div>
+		else $output .= "<br /><a href='profile.php'><img src='images/avatars/blank.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
+        $output .= "<div class='post_info'><span style='color:#".$statuscolor."'><strong>".$status."</strong></span></div>";
+        if ($pRec["user_id"] != "0") echo "
+
 					<div class='post_info'>
 						<strong>Posts:</strong> ".$user[0]["posts"]."
 						<br />

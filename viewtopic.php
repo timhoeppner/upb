@@ -78,6 +78,10 @@
 		$pm = "";
 		if ($pRec["user_id"] != "0") {
 			$user = $tdb->get("users", $pRec["user_id"]);
+            if($user === false) {
+                $user = array(array('level'=>0, 'status'=>'<i>Deleted Member</i>'));
+                $pRec['user_id'] = '0';
+            }
 			if ($user[0]["sig"] != "") {
 				$sig = format_text(filterLanguage(UPBcoding($user[0]["sig"]), $_CONFIG));
 				$sig = "<div class='signature'>$sig</div>";
@@ -87,7 +91,7 @@
 			$statuscolor = $status_config['statuscolor'];
 
 			if ($user[0]["status"] != "") $status = $user[0]["status"];
-			if (isset($_COOKIE["id_env"]) && $pRec["user_id"] != $_COOKIE["id_env"]) {
+			if (isset($_COOKIE["id_env"]) && $pRec["user_id"] != $_COOKIE["id_env"] && $pRec['user_id'] != 0) {
 				$user_blList = getUsersPMBlockedList($pRec["user_id"]);
 				if (TRUE !== (in_array($_COOKIE["id_env"], $user_blList))) $pm = "<div class='button_pro2'><a href='newpm.php?to=".$pRec["user_id"]."'>Send ".$pRec["user_name"]." a PM</a></div>";
 			}
@@ -136,9 +140,9 @@
 				<td class='$table_color' valign='top' style='width:15%;'>";
 		if (@$user[0]["avatar"] != "") echo "<br /><img src=\"".$user[0]["avatar"]."\" border='0' alt='' title=''><br />";
 		else if ($pRec["user_id"] != "0")
-      echo "<br /><a href='profile.php'><img src='images/avatars/noavatar.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
-		if ($pRec["user_id"] != "0") echo "
-					<div class='post_info'><span style='color:#".$statuscolor."'><strong>".$status."</strong></span></div>
+        echo "<br /><a href='profile.php'><img src='images/avatars/blank.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
+        print "<div class='post_info'><span style='color:#".$statuscolor."'><strong>".$status."</strong></span></div>";
+        if ($pRec["user_id"] != "0") echo "
 					<div class='post_info'>
 						<strong>Posts:</strong> ".$user[0]["posts"]."
 						<br />

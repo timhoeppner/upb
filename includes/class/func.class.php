@@ -26,7 +26,7 @@ class functions extends tdb {
             {
               if($rec[0]['reg_code'] != '') {
                   $error = 'Your account has not been validated yet.';
-                  if(!$_REGIST['reg_approval']) $error .= '  To resend your confirmation e-mail, <a href="register.php?action=resend&id='.$rec[0]['id'].'">click here</a>.';
+                  if(!$GLOBALS['_REGIST']['reg_approval']) $error .= '  To resend your confirmation e-mail, <a href="register.php?action=resend&id='.$rec[0]['id'].'">click here</a>.';
                   else $error .= '  The forum admin hasn\'t approved your account yet.';
                   return false;
               }
