@@ -120,7 +120,7 @@ class posts extends tdb {
 				<li><a href='managetopic.php?action=OpenTopic&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><span>Open topic?</span></a></li>";
 */
 		    $output .= "
-				<li><a href='managetopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><span>Options</span></a></li>";
+				<li><a href='managetopic.php?id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."'><span>Options</span></a></li>";
 	    }
    	$output .= "
         </ul>
