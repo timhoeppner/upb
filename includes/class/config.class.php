@@ -61,8 +61,8 @@
 
 class configSettings extends tdb {
 
-    var $_cache = array();  //cache the vars
-    var $_cache_ext = array();
+    public $_cache = array();  //cache the vars
+    public $_cache_ext = array();
 
     function configSettings() {
         $this->tdb(DB_DIR, "main.tdb");
@@ -86,7 +86,7 @@ class configSettings extends tdb {
         $rawVars = $this->query("config", "type='".$type."'");
         //print_r($rawVars);
         foreach($rawVars as $rawVar) {
-            switch($rawVars['data_type']) {
+            switch($rawVar['data_type']) {
                 case 'string':
                 case 'text':
                 default:

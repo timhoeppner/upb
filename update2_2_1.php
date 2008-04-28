@@ -115,7 +115,7 @@ if ($_POST['next'] == 0) {
 		if(substr($table, -6) == "topics" || is_numeric($table)) continue;
 		$post_tdb->setFp("posts", $table);
 		$fields = $post_tdb->getFieldList('posts');
-		if(!in_array('upload_id', $fields) {
+		if(!in_array('upload_id', $fields)) {
 			$post_tdb->addField("posts", array(
 				"upload_id",
 				"number",
