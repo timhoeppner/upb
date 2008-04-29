@@ -105,7 +105,7 @@ if ($_POST['next'] == 0) {
 		), 2048);
 	}
 
-	$post_tdb->tdb(DB_DIR, 'posts');
+	$post_tdb = new tdb(DB_DIR, 'posts');
 	$tableList = $post_tdb->getTableList();
 	foreach($tableList as $table) {
 		// Remove the database name from the tablename
@@ -173,6 +173,11 @@ if ($_POST['next'] == 0) {
 	if (!is_dir($uploads_dir)) {
 		if (!mkdir($uploads_dir, 0777)) die('Unable to create an uploads directory.  The forum must be able to create a folder in the root forum folder.  Please chmod() the root folder to 777 and refresh the page.');
 		touch($uploads_dir. '/index.html');
+		
+		// Create a no access file
+		$f = fopen($uploads_dir."/.htaccess", "w");
+		fwrite($f, "Order deny,allow\nDeny from all");
+		fclose($f);
 	}
 	print "<P>Created a new uploads directory";
     foreach($uploads as $file) {

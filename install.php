@@ -104,6 +104,11 @@
 		if (!is_dir($uploads_dir)) {
 			if (!mkdir($uploads_dir, 0777)) die('The forum must be able to create a folder in the root forum folder.  Please chmod() the root folder to 777 and rerun the script');
 			touch($uploads_dir. '/index.html');
+			
+			// Create a no access file
+			$f = fopen($uploads_dir."/.htaccess", "w");
+			fwrite($f, "Order deny,allow\nDeny from all");
+			fclose($f);
 		}
 		//end
 		//create *.dat files and folders
@@ -555,6 +560,7 @@
     		$edit_config = array("title" => $_POST["title"], "fileupload_size" => $_POST["fileupload_size"], "homepage" => $_POST["homepage"]);
     		$edit_regist = array("register_sbj" => $_POST["register_sbj"], "register_msg" => $_POST["register_msg"], "admin_email" => $_POST["admin_email"]);
     		if ($config_tdb->editVars("config", $edit_config) && $config_tdb->editVars("regist", $edit_regist)) {
+
     			echo "
     			<div class='alert_confirm'>
     				<div class='alert_confirm_text'>
