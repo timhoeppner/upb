@@ -6,8 +6,9 @@
 	header ("Pragma: no-cache");
 	if (!isset($_GET["ref"])) $_GET["ref"] = "index.php";
 	//Delete user from whos_online system
-	require_once('config.php');
-	require('./includes/inc/date.inc.php');
+	require_once('./includes/upb.initialize.php');
+  require_once('config.php');
+	
 	if (isset($_COOKIE['id_env'])) $user_id = $_COOKIE['id_env'];
 	else $user_id = getenv("REMOTE_ADDR");
     $old = mkdate() - 3600;
@@ -34,7 +35,7 @@
 <head>
 <title>Logoff</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-<link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
+<link rel='stylesheet' type='text/css' href='<?php print SKIN_DIR."/css/style.css";?>' />
 <meta http-equiv='refresh' content='2;URL=<?php print $_GET["ref"]; ?>'>
 </head>
 <body>
@@ -42,7 +43,7 @@
 	<div class='main_cat_wrapper2'>
 		<table class='main_table_2' cellspacing='1'>
 			<tr>
-				<td id='logo'><img src='skins/default/images/logo.png' alt='' title='' /></td>
+				<td id='logo'><img src='<?php print $_CONFIG['logo'];?>' alt='' title='' /></td>
 			</tr>
 		</table>
 	</div>
