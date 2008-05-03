@@ -84,7 +84,7 @@
 	require_once('./includes/inc/encode.inc.php');
 
     if (isset($_POST['submit']) && $_POST["submit"] == "Submit") {
-		if ((bool)$_CONFIG['security_code'] && !$tdb->is_logged_in() && $_POST['s_key'] !== $_SESSION["u_keycheck"])
+		if ((bool)$_REGIST['security_code'] && !$tdb->is_logged_in() && $_POST['s_key'] !== $_SESSION["u_keycheck"])
             exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You failed the CAPTCHA check.  Please enter the code <b>exactly</b> as it appears.', ALERT_MSG)), true);
 		unset($_SESSION['u_keycheck']);
 
@@ -231,7 +231,7 @@
 	} else {
 		require_once('./includes/header.php');
 		// security mod if enabled
-		if ((bool) $_CONFIG['security_code'] === true && !$tdb->is_logged_in())
+		if ((bool) $_REGIST['security_code'] === true && !$tdb->is_logged_in())
     {
       $string = md5(rand(0, microtime() * 1000000));
 		  $verify_string = substr($string, 3, 7);
@@ -254,7 +254,7 @@
 				<td class='area_1'>
 					<strong>E-mail Address:</strong> <span style='color:$required;'>*</span><br />
 					<span style='description'>Must be a valid email address (you@host.com).";
-          if ((bool)$_CONFIG['security_code'] && !$tdb->is_logged_in())
+          if ((bool)$_REGIST['security_code'] && !$tdb->is_logged_in())
           echo "A confirmation e-mail is sent to the email address that you provide.<br>If you use a hotmail email account, please be aware that there have been alot of missing activation emails. This is a hotmail problem.";
           echo "</span></td>
 				<td class='area_2'><input type=text name=u_email size=40></td>
@@ -268,7 +268,7 @@
 					<strong>Make email address visible to everyone?</strong></td>
 				<td class='area_2'><input type=checkbox name=show_email value='1'></td>
 			</tr>";
-			if ((bool)$_CONFIG['security_code'] && !$tdb->is_logged_in())
+      if ((bool)$_REGIST['security_code'] && !$tdb->is_logged_in())
 			{
 			print "<tr>
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
