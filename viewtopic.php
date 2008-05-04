@@ -110,7 +110,7 @@
 		else $delete = "";
 
     if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"])
-		$quote = "<div class='button_pro1'><a href=\"javascript:addQuote('".$pRec["user_name"]."-".$pRec["id"]."-".$pRec['date']."','".$pRec["message"]."')\">\"Quote\"</a></div>";
+		$quote = "<div class='button_pro1'><a href=\"javascript:addQuote('".$pRec["user_name"]."-".$pRec["id"]."-".$pRec['date']."','".addslashes($pRec["message"])."')\">\"Quote\"</a></div>";
     else $quote = "";
 
 		$uploadId = (int) $pRec["upload_id"];
