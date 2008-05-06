@@ -1,0 +1,13 @@
+This is the changelog for this product's working copy.
+Add a new bullet under the appropiate category for PUBLIC changes:
+i.e. Added tracker system
+bad entry: Fixed bug caused by the unreleased tracker system:
+
+FEATURES:
+ * New Entry
+ 
+BUG FIXES:
+
+
+MISC:
+
