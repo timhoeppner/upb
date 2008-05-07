@@ -161,8 +161,8 @@ function parse_quote($matches)
 }
 
 function bbcodebuttons($txtarea='message',$type='post') {
-    if (!isset($_COOKIE['javascript']))
-      return "Please enable Javascript to use text formatting and smilies<p>";
+    if (!(isset($_COOKIE['javascript']) or isset($_POST['jscript'])))
+        return "Please enable Javascript to use text formatting and smilies<p>";
 
     $bb_buttons = "<p>";
     $bb_buttons .= "<select class='bbselect' onchange=\"bb_dropdown(this.form.colors,'colors','$txtarea')\" name='colors'>";

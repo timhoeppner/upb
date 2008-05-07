@@ -42,7 +42,7 @@
 			<tr>
 				<td class='area_1' style='padding:8px;' valign='top'><strong>Message:</strong>";
     if (isset($_POST['newedit']))
-      $message = $_POST['newedit'];
+      $message = stripslashes($_POST['newedit']);
     else
       $message = $pRec[0]['message'];
 		echo "<div style='text-align:center;'></div></td>

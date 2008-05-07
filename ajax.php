@@ -21,6 +21,8 @@ switch ($ajax_type)
       $output .= "<input type='hidden' id='userid' name='userid' value='".$_POST["userid"]."'>";
       $output .= "<input type='hidden' id='threadid' name='threadid' value='".$_POST["threadid"]."'>";
       $output .= "<input type='hidden' id='postid' name='postid' value='".$_POST["postid"]."'>";
+      if (isset($_COOKIE['javascript']))
+        $output .= "<input type='hidden' id='jscript' name='jscript' value='true'>";
       $output .= "<textarea name='newedit' id='newedit' cols='60' rows='18'>".$pRec[0]['message']."</textarea><br>";
       $output .= "\n<input type='button' onclick='javascript:getEdit(document.getElementById(\"quickedit\"),\"".$_POST['divname']."\");'\' name='qedit' value='Save'>";
       $output .= "\n<input type='button' name='cancel_edit' onClick=\"javascript:getPost('".$_POST["userid"]."','".$_POST["forumid"]."-".$_POST["threadid"]."-".$_POST["postid"]."','cancel');\" value='Cancel'>";
