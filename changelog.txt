@@ -7,7 +7,7 @@ FEATURES:
  * New Entry
  
 BUG FIXES:
-
+Fixed Advanced Editing Bugs
 
 MISC:
 
