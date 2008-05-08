@@ -67,21 +67,21 @@ DEFINE('TDB_PRINT_ERRORS', FALSE);
 DEFINE('TDB_ERROR_INCLUDE_ORIGIN', TRUE);
 
 class tdb {
-    public $fp = array();     // allowing for multiply file pointers
-    public $workingDir;       // working directory
-    public $Db;               // database.tdb
-    public $Tables;           // list of tables in the database
-    public $error_handler = false; // user defined error handler
+    var $fp = array();     // allowing for multiply file pointers
+    var $workingDir;       // working directory
+    var $Db;               // database.tdb
+    var $Tables;           // list of tables in the database
+    var $error_handler = false; // user defined error handler
 
-    public $_header = array(); // cache publics
-    public $_query = array();
-    public $_fileId = array();
-    public $_ref = array();
-    public $_firstBlankMemoBlockRef = array();
+    var $_header = array(); // cache publics
+    var $_query = array();
+    var $_fileId = array();
+    var $_ref = array();
+    var $_firstBlankMemoBlockRef = array();
 
     //Does not store FPs but physical file addy, does not clear for cleanUp() etc.
     //prompts statsclearcache()
-    public $editedTable = array();
+    var $editedTable = array();
 
     /*
     Functions:

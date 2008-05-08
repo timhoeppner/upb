@@ -35,7 +35,7 @@
 		        break;
 		    }
 		}
-
+    
 		if (isset($_POST["action"])) {
 			if ($_POST["action"] == "Reply") {
 				redirect("newpm.php?ref=viewpm.php&r_id=".$_GET["id"], "0");
@@ -81,7 +81,7 @@
 		$where = "<a href='pmsystem.php'>Messenger</a> ".$_CONFIG["where_sep"]." <a href='pmsystem.php?section=".$_GET["section"]."'>".ucfirst($_GET["section"])."</a> ".$_CONFIG["where_sep"]." ".$pmRec[0]["subject"];
 		require_once('./includes/header.php');
 		$pm_navegate = "
-		<form action='".$PHP_SELF."?section=".$_GET["section"]."&id=".$_GET["id"].$extra."' method='POST' onSubmit='submitonce(this)' enctype='multipart/form-data'>
+		<form action='".$PHP_SELF."?section=".$_GET["section"]."&id=".$_GET["id"].$extra."' method='POST'>
 		<table border='0' align='center'>
 			<tr>
 				<td align='right'>

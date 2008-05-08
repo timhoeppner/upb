@@ -8,6 +8,7 @@ FEATURES:
  
 BUG FIXES:
 Fixed Advanced Editing Bugs
+Fixed Broken Private Message Option Buttons
 
 MISC:
 

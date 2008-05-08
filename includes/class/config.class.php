@@ -61,8 +61,8 @@
 
 class configSettings extends tdb {
 
-    public $_cache = array();  //cache the vars
-    public $_cache_ext = array();
+    var $_cache = array();  //cache the vars
+    var $_cache_ext = array();
 
     function configSettings() {
         $this->tdb(DB_DIR, "main.tdb");
