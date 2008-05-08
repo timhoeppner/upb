@@ -9,6 +9,7 @@ FEATURES:
 BUG FIXES:
 Fixed Advanced Editing Bugs
 Fixed Broken Private Message Option Buttons
+Fixed PM Reply BBcode Bug
 
 MISC:
 
