@@ -150,10 +150,10 @@
 			$hed = "New Topic";
 			$iframe = "";
 		} else {
-			if ($_GET['quote'] == 1) {
+			if (isset($_GET['q_id'])) {
 				$hed = "Reply Quote";
-				$reply = $posts_tdb->get("posts", $_GET['p_id']);
-				$message = "[quote=".$reply[0]['user_name'].";".$_GET['p_id'].";".$reply[0]['date']."]".$reply[0]["message"]."[/quote]";
+				$reply = $posts_tdb->get("posts", $_GET['q_id']);
+				$message = "[quote=".$reply[0]['user_name'].";".$_GET['q_id'].";".$reply[0]['date']."]".$reply[0]["message"]."[/quote]";
 			}
 			else $hed = "Reply";
 			$tpc = "";

@@ -110,7 +110,9 @@
 		else $delete = "";
 
     if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"])
-		$quote = "<div class='button_pro1'><a href=\"javascript:addQuote('".$pRec["user_name"]."-".$pRec["id"]."-".$pRec['date']."','".addslashes($pRec["message"])."')\">\"Quote\"</a></div>";
+		//$quote = "<div class='button_pro1'><a href=\"javascript:addQuote('".$pRec["user_name"]."-".$pRec["id"]."-".$pRec['date']."','".addslashes(str_replace(array("\"","<br />"),array("&quot;","\n"),$pRec["message"]))."')\">\"Quote\"</a></div>";
+    //$quote = "<div class='button_pro1'><a href=\"javascript:addQuote('".$pRec["user_name"]."-".$pRec["id"]."-".$pRec['date']."','".str_replace("\n","<br />",$pRec["message"])."')\">\"Quote\"</a></div>";
+    $quote = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&q_id=".$pRec['id']."&page=".$vars["page"]."'>Quote</a></div>"; 
     else $quote = "";
 
 		$uploadId = (int) $pRec["upload_id"];
