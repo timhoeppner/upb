@@ -4,7 +4,6 @@
 // Version: 2.2.1
 
 //START OF BBCODE SCRIPTS
-
 var clientInfo = navigator.userAgent.toLowerCase();
 var isIE = ( clientInfo.indexOf("msie") != -1 );
 var isWin = ( (clientInfo.indexOf("win")!=-1) || (clientInfo.indexOf("16bit") != -1) );
@@ -138,6 +137,7 @@ function moresmilies(Tag)
     opener.document.newentry.message.selectionEnd = pos + Tag.length;
   }
   opener.document.newentry.message.scrollTop = scrollPos;
+  return;
 }
 
 //function add_link adds urls, images or emails to the textbox
@@ -758,17 +758,27 @@ function PopUp(where) {
 window.open("where", "This PM has been Recieved Within the Last 5 Minutes", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,width=500,height=350");
 }
 
-//adds quote information to the quick reply box
-function addQuote(details,message)
-{
-split = details.split("-");
-output = "\r\n[quote="+split[0]+";"+split[1]+";"+split[2]+"]"+message+"[/quote]\r\n";
-document.quickreply.newentry.value += output;
+function substr_count( haystack, needle, offset, length ) {
+ 
+    var pos = 0, cnt = 0;
+ 
+    if(isNaN(offset)) offset = 0;
+    if(isNaN(length)) length = 0;
+    offset--;
+ 
+    while( (offset = haystack.indexOf(needle, offset+1)) != -1 ){
+        if(length > 0 && (offset+needle.length) > length){
+            return false;
+        } else{
+            cnt++;
+        }
+    }
+ 
+    return cnt;
 }
 
 //removes all bbcode from post boxes
 
-//function below is not complete, relevant bbcode button has been commented out until completion.
 function removeBBcode(areaId) {
    var text1 = new String("");
    text1 = document.getElementById( areaId ).value;
