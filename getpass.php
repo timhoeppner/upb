@@ -24,10 +24,10 @@
 				$passcode = rand();
 				$request_ID = $tdb->add("getpass", array("passcode_HASH" => generateHash($passcode), time => mkdate(), "user_id" => $user[0]['id']));
 				if (FALSE !== ($question_mark_where = strpos($_SERVER['REQUEST_URI'], '?'))) {
-					$url = substr($_SERVER['$REQUEST_URI'], 0, $question_mark_where);
+					$url = substr($_SERVER['REQUEST_URI'], 0, $question_mark_where);
 				}
 				else $url = $_SERVER['REQUEST_URI'];
-				mail($user[0]["email"], "Lost Password Confirmation", "The IP Address: ".$_SERVER['REMOTE_ADDR']." has requested a password retrieval from an account linked to this e-mail address.  If you did request this, visit here to confirm that you would like to change your password for ".$user[0]["user_name"]."\n\nhttp://".$HTTP_HOST.$url."?request_ID=".$request_ID."&passcode=".$passcode."\n\nBut you did not request a Password Retrieval, please alert an administrator, and give them the IP Address provided.", "From: ".$_REGIST['admin_email']);
+        mail($user[0]["email"], "Lost Password Confirmation", "The IP Address: ".$_SERVER['REMOTE_ADDR']." has requested a password retrieval from an account linked to this e-mail address.  If you did request this, visit here to confirm that you would like to change your password for ".$user[0]["user_name"]."\n\nhttp://".$_SERVER['HTTP_HOST'].$url."?request_ID=".$request_ID."&passcode=".$passcode."\n\nBut you did not request a Password Retrieval, please alert an administrator, and give them the IP Address provided.", "From: ".$_REGIST['admin_email']);
 				$error = "A confirmation e-mail has been sent to the e-mail address attached to the username.";
 				$e = true;
 			}
