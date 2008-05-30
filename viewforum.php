@@ -105,7 +105,7 @@
 	} else {
 		foreach($tRecs as $tRec) {
 			if ($tRec["icon"] != "") {
-			    $posts_tdb->set_topic(array($tRec));
+          $posts_tdb->set_topic(array($tRec));
 			    if(($tRec['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$_GET['id']] && !isset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']]))) {
 					$tRec['icon'] = 'new.gif';
 			    } elseif(isset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']])) {
@@ -136,14 +136,16 @@
                   $tRec["topic_starter"] = "<i>a guest</i>";
 				  $statuscolor = '9d865e';
 				} else {
-					$user_data = $tdb->get('users', $tRec["user_id"], array('level','posts'));
-					if($user_data === false) $status_config = array('statuscolor' => '9d865e');
-					else $status_config = status($user_data);
-					$status_config = status($user_data);
-					$statuscolor = $status_config['statuscolor'];
-				}
+					$user_id = $tdb->basicQuery('users','user_name',$tRec['topic_starter'],1,-1,array('id','level'));
+          if($user_id === false) $status_config = array('statuscolor' => '9d865e');
+					else 
+          {
+          $status_config = status($user_id);
+          $statuscolor = $status_config['statuscolor'];
+          }
+        }
 				$user_data = $tdb->get('users', $tRec["user_id"], array('level','posts'));
-				if($user_data === false) $status_config = array('statuscolor' => '9d865e');
+        if($user_data === false) $status_config = array('statuscolor' => '9d865e');
 				else $status_config = status($user_data);
         echo "
 		<tr>
