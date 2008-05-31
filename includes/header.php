@@ -61,7 +61,7 @@
 		$default_timezone = '0';
 		$now = mkdate();
 		if (!isset($_COOKIE["timezone"]) && !headers_sent()) setcookie("timezone", $default_timezone, (time() + (60 * 60 * 24 * 7)));
-		if (!isset($_COOKIE["lastvisit"]) && !headers_sent()) setcookie("timezone", $now, (time() + (60 * 60 * 24 * 7)));
+		if (!isset($_COOKIE["lastvisit"]) && !headers_sent()) setcookie("lastvisit", $now, (time() + (60 * 60 * 24 * 7)));
 		$_COOKIE['lastvisit'] = $now;
 		$_COOKIE['timezone'] = $default_timezone;
 	}
