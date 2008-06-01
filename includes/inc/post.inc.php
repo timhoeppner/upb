@@ -121,7 +121,8 @@ function UPBcoding($text) {
     
     foreach($code_matches[1] as $thecode) {
     	$newcode = "<?php\n".$thecode."\n?>";
-    	$newcode = highlight_string(str_replace(array('&lt;','&gt;'),array('<','>'),$newcode), true);
+    	$newcode = str_replace(array('&lt;','&gt;','&quot;'),array('<','>', '"'),$newcode);
+    	$newcode = highlight_string($newcode, true);
     	$newcode = str_replace("<font color=\"#0000BB\">&lt;?php", "<font>", $newcode);
     	$newcode = str_replace("<font color=\"#0000BB\">?&gt;", "<font>", $newcode);
     	$msg = str_replace("[code]{$thecode}[/code]", "<div class=\"code_block\">{$newcode}</div>", $msg);
