@@ -107,7 +107,7 @@ function UPBcoding($text) {
     $msg = preg_replace("/\[url=(http:\/\/)?(.*?)\](.*?)\[\/url\]/si", "<a href=\"\\1\\2\" target='_blank'>\\3</a>", $msg);
     $msg = preg_replace("/\[email\](.*?)\[\/email\]/si", "<a href=\"mailto:\\1\">\\1</a>", $msg);
     $msg = preg_replace("/\[email=(.*?)\](.*?)\[\/email\]/si", "<a href=\"mailto:\\1\">\\2</a>", $msg);
-    $msg = preg_replace("/\[img\](.*?)\[\/img\]/si", "<img src=\"\\1\" border=\"0\">", $msg);
+    $msg = preg_replace("/\[img\](.*?)\[\/img\]/si", "<div class=\"image_block\"><img src=\"\\1\" border=\"0\"></div>", $msg);
     $msg = preg_replace("/\[offtopic\](.*?)\[\/offtopic\]/si", "<font color='blue'>Offtopic: \\1</font>", $msg);
 
     while (preg_match("/\[quote(.*?)\](.*?)\[\/quote\]/si", $msg))
