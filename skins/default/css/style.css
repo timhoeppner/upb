@@ -1469,3 +1469,9 @@ height: 20px;
 .example {
 vertical-align:middle;
 }
+
+.code_block {
+	border: 1px solid black;
+	max-height: 300px;
+	overflow: auto;
+}
