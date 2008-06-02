@@ -193,7 +193,7 @@
 	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0) and isset($_COOKIE['javascript']))
 {
   echo "<div id='quickreplyform' name='quickreplyform'>";
-  echo "<form name='quickreply' action='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$vars["page"]."' id='quickreply' method='POST' onSubmit='return validateField(this)'>\n";
+  echo "<form name='quickreplyfm' action='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$vars["page"]."' id='quickreplyfm' method='POST' onSubmit='return validateField(this)'>\n";
   ?><script type="text/javascript">
   function validateField(theform) {
     var theValue = theform.newentry.value;
@@ -225,7 +225,7 @@
     <textarea id=\"newentry\" name=\"newentry\" value=\"\" cols=\"60\" rows=\"18\"></textarea>\n
     </td></tr>\n";
   echo "<tr><td class='footer_3a' style='text-align:center;' colspan='2'>\n
-    <input type='button' name='quickreply' value='Quick Reply' onclick=\"javascript:getReply(document.getElementById('quickreply'))\">\n
+    <input type='button' name='quickreply' value='Quick Reply' onclick=\"document.quickreplyfm.quickreply.disabled=true;javascript:getReply(document.getElementById('quickreply'));\">\n
     <input type='submit' name='submit' value='Advanced'>\n</td></tr></form></font>";
     echoTableFooter(SKIN_DIR);
   echo "</div>";

@@ -177,9 +177,8 @@
 				<div class='alert'><div class='alert_text'>
 				<strong>Error!</strong></div><div style='padding:4px;'>You cannot have more than 200 characters in the signature.</div></div>");
 			if (substr(trim(strtolower($_POST["url"])), 0, 7) != "http://") $_POST["url"] = "http://".$_POST["url"];
-			if ($_POST["timezone"] {
-				0 }
-			== '+') $_POST["u_timezone"] = substr($_POST["u_timezone"], 1);
+			if ($_POST["timezone"] {0} == '+') 
+        $_POST["u_timezone"] = substr($_POST["u_timezone"], 1);
 			$new = array();
 			if ($_POST["level"] != $rec[0]["level"]) $new["level"] = $_POST["level"];
 			if ($_POST["email"] != $rec[0]["email"]) $new["email"] = $_POST["email"];

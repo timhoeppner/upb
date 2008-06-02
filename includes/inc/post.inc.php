@@ -96,6 +96,15 @@ function UPBcoding($text) {
     //end script for delete.php
     //start upb code
     
+    //CONVERT OLD BBCODE COLOR TAGS
+    $msg = preg_replace("/\[white\](.*?)\[\/white\]/si", "<span style='color: #ffffff;'>\\1</span>", $msg);
+    $msg = preg_replace("/\[yellow\](.*?)\[\/yellow\]/si", "<span style='color: #ffff00;'>\\1</span>", $msg);
+    $msg = preg_replace("/\[green\](.*?)\[\/green\]/si", "<span style='color: #008000;'>\\1</span>", $msg);
+    $msg = preg_replace("/\[purple\](.*?)\[\/purple\]/si", "<span style='color: #800080;'>\\1</span>", $msg);
+    $msg = preg_replace("/\[blue\](.*?)\[\/blue\]/si", "<span style='color: #0000ff;'>\\1</span>", $msg);
+    $msg = preg_replace("/\[red\](.*?)\[\/red\]/si", "<span style='color: #ff0000;'>\\1</span>", $msg);
+    //END OF OLD BBCODE COLOR TAGS
+    
     $msg = preg_replace("/\[move\](.*?)\[\/move\]/si", "<marquee>\\1</marquee>", $msg);
     $msg = preg_replace("/\[color=(.*?)\](.*?)\[\/color\]/si", "<span style='color:\\1;'>\\2</span>", $msg);
     $msg = preg_replace("/\[font=(.*?)\](.*?)\[\/font\]/si", "<span style='font-family:\\1;'>\\2</span>", $msg);

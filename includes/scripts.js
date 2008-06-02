@@ -684,6 +684,13 @@ var http_request = false;
    }
    
    function getReply(obj) {
+      if (document.getElementById("newentry").value == "")
+      {
+        alert("Error: Empty Post");
+        document.quickreplyfm.quickreply.disabled = false;
+      }
+      else
+      {
       var poststr = "id="+escape(Utf8.encode( document.getElementById("id").value));
       poststr += "&t_id="+escape(Utf8.encode( document.getElementById("t_id").value));
       poststr += "&page="+escape(Utf8.encode( document.getElementById("page").value));
@@ -694,6 +701,7 @@ var http_request = false;
       poststr += "&type=reply";
       
       makePOSTRequest('./ajax.php', poststr,'reply');
+      }
    }
     
    function getPost(userid,divname,method)
