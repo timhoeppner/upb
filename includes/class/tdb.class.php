@@ -1665,7 +1665,8 @@ class tdb {
 	 * @return int
 	 */
     function writeMemo($fp, $oriData, $header) {
-        $data = trim($oriData);
+        $data = trim($oriData,"\t\n\r\0\x0B"); //strip all but whitespace from both ends of data
+
         if(strlen($data) == 0) return;
 
         $f = fopen($this->fp[$fp].'.memo', 'r+b');
