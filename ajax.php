@@ -318,7 +318,7 @@ switch ($ajax_type)
 
     $qrform = ""; //NEW QUICK REPLY FORM
 
-    $qrform .= "<form name='quickreply' action='newpost.php?id=".$_POST['id']."&t_id=".$_POST['id']."&page=".$page."' method='POST' name='quickreply'>\n";
+    $qrform .= "<form name='quickreplyfm' action='newpost.php?id=".$_POST['id']."&t_id=".$_POST['id']."&page=".$page."' method='POST' name='quickreply'>\n";
     $qrform .= "<div class='main_cat_wrapper'>
 		<div class='cat_area_1'>Quick Reply</div>
 		<table class='main_table' cellspacing='1'>
@@ -340,7 +340,7 @@ switch ($ajax_type)
     <textarea id=\"newentry\" value=\"\" name=\"newentry\" cols=\"60\" rows=\"18\"></textarea>\n
     </td></tr>\n";
     $qrform .= "<tr><td class='footer_3a' style='text-align:center;' colspan='2'>\n
-    <input type='button' name='quickreply' value='Quick Reply' onclick=\"javascript:getReply(document.getElementById('quickreply'))\">\n
+    <input type='button' name='quickreply' value='Quick Reply' onclick=\"document.quickreplyfm.quickreply.disabled=true;javascript:getReply(document.getElementById('quickreply'))\">\n
     <input type='submit' name='submit' value='Advanced'>\n</td></tr></form></font>";
     $qrform .= "</tbody>
 		</table>
