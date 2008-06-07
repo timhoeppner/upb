@@ -176,8 +176,9 @@
 		if ($pRec['user_id'] != 0)
     {
     echo "
-					<div class='button_pro2'><a href='profile.php?action=get&id=".$pRec["user_id"]."'>Profile</a></div>
-					<div class='button_pro2'><a href='".$user[0]["url"]."' target = '_blank'>Homepage</a></div>";
+					<div class='button_pro2'><a href='profile.php?action=get&id=".$pRec["user_id"]."'>Profile</a></div>";
+    if (isValidUrl($user[0]['url']))
+    echo "<div class='button_pro2'><a href='".$user[0]["url"]."' target = '_blank'>Homepage</a></div>";
 		if ($_CONFIG['email_mode'])
     echo "
 					<div class='button_pro2'><a href='email.php?id=".$pRec["user_id"]."'>email ".$pRec["user_name"]."</a></div>";
@@ -187,8 +188,9 @@
   }
 	echo "</div>";
 
-	$p = createPageNumbers($vars['page'], $num_pages, $_SERVER['QUERY_STRING']);
-	//echo "<div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,$vars['page'],"bottom") . "</div>";
+	//$p = createPageNumbers($vars['page'], $num_pages, $_SERVER['QUERY_STRING']);
+  //echo "<div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page']) . "</div>";
+  //echo "<div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,$vars['page'],"bottom") . "</div>";
 
 	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0) and isset($_COOKIE['javascript']))
 {
