@@ -103,7 +103,6 @@ switch ($ajax_type)
 
   case "reply" :
     //QUICK REPLY TO TOPIC, STORES POST IN DATABASE AND RETURNS THE USER TO THE NEW POST AND ADDS NEW QUICK REPLY FORM
-    $output = "<link rel=\"stylesheet\" href=\"".SKIN_DIR."/css/style.css\" type=\"text/css\">";
     $fRec = $tdb->get("forums", $_POST["id"]);
     $posts_tdb = new posts(DB_DIR."/", "posts.tdb");
     $posts_tdb->setFp("topics", $_POST["id"]."_topics");

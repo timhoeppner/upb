@@ -673,7 +673,7 @@ var http_request = false;
    
    function getEdit(obj,divname) {
       div = divname;
-      var poststr = "newedit=" + escape(Utf8.encode( document.getElementById("newedit").value ));
+      var poststr = "newedit=" + escape(Utf8.encode( replaceSubstring(document.getElementById("newedit").value,"+","&#43;")));
       poststr += "&forumid="+escape(Utf8.encode(document.getElementById("forumid").value));
       poststr += "&userid="+escape(Utf8.encode( document.getElementById("userid").value ));
       poststr += "&threadid="+escape(Utf8.encode( document.getElementById("threadid").value ));
@@ -697,7 +697,7 @@ var http_request = false;
       poststr += "&page="+escape(Utf8.encode( document.getElementById("page").value));
       poststr += "&user_id="+escape(Utf8.encode( document.getElementById("user_id").value));
       poststr += "&icon="+escape(Utf8.encode( document.getElementById("icon").value));
-      poststr += "&newentry=" + escape(Utf8.encode( document.getElementById("newentry").value));
+      poststr += "&newentry=" + escape(Utf8.encode( replaceSubstring(document.getElementById("newentry").value,"+","&#43;")));
       poststr += "&username="+escape(Utf8.encode( document.getElementById("username").value));
       poststr += "&type=reply";
       
@@ -820,5 +820,44 @@ function changeCheckboxValue(checked, object) {
                     }
                 }
 
+function replaceSubstring(inputString, fromString, toString) {
+      var temp = inputString;
+   if (fromString == "") {
+      return inputString;
+   }
+   if (toString.indexOf(fromString) == -1) { 
+      while (temp.indexOf(fromString) != -1) {
+         var toTheLeft = temp.substring(0, temp.indexOf(fromString));
+         var toTheRight = temp.substring(temp.indexOf(fromString)+fromString.length, temp.length);
+         temp = toTheLeft + toString + toTheRight;
+      }
+   } else { 
+      var midStrings = new Array("~", "`", "_", "^", "#");
+      var midStringLen = 1;
+      var midString = "";
+
+      while (midString == "") {
+         for (var i=0; i < midStrings.length; i++) {
+            var tempMidString = "";
+            for (var j=0; j < midStringLen; j++) { tempMidString += midStrings[i]; }
+            if (fromString.indexOf(tempMidString) == -1) {
+               midString = tempMidString;
+               i = midStrings.length + 1;
+            }
+         }
+      }
+      while (temp.indexOf(fromString) != -1) {
+         var toTheLeft = temp.substring(0, temp.indexOf(fromString));
+         var toTheRight = temp.substring(temp.indexOf(fromString)+fromString.length, temp.length);
+         temp = toTheLeft + midString + toTheRight;
+      }
+      while (temp.indexOf(midString) != -1) {
+         var toTheLeft = temp.substring(0, temp.indexOf(midString));
+         var toTheRight = temp.substring(temp.indexOf(midString)+midString.length, temp.length);
+         temp = toTheLeft + toString + toTheRight;
+      }
+   } 
+   return temp; 
+} 
 document.cookie = 'javascript=true'; //sets a cookie if javascript is enabled
 //END OF MISCELLANEOUS SCRIPTS
