@@ -739,7 +739,7 @@ var http_request = false;
    
     function sigPreview(obj,id,status)
     {
-    var poststr = "sig="+escape(Utf8.encode(document.getElementById("u_sig").value));
+    var poststr = "sig="+escape(Utf8.encode(replaceSubstring(document.getElementById("u_sig").value,"+","&#43;")));
     poststr += "&id="+escape(Utf8.encode(id));
     poststr += "&status="+escape(Utf8.encode(status));
     poststr += "&type=sig";

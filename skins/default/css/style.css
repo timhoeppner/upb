@@ -535,6 +535,7 @@ vertical-align: middle;
 	padding:4px;
 	border: 1px solid #0b2a4f;
 	position:relative;
+	margin: 0 1px 0 0;
 	cursor: pointer;
 }
 .pagination_link a:link, .pagination_link a:visited, .pagination_link a:active { 
@@ -808,7 +809,17 @@ vertical-align: middle;
 	height : 0px;
 	font-weight : bold;
 }
-   
+
+#tabstyle_pagenum2 {
+	position : relative;
+	top : -20px;
+	float : left;
+	font-size : 93%;
+	line-height : normal;
+	border-bottom : 0px solid #3b424f;
+	height : 0px;
+	font-weight : bold;
+}
 
 /* ------------------------------------- */
 /* ----Special tab menu rowstyle end---- */
@@ -1463,6 +1474,40 @@ height: 20px;
 
 /* --------------------------------------------- */
 /* ----Quick Class Text Colors For Spans End---- */
+/* --------------------------------------------- */
+
+/* --------------------------------------------- */
+/* ----Download link fluid background classes--- */
+/* --------------------------------------------- */
+
+.download1
+{
+color:#000000;
+background:#999999 url(../images/dltl.png) no-repeat;
+float: left;
+}
+
+.download2
+{
+background:url(../images/dltr.png) no-repeat top right;
+}
+
+.download3
+{
+background:url(../images/dlbl.png) no-repeat left bottom;
+}
+
+.download4
+{
+background:url(../images/dlbr.png) no-repeat right bottom; 
+padding-left:5px;
+padding-right:5px;
+padding-top:5px;
+padding-bottom:5px;
+}
+
+/* --------------------------------------------- */
+/* ------------Miscellaneous classes------------ */
 /* --------------------------------------------- */
 
 /*Style for smilie example in faq*/

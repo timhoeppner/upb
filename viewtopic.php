@@ -121,7 +121,7 @@
                 $attachName = $q[0]["name"];
                 $attachDownloads = $q[0]["downloads"];
 
-                $pRec["message"] = "<div class='download_link'><img src='images/attachment.gif'> Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)</div>\n\n" . $pRec["message"];
+                $pRec["message"] = "<div class='download1'><div class='download2'><div class='download3'><div class='download4'><img src='images/attachment.gif' class='example'> Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)</div></div></div></div>\n\n<p>" . $pRec["message"];
             }
         }
 

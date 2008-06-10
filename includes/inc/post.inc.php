@@ -35,7 +35,8 @@ function format_text($text) {
     return $text;
 }
 
-/* cOULD POTENTIALLY BREAK SETTING COOKIES AND SESSIONS */?><?php //<? added to allow for syntax highlighting in editors
+/* cOULD POTENTIALLY BREAK SETTING COOKIES AND SESSIONS */
+
 function encode_text($text)
 {
   $string = str_replace(array('<','>'),array('&lt;','&gt;'),$text);
