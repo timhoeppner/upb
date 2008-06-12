@@ -60,11 +60,14 @@
 					$config_tdb->editVars("config", array("admin_catagory_sorting" => implode(",", $sort)));
 					$tdb->delete("cats", $_GET["id"]);
 					$forums = $tdb->query('forums', "cat='{$_GET['id']}'");
-					foreach($forums as $forum) {
+
+          if ($forums !== false) {
+          foreach($forums as $forum) {
     					$tdb->delete("forums", $forum["id"]);
     					$post_tdb->removeTable($forum["id"]);
     					$post_tdb->removeTable($forum["id"]."_topics");
     				}
+    			}
     				$post_tdb->cleanup();
 					echo "
 						<div class='alert_confirm'>
