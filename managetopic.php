@@ -359,7 +359,7 @@
 				        if(empty($sort)) break;
 				        if($fRecs[$i]['id'] != $sort[0]) continue;
 				        array_shift($sort);
-						if ($fRec["id"] != $_GET["id"]) $options .= "<option value='".$fRecs[$i]["id"]."'>&nbsp;&nbsp;&nbsp;".$fRecs[$i]["forum"]."</option>\n";
+						if ($fRecs[$i]["id"] != $_GET["id"]) $options .= "<option value='".$fRecs[$i]["id"]."'>&nbsp;&nbsp;&nbsp;".$fRecs[$i]["forum"]."</option>\n";
 						$i=0;
 					}
 				}
