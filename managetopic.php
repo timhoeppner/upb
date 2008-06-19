@@ -169,7 +169,7 @@
 		        print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'Cannot Delete any posts.<br />'.ALERT_GENERIC_MSG, ALERT_MSG));
 		    } else {
 		        if($_POST['verify'] == 'Ok') {
-		            $ids = unserialize($_POST['ids']);
+		            $ids = unserialize(stripslashes($_POST['ids']));
 		            $p_ids = explode(',', $tRec[0]['p_ids']);
 		            foreach($ids as $id) {
 		                if(FALSE !== ($key = array_search($id, $p_ids))) unset($p_ids[$key]);
