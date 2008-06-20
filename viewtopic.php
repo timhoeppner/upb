@@ -45,7 +45,15 @@
 		$vars['page'] = ceil((substr_count($tRec[0]['p_ids'], ',') + 1) / $_CONFIG['posts_per_page']);
 	}
 	$pRecs = $posts_tdb->getPosts("posts", (($_CONFIG["posts_per_page"] * $vars['page'])-$_CONFIG["posts_per_page"]), $_CONFIG["posts_per_page"]);
-	if (empty($pRecs)) exitPage("Posts not found");
+	if (empty($pRecs)) {
+    $msg = 'No posts could be found for this topic';
+    if ((int)$_COOKIE["power_env"] >= 2)
+      $msg .= "<br>To delete this topic click <a href='managetopic.php?id=2&t_id=2'>here</a>";
+    die(str_replace('__TITLE__', 'Fatal Error:', str_replace('__MSG__', $msg, ALERT_MSG)).MINIMAL_BODY_FOOTER);
+    
+    require_once('./includes/footer.php');
+    die();
+  }
 	$num_pages = ceil(($tRec[0]["replies"] + 1) / $_CONFIG["posts_per_page"]);
 	$p = createPageNumbers($vars["page"], $num_pages, $_SERVER['QUERY_STRING']);
   echo "<br /><div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page']) . "</div>";
@@ -225,5 +233,5 @@
 //END QUICK REPLY SEGMENT
 	$tdb->cleanup();
 	unset($tdb);
-	require('./includes/footer.php');
+	require_once('./includes/footer.php');
 ?>

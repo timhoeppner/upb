@@ -220,7 +220,7 @@
 				$posts_tdb->edit("topics", $_GET["t_id"], array("p_ids" => $p_ids));
 				echo "Successfully deleted ".$num." Post(s)";
 				require_once("./includes/footer.php");
-				redirect($_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"], "2");
+				//redirect($_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"], "2");
 				exit;
 			} elseif($_POST["verify"] == "Cancel") {
 				unset($_POST["action"]);
@@ -400,11 +400,13 @@
 			</tr>
 		</form>";
 	   echoTableFooter(SKIN_DIR);
-				echo "
-		<form method='POST' action='".$_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'>";
-		echoTableHeading("Delete Multiple Posts", $_CONFIG);
 				$posts_tdb->set_topic($tRec);
 				$pRecs = $posts_tdb->getPosts("posts");
+        if (count($pRecs) > 1) {
+        echo "
+		<form method='POST' action='".$_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'>";
+		echoTableHeading("Delete Multiple Posts", $_CONFIG);
+				
 				$x = 1;
 				foreach($pRecs as $pRec) {
 					$msg = format_text(UPBcoding(filterLanguage($pRec["message"], $_CONFIG)));
@@ -423,7 +425,7 @@
 				<td class='footer_3a' colspan='3' style='text-align:center;'><input type='submit' value='Delete Selected' name='action' /></td>
 			</tr>
 	</form>";
-				echoTableFooter(SKIN_DIR);
+				echoTableFooter(SKIN_DIR); }
 			}
 	} else {
 		require_once('./includes/header.php');
