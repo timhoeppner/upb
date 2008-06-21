@@ -220,7 +220,7 @@
 				$posts_tdb->edit("topics", $_GET["t_id"], array("p_ids" => $p_ids));
 				echo "Successfully deleted ".$num." Post(s)";
 				require_once("./includes/footer.php");
-				//redirect($_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"], "2");
+				redirect($_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"], "2");
 				exit;
 			} elseif($_POST["verify"] == "Cancel") {
 				unset($_POST["action"]);

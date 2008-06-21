@@ -226,7 +226,7 @@
     </td></tr>\n";
   echo "<tr><td class='footer_3a' style='text-align:center;' colspan='2'>\n
     <input type='button' name='quickreply' value='Quick Reply' onclick=\"document.quickreplyfm.quickreply.disabled=true;javascript:getReply(document.getElementById('quickreply'));\">\n
-    <input type='submit' name='submit' value='Advanced'>\n</td></tr></form></font>";
+    <input type='submit' name='submit' value='Advanced'>\n</td></tr></form>";
     echoTableFooter(SKIN_DIR);
   echo "</div>";
 }

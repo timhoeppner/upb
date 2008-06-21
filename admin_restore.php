@@ -112,12 +112,12 @@
 				$config_file = file('./config.php');
 				//print_r($config_file);
 				for($i = 0; $i < count($config_file); $i++) {
-					$config_file[$i] = trim($config_file[$i]);
+					//$config_file[$i] = trim($config_file[$i]);
 					//echo "line #$i: ".$config_file[$i]."<br />";
 					if (empty($config_file[$i])) unset($config_file[$i]);
 					if (strchr($config_file[$i], "DB_DIR")) {
 						$success = true;
-						$config_file[$i] = "define('DB_DIR', '".$new_db_dir."', true);";
+						$config_file[$i] = "define('DB_DIR', '".$new_db_dir."', true);\n";
 						break;
 					}
 				}
