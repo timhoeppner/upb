@@ -25,7 +25,7 @@
 		if ($_POST["verify"] == "Ok") {
 			if (isset($_GET["t_id"])) {
 				$p_ids = explode(",", $tRec[0]["p_ids"]);
-				$subtract_user_post_count = array();
+        $subtract_user_post_count = array();
 				foreach($p_ids as $p_id) {
 					$pRec = $post_tdb->get('posts', $p_id);
 					if (!isset($subtract_user_post_count[$pRec[0]['user_id']])) {

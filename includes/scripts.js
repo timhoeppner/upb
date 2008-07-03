@@ -462,6 +462,31 @@ return false;
 }
 }
 
+function validate_reply()
+{
+  if (trim(document.newentry.message.value) == "") {
+    document.getElementById('msg_err').innerHTML = "^^^ You need to enter a message";
+    return false;
+  }
+  document.newentry.submit.disabled = true;
+  return true;
+}
+
+function validate_topic()
+{
+  if (trim(document.newentry.subject.value) == "" || trim(document.newentry.message.value) == "")
+  {
+    if (trim(document.newentry.subject.value) == "") {
+      document.getElementById('sub_err').innerHTML = "<-- You need to enter a subject";
+    }
+    if (trim(document.newentry.message.value) == "") {
+    document.getElementById('msg_err').innerHTML = "^^^ You need to enter a message";
+    }
+    return false;
+  }
+  document.newentry.submit.disabled = true;
+  return true;
+}
 //END OF FORM SCRIPTS
 
 //START OF AJAX SCRIPTS
@@ -859,5 +884,18 @@ function replaceSubstring(inputString, fromString, toString) {
    } 
    return temp; 
 } 
+
+function trim (str) {
+	str = str.replace(/^\s+/, '');
+	for (var i = str.length - 1; i >= 0; i--) {
+		if (/\S/.test(str.charAt(i))) {
+			str = str.substring(0, i + 1);
+			break;
+		}
+	}
+	return str;
+}
+
+
 document.cookie = 'javascript=true'; //sets a cookie if javascript is enabled
 //END OF MISCELLANEOUS SCRIPTS

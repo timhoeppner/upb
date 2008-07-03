@@ -140,7 +140,7 @@
 			$tpc = "
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Subject:</strong></td>
-				<td class='area_2'><input type=text name=subject size=40></td>
+				<td class='area_2'><input type='text' name='subject' size='40'> <span id='sub_err' class='err'></span></td>
 			</tr>";
 			if ($_COOKIE["power_env"] >= 3) $sticky = "
 			<tr>
@@ -149,6 +149,7 @@
 			</tr>";
 			$hed = "New Topic";
 			$iframe = "";
+			$check = "topic";
 		} else {
 			if (isset($_GET['q_id'])) {
 				$hed = "Reply Quote";
@@ -157,6 +158,7 @@
 			}
 			else $hed = "Reply";
 			$tpc = "";
+			$check = "reply";
 			if ($_COOKIE["power_env"] >= 3) $sticky = "
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Un-Sticky:</strong></td>
@@ -177,7 +179,7 @@
 		$icons = message_icons();
 
 		echo "
-			<form action='newpost.php?id=".$_GET["id"]."&t=".$_GET["t"]."&quote=".$_GET["quote"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."' method='POST' name='newentry' onSubmit='submitonce(this)' enctype='multipart/form-data'>
+			<form action='newpost.php?id=".$_GET["id"]."&t=".$_GET["t"]."&quote=".$_GET["quote"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."' method='POST' name='newentry' enctype='multipart/form-data' onSubmit='return validate_$check();'>
 			<input type='hidden' name='a' value='1'>";
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
@@ -202,8 +204,8 @@
 		echo "
 					<div style='text-align:center;'></div></td>
 				<td class='area_2'>
-        ".bbcodebuttons('look1')."<textarea name='message' id='look1'>".$message."</textarea>
-					<div style='padding:8px;'>".getSmilies('look1')."</div></td>
+        ".bbcodebuttons('look1')."<textarea name='message' id='look1'>".$message."</textarea><br>
+					<span id='msg_err' class='err'></span><div style='padding:8px;'>".getSmilies('look1')."</div></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
@@ -219,7 +221,7 @@
 		}
 		echo "
 			<tr>
-				<td class='footer_3a' style='text-align:center;' colspan='2'><input type=submit value='Submit' onclick='return check_submit()'></td>
+				<td class='footer_3a' style='text-align:center;' colspan='2'><input type='submit' name='submit' value='Submit'></td>
 			</tr>";
       echoTableFooter(SKIN_DIR);
       echo "

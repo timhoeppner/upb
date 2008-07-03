@@ -241,7 +241,7 @@ function bbcodebuttons($txtarea='message',$type='post') {
 
 function getSmilies($field = 'message')
 {
-  if (!isset($_COOKIE['javascript']))
+  if (!(isset($_COOKIE['javascript']) or isset($_POST['jscript'])))
     return "";
   $tdb = new tdb(DB_DIR.'/', 'bbcode.tdb');
   $tdb->setFP("smilies","smilies");
