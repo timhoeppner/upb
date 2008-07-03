@@ -117,7 +117,7 @@
 		if ((($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) && $pRec['id'] != $first_post) $delete = "<div class='button_pro1'><a href='delete.php?action=delete&t=0&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."'>X</a></div>";
 		else $delete = "";
 
-    if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"])
+    if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1)
       $quote = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&q_id=".$pRec['id']."&page=".$vars["page"]."'>Quote</a></div>"; 
     else $quote = "";
 
@@ -133,7 +133,7 @@
             }
         }
 
-		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$vars['page']."'>Add Reply</a></div>";
+		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$vars['page']."'>Add Reply</a></div>";
 		else $reply = "";
 		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
 		echo "
@@ -199,8 +199,7 @@
 	//$p = createPageNumbers($vars['page'], $num_pages, $_SERVER['QUERY_STRING']);
   //echo "<div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page']) . "</div>";
   //echo "<div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,$vars['page'],"bottom") . "</div>";
-
-	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0) and isset($_COOKIE['javascript']))
+	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0 ) and $tRec[0]['locked'] != 1 and isset($_COOKIE['javascript']))
 {
   echo "<div id='quickreplyform' name='quickreplyform'>";
   echo "<form name='quickreplyfm' action='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$vars["page"]."' id='quickreplyfm' method='POST'>\n";

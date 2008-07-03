@@ -230,7 +230,7 @@ switch ($ajax_type)
 		else $edit = "";
 		if ((($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) && $pRec['id'] != $first_post) $delete = "<div class='button_pro1'><a href='delete.php?action=delete&t=0&id=".$_POST["id"]."&t_id=".$_POST["t_id"]."&p_id=".$pRec["id"]."'>X</a></div>";
 		else $delete = "";
-		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $quote = "<div class='button_pro1'><a href=\"javascript:addQuote('".$pRec["user_name"]."-".$pRec["id"]."-".$pRec['date']."','".$pRec["message"]."')\">\"Quote\"</a></div>";
+		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1) $quote = "<div class='button_pro1'><a href=\"javascript:addQuote('".$pRec["user_name"]."-".$pRec["id"]."-".$pRec['date']."','".$pRec["message"]."')\">\"Quote\"</a></div>";
 		else $quote = "";
 
 		$uploadId = (int) $pRec["upload_id"];
@@ -250,7 +250,7 @@ switch ($ajax_type)
         }
     }
 
-		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"]) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_POST["id"]."&t=0&t_id=".$_POST["t_id"]."&page=$page'>Add Reply</a></div>";
+		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_POST["id"]."&t=0&t_id=".$_POST["t_id"]."&page=$page'>Add Reply</a></div>";
 		else $reply = "";
 		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
 		$output .= "
@@ -317,7 +317,8 @@ switch ($ajax_type)
 }
 
     $qrform = ""; //NEW QUICK REPLY FORM
-
+    if ($tRec[0]['locked'] != 1)
+    {
     $qrform .= "<form name='quickreplyfm' action='newpost.php?id=".$_POST['id']."&t_id=".$_POST['id']."&page=".$page."' method='POST' name='quickreply'>\n";
     $qrform .= "<div class='main_cat_wrapper'>
 		<div class='cat_area_1'>Quick Reply</div>
@@ -347,7 +348,7 @@ switch ($ajax_type)
 		<div class='footer'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></div>
 	</div>
 	<br />";
-
+    }
     $output .= "<!--divider-->$pagelinks1<!--divider-->$qrform";
 
     echo $output;
