@@ -15,7 +15,6 @@ if (isset($_POST["u_edit"])) {
 		echo "<html><head><meta http-equiv='refresh' content='2;URL=login.php?ref=profile.php'></head></html>";
 		exit;
 	} else {
-
     $rec = array();
 		if (!isset($_POST["u_email"])) exitPage("please enter your email!", true);
 		if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["u_email"])) exitPage("please enter a valid email!", true);
@@ -36,18 +35,19 @@ if (isset($_POST["u_edit"])) {
 		else $ht = "<meta http-equiv='refresh' content='2;URL=profile.php'>";
 		if ($user[0]["email"] != $_POST["u_email"]) $rec["email"] = $_POST["u_email"];
 		if ($user[0]["u_sig"] != encode_text(chop($_POST["u_sig"]))) $rec["sig"] = encode_text(chop($_POST["u_sig"]));
+		if ($_POST['u_sig'] == "")
+		  $rec['sig'] = "";
 		if (substr(trim(strtolower($_POST["u_site"])), 0, 7) != "http://") $_POST["u_site"] = "http://".$_POST["u_site"];
   if ($user[0]["url"] != $_POST["u_site"])
     $rec["url"] = $_POST["u_site"];
   if ($_POST['u_site'] == "http://" or $rec['url'] == 'http://')
     $rec['url'] = "";
   if ($_POST["u_timezone"]{0} == '+') $_POST["u_timezone"] = substr($_POST["u_timezone"], 1);
-		if ($_POST["show_email"] != "1") $_POST["show_email"] = "0";
+    if ($_POST["show_email"] != "1") $_POST["show_email"] = "0";
 		if ($_POST["email_list"] != "1") $_POST["email_list"] = "0";
 		if ($user[0]["view_email"] != $_POST["show_email"]) $rec["view_email"] = $_POST["show_email"];
 		if ($user[0]["mail_list"] != $_POST["email_list"]) $rec["mail_list"] = $_POST["email_list"];
 		if ($user[0]["location"] != $_POST["u_loca"]) $rec["location"] = $_POST["u_loca"];
-
 	    if($_REGIST['custom_avatars'] == 2 && isset($_FILES["avatar2"]["name"]) && trim($_FILES["avatar2"]["name"]) != "") {
 	        if($_FILES['avatar2']['error'] == UPLOAD_ERR_OK) {
                 require_once('./includes/class/upload.class.php');
@@ -108,7 +108,7 @@ if (isset($_POST["u_edit"])) {
 		}
 
   $tdb->edit("users", $_COOKIE["id_env"], $rec);
-		require_once('./includes/header.php');
+    require_once('./includes/header.php');
   echo "<div class='alert_confirm'>
 				<div class='alert_confirm_text'>
 				<strong>User Profile Update:</strong></div><div style='padding:4px;'>Your user profile has been successfully updated
