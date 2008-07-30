@@ -134,6 +134,7 @@ function UPBcoding($text) {
     
     foreach($code_matches[1] as $thecode) {
     	$newcode = "<?php\n".$thecode."\n?>";
+    	?><?php //allows code highlighting to show again in editors
     	$newcode = str_replace(array('&lt;','&gt;','&quot;'),array('<','>', '"'),$newcode);
     	$newcode = highlight_string($newcode, true);
     	$newcode = str_replace("<font color=\"#0000BB\">&lt;?php", "<font>", $newcode);
@@ -236,6 +237,9 @@ function bbcodebuttons($txtarea='message',$type='post') {
     $bb_buttons .= "<a href=\"javascript:createBBtag('[move]','[/move]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/move.gif' border='0' title='moving text' /></a> ";
     $bb_buttons .= "<a href=\"javascript:createBBtag('[quote]','[/quote]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/quote.gif' border='0' title='quote' /></a> ";
     $bb_buttons .= "<a href=\"javascript:createBBtag('[offtopic]','[/offtopic]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/offtopic.gif' border='0' title='off topic' /></a>";
+    $bb_buttons .= "<img src='".SKIN_DIR."/images/bbcode/separator.gif' border='0' title='' />";
+    $bb_buttons .= "<a href=\"javascript:add_link('google','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/google.gif' border='0' title='off topic' /></a> ";
+    $bb_buttons .= "<a href=\"javascript:add_link('youtube','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/youtube.gif' border='0' title='off topic' /></a>";
     $bb_buttons .= "<img src='".SKIN_DIR."/images/bbcode/separator.gif' border='0' title='' />";
     $bb_buttons .= "<a href=\"javascript:removeBBcode('$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/removeformat.gif' border='0' title='remove bbcode' /></a>";
 

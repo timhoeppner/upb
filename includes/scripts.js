@@ -140,9 +140,9 @@ function moresmilies(Tag)
   return;
 }
 
-//function add_link adds urls, images or emails to the textbox
+//function add_link adds urls, images, videos or emails to the textbox
 //parameters: type,areaId (type is type of link, areaId is name of textbox)
-//function will eventually place the email, image link or url where the cursor is.
+//function will eventually place the email, image link, url or embed video where the cursor is.
 function add_link(type,areaId)
 {
 	if(isIE && isWin) {
@@ -153,7 +153,6 @@ function add_link(type,areaId)
 	}
 	return;
 }
-
 
 function add_link_IE(type,areaId) {
 	//alert(areaId)
@@ -187,7 +186,7 @@ function add_link_IE(type,areaId) {
 	}
 	else 
   {
-		var Tag = '['+type;
+    var Tag = '['+type;
     if (type == 'email')
 		{
       url = prompt('Enter the email address:','');
@@ -195,6 +194,14 @@ function add_link_IE(type,areaId) {
     else if (type == 'url')
     { 
       url = prompt('Enter the url:','http://');
+    }
+    else if (type == 'google')
+    {
+      url = prompt('Enter the video code\nThis is the code after docId= in the URL of the video');
+    }
+    else if (type == 'youtube')
+    {
+      url = prompt('Enter the video code\nThis is the code after v= in the URL of the video');
     }
     else
     { 
@@ -277,6 +284,14 @@ function add_link_nav(type,areaId)
 		  link = prompt('Enter the email address:','');
     else if (type == 'url')
       link = prompt('Enter the url:','http://');
+    else if (type == 'google')
+    {
+      link = prompt('Enter the video code\nThis is the code after docId= in the URL of the video');
+    }
+    else if (type == 'youtube')
+    {
+      link = prompt('Enter the video code\nThis is the code after v= in the URL of the video');
+    }
     else
       link = prompt('Enter the url of the image:','http://');
     
@@ -589,8 +604,14 @@ var http_request = false;
         http_request.onreadystatechange = ReplyContents;
       else if (type == 'sig')
         http_request.onreadystatechange = Sig;
-      else
+      else if (type == 'sort')
         http_request.onreadystatechange = SortForums;
+      else if (type == 'username')
+        http_request.onreadystatechange = CheckUsername;
+      else if (type == 'email')
+        http_request.onreadystatechange = CheckEmail;
+      else
+        http_request.onreadystatechange = Error;
       http_request.open('POST', url, true);
       http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
       http_request.setRequestHeader("Content-length", parameters.length);
@@ -617,6 +638,11 @@ var http_request = false;
       }
    }
    
+   function Error()
+   {
+    alert('An error has occured');
+   }
+   
    function SortForums() {
     if (http_request.readyState == 3) {
       if (what == 'forum')
@@ -640,7 +666,7 @@ var http_request = false;
    
    function GetPost() {
       if (http_request.readyState == 3)
-        document.getElementById(div).innerHTML = "Getting Post from Database....Please Wait";
+        document.getElementById(div).innerHTML = "<img src='images/spinner.gif' alt='' title='' style='vertical-align: middle;'>&nbsp;Getting Post from Database....Please Wait";
       if (http_request.readyState == 4) {
          if (http_request.status == 200) {
             result = http_request.responseText;
@@ -655,7 +681,7 @@ var http_request = false;
    
    function EditContents() {
       if (http_request.readyState == 3)
-        document.getElementById(div).innerHTML = "Editing Post....Please Wait";
+        document.getElementById(div).innerHTML = "<img src='images/spinner.gif' alt='' title='' style='vertical-align: middle;'>&nbsp;Editing Post....Please Wait";
       if (http_request.readyState == 4) {
          if (http_request.status == 200) {
             result = http_request.responseText;
@@ -689,6 +715,42 @@ var http_request = false;
             document.getElementById('pagelink1').innerHTML = result_array[1];
             //document.getElementById('pagelink2').innerHTML = result_array[2];
             document.getElementById('quickreplyform').innerHTML = result_array[2];
+         } else {
+            alert(http_request.status)
+            alert('There was a problem with the request.');
+         }
+      }
+   }
+   
+   function CheckUsername() {
+      
+      if (http_request.readyState == 3)
+      {
+        html = "<img src='images/spinner.gif' alt='' title='' style='vertical-align: middle;'>Checking Username";
+        document.getElementById('namecheck').innerHTML = html;
+      }
+      if (http_request.readyState == 4) {
+         if (http_request.status == 200) {
+            result = http_request.responseText;
+            document.getElementById('namecheck').innerHTML = result;
+         } else {
+            alert(http_request.status)
+            alert('There was a problem with the request.');
+         }
+      }
+   }
+   
+   function CheckEmail() {
+      
+      if (http_request.readyState == 3)
+      {
+        html = "<img src='images/spinner.gif' alt='' title='' style='vertical-align: middle;'>Checking Email Address";
+        document.getElementById('emailcheck').innerHTML = html;
+      }
+      if (http_request.readyState == 4) {
+         if (http_request.status == 200) {
+            result = http_request.responseText;
+            document.getElementById('emailcheck').innerHTML = result;
          } else {
             alert(http_request.status)
             alert('There was a problem with the request.');
@@ -771,7 +833,20 @@ var http_request = false;
     
     makePOSTRequest('./ajax.php', poststr,'sig'); 
     }
-
+    
+    function getUsername(username)
+    {
+      var poststr = 'username='+escape(Utf8.encode(username));
+      poststr += '&type=username';
+      makePOSTRequest('./ajax.php',poststr,'username');
+    }
+    
+    function getEmail(email)
+    {
+      var poststr = 'email='+escape(Utf8.encode(email));
+      poststr += '&type=email';
+      makePOSTRequest('./ajax.php',poststr,'email');
+    }
 //END OF AJAX SCRIPTS
 
 //START OF MISCELLANEOUS SCRIPTS
