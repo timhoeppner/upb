@@ -100,8 +100,8 @@
 	    if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[_a-z0-9-]+(\.[_a-z0-9-]+)*)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["u_email"]))
 		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'Please enter a valid e-mail (ex: you@host.com).', ALERT_MSG)), true);
 
-	    $q = $tdb->query("users", "user_name='".$_POST["u_login"]."'", 1, 1);
-		if ($_POST["u_login"] == $q[0]["user_name"])
+	    $q = $tdb->query("users", "user_name='".strtolower($_POST["u_login"])."'", 1, 1);
+		if (strtolower($_POST["u_login"]) == strtolower($q[0]["user_name"]))
 		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'The username you chose is already in use.', ALERT_MSG)), true);
 		unset($q);
 
@@ -230,6 +230,8 @@
 		exit;
 	} else {
 		require_once('./includes/header.php');
+		?> <script language='javascript' src='includes/pwd_strength.js'></script>
+		<? 
 		// security mod if enabled
 		if ((bool) $_REGIST['security_code'] === true && !$tdb->is_logged_in())
     {
@@ -240,7 +242,7 @@
 		  // rather than the hidden field we have
 		  $_SESSION['u_keycheck'] = $verify_string;
 		}
-    echo "<form action='register.php' method=POST>";
+    echo "<form name='registration' action='register.php' method='POST'>";
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
 			<tr>
@@ -248,7 +250,7 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='width:45%;'> <strong>User Name:</strong> <span style='color:$required;'>*</span><br />Your identity throughout the bulletin board.</td>
-				<td class='area_2'><input type=text name='u_login' size=40></td>
+				<td class='area_2'><input type=text name='u_login' size=40 onblur=\"getUsername(this.value);\"><span class='err' id='namecheck'></span></td>
 			</tr>
 			<tr>
 				<td class='area_1'>
@@ -257,11 +259,11 @@
           if ((bool)$_REGIST['security_code'] && !$tdb->is_logged_in())
           echo "A confirmation e-mail is sent to the email address that you provide.<br>If you use a hotmail email account, please be aware that there have been alot of missing activation emails. This is a hotmail problem.";
           echo "</span></td>
-				<td class='area_2'><input type=text name=u_email size=40></td>
+				<td class='area_2'><input type=text name='u_email' size='40' onblur=\"getEmail(this.value);\"><span class='err' id='emailcheck'></span></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Confirm E-mail Address:</strong> <span style='color:$required;'>*</span></td>
-				<td class='area_2'><input type=text name=u_email2 size=40></td>
+				<td class='area_2'><input type='text' name='u_email2' size='40'></td>
 			</tr>
 			<tr>
 				<td class='area_1'>
@@ -287,7 +289,7 @@
 					<strong>Password:</strong> <span style='color:$required;'>*</span><br />
 					<span style='description'>Your Password must be at least 6 characters long.</span>
 			    </td>
-				<td class='area_2'><input type=password name=u_pass size=40></td>
+				<td class='area_2'><input type='password' name='u_pass' size='40' onkeyup=\"runPassword(this.value, 'u_pass');\">&nbsp;Password Strength: <div id=\"u_pass_text\" style=\"font-size: 10px;\"></div></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Confirm Password:</strong> <span style='color:$required;'>*</span></td>

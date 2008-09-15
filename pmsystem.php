@@ -17,9 +17,10 @@
 	require_once('./includes/inc/privmsg.inc.php');
 	$PrivMsg = new functions(DB_DIR."/", "privmsg.tdb");
 	$PrivMsg->setFp("CuBox", ceil($_COOKIE["id_env"]/120));
-	if ($_GET["section"] != "outbox") $pmRecs = $PrivMsg->query("CuBox", "box='inbox'&&to='".$_COOKIE["id_env"]."'");
+  if ($_GET["section"] != "outbox") $pmRecs = $PrivMsg->query("CuBox", "box='inbox'&&to='".$_COOKIE["id_env"]."'");
 	else $pmRecs = $PrivMsg->query("CuBox", "box='outbox'&&from='".$_COOKIE["id_env"]."'");
-	if (!empty($pmRecs) && $pmRecs[0] != '') $pmRecs = array_reverse($pmRecs);
+	
+  if (!empty($pmRecs) && $pmRecs[0] != '') $pmRecs = array_reverse($pmRecs);
 	elseif($_GET['section'] != '') {
 		//PM Blocking system commented out
     echo "
@@ -111,7 +112,7 @@
 		if ($none) {
 			$echo = "
 				<tr>
-					<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='6'>HiNo Messages in your ".$_GET["section"]."</td>
+					<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='6'>No Messages in your ".$_GET["section"]."</td>
 				</tr>";
 			$disable = "DISABLED";
 		}
@@ -154,7 +155,30 @@
 		</form>";
 		echoTableFooter(SKIN_DIR);
 	} elseif($_GET["section"] == "outbox") {
-		$none = 0;
+		if ($_GET['action'] == "delete") {
+			//dump($_POST);
+      $num = 0;
+			$delete = array();
+			for($i = 0; $i < $count; $i++) {
+				if (isset($_POST[$pmRecs[$i]["id"]."_del"])) {
+					$PrivMsg->delete("CuBox", $pmRecs[$i]["id"], false);
+					$num++;
+					$delete[] = $i;
+				}
+			}
+			//$PrivMsg->reBuild("CuBox"); // Not needed with new version of TextDB?
+			if ($num > 0) {
+				echo "<p align='center'>Successfully Deleted $num Private Msg(s)</p>";
+				$count -= $num;
+				for($i = 0; $i < count($delete); $i++) {
+					unset($pmRecs[$delete[$i]]);
+				}
+			} else {
+				echo "<p align='center'>No Private Msg(s) Successfully Deleted...</p>";
+			}
+			unset($num);
+		}
+    $none = 0;
 		echo "
 			<div id='tabstyle_2'>
 				<ul>
@@ -165,12 +189,14 @@
 				</ul>
 			</div>
 			<div style='clear:both;'></div>";
-		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
+		echo "<form name='main' action='pmsystem.php?section=outbox&amp;action=delete' method='post' onSubmit='submitonce(this)' enctype='multipart/form-data'>";
+    echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
 				<tr>
 					<th style='width:5%;'>&nbsp;</th>
 					<th style='width:40%;'>Title:</th>
-					<th style='width:55%;'>By:</th>
+					<th style='width:50%;'>By:</th>
+					<th style='width:5%';>Delete</th>
 				</tr>";
 		foreach($pmRecs as $pmRec) {
 			if ($pmRec["id"] != "") {
@@ -180,7 +206,8 @@
 					<td class='area_1' style='text-align:center;padding:8px;'><img src='".SKIN_DIR."/icons/post_icons/".$pmRec["icon"]."' alt='' title='' /></td>
 					<td class='area_2'> <span class='link_1'><a href='viewpm.php?section=".$_GET["section"]."&id=".$pmRec["id"]."'>".$pmRec["subject"]."</a></span></td>
 					<td class='area_1'>Sent to <a href='profile.php?action=get&id=".$user[0]['id']."'>".$user[0]["user_name"]."</a> on ".gmdate("M d, Y g:i:s a", user_date($pmRec["date"]))."</td>
-				</tr>";
+				  <td class='area_1' style='text-align:center;padding:8px;'><input type='checkbox' name='".$pmRec["id"]."_del' value='CHECKED'></td>
+        </tr>";
 				unset($pmRec);
 			} else {
 				$none++;
@@ -191,11 +218,14 @@
 		if ($none == $count) {
 			echo "
 				<tr>
-					<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='3'>No Messages in your ".$_GET["section"]."</td>
+					<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='4'>No Messages in your ".$_GET["section"]."</td>
 				</tr>";
 			$disable = "DISABLED";
 		}
-		echoTableFooter(SKIN_DIR);
+		echo "<tr>
+					<td class='footer_3a' colspan='4' style='text-align:center;'><input type='submit' name='action' value='Delete Selected PMs' $disable></td>
+				</tr>";
+    echoTableFooter(SKIN_DIR);
 	} else {
 		
     $old_pm = ($count - $new_pm);

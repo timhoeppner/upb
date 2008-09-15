@@ -6,6 +6,22 @@
 // Using textdb Version: 4.3.2
 require_once('./includes/upb.initialize.php');
 
+/*if ($_POST['status'] == "set")
+{
+  if ($)
+  $sig = format_text(filterLanguage(UPBcoding($_POST["sig"]), $_CONFIG));
+  $sig_title = "<strong>Signature Preview:</strong><br>To save this signature press Submit below";
+      }
+      else
+      {
+        $rec = $tdb->get("users", $_POST["id"]);
+        $sig = format_text(filterLanguage(UPBcoding($rec[0]['sig']), $_CONFIG));
+        $sig_title = "<strong>Current Signature:</strong>";
+      }
+      echo $sig."<!--divider-->".$sig_title;
+
+      die();
+}*/
 if(!isset($_GET['action']) || $_GET['action'] == '') $_GET['action'] = 'edit';
 if ($_GET['action'] == "get" || $_GET['action'] == 'view') $where = "Member Profile";
 elseif ($_GET['action'] == "bookmarks") $where = "Favorited Topics";
@@ -304,7 +320,7 @@ if (isset($_POST["u_edit"])) {
 				</td>";
 
     if($custom_avatar) {
-		    echo "<td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input type='".(($_REGIST['custom_avatars'] == '2') ? "file'" : "text' value=''")." name='avatar2' /><p><i>Consult the forum admin for acceptable dimensions.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is 5Kb.' : '')."</i></p></td></tr>";
+		    echo "<td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input type='".(($_REGIST['custom_avatars'] == '2') ? "file'" : "text' value=''")." name='avatar2' /><p><i>Consult the forum admin for acceptable dimensions.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is '.$_CONFIG["fileupload_size"].'Kb.' : '')."</i></p></td></tr>";
 		}
 		echo "
 			<tr>

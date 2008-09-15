@@ -623,7 +623,7 @@ var http_request = false;
    function Sig()
    {
       if (http_request.readyState == 3) {
-      document.getElementById('sig_preview').innerHTML = "<img src='images/spinner.gif' alt='' title='' style='vertical-align: middle;'><br>Getting Preview of Signature";
+      document.getElementById('sig_preview').innerHTML = "<img src='images/spinner.gif' alt='' title='' style='vertical-align: middle;'>";
       }
       if (http_request.readyState == 4) {
          if (http_request.status == 200) {
@@ -633,7 +633,7 @@ var http_request = false;
             document.getElementById('sig_title').innerHTML = result_array[1];       
          } else {
             alert(http_request.status)
-            alert('There was a problem with the request.');
+            alert('Error');
          }
       }
    }
@@ -831,7 +831,8 @@ var http_request = false;
     poststr += "&status="+escape(Utf8.encode(status));
     poststr += "&type=sig";
     
-    makePOSTRequest('./ajax.php', poststr,'sig'); 
+    //makePOSTRequest('./ajax.php', poststr,'sig'); 
+    makePOSTRequest('./profile.php', poststr,'sig'); 
     }
     
     function getUsername(username)

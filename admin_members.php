@@ -355,7 +355,7 @@
 			echo "</td>
 			</tr>";
 			echoTableFooter(SKIN_DIR);
-			echo "<form method='POST' action=".$PHP_SELF."?action=pass&id=".$_GET["id"]."><input type='hidden' name='a' value='1'>";
+			echo "<form method='POST' action=".$_SERVER['PHP_SELF']."?action=pass&id=".$_GET["id"]."><input type='hidden' name='a' value='1'>";
 		echoTableHeading("Setting a new password for: ".$user[0]["user_name"]."", $_CONFIG);
 			echo "
 			<tr>

@@ -489,22 +489,29 @@ switch ($ajax_type)
 
         break 1;
 
-    case "sig" :
-      if ($_POST['status'] == "set")
+    case "username" :
+      $q = $tdb->query("users", "user_name='".strtolower($_POST["username"])."'", 1, 1);
+      if (strtolower($_POST["username"]) == strtolower($q[0]["user_name"]))
+        echo "&nbsp;<img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'> Username already exists";
+      else 
+        echo "&nbsp;<img src='images/tick.gif' alt='' title='' style='vertical-align: middle;'>";
+      break 1;
+    
+    case "email" :
+      if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[_a-z0-9-]+(\.[_a-z0-9-]+)*)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["email"]))
       {
-        $sig = format_text(filterLanguage(UPBcoding($_POST["sig"]), $_CONFIG));
-        $sig_title = "<strong>Signature Preview:</strong><br>To save this signature press Submit below";
+        echo "&nbsp;<img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'>&nbsp;Invalid Email Address";
       }
       else
       {
-        $rec = $tdb->get("users", $_POST["id"]);
-        $sig = format_text(filterLanguage(UPBcoding($rec[0]['sig']), $_CONFIG));
-        $sig_title = "<strong>Current Signature:</strong>";
+      $q = $tdb->query("users", "email='".$_POST["email"]."'", 1, 1);
+		  if ($_POST["email"] == $q[0]["email"])
+		    echo "&nbsp;<img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'>&nbsp;Email address already used";
+      else 
+        echo "&nbsp;<img src='images/tick.gif' alt='' title='' style='vertical-align: middle;'>";
       }
-      echo $sig."<!--divider-->".$sig_title;
-
       break 1;
-
+    
     default:
       echo "Something has gone horribly wrong. You should never see this text";
       break 1;

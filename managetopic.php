@@ -321,7 +321,6 @@
 			</tr>
 	</form>";
 	echoTableFooter(SKIN_DIR);
-			echo "<form method='POST' action='".$_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'>";
 		echoTableHeading("Topic Options", $_CONFIG);
 			if ($_COOKIE["power_env"] >= 3) {
 				echo "
@@ -368,7 +367,6 @@
 				echo "
 			<form method='POST' action='".$_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><input type='hidden' name='move_forum' value='1'>
 			$options
-			</form>
 			<tr>
 				<td class='area_1' style='text-align:right;'><input type='radio' value='redirect' name='action' checked id='fp6'></td>
 				<td class='area_2'><label for='fp6'>Move topic and leave a redirect topic in its place</label></td>
@@ -396,7 +394,7 @@
 			}
 			echo "
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Submit' name='submit2'></td>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='button' value='Submit' name='submit2'><input type='reset' value='Reset' name='Reset'></td>
 			</tr>
 		</form>";
 	   echoTableFooter(SKIN_DIR);
@@ -422,7 +420,7 @@
 				}
 				echo "
 			<tr>
-				<td class='footer_3a' colspan='3' style='text-align:center;'><input type='submit' value='Delete Selected' name='action' /></td>
+				<td class='footer_3a' colspan='3' style='text-align:center;'><input type='submit' value='Delete Selected' name='action' onclick=\"alert('Button clicked')\"/></td>
 			</tr>
 	</form>";
 				echoTableFooter(SKIN_DIR); }

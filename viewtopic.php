@@ -168,7 +168,7 @@
 		echo"</div>";
 		echo "</td>
 				<td class='$table_color' valign='top'>
-					<div style='padding:12px;margin-bottom:20px;' id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' name='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>$msg</div>
+					<div style='width:85%;padding:12px;margin-bottom:20px;overflow:auto;' id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' name='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>$msg</div>
 					<div style='padding:12px;'>".$sig."</div></td>
 			</tr>
 			<tr>
