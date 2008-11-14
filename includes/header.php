@@ -137,7 +137,9 @@
 <title>".((!isset($where) || $where == '') ? stripslashes($_CONFIG['title']) : (strip_tags(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], stripslashes($where)))))."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 <link rel='stylesheet' type='text/css' href='".SKIN_DIR."/css/style.css' />
+<link rel='stylesheet' type='text/css' href='skins/disabled.css' />
 <script type='text/javascript' src='./includes/scripts.js'></script>
+<script type='text/javascript' src='./includes/script-styles.js'></script>
 </head>
 <body>
 <div id='upb_container'>

@@ -1,10 +1,11 @@
 <?php
+
 	// Ultimate PHP Board
 	// Author: Tim Hoeppner aka RR_Pilot, FixITguy
 	// Website: http://www.myupb.com
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
-	header ("refresh: 600");
+  header ("refresh: 600");
 	require_once("./includes/upb.initialize.php");
 
 	if(!isset($_GET['action'])) $_GET['action'] = '';      //PHP sends Notices if you don't do this first

@@ -187,11 +187,8 @@ function parse_quote($matches)
 }
 
 function bbcodebuttons($txtarea='message',$type='post') {
-    if (!(isset($_COOKIE['javascript']) or isset($_POST['jscript'])))
-        return "Please enable Javascript to use text formatting and smilies<p>";
-
-    $bb_buttons = "<p>";
-    $bb_buttons .= "<select class='bbselect' onchange=\"bb_dropdown(this.form.colors,'colors','$txtarea')\" name='colors'>";
+    $bb_buttons = "<div id='disabled_msg'>Please enable Javascript to use text formatting<br></div>";
+    $bb_buttons .= "<div id='enabled_msg'><select class='bbselect' onchange=\"bb_dropdown(this.form.colors,'colors','$txtarea')\" name='colors'>";
     $bb_buttons .= "<option value='' selected='selected'>Choose color</option>";
     $bb_buttons .= "<option style='color: #ffffff;' value='#FFFFFF'>White</option>";
     $bb_buttons .= "<option style='color: #ffff00;' value='#FFFF00'>Yellow</option>";
@@ -216,8 +213,8 @@ function bbcodebuttons($txtarea='message',$type='post') {
     $bb_buttons .= "<option style='font-size : 12px;' value='12'>12px</option>";
     $bb_buttons .= "<option style='font-size : 18px;' value='18'>18px</option>";
     $bb_buttons .= "<option style='font-size : 24px;' value='24'>24px</option>";
-    $bb_buttons .= "</select> ";
-    $bb_buttons .= "</p>";
+    $bb_buttons .= "</select>";
+    $bb_buttons .= "<p>";
     $bb_buttons .= "<a href=\"javascript:createBBtag('[b]','[/b]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/bold.gif' title='bold' border='0' /></a> ";
     $bb_buttons .= "<a href=\"javascript:createBBtag('[i]','[/i]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/italic.gif' title='italic'  border='0' /></a> ";
     $bb_buttons .= "<a href=\"javascript:createBBtag('[u]','[/u]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/underline.gif' border='0'  title='underline' /></a>";
@@ -241,27 +238,25 @@ function bbcodebuttons($txtarea='message',$type='post') {
     $bb_buttons .= "<a href=\"javascript:add_link('google','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/google.gif' border='0' title='off topic' /></a> ";
     $bb_buttons .= "<a href=\"javascript:add_link('youtube','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/youtube.gif' border='0' title='off topic' /></a>";
     $bb_buttons .= "<img src='".SKIN_DIR."/images/bbcode/separator.gif' border='0' title='' />";
-    $bb_buttons .= "<a href=\"javascript:removeBBcode('$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/removeformat.gif' border='0' title='remove bbcode' /></a>";
+    $bb_buttons .= "<a href=\"javascript:removeBBcode('$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/removeformat.gif' border='0' title='remove bbcode' /></a></div>";
 
-  return $bb_buttons."<br />";
+  return $bb_buttons;
 }
 
 function getSmilies($field = 'message')
 {
-  if (!(isset($_COOKIE['javascript']) or isset($_POST['jscript'])))
-    return "";
   $tdb = new tdb(DB_DIR.'/', 'bbcode.tdb');
   $tdb->setFP("smilies","smilies");
   $smilies = $tdb->query("smilies","id>'0'&&type='main'");
   //var_dump($smilies);
-  $output = "<table class='smilie_tb'><tr>";
+  $output = "<div id='disabled_msg'>Please enable Javascript to use smilies</div><div id='enabled_msg'><table class='smilie_tb'><tr>";
   foreach ($smilies as $key => $smiley)
   {
     $output .= "<td class='smilie'><A HREF=\"javascript:setsmilies(' ".$smiley['bbcode']." ','$field')\" ONFOCUS=\"filter:blur()\">".$smiley['replace']."</A></td>";
     if ($key%10 == 9)
       $output .= "</tr><tr>";
   }
-  $output .= "</tr><tr><td colspan='10' class='more_smilie'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></td></tr></table>";
+  $output .= "</tr><tr><td colspan='10' class='more_smilie'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></td></tr></table></div>";
   return $output;
 }
 

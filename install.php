@@ -3,7 +3,7 @@
 	// designed for Ultimate PHP Board
 	// Author: Jerroyd Moore, aka Rebles
 	// Website: http://www.myupb.com
-	// Version: 2.2.1
+	// Version: 2.2.2
 	// Using textdb Version: 4.4.1
 	ignore_user_abort();
 	if (TRUE !== is_writable('config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
@@ -91,7 +91,7 @@
 		if (!defined('DB_DIR')) {
 			define('DB_DIR', './'.uniqid('data_', true), true);
 			$f = fopen('config.php', 'w');
-			fwrite($f, "<?php\ndefine('UPB_VERSION', '2.2.1', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
+			fwrite($f, "<?php\ndefine('UPB_VERSION', '2.2.2', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
       ?><?php
       //allows syntax highlighting to be work again for coding purposes
 			fclose($f);
@@ -253,7 +253,7 @@
 		?><?php
 		require_once('./includes/class/config.class.php');
 		$config_tdb = new configSettings();
-		$config_tdb->add('ver', '2.2.1', 'config', 'text', 'hidden', '','','','');
+		$config_tdb->add('ver', '2.2.2', 'config', 'text', 'hidden', '','','','');
 		$config_tdb->add('email_mode', '1', 'config', 'bool', 'hidden','','','','');
 		$config_tdb->add('admin_catagory_sorting', '', 'config', 'text', 'hidden', '', '', '', '');
 		$config_tdb->add('banned_words', 'shit,fuck,cunt,pussy,bitch,arse', 'config', 'text', 'hidden', '','','','');

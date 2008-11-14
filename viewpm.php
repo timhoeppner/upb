@@ -78,8 +78,6 @@
 		    if($user[0]['level'] > 1) $block_disabled = " DISABLED";
 		    else $block_disabled = "";
 			$options = "<input type='submit' name='action' value='Reply' onclick='check_submit()'$reply_disabled> <input type='submit' name='action' value='Delete' onclick='check_submit()'>  <input type='submit' name='action' value='Block User' onclick='check_submit()'$block_disabled>";
-      if (isset($_COOKIE['javascript']))
-        $options .= "<input type='hidden' name='jscript' value='true'>";
 		}
 		$where = "<a href='pmsystem.php'>Messenger</a> ".$_CONFIG["where_sep"]." <a href='pmsystem.php?section=".$_GET["section"]."'>".ucfirst($_GET["section"])."</a> ".$_CONFIG["where_sep"]." ".$pmRec[0]["subject"];
 		require_once('./includes/header.php');

@@ -1,7 +1,19 @@
 // Ultimate PHP Board Javascripts
 // Author: Chris Kent aka Clark and others for Ultimate PHP Board by Tim Hoeppner aka RR_Pilot, FixITguy
 // Website: http://www.myupb.com
-// Version: 2.2.1
+// Version: 2.2.2
+
+//Following script only shows text for javascript dependent content
+(function () {
+	var head = document.getElementsByTagName("head")[0];
+	if (head) {
+		var scriptStyles = document.createElement("link");
+		scriptStyles.rel = "stylesheet";
+		scriptStyles.type = "text/css";
+		scriptStyles.href = "skins/enabled.css";
+		head.appendChild(scriptStyles);
+	}
+}());
 
 //START OF BBCODE SCRIPTS
 var clientInfo = navigator.userAgent.toLowerCase();
@@ -973,5 +985,5 @@ function trim (str) {
 }
 
 
-document.cookie = 'javascript=true'; //sets a cookie if javascript is enabled
+//document.cookie = 'javascript=true'; //sets a cookie if javascript is enabled
 //END OF MISCELLANEOUS SCRIPTS

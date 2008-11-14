@@ -1,4 +1,5 @@
 <?php
+$_SERVER['PHP_SELF'] = $_SERVER['SCRIPT_NAME'];
 if(basename($_SERVER['PHP_SELF']) == 'upb.initialize.php') die('This is a wrapper script!');
 //Start session for all upb pages
 session_start();
@@ -123,7 +124,7 @@ if(file_exists(DB_DIR."/main.tdb")) {
     $config_tdb = new configSettings();
     $config_tdb->setFp("config", "config");
     $config_tdb->setFp("ext_config", "ext_config");
-
+    
     $_CONFIG = $config_tdb->getVars("config");
     $_REGISTER = $config_tdb->getVars("regist");
     $_REGIST = &$_REGISTER;

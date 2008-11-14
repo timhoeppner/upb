@@ -106,12 +106,14 @@
 		}
 		if (($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2)
     {
-      $edit = "<div class='button_pro1'>";
-      if ($_COOKIE['javascript'] == 'true')
-        $edit .= "<a href=\"javascript:getPost('{$pRec["user_id"]}','{$_GET["id"]}-{$_GET["t_id"]}-{$pRec["id"]}','edit');\">";
-      else
-        $edit .= "<a href='editpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."'>";
+      $edit = "<div class='button_pro1' id='enabled_msg'>";
+      $edit .= "<a href=\"javascript:getPost('{$pRec["user_id"]}','{$_GET["id"]}-{$_GET["t_id"]}-{$pRec["id"]}','edit');\">";
       $edit .= "Edit</a></div>";
+      $edit .= "<div class='button_pro1' id='disabled_msg'>";
+      $edit .= "<a href='editpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."'>";
+      $edit .= "Edit</a></div>
+      ";
+      
 		}
     else $edit = "";
 		if ((($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) && $pRec['id'] != $first_post) $delete = "<div class='button_pro1'><a href='delete.php?action=delete&t=0&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."'>X</a></div>";
@@ -199,9 +201,9 @@
 	//$p = createPageNumbers($vars['page'], $num_pages, $_SERVER['QUERY_STRING']);
   //echo "<div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page']) . "</div>";
   //echo "<div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,$vars['page'],"bottom") . "</div>";
-	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0 ) and $tRec[0]['locked'] != 1 and isset($_COOKIE['javascript']))
+	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0 ) and $tRec[0]['locked'] != 1)
 {
-  echo "<div id='quickreplyform' name='quickreplyform'>";
+  echo "<div id='enabled_msg'><div id='quickreplyform' name='quickreplyform'>";
   echo "<form name='quickreplyfm' action='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$vars["page"]."' id='quickreplyfm' method='POST'>\n";
   echoTableHeading("Quick Reply", $_CONFIG);
   echo "<table class='main_table' cellspacing='1'>";
@@ -227,7 +229,7 @@
     <input type='button' name='quickreply' value='Quick Reply' onclick=\"document.quickreplyfm.quickreply.disabled=true;javascript:getReply(document.getElementById('quickreply'));\">\n
     <input type='submit' name='submit' value='Advanced'>\n</td></tr></form>";
     echoTableFooter(SKIN_DIR);
-  echo "</div>";
+  echo "</div></div>";
 }
 //END QUICK REPLY SEGMENT
 	$tdb->cleanup();
