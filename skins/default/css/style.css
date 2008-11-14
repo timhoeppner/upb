@@ -1472,6 +1472,40 @@ height: 20px;
 	color : #990000;
 }
 
+.announce1 {
+
+color:#ffffff;
+
+background:#131313 url(../images/announcement/tl.png) no-repeat;
+
+//float: right;
+}
+
+.announce2 {
+
+background:url(../images/announcement/tr.png) no-repeat top right;
+
+}
+
+.announce3 {
+
+background:url(../images/announcement/bl.png) no-repeat left bottom;
+
+}
+
+.announce4 {
+background:url(../images/announcement/br.png) no-repeat right bottom; 
+
+padding-left:5px;
+
+padding-right:5px;
+
+padding-top:5px;
+
+padding-bottom:5px;
+
+}
+
 /* --------------------------------------------- */
 /* ----Quick Class Text Colors For Spans End---- */
 /* --------------------------------------------- */
