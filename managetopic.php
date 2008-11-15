@@ -394,7 +394,7 @@
 			}
 			echo "
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='button' value='Submit' name='submit2'><input type='reset' value='Reset' name='Reset'></td>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Submit' name='submit2'><input type='reset' value='Reset' name='Reset'></td>
 			</tr>
 		</form>";
 	   echoTableFooter(SKIN_DIR);
@@ -411,7 +411,7 @@
 					echo "
 			<tr>
 				<td class='footer_3' colspan='3'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
-			</tr
+			</tr>
 			<tr>
 				<td class='area_1' style='width:5%;text-align:center;padding:20px;' valign='top'><input type='checkbox' name='ids[]' value='{$pRec["id"]}'></td>
 				<td class='area_1' style='width:20%;padding:20px;' valign='top'><span class='link_2'><a href='profile.php?id=".$pRec["user_id"]."'>".$pRec["user_name"]."</a></span></td>
