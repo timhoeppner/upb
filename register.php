@@ -250,7 +250,7 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='width:45%;'> <strong>User Name:</strong> <span style='color:$required;'>*</span><br />Your identity throughout the bulletin board.</td>
-				<td class='area_2'><input type=text name='u_login' size=40 onblur=\"getUsername(this.value);\"><span class='err' id='namecheck'></span></td>
+				<td class='area_2'><input type=text name='u_login' size=40 onblur=\"getUsername(this.value,'reg');\"><span class='err' id='namecheck'></span></td>
 			</tr>
 			<tr>
 				<td class='area_1'>
@@ -289,7 +289,7 @@
 					<strong>Password:</strong> <span style='color:$required;'>*</span><br />
 					<span style='description'>Your Password must be at least 6 characters long.</span>
 			    </td>
-				<td class='area_2'><input type='password' name='u_pass' size='40' onkeyup=\"runPassword(this.value, 'u_pass');\">&nbsp;Password Strength: <div id=\"u_pass_text\" style=\"font-size: 10px;\"></div></td>
+				<td class='area_2'><input type='password' name='u_pass' size='40' onkeyup=\"runPassword(this.value, 'u_pass');\"><div style=\"font-size: 10px;\">Password Strength: <span id=\"u_pass_text\" style=\"font-size: 10px;\"></span></div></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Confirm Password:</strong> <span style='color:$required;'>*</span></td>
@@ -309,7 +309,7 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='width:45%;'><strong>Location:</strong><br />Where are you from? (it can be anything)</td>
-				<td class='area_2'><input type=text name='u_loca' size='4';</td>
+				<td class='area_2'><input type=text name='u_loca' size='4'></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Website URL:</strong><br />please include the http:// in front of url</td>

@@ -847,9 +847,10 @@ var http_request = false;
     makePOSTRequest('./profile.php', poststr,'sig'); 
     }
     
-    function getUsername(username)
+    function getUsername(username,type)
     {
       var poststr = 'username='+escape(Utf8.encode(username));
+      poststr += '&area='+escape(Utf8.encode(type));
       poststr += '&type=username';
       makePOSTRequest('./ajax.php',poststr,'username');
     }

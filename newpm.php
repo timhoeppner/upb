@@ -27,7 +27,11 @@
 		else redirect("pmsystem.php", "2");
 		exit;
 	} elseif($_POST["s"] == 1) {
-  
+    
+    if (isset($_POST['pm_recip']))
+		  $q = $tdb->query("users", "user_name='".strtolower($_POST["pm_recip"])."'", 1, 1,array('id'));
+		$_POST['to'] = $q[0]['id'];
+    
 		$_POST['subject'] = htmlentities(stripslashes($_POST['subject']));
 		$_POST['message'] = htmlentities(stripslashes($_POST['message']));
 		$error_msg = "";
@@ -41,7 +45,7 @@
 			$error_msg .= str_replace('__TITLE__','Caution!',str_replace('__MSG__',"You must provide a message.",ALERT_MSG));
 		}
 		if ($_POST["to"] == "" || $_POST["to"] == "0") {
-			$error_msg .= "Select a Username<br />";
+        $error_msg .= "Select a Username<br />";
 		} elseif($_POST["to"] == $_COOKIE["id_env"]) {
 			$error_msg .= str_replace('__TITLE__','Caution!',str_replace('__MSG__',"You cannot send yourself a Private Message.",ALERT_MSG));
 
@@ -107,21 +111,20 @@
 					<iframe src='viewpm_simple.php?id=".$_GET["r_id"]."' class='review_frame' scrolling='auto' frameborder='0'></iframe></div></td>
 			</tr>";
 	} else {
-		if (!isset($_GET['to'])) 
-    {
-      echo str_replace('__TITLE__','Error:',str_replace('__MSG__',"You must click on 'Send PM' from a user's profile or post.",ALERT_MSG));
-			require_once('./includes/footer.php');
-			exit();
-		}
-    if (!is_numeric($_GET['to'])) 
+    if (isset($_GET['to']) && !is_numeric($_GET['to'])) 
     {
       echo str_replace('__TITLE__','Error:',str_replace('__MSG__',"Invalid User ID",ALERT_MSG));
 			require_once('./includes/footer.php');
 			exit();
 		}
-    $send_to = $tdb->get('users', $_GET['to']);
-		$send_to = $send_to[0]['user_name'].'<input type="hidden" name="to" value="'.$_GET['to'].'">';
-		$hed = "New Topic";
+    if (isset($_GET['to']))
+    {
+      $send_to = $tdb->get('users', $_GET['to']);
+		  $send_to = $send_to[0]['user_name'].'<input type="hidden" name="to" value="'.$_GET['to'].'">';
+		}
+		else
+		  $send_to = false;
+    $hed = "New Topic";
 		$iframe = "";
 	}
 	$icons = message_icons();
@@ -160,8 +163,13 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Send to:</strong></td>
-				<td class='area_2'>".$send_to."</td>
-			</tr>
+				<td class='area_2'>";
+        if ($send_to !== false)
+          echo $send_to;
+        else
+          echo "<input type='text' name='pm_recip' size=40 onblur=\"getUsername(this.value,'pm');\"><span class='err' id='namecheck'></span>";
+        echo "</td>
+      </tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Subject:</strong></td>
 				<td class='area_2'><input type='text' name='subject' size='40' value='".$sbj."'> <span id='sub_err' class='err'></span></td>

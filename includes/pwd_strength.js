@@ -57,7 +57,7 @@ var m_strCharacters = "!@#$%^&*?_~"
 function checkPassword(strPassword)
 {
 	// Reset combination count
-	var nScore = 0;
+	var nScore = strPassword.length;
 	
 	// Password length
 	// -- Less than 4 characters
@@ -99,7 +99,7 @@ function checkPassword(strPassword)
 		nScore += 10;
 	}
 	// -- 3 or more numbers
-	if (nNumberCount >= 3)
+	if (nNumberCount >= 2)
 	{
 		nScore += 20;
 	}
@@ -145,13 +145,9 @@ function runPassword(strPassword, strFieldID)
 	var nScore = checkPassword(strPassword);
 	
 	 // Get controls
-    	var ctlBar = document.getElementById(strFieldID + "_bar"); 
     	var ctlText = document.getElementById(strFieldID + "_text");
-    	if (!ctlBar || !ctlText)
+    	if (!ctlText)
     		return;
-    	
-    	// Set new width
-    	ctlBar.style.width = nScore + "%";
 
  	// Color and text
 	// -- Very Secure
@@ -164,7 +160,7 @@ function runPassword(strPassword, strFieldID)
  	else if (nScore >= 80)
  	{
  		var strText = "Secure";
- 		var strColor = "#7ff67c";
+ 		var strColor = "#408042";
 	}
 	// -- Very Strong
  	else if (nScore >= 70)
@@ -196,7 +192,6 @@ function runPassword(strPassword, strFieldID)
  		var strText = "Very Weak";
  		var strColor = "#CC0033";
 	}
-	ctlBar.style.backgroundColor = strColor;
 	ctlText.innerHTML = "<span style='color: " + strColor + ";'>" + strText + "</span>";
 }
  

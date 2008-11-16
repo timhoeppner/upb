@@ -489,13 +489,19 @@ switch ($ajax_type)
 
     case "username" :
       $q = $tdb->query("users", "user_name='".strtolower($_POST["username"])."'", 1, 1);
-      if (strtolower($_POST["username"]) == strtolower($q[0]["user_name"]))
+      if ($_POST['username'] == "")
+        break 1;
+      if ($_POST['area'] == 'reg' && strtolower($_POST["username"]) == strtolower($q[0]["user_name"]))
         echo "&nbsp;<img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'> Username already exists";
+      else if ($_POST['area'] == 'pm' && strtolower($_POST["username"]) != strtolower($q[0]["user_name"]))
+        echo "&nbsp;<img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'> Username not found";
       else 
         echo "&nbsp;<img src='images/tick.gif' alt='' title='' style='vertical-align: middle;'>";
       break 1;
     
     case "email" :
+      if ($_POST['email'] == "")
+        break 1;
       if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[_a-z0-9-]+(\.[_a-z0-9-]+)*)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["email"]))
       {
         echo "&nbsp;<img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'>&nbsp;Invalid Email Address";

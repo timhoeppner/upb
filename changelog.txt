@@ -1,6 +1,10 @@
 2.2.3 Changelog
 
-Version number displayed in footer
-Minor bug in upb.initialise.php fixed.
-Fixed potential bugs in upgrade script.
-Fixed move topics bug
+Bug Fixes
+Minor bug in upb.initialise.php.
+Potential bugs in upgrade script.
+Move topics bug
+
+New Features
+Password Strength Meter
+Send a PM via Messenger SystemVersion number displayed in footer
