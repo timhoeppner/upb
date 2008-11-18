@@ -142,5 +142,4 @@ if(file_exists(DB_DIR."/main.tdb")) {
 
     require_once('./includes/whos_online.php');
 }
-if (isset($_COOKIE['javascript'])) setcookie('javascript','',time()-3600); //remove any existing javascript cookie to prevent false positives
 ?>

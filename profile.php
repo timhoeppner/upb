@@ -58,6 +58,8 @@ if (isset($_POST["u_edit"])) {
     $rec["url"] = $_POST["u_site"];
   if ($_POST['u_site'] == "http://" or $rec['url'] == 'http://')
     $rec['url'] = "";
+  for ($i=1;$i<=6;$i++)
+    $rec["custom_profile$i"] = $_POST["custom_profile$i"];
   if ($_POST["u_timezone"]{0} == '+') $_POST["u_timezone"] = substr($_POST["u_timezone"], 1);
     if ($_POST["show_email"] != "1") $_POST["show_email"] = "0";
 		if ($_POST["email_list"] != "1") $_POST["email_list"] = "0";
@@ -173,7 +175,17 @@ if (isset($_POST["u_edit"])) {
 		} else {
 			echo "<a href='newpm.php?to=".$_GET["id"]."' target='_blank'>Send private message?</a>";
 		}
-		echo "</div></div></td></tr><tr><td id='leftcontent'>
+		
+    for($i=1;$i<=6;$i++)
+    {
+    $custom = $config_tdb->basicQuery('config',"name","custom_profile$i");
+    if (trim($custom[0]['value']) != "")
+      $customs[] = array($custom[0]['value'],$rec[0]["custom_profile$i"]);
+    }
+    
+    $split = ceil(count($customs)/2);
+    
+    echo "</div></div></td></tr><tr><td id='leftcontent' valign='top'>
 					<div class='pro_container'>
 						<div class='pro_area_1'><div class='pro_area_2'><strong>Joined: </strong></div>".gmdate("Y-m-d", user_date($rec[0]["date_added"]))."</div>
 						<div class='pro_area_1'><div class='pro_area_2'><strong>Posts made: </strong></div>".$rec[0]["posts"]."</div>";
@@ -184,6 +196,13 @@ if (isset($_POST["u_edit"])) {
 		if (strlen($rec[0]['url']) != 0)
     echo "<a href='".$rec[0]["url"]."' target='_blank'>".$rec[0]["url"]."</a>";
 		echo "&nbsp;</div>";
+		
+    foreach ($customs as $key => $value)
+		{
+      if ($key < $split )
+        echo "
+			<div class='pro_area_1'><div class='pro_area_2'><strong>".$value[0].":</strong></div>".$value[1]."</div>";
+    }
   echo "</div>
 			</td><td id='rightcontent'>
 			<div class='pro_container'>
@@ -194,26 +213,28 @@ if (isset($_POST["u_edit"])) {
 		else echo "not public";
 		echo "</div>";
   echo "<div class='pro_area_1'><div class='pro_area_2'><strong>Location: </strong></div>".$rec[0]["location"]."&nbsp;</div>";
-		echo "</div>";
-		if (@$rec[0]["icq"] != "" and @$rec[0]["aim"] != "" and @$rec[0]["msn"] != "" and @$rec[0]["yahoo"] != "")
+	foreach ($customs as $key => $value)
+		{
+      if ($key >= $split )
+        echo "
+			<div class='pro_area_1'><div class='pro_area_2'><strong>".$value[0].":</strong></div>".$value[1]."</div>";
+    }
+		echo "</div></td></tr>";
+    if (@$rec[0]["icq"] != "" or @$rec[0]["aim"] != "" or @$rec[0]["msn"] != "" or @$rec[0]["yahoo"] != "")
   {
-  echo "<div class='pro_contact'>";
+  
+  echo "<tr><td><div class='pro_contact'>";
 		if (@$rec[0]["icq"] != "") echo "
-							<strong>icq</strong><a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$rec[0]["icq"]."&action=message'><img src='images/icq.gif' border='0'>&nbsp;".$rec[0]["icq"]."</a>";
+							<div class='pro_area_1'><div class='pro_area_2'><strong>icq</strong><a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$rec[0]["icq"]."&action=message'><img src='images/icq.gif' border='0'></div>&nbsp;".$rec[0]["icq"]."</a></div>";
 		if (@$rec[0]["aim"] != "") echo "
-							<strong>aim</strong><a href='aim:goim?screenname=".$rec[0]["aim"]."'><img src='images/aol.gif' border='0'>&nbsp;".$rec[0]["aim"]."</a>";
+							<div class='pro_area_1'><div class='pro_area_2'><strong>aim</strong><a href='aim:goim?screenname=".$rec[0]["aim"]."'><img src='images/aol.gif' border='0'></div>&nbsp;".$rec[0]["aim"]."</a></div>";
 		if (@$rec[0]["msn"] != "") echo "
-							<strong>msn</strong><a href='http://members.msn.com/".$rec[0]["msn"]."' target='_blank'><img src='images/msn.gif' border='0'>&nbsp;".$rec[0]["msn"]."</a>";
+							<div class='pro_area_1'><div class='pro_area_2'><strong>msn</strong><a href='http://members.msn.com/".$rec[0]["msn"]."' target='_blank'><img src='images/msn.gif' border='0'></div>&nbsp;".$rec[0]["msn"]."</a></div>";
 		if (@$rec[0]["yahoo"] != "") echo "
-							<strong>Y!</strong><a href='http://edit.yahoo.com/config/send_webmesg?.target=".$rec[0]["yahoo"]."&.src=pg'><img border=0 src='http://opi.yahoo.com/online?u=".$rec[0]["yahoo"]."&m=g&t=0'>&nbsp;".$rec[0]["yahoo"]."</a>";
-		echo "</div>";
+							<div class='pro_area_1'><div class='pro_area_2'><strong>Y!</strong><a href='http://edit.yahoo.com/config/send_webmesg?.target=".$rec[0]["yahoo"]."&.src=pg'><img border=0 src='http://opi.yahoo.com/online?u=".$rec[0]["yahoo"]."&m=g&t=0'></div>&nbsp;".$rec[0]["yahoo"]."</a></div>";
+		echo "</div></td></tr>";
 		}
-  //		<div class='pro_blank'>Just imagine what could go here!</div>
-		//		<br />
-		//		<div class='pro_blank2'>Or here!</div>
-		//	";
-		echo "</td>
-				</tr>";
+  	
 		if (@$rec[0]["sig"] != "") echo "
 				<tr>
 					<td id='bottomcontent' colspan='2'>
@@ -338,7 +359,18 @@ if (isset($_POST["u_edit"])) {
       echo $rec[0]["url"];
     echo "' /></td>
 			</tr>
-			<tr>
+			";
+    
+    for ($i=1;$i<=6;$i++)
+    {
+      $custom = $config_tdb->basicQuery('config',"name","custom_profile$i");
+      if (trim($custom[0]['value']) != "")
+      echo "<tr>
+				<td class='area_1'><strong>{$custom[0]['value']}</strong></td>
+				<td class='area_2'><textarea cols='60' name='custom_profile$i' />".$rec[0]["custom_profile$i"]."</textarea></td>
+			</tr>";
+    }
+    echo "<tr>
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
