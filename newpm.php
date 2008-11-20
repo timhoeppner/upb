@@ -27,11 +27,11 @@
 		else redirect("pmsystem.php", "2");
 		exit;
 	} elseif($_POST["s"] == 1) {
-    
     if (isset($_POST['pm_recip']))
-		  $q = $tdb->query("users", "user_name='".strtolower($_POST["pm_recip"])."'", 1, 1,array('id'));
+		{
+    $q = $tdb->query("users", "user_name='".strtolower($_POST["pm_recip"])."'", 1, 1,array('id'));
 		$_POST['to'] = $q[0]['id'];
-    
+    }
 		$_POST['subject'] = htmlentities(stripslashes($_POST['subject']));
 		$_POST['message'] = htmlentities(stripslashes($_POST['message']));
 		$error_msg = "";

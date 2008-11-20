@@ -210,7 +210,7 @@
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
-		if (!(($_CONFIG["fileupload_size"] == "0" || $_CONFIG["fileupload_size"] == "") && $_CONFIG["fileupload_location"] == "")) {
+    if (!($_CONFIG["fileupload_size"] == "0" || $_CONFIG["fileupload_size"] == "" || $_CONFIG["fileupload_location"] == "")) {
 			echo "
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Attach file:</strong></td>
