@@ -113,7 +113,7 @@ class configSettings extends tdb {
             echo "<b>Warning:</b> second argument of editVars(), must be an array.  (type: ".$type.")";
             return false;
         }
-
+        
         $oriVars = $this->getVars($type, true);
         if($editOptionalData) {
             $nameRef = array();
@@ -121,6 +121,7 @@ class configSettings extends tdb {
                $nameRef[$varArr[$i]["name"]] = $varArr[$i];  //element "value" is already in $varArr[$i]$varArr
             }
         }
+        
         foreach($oriVars as $oriVar) {
             if(!$editOptionalData && !isset($varArr[$oriVar['name']])) continue;
             elseif($editOptionalData && !isset($nameRef[$oriVar['name']])) continue;

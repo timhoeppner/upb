@@ -7,6 +7,7 @@ Minor bug in upb.initialise.php.
 Move topics bug
 Stripped slashes on config page.
 Attach file section of form is not displayed if filesize and/or location is 0 or not set
+Fixed broken signature preview
 
 New Features
 ------------
@@ -17,3 +18,6 @@ Send a PM via Messenger System
 Version number displayed in footer
 Skin selection now dropdown list rather than text box
 New BBcode buttons by Nightmare
+Removed some BBcode buttons for signatures (lists and videos)
+Page navigation rewritten and working at the bottom
+Avatar Upload size is separate from file upload size

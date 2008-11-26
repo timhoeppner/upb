@@ -1,11 +1,10 @@
 <?php
 require_once("./includes/upb.initialize.php");
-$from_version = "2.2.1";
-$to_version = "2.2.2";
+$to_version = "2.2.3";
 
-$where = "Updating v2.2.1 to v2.2.2";
+$where = "Updating to $to_version";
 require_once("./includes/header.php");
-echo "From $from_version to $to_version";
+echo "Updating to $to_version";
 
 if(UPB_VERSION == $from_version) {
 $pass = true;
@@ -16,7 +15,7 @@ else
 {
     for($i=0;$i<count($lines);$i++) {
     if(FALSE === strpos($lines[$i], 'UPB_VERSION')) continue;
-        $lines[$i] = "define('UPB_VERSION', '2.2.2', true);";
+        $lines[$i] = "define('UPB_VERSION', '2.2.3', true);";
         break;
     }
     $f = fopen('config.php', 'w');
