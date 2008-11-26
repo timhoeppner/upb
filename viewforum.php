@@ -63,6 +63,7 @@
 	elseif (($vars["cTopics"] % $_CONFIG["topics_per_page"]) == 0) $num_pages = ($vars["cTopics"] / $_CONFIG["topics_per_page"]);
 	else $num_pages = ($vars["cTopics"] / $_CONFIG["topics_per_page"]) + 1;
 	$num_pages = (int) $num_pages;
+	
 	$p = createPageNumbers($vars["page"], $num_pages, 'id='.$_GET['id']);
 	require_once('./includes/header.php');
 //$_SESSION['newTopics'] = array('lastVisitForums' => array());
@@ -88,8 +89,7 @@
         if($val == 0) unset($_SESSION['newTopics']['f'.$_GET['id']][$key]);
     }
     $tdb->updateVisitedTopics();
-	echo "<br>";
-  $posts_tdb->d_topic($p);
+  $posts_tdb->d_topic($p,$vars['page'],$num_pages);
 
 	echoTableHeading($fRec[0]["forum"], $_CONFIG);
 	echo "
@@ -122,15 +122,17 @@
 				else $tRec["subject"] = "<a href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."'>".$tRec["subject"]."</a>";
 				settype($tRec["replies"], "integer");
 				$total_posts = $tRec["replies"] + 1;
-				$num_pages = ceil($total_posts / $_CONFIG["posts_per_page"]);
-				if ($num_pages == 1) {
+				$num_topicpages = ceil($total_posts / $_CONFIG["posts_per_page"]);
+				if ($num_topicpages == 1) {
 					$r_ext = "";
 				} else {
 					$r_ext = "<br /><div class='pagination_small'> Pages: ( ";
-					for($m = 1; $m <= $num_pages; $m++) {
+					for($m = 1; $m <= 4; $m++) {
 						$r_ext .= "<a href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."&page=$m'>$m</a> ";
 					}
-					$r_ext .= ")</div>";
+					if ($num_topicpages > 4)
+            $r_ext .= "... <a href='viewtopic.php?id=".$_GET["id"]."&amp;t_id=".$tRec["id"]."&page=$num_topicpages'>$num_topicpages</a> ";
+          $r_ext .= ")</div>";
 				}
 				if ($tRec["topic_starter"] == "guest") {
                   $tRec["topic_starter"] = "<i>a guest</i>";
@@ -167,7 +169,7 @@
 		}
 	}
   echoTableFooter(SKIN_DIR);
-
-
+  $posts_tdb->d_topic($p,$vars['page'],$num_pages,"bottom");
+  
 	require_once('./includes/footer.php');
 ?>

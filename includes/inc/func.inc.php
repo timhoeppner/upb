@@ -162,16 +162,32 @@ function createPageNumbers($current_page, $total_number_of_pages, $url_string=''
     else $url_string = '?';
     $url_string = str_replace('&&', '&', $url_string);
 
+// look at current page number. If more than three on either side display ...
+
     $pageStr = '';
-    if($num_pages == 1) $pageStr = "<span class='pagination_current'>$num_pages</span>";
+    if($num_pages == 1) $pageStr = "<td class='pagination_current'>$num_pages</td>";
     else {
-        //$pageStr = "<font face='$font_face' size='$font_s'><span class=pagenumstatic>";
-        for($i=1;$i<=$num_pages;$i++) {
-            if($current_page == $i) $pageStr .= "<span class='pagination_current'>".$i."</span>";
-            else $pageStr .= "<span class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=".$i."'>".$i."</a></span> ";
+        if ($current_page != 1)
+          $pageStr = "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=".($current_page-1)."'><</a></td>";
+        if ($current_page-2 != 1 and $current_page-2 > 1)
+              $pageStr .= "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=1'>1</a></td><td>...</td>";
+        for($i=($current_page-2);$i<=($current_page+2);$i++) {
+            if ($i < 1)
+              continue;
+            if ($i > $num_pages)
+              continue;
+            if($current_page == $i) 
+              $pageStr .= "<td class='pagination_current'>".$i."</td>";
+            else 
+              $pageStr .= "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=".$i."'>".$i."</a></td> ";
         }
-        //$pageStr .= "</font></span>";
+        if ($current_page+2 < $num_pages)
+              $pageStr .= "<td>...</td><td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=$num_pages'>$num_pages</a></td>";
+        
+        if ($current_page != $num_pages)
+          $pageStr .= "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=".($current_page+1)."'>></a></td>";
     }
+    
     return $pageStr;
 }
 

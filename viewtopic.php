@@ -55,8 +55,9 @@
     die();
   }
 	$num_pages = ceil(($tRec[0]["replies"] + 1) / $_CONFIG["posts_per_page"]);
+
 	$p = createPageNumbers($vars["page"], $num_pages, $_SERVER['QUERY_STRING']);
-  echo "<br /><div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page']) . "</div>";
+  echo "<div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page'],$num_pages)."</div>";
 	if ($vars['page'] == 1) $first_post = $pRecs[0]['id'];
 	else $first_post = 0;
 	$x = +1;
@@ -197,13 +198,11 @@
 
   }
 	echo "</div>";
-
-	//$p = createPageNumbers($vars['page'], $num_pages, $_SERVER['QUERY_STRING']);
-  //echo "<div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page']) . "</div>";
-  //echo "<div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,$vars['page'],"bottom") . "</div>";
-	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0 ) and $tRec[0]['locked'] != 1)
+  echo "<div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,$vars['page'],$num_pages,"bottom") . "</div>";
+  
+  if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0 ) and $tRec[0]['locked'] != 1)
 {
-  echo "<div id='enabled_msg'><div id='quickreplyform' name='quickreplyform'>";
+  echo "<br /><div id='enabled_msg'><div id='quickreplyform' name='quickreplyform'>";
   echo "<form name='quickreplyfm' action='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$vars["page"]."' id='quickreplyfm' method='POST'>\n";
   echoTableHeading("Quick Reply", $_CONFIG);
   echo "<table class='main_table' cellspacing='1'>";

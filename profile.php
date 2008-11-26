@@ -6,22 +6,6 @@
 // Using textdb Version: 4.3.2
 require_once('./includes/upb.initialize.php');
 
-/*if ($_POST['status'] == "set")
-{
-  if ($)
-  $sig = format_text(filterLanguage(UPBcoding($_POST["sig"]), $_CONFIG));
-  $sig_title = "<strong>Signature Preview:</strong><br>To save this signature press Submit below";
-      }
-      else
-      {
-        $rec = $tdb->get("users", $_POST["id"]);
-        $sig = format_text(filterLanguage(UPBcoding($rec[0]['sig']), $_CONFIG));
-        $sig_title = "<strong>Current Signature:</strong>";
-      }
-      echo $sig."<!--divider-->".$sig_title;
-
-      die();
-}*/
 if(!isset($_GET['action']) || $_GET['action'] == '') $_GET['action'] = 'edit';
 if ($_GET['action'] == "get" || $_GET['action'] == 'view') $where = "Member Profile";
 elseif ($_GET['action'] == "bookmarks") $where = "Favorited Topics";
@@ -69,7 +53,7 @@ if (isset($_POST["u_edit"])) {
 	    if($_REGIST['custom_avatars'] == 2 && isset($_FILES["avatar2"]["name"]) && trim($_FILES["avatar2"]["name"]) != "") {
 	        if($_FILES['avatar2']['error'] == UPLOAD_ERR_OK) {
                 require_once('./includes/class/upload.class.php');
-    			$upload = new upload(DB_DIR, $_CONFIG["fileupload_size"], $_CONFIG["fileupload_location"]);
+    			$upload = new upload(DB_DIR, $_CONFIG["avatarupload_size"], $_CONFIG["fileupload_location"]);
     			$uploadId = $upload->storeFile($_FILES["avatar2"]);
     			if ($uploadId !== false) {
     			    $rec['avatar'] = 'downloadattachment.php?id='.$uploadId;
@@ -111,7 +95,7 @@ if (isset($_POST["u_edit"])) {
             if(ctype_digit($id)) {
                 if(!isset($upload)) {
                     require_once('./includes/class/upload.class.php');
-                    $upload = new upload(DB_DIR, $_CONFIG["fileupload_size"], $_CONFIG["fileupload_location"]);
+                    $upload = new upload(DB_DIR, $_CONFIG["avatarupload_size"], $_CONFIG["fileupload_location"]);
                 }
                 $upload->deleteFile($id);
             }
@@ -288,7 +272,7 @@ if (isset($_POST["u_edit"])) {
 			echo "
 			<tr>
 				<td class='area_1'><strong>email:</strong></td>
-				<td class='area_2'><input type='text' name='u_email' value='".$rec[0]["email"]."' />&nbsp;".$rec[0]["email"]."</td>
+				<td class='area_2'><input type='text' size='25' name='u_email' value='".$rec[0]["email"]."' />&nbsp;".$rec[0]["email"]."</td>
 			</tr>";
 		} else {
 			echo "
@@ -308,7 +292,7 @@ if (isset($_POST["u_edit"])) {
 			</tr>
 			<tr>
 				<td class='area_1'><strong>location:</strong></td>
-				<td class='area_2'><input type='text' name='u_loca' value='".$rec[0]["location"]."' /></td>
+				<td class='area_2'><input type='text' size='25' name='u_loca' value='".$rec[0]["location"]."' /></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
@@ -324,11 +308,11 @@ if (isset($_POST["u_edit"])) {
 				<th style='text-align:center;'>".(($_REGIST['custom_avatars'] == '2') ? 'Upload' : 'Link')." an avatar</th>" : "")."
 			</tr>
 			<tr>
-				<td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'>";
+				<td class='area_1' valign='middle' style='width:40%;text-align:center;padding:20px;height:150px;'>";
 		if (@$rec[0]["avatar"] != "") echo "<img src=\"".$rec[0]["avatar"]."\" border='0'><br />";
 		else echo "<img src='images/avatars/noavatar.gif' alt='' title='' />";
 		echo "</td>
-				<td class='area_2' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'>
+				<td class='area_2' valign='middle' style='width:50%;text-align:center;padding:20px;height:150px;'>
 					<table cellspacing='0px' style='width:100%;'>
 						<tr>
 							<td style='text-align:center;width:50%;'>
@@ -341,7 +325,7 @@ if (isset($_POST["u_edit"])) {
 				</td>";
 
     if($custom_avatar) {
-		    echo "<td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input type='".(($_REGIST['custom_avatars'] == '2') ? "file'" : "text' value=''")." name='avatar2' /><p><i>Consult the forum admin for acceptable dimensions.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is '.$_CONFIG["fileupload_size"].'Kb.' : '')."</i></p></td></tr>";
+		    echo "<td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input type='".(($_REGIST['custom_avatars'] == '2' && $_CONFIG["avatarupload_size"] > 0) ? "file'" : "text' value=''")." name='avatar2' /><p><i>Max avatar size is ".$_CONFIG["avatar_width"]."x".$_CONFIG["avatar_height"]."px.<br />".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes: jpg, jpeg and gif.<br />Maximum filesize is '.$_CONFIG["avatarupload_size"].'Kb.' : '')."</i></p></td></tr>";
 		}
 		echo "
 			<tr>
@@ -352,7 +336,7 @@ if (isset($_POST["u_edit"])) {
 		echo "
 			<tr>
 				<td class='area_1' style='width:35%;'><strong>Homepage:</strong></td>
-				<td class='area_2'><input type='text' name='u_site' value='";
+				<td class='area_2'><input type='text' size='50' name='u_site' value='";
     if ($rec[0]["url"] == '')
       echo "http://";
     else
@@ -375,19 +359,19 @@ if (isset($_POST["u_edit"])) {
 			</tr>
 			<tr>
 				<td class='bar_icq'><strong>ICQ:</strong></td>
-				<td class='area_2'><input type='text' name='u_icq' value='".$rec[0]["icq"]."' /></td>
+				<td class='area_2'><input type='text' size='25' name='u_icq' value='".$rec[0]["icq"]."' /></td>
 			</tr>
 			<tr>
 				<td class='bar_aim'><strong>AIM:</strong></td>
-				<td class='area_2'><input type='text' name='u_aim' value='".$rec[0]["aim"]."' /> </td>
+				<td class='area_2'><input type='text' size='25' name='u_aim' value='".$rec[0]["aim"]."' /> </td>
 			</tr>
 			<tr>
 				<td class='bar_yim'><strong>Yahoo!:</strong></td>
-				<td class='area_2'><input type='text' name='u_yahoo' value='".$rec[0]["yahoo"]."' /></td>
+				<td class='area_2'><input type='text' size='25' name='u_yahoo' value='".$rec[0]["yahoo"]."' /></td>
 			</tr>
 			<tr>
 				<td class='bar_msnm'><strong>MSN:</strong></td>
-				<td class='area_2'><input type='text' name='u_msn' value='".$rec[0]["msn"]."' /></td>
+				<td class='area_2'><input type='text' size='25' name='u_msn' value='".$rec[0]["msn"]."' /></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>

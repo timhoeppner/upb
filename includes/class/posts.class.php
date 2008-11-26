@@ -67,16 +67,16 @@ class posts extends tdb {
 	}
 	// end check functions
 
-	function d_topic($page_string) {
+	function d_topic($page_string, $page, $num_pages,$position = 'top') {
 		if(!$this->check_user_info()) return false;
-		echo "
-	<br />
-    <div id='tabstyle_pagenum'>
-<span class='pagination_current'>Page:</span>".$page_string."
-</div>
+		if ($num_pages != 1)
+      echo "<table><tr>
+<td class='pagination_title'>Page ($num_pages):</td>".$page_string."
+</tr></table>
 
-    <div style='clear:both;'></div>
-    <div class='tabstyle_1'>
+    <div style='clear:both;'></div>";
+    if ($position == 'top') {
+    echo "<div class='tabstyle_1'>
         <ul>";
 		if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"]){
 			echo "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=' title='Create a new topic?'><span>Create New Topic</span></a></li>";
@@ -85,18 +85,19 @@ class posts extends tdb {
 		}
 		echo "
         </ul>
-    </div>
-    <div style='clear:both;'></div>";
+    </div>";
+    }
+    else
+    echo "<div style='clear:both;'></div>";
 		return true;
 	}
 
-	function d_posting($page_string, $page, $position = "top")
+	function d_posting($page_string, $page,$num_pages, $position = "top")
   {
     if(!$this->check_topic() || !$this->check_forum() || !$this->check_user_info()) return false;
-    $output = "<br><div id='tabstyle_pagenum'>
-  <span class='pagination_current'>Page:</span>$page_string
-   </div>
-      <div style='clear:both;'></div>";
+    $output = "";
+    if ($num_pages != 1)
+    $output .= "<table><tr><td class='pagination_title'>Pages ($num_pages):</td>$page_string</tr></table><div style='clear:both;'></div>";
       if ($position == "top")
       {
       $output .= "<div class='tabstyle_1'>
@@ -112,13 +113,6 @@ class posts extends tdb {
 	        $output .= "<li><a href='managetopic.php?action=favorite&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Favorite this Topic?'><span>Bookmark Topic</span></a></li>";
   		}
     	if ((int)$_COOKIE["power_env"] >= 2) {
-/*    		$output .= "
-				<li><a href='delete.php?action=delete&t=1&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><span>Delete topic</span></a></li>";
-		    if ($tRec[0]["locked"] == "0") $output .= "
-				<li><a href='managetopic.php?action=CloseTopic&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><span>Close topic?</span></a></li>";
-		    else $output .= "
-				<li><a href='managetopic.php?action=OpenTopic&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'><span>Open topic?</span></a></li>";
-*/
 		    $output .= "
 				<li><a href='managetopic.php?id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."'><span>Options</span></a></li>";
 	    }

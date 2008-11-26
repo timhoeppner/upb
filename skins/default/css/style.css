@@ -514,11 +514,26 @@ vertical-align: middle;
 	font-size : 10px;
 	color : #333333;
 	background-color : #a8bad3;
-	padding:4px;
+	padding:2px;
 	border: 1px solid #0b2a4f;
 	margin: 0 1px 0 0;
 	position:relative;
+	width: 15px;
+	text-align: center;
 }
+
+/* This controls the look of the current page box */
+.pagination_title {
+	font-size : 10px;
+	color : #333333;
+	background-color : #a8bad3;
+	padding:2px;
+	border: 1px solid #0b2a4f;
+	margin: 0 1px 0 0;
+	position:relative;
+	text-align: center;
+}
+
 .pagination_current a:link, .pagination_current a:visited, .pagination_current a:active { 
 	color : #FFFFFF;
 	text-decoration : underline;
@@ -532,11 +547,13 @@ vertical-align: middle;
 	font-size : 10px;
 	color : #333333;
 	background-color : #f9f9f9;
-	padding:4px;
+	padding:2px;
 	border: 1px solid #0b2a4f;
 	position:relative;
 	margin: 0 1px 0 0;
 	cursor: pointer;
+	width: 15px;
+	text-align: center;
 }
 .pagination_link a:link, .pagination_link a:visited, .pagination_link a:active { 
 	color : #333333;
@@ -740,7 +757,7 @@ vertical-align: middle;
 .tabstyle_1 {
 	position : relative;
 	top : -33px;
-	left : -32px;
+	left : 0px;
 	float : right;
 	font-size : 93%;
 	line-height : normal;
