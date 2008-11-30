@@ -85,6 +85,7 @@
 		$status = '';
 		$statuscolor = '';
 		$pm = "";
+
 		if ($pRec["user_id"] != "0") {
 			$user = $tdb->get("users", $pRec["user_id"]);
             if($user === false) {
@@ -123,23 +124,12 @@
     if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1)
       $quote = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&q_id=".$pRec['id']."&page=".$vars["page"]."'>Quote</a></div>"; 
     else $quote = "";
-
-		$uploadId = (int) $pRec["upload_id"];
-        if($uploadId > 0) {
-            //check information is in the upload database
-            $q = $tdb->get("uploads", $uploadId, array("name", "downloads","file_loca"));
-            if(!empty($q[0]) && file_exists($_CONFIG['fileupload_location']."/".$q[0]['file_loca'])) {
-                $attachName = $q[0]["name"];
-                $attachDownloads = $q[0]["downloads"];
-
-                $pRec["message"] = "<div class='download1'><div class='download2'><div class='download3'><div class='download4'><img src='images/attachment.gif' class='example'> Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)</div></div></div></div>\n\n<p>" . $pRec["message"];
-            }
-        }
-
+        
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$vars['page']."'>Add Reply</a></div>";
 		else $reply = "";
 		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
-		echo "
+		$msg .= $tdb->getUploads($pRec['upload_id'],$fRec[0]['download'],$_CONFIG['fileupload_location']);
+    echo "
 			<tr>
 				<th><div class='post_name'>";
 		if ($pRec["user_id"] != "0") echo "<a href='profile.php?action=get&amp;id=".$pRec["user_id"]."'>".$pRec["user_name"]."</b>";
@@ -148,7 +138,7 @@
 				<th><div style='float:left;'><img src='".SKIN_DIR."/icons/post_icons/".$pRec["icon"]."'></div><div align='right'>$delete $edit $quote $reply</div></th>
 			</tr>
 			<tr>
-				<td class='$table_color' valign='top' style='width:15%;'>";
+				<td class='$table_color' valign='top' style='width:15%;' colspan='$attached'>";
 		if (@$user[0]["avatar"] != "") echo "<br /><img src=\"".$user[0]["avatar"]."\" border='0' alt='' title=''><br />";
 		else if ($pRec["user_id"] != "0")
         echo "<br /><a href='profile.php'><img src='images/avatars/blank.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";

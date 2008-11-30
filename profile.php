@@ -185,7 +185,7 @@ if (isset($_POST["u_edit"])) {
 		{
       if ($key < $split )
         echo "
-			<div class='pro_area_1'><div class='pro_area_2'><strong>".$value[0].":</strong></div>".$value[1]."</div>";
+			<div class='pro_area_1'><div class='pro_area_2'><strong>".$value[0].":</strong></div>".nl2br($value[1])."</div>";
     }
   echo "</div>
 			</td><td id='rightcontent'>
@@ -358,19 +358,19 @@ if (isset($_POST["u_edit"])) {
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='bar_icq'><strong>ICQ:</strong></td>
+				<td class='area_1'><strong>ICQ:</strong></td>
 				<td class='area_2'><input type='text' size='25' name='u_icq' value='".$rec[0]["icq"]."' /></td>
 			</tr>
 			<tr>
-				<td class='bar_aim'><strong>AIM:</strong></td>
+				<td class='area_1'><strong>AIM:</strong></td>
 				<td class='area_2'><input type='text' size='25' name='u_aim' value='".$rec[0]["aim"]."' /> </td>
 			</tr>
 			<tr>
-				<td class='bar_yim'><strong>Yahoo!:</strong></td>
+				<td class='area_1'><strong>Yahoo!:</strong></td>
 				<td class='area_2'><input type='text' size='25' name='u_yahoo' value='".$rec[0]["yahoo"]."' /></td>
 			</tr>
 			<tr>
-				<td class='bar_msnm'><strong>MSN:</strong></td>
+				<td class='area_1'><strong>MSN/Windows Live Messenger:</strong></td>
 				<td class='area_2'><input type='text' size='25' name='u_msn' value='".$rec[0]["msn"]."' /></td>
 			</tr>
 			<tr>

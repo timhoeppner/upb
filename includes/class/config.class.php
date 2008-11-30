@@ -180,7 +180,9 @@ class configSettings extends tdb {
         if(!empty($query[0])) return false;
         $query = $this->query('ext_config', "minicat='$category'&&sort='$sort'");
         if(!empty($query[0])) {
-            $query = $this->query('ext_config', "minicat='$category'&&sort>'$sort'");
+            //query sort-1 in order to bump on the exact match and higher
+            $query = $this->query('ext_config', "minicat='$category'&&sort>'".($sort-1)."'"); 
+            
             if(!empty($query[0])) {
                 foreach($query as $r) {
                     if(empty($r)) continue;

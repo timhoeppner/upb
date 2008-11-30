@@ -6,8 +6,11 @@ Bug Fixes
 Minor bug in upb.initialise.php.
 Move topics bug
 Stripped slashes on config page.
-Attach file section of form is not displayed if filesize and/or location is 0 or not set
+Attach file section of form is not displayed if filesize and/or location is 0 or not set and dependent of new forum permissions.
 Fixed broken signature preview
+Javascript detection bugs fixed.
+Attached file information no longer disappears after Quick Edit
+Fixed new category order not being displayed correctly after changing
 
 New Features
 ------------
@@ -21,3 +24,8 @@ New BBcode buttons by Nightmare
 Removed some BBcode buttons for signatures (lists and videos)
 Page navigation rewritten and working at the bottom
 Avatar Upload size is separate from file upload size
+Settings for file uploads and downloads for each forum
+Re-worked attached file display
+Removed ICQ, MSN, Yahoo and AIM logos from profile editing to make it easier for skinning
+Configurable file upload extensions
+Multiple file uploads per post

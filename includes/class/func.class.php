@@ -89,5 +89,27 @@ class functions extends tdb {
         $this->readHeader($fp, $header);
         return $header["curId"];
     }
+    
+    function getUploads($post,$power,$location)
+	  {
+      if ((int)$_COOKIE['power_env'] >= (int)$power)
+      {
+        $uploadId = (int) $post;
+        if($uploadId > 0) 
+        {
+          //check information is in the upload database
+          $q = $this->get("uploads", $uploadId, array("name", "downloads","file_loca"));
+          if(!empty($q[0]) && file_exists($location."/".$q[0]['file_loca'])) 
+          {
+            
+            $attachName = $q[0]["name"];
+            $attachDownloads = $q[0]["downloads"];
+            $attachSize = floor(filesize($location."/".$q[0]['file_loca'])/1024);
+            return "<p><fieldset><legend>Attached File(s)</legend><a href='downloadattachment.php?id={$uploadId}'>{$attachName}</a> ({$attachSize}KB  / $attachDownloads Downloads)</fieldset>";
+          }
+        }
+      }
+      return;
+    }
 }
 ?>

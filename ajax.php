@@ -12,6 +12,7 @@ switch ($ajax_type)
     $posts_tdb = new posts(DB_DIR, "posts.tdb");
     $posts_tdb->setFp("topics", $_POST["forumid"]."_topics");
     $posts_tdb->setFp("posts", $_POST["forumid"]);
+    $fRec = $tdb->get("forums", $_POST["forumid"]);
     $pRec = $posts_tdb->get("posts", $_POST["postid"]);
     if ($_POST['method'] != 'cancel')
     {
@@ -21,15 +22,17 @@ switch ($ajax_type)
       $output .= "<input type='hidden' id='userid' name='userid' value='".$_POST["userid"]."'>";
       $output .= "<input type='hidden' id='threadid' name='threadid' value='".$_POST["threadid"]."'>";
       $output .= "<input type='hidden' id='postid' name='postid' value='".$_POST["postid"]."'>";
-      $output .= "<textarea name='newedit' id='newedit' cols='60' rows='18'>".$pRec[0]['message']."</textarea><br>";
+      $output .= "<textarea name='newedit' id='newedit' rows='18'>".$pRec[0]['message']."</textarea><br>";
       $output .= "\n<input type='button' onclick='javascript:getEdit(document.getElementById(\"quickedit\"),\"".$_POST['divname']."\");'\' name='qedit' value='Save'>";
       $output .= "\n<input type='button' name='cancel_edit' onClick=\"javascript:getPost('".$_POST["userid"]."','".$_POST["forumid"]."-".$_POST["threadid"]."-".$_POST["postid"]."','cancel');\" value='Cancel'>";
       $output .= "\n<input type='submit' name='submit' value='Advanced'>";
       $output .= "</form>";
     }
     else
-      $output = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($pRec[0]['message'])))), $_CONFIG));
-
+    {     
+      $attach_msg .= $tdb->getUploads($pRec[0]['upload_id'],$fRec[0]['download'],$_CONFIG['fileupload_location']);
+      $output = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($pRec[0]['message'])))), $_CONFIG)).$attach_msg;
+    }
     echo $output;
 
     break 1;
@@ -39,59 +42,26 @@ switch ($ajax_type)
     $posts_tdb->setFp("topics", $_POST["forumid"]."_topics");
     $posts_tdb->setFp("posts", $_POST["forumid"]);
     $pRec = $posts_tdb->get("posts", $_POST["postid"]);
+    $fRec = $tdb->get("forums", $_POST["forumid"]);
     //STORES THE EDITED VERSION OF THE POST IN THE DATABASE AND RETURNS THE EDITED PAGE TO THE USER
     if(!(isset($_POST["userid"]) && isset($_POST["forumid"]) && isset($_POST["threadid"]) && isset($_POST["postid"]))) exitPage("Not enough information to perform this function.");
     if(!($tdb->is_logged_in())) exitPage("You are not logged in, therefore unable to perform this action.");
 
     if($pRec[0]["user_id"] != $_COOKIE["id_env"] && $_COOKIE["power_env"] < 2) exitPage("You are not authorized to edit this post.");
     $msg = "";
-    $uploadId = (int) $pRec["upload_id"];
+    
+    $msg = format_text(filterLanguage(UPBcoding(utf8_decode(stripslashes($_POST["newedit"]))), $_CONFIG));
 
-    if($uploadId > 0) {
-        // We have an attachment, query the database for the info
-        $tdb->setFp("uploads", "uploads");
-
-        $q = $tdb->get("uploads", $uploadId, array("name", "downloads"));
-
-        // Make sure the attachment exists
-        if($q !== false) {
-            $attachName = $q[0]["name"];
-            $attachDownloads = $q[0]["downloads"];
-
-            $attach_msg = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n";
-        }
-    }
-
-    $msg = format_text(filterLanguage(UPBcoding(utf8_decode(stripslashes($attach_msg.$_POST["newedit"]))), $_CONFIG));
-
-    $dbmsg = encode_text(stripslashes(utf8_decode($attach_msg.$_POST["newedit"])),ENT_NOQUOTES);
+    $dbmsg = encode_text(stripslashes(utf8_decode($_POST["newedit"])),ENT_NOQUOTES);
 
     $posts_tdb->edit("posts", $_POST["postid"], array("message" => $dbmsg, "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate()));
 //clearstatcache();
-    $posts_tdb->cleanup();
-    $posts_tdb->setFp("posts", $_POST["forumid"]);
     $pRec2 = $posts_tdb->get("posts", $_POST["postid"]);
-    $uploadId = (int) $pRec2[0]["upload_id"];
 
-    if($uploadId > 0) {
-
-        // We have an attachment, query the database for the info
-        $tdb->setFp("uploads", "uploads");
-
-        $q = $tdb->get("uploads", $uploadId, array("name", "downloads"));
-
-        // Make sure the attachment exists
-        if($q !== false) {
-            $attachName = $q[0]["name"];
-            $attachDownloads = $q[0]["downloads"];
-
-            $msg = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n". $msg;
-        }
-    }
-    $msg = format_text(filterLanguage(utf8_decode(stripslashes($msg)), $_CONFIG));
-
+    $attach_msg .= $tdb->getUploads($pRec[0]['upload_id'],$fRec[0]['download'],$_CONFIG['fileupload_location']);
+    $msg = format_text(filterLanguage(utf8_decode(stripslashes($msg)), $_CONFIG)).$attach_msg;
+    
     $div = $_POST['forumid']."-".$_POST['threadid']."-".$_POST['postid'];
-
 
     if(!empty($pRec2[0]['edited_by']) && !empty($pRec2[0]['edited_by_id']) && !empty($pRec2[0]['edited_date']))
     $edited = "Last edited by: <a href='profile.php?action=get&id=".$pRec2[0]['edited_by_id']."' target='_new'>".$pRec2[0]['edited_by']."</a> on ".gmdate("M d, Y g:i:s a", user_date($pRec2[0]['edited_date']));
@@ -231,23 +201,6 @@ switch ($ajax_type)
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1) $quote = "<div class='button_pro1'><a href=\"javascript:addQuote('".$pRec["user_name"]."-".$pRec["id"]."-".$pRec['date']."','".$pRec["message"]."')\">\"Quote\"</a></div>";
 		else $quote = "";
 
-		$uploadId = (int) $pRec["upload_id"];
-
-    if($uploadId > 0) {
-        // We have an attachment, query the database for the info
-        $tdb->setFp("uploads", "uploads");
-
-        $q = $tdb->get("uploads", $uploadId, array("name", "downloads"));
-
-        // Make sure the attachment exists
-        if($q !== false) {
-            $attachName = $q[0]["name"];
-            $attachDownloads = $q[0]["downloads"];
-
-            $pRec["message"] = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n" . $pRec["message"];
-        }
-    }
-
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_POST["id"]."&t=0&t_id=".$_POST["t_id"]."&page=$page'>Add Reply</a></div>";
 		else $reply = "";
 		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
@@ -364,9 +317,9 @@ switch ($ajax_type)
         $cRec = $tdb->get('cats', $fRec[0]['cat']);
         $sort = $cRec[0]['sort'];
       }
-
+      
       $sort = explode(',', $sort);
-
+      
       if(FALSE !== ($index = array_search($_POST['id'], $sort)))
       {
         if($_POST['where'] == 'up' && $index > 0)
@@ -384,18 +337,18 @@ switch ($ajax_type)
 	     $sort = implode(',', $sort);
 
        if($_POST['what'] == 'cat')
-          $config_tdb->editVars('config', array('admin_catagory_sorting' => $sort));
+        $config_tdb->editVars('config', array('admin_catagory_sorting' => $sort));
       elseif($_POST['what'] == 'forum')
         $tdb->edit('cats', $cRec[0]['id'], array('sort' => $sort));
       }
-
-      $tdb->cleanUp();
-      $tdb->setFp('forums', 'forums');
-      $tdb->setFp('cats', 'categories');
-
+      
       $cRecs = $tdb->listRec("cats", 1);
       $config_tdb->clearcache();
-      $cSorting = explode(",", $_CONFIG['admin_catagory_sorting']);
+      
+      $query = $config_tdb->basicQuery('config','name',"admin_catagory_sorting");
+     
+      $cSorting = explode(",", $query[0]['value']);
+      
       $k = 0;
     	$i = 0;
     	$sorted = array();
@@ -423,10 +376,12 @@ switch ($ajax_type)
 		  $output .= "
 			<tr>
 			    <th style='width:7%;'>&nbsp;</th>
-				<th style='width:68%;'>Name</th>
+				<th style='width:58%;'>Name</th>
 				<th style='width:5%;text-align:center;'>View</th>
 				<th style='width:5%;text-align:center;'>Post</th>
 				<th style='width:5%;text-align:center;'>Reply</th>
+				<th style='width:5%;text-align:center;'>Upload</th>
+				<th style='width:5%;text-align:center;'>Download</th>
 				<th style='width:10%;text-align:center;'>Edit?</th>
 				<th style='width:10%;text-align:center;'>Delete?</th>
 			</tr>";
@@ -441,9 +396,19 @@ switch ($ajax_type)
 					$view = createUserPowerMisc($cRecs[$i]["view"], 2);
 					$output .= "
 			<tr>
-			    <td class='area_1' style='padding:8px;text-align:center;'>".(($i>0) ? "<a href=\"javascript:forumSort('cat','up','".$cRecs[$i]['id']."');\"><img src='./images/up.gif'></a>" : "&nbsp;&nbsp;&nbsp;").(($i<($c1-1)) ? "<a href=\"javascript:forumSort('cat','down','".$cRecs[$i]['id']."');\"><img src='./images/down.gif'></a>" : "")."</td>
+			    <td class='area_1' style='padding:8px;text-align:center;'>";
+          
+          if($i>0) 
+            $output .= "<a href=\"javascript:forumSort('cat','up','".$cRecs[$i]['id']."');\"><img src='./images/up.gif'></a>";
+          else
+            $output .= "&nbsp;&nbsp;&nbsp;";
+          
+          if ($i<($c1-1)) 
+            $output .= "<a href=\"javascript:forumSort('cat','down','".$cRecs[$i]['id']."');\"><img src='./images/down.gif'></a>";
+          else $output .= "&nbsp;&nbsp;&nbsp;";
+          $output .= "</td>
 				<td class='area_1' style='padding:8px;'><strong>".$cRecs[$i]["name"]."</strong></td>
-				<td class='area_1' style='padding:8px;text-align:center;' colspan=3>$view</td>
+				<td class='area_1' style='padding:8px;text-align:center;' colspan='5'>$view</td>
 				<td class='area_1' style='padding:8px;text-align:center;'><a href='admin_forums.php?action=edit_cat&id=".$cRecs[$i]["id"]."'>Edit</a></td>
 				<td class='area_1' style='padding:8px;text-align:center;'><a href='admin_forums.php?action=delete_cat&id=".$cRecs[$i]["id"]."'>Delete</a></td>
 			</tr>";
@@ -462,14 +427,29 @@ switch ($ajax_type)
                 			$whoView = createUserPowerMisc($fRec[0]["view"], 3);
                 			$whoPost = createUserPowerMisc($fRec[0]["post"], 3);
                 			$whoReply = createUserPowerMisc($fRec[0]["reply"], 3);
+                			$whoUpload = createUserPowerMisc($fRec[0]["upload"], 3);
+                			$whoDownload = createUserPowerMisc($fRec[0]["download"], 3);
                 			//show each forum
                 			$output .= "
 			<tr>
-			    <td class='area_2' style='padding:8px;text-align:center;'>".(($j>0) ? "<a href=\"javascript:forumSort('forum','up','".$fRec[0]['id']."');\"><img src='./images/up.gif'></a>" : "&nbsp;&nbsp;&nbsp;").(($j<($c2-1)) ? "<a href=\"javascript:forumSort('forum','down','".$fRec[0]['id']."');\"><img src='./images/down.gif'></a>" : "&nbsp;&nbsp;&nbsp;")."</td>
+			    <td class='area_2' style='padding:8px;text-align:center;'>";
+          
+          if ($j>0)
+            $output .= "<a href=\"javascript:forumSort('forum','up','".$fRec[0]['id']."');\"><img src='./images/up.gif'></a>";
+            else 
+              $output .= "&nbsp;&nbsp;&nbsp;";
+          if ($j<($c2-1))
+            $output .= "<a href=\"javascript:forumSort('forum','down','".$fRec[0]['id']."');\"><img src='./images/down.gif'></a>";
+          else 
+            $output .= "&nbsp;&nbsp;&nbsp;";
+        
+        $output .= "</td>
 				<td class='area_2' style='padding:8px;'><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$fRec[0]["forum"]."</td>
 				<td class='area_2' style='padding:8px;text-align:center;'>$whoView</td>
 				<td class='area_2' style='padding:8px;text-align:center;'>$whoPost</td>
 				<td class='area_2' style='padding:8px;text-align:center;'>$whoReply</td>
+				<td class='area_2' style='padding:8px;text-align:center;'>$whoUpload</td>
+				<td class='area_2' style='padding:8px;text-align:center;'>$whoDownload</td>
 				<td class='area_2' style='padding:8px;text-align:center;'><a href='admin_forums.php?action=edit_forum&id=".$fRec[0]["id"]."'>Edit</a></td>
 				<td class='area_2' style='padding:8px;text-align:center;'><a href='admin_forums.php?action=delete_forum&id=".$fRec[0]["id"]."'>Delete</a></td>
 			</tr>";

@@ -547,7 +547,7 @@
 		if($_POST['register_msg'] != '' && FALSE === strpos($_POST['register_msg'], '<login>')) $error[] = 'You must include the tag &lt;login&gt; in the <b>Register E-mail Message</b> field.';
         if($_POST['register_msg'] != '' && FALSE === strpos($_POST['register_msg'], '<password>')) $error[] = 'You must include the tag &lt;password&gt; in the <b>Register E-mail Message</b> field.';
         if($_POST['register_msg'] != '' && FALSE === strpos($_POST['register_msg'], '<url>')) $error[] = 'You must include the tag &lt;url&gt; in the <b>Register E-mail Message</b> field.';
-        if($_POST['fileupload_size'] == '') $error[] = 'You cannot leave the <b>Size limites for file upload</b> field blank.';
+        if($_POST['fileupload_size'] == '') $error[] = 'You cannot leave the <b>Size limits for file upload</b> field blank.';
         if($_POST['fileupload_size'] != '' && !ctype_digit($_POST['fileupload_size'])) $error[] = 'You must provide a number to the <b>Size limits for file upload</b> field.';
         if($_POST['admin_email'] == '') $error[] = 'You cannot leave the <b>Admin E-mail</b> field blank.';
         if($_POST['admin_email'] != '' && !eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["admin_email"])) $error[] = 'You must provide a <i>valid</i> email for the <b>Admin E-mail</b> field.';
