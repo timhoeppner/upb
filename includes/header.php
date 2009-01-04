@@ -163,7 +163,7 @@
 	else echo "
 			<li><a href='index.php' title='Forum Home'><span>Forum Home</span></a></li>
 			<li><a href='".$_CONFIG["homepage"]."' title='Site Home'><span>Site Home</span></a></li>
-			<li><a href='search.php' title='Search'><span>Search</span></a></li>
+      <li><a href='search.php' title='Search'><span>Search</span></a></li>
 			<li><a href='board_faq.php' title='Help Faq'><span>Help Faq</span></a></li>";
 	echo "
 		</ul>

@@ -40,7 +40,8 @@
 	$whos_online_log = implode("\n", array_reverse($whos_online_array))."\n";
 	$f = fopen(DB_DIR.'/whos_online.dat', 'w');
 	fwrite($f, $whos_online_log);
-	function whos_online($whos_online_log, $_STATUS) {
+	fclose($f);
+  function whos_online($whos_online_log, $_STATUS,$type='main') {
 		$whos_online_array = array_reverse(explode("\n", substr($whos_online_log, 0, -1)));
 		$whos_online_count = count($whos_online_array);
 		$return = array('guests' => 0, 'who' => array());
@@ -55,13 +56,19 @@
 				if ($wUser['user_power'] == '1') $color = "#".$_STATUS['userColor'];
 				elseif($wUser['user_power'] == '2') $color = "#".$_STATUS['modColor'];
 				elseif($wUser['user_power'] >= '3') $color = "#".$_STATUS['adminColor'];
-				$return['who'][] = '<a href="profile.php?action=get&amp;id='.$wUser['user_id'].'"><span style="color:'.$color.';">'.$wUser['user_name'].'</span></a>';
-			}
+				if ($type == 'main')
+          $return['who'][] = '<a href="profile.php?action=get&amp;id='.$wUser['user_id'].'"><span style="color:'.$color.';">'.$wUser['user_name'].'</span></a>';
+        else
+          $return['who'][] = $wUser['user_id'];
+      }
 		}
 		if (!empty($return['who'])) {
-			$return['users'] = count($return['who']);
-			$return['who'] = implode(', ', $return['who']);
-		} else {
+			if ($type == 'main')
+      {
+        $return['users'] = count($return['who']);
+        $return['who'] = implode(', ', $return['who']);
+		  }
+    } else {
 			$return['users'] = 0;
 		}
 		return $return;

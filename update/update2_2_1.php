@@ -112,7 +112,7 @@ if ($_POST['next'] == 0) {
 		$table = str_replace("posts_", "", $table);
 
 		// Make sure we don't get any topic tables
-		if(substr($table, -6) == "topics" || is_numeric($table)) continue;
+		if(substr($table, -6) == "topics" || !is_numeric($table)) continue;
 		$post_tdb->setFp("posts", $table);
 		$fields = $post_tdb->getFieldList('posts');
 		if(!in_array('upload_id', $fields)) {

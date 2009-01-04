@@ -128,7 +128,7 @@
 		if ($user[0]["yahoo"] != "") echo "&nbsp;<a href='http://edit.yahoo.com/config/send_webmesg?.target=".$user[0]["yahoo"]."&.src=pg'><img border=0 src='http://opi.yahoo.com/online?u=".$user[0]["yahoo"]."&m=g&t=0' alt='Y!: ".$user[0]["yahoo"]."'></a>";
 		echo "</div></td>
 					<td class='area_2' valign=top>
-						<div style='padding:12px;margin-bottom:20px;'>$message</div>
+						<div class='msg_block'>$message</div>
 						<div style='padding:12px;'>".$user[0]["sig"]."</div></td>
 				</tr>
 				<tr>

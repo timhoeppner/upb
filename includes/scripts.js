@@ -524,8 +524,10 @@ var Utf8 = {
 
 	// public method for url encoding
 	encode : function (string) {
-		string = string.replace(/\r\n/g,"\n");
-		var utftext = "";
+
+    string = string.replace(/\r\n/g,"\n");
+
+    var utftext = "";
 
 		for (var n = 0; n < string.length; n++) {
 
@@ -622,6 +624,8 @@ var http_request = false;
         http_request.onreadystatechange = CheckUsername;
       else if (type == 'email')
         http_request.onreadystatechange = CheckEmail;
+      else if (type == 'delfile')
+        http_request.onreadystatechange = DelFile;
       else
         http_request.onreadystatechange = Error;
       http_request.open('POST', url, true);
@@ -770,6 +774,26 @@ var http_request = false;
       }
    }
    
+   function DelFile() {
+      if (http_request.readyState == 3)
+      {
+        html = "<img src='images/spinner.gif' alt='' title='' style='vertical-align: middle;'>Deleting File";
+        document.getElementById(div).innerHTML = html;
+      }
+      if (http_request.readyState == 4) {
+         if (http_request.status == 200) {
+            result = http_request.responseText;
+            result_array = result.split("<!--divider-->");
+            document.getElementById(div).innerHTML = result_array[0];
+            editdiv = 'edit'+div.replace('-attach','');
+            document.getElementById(editdiv).innerHTML = result_array[1];
+         } else {
+            alert(http_request.status)
+            alert('There was a problem with the request.');
+         }
+      }
+   }
+   
    function getEdit(obj,divname) {
       div = divname;
       var poststr = "newedit=" + escape(Utf8.encode( replaceSubstring(document.getElementById("newedit").value,"+","&#43;")));
@@ -859,6 +883,27 @@ var http_request = false;
       var poststr = 'email='+escape(Utf8.encode(email));
       poststr += '&type=email';
       makePOSTRequest('./ajax.php',poststr,'email');
+    }
+    
+    function deleteFile(fId,tId,pId,fileId,filename,userid,divname)
+    {
+      answer = confirm('Are you sure you want to delete '+filename+'?');
+      if (answer)
+      {
+        div = divname;
+        var poststr = "forumid="+escape(fId);
+        poststr += "&postid="+escape(pId);
+        poststr += "&userid="+escape(userid);
+        poststr += "&threadid="+escape(tId);
+        poststr += "&divname="+escape(divname);
+        poststr += "&fileid="+escape(fileId);
+        poststr += "&filename="+escape(Utf8.encode(filename));
+        poststr += '&type=delfile';
+       
+        makePOSTRequest('./ajax.php',poststr,'delfile');
+      }
+      else
+        alert('Awww No!');
     }
 //END OF AJAX SCRIPTS
 
@@ -984,6 +1029,4 @@ function trim (str) {
 	return str;
 }
 
-
-//document.cookie = 'javascript=true'; //sets a cookie if javascript is enabled
 //END OF MISCELLANEOUS SCRIPTS

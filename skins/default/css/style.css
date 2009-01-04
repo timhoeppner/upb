@@ -1572,7 +1572,16 @@ vertical-align:middle;
 
 .image_block {
 	max-height: 400px;
+	max-width: 650px;
 	overflow: auto;
+}
+
+.msg_block
+{
+  max-width:650px;
+  padding:12px;
+  margin-bottom:20px;
+  overflow: auto;
 }
 
 .err {

@@ -90,26 +90,41 @@ class functions extends tdb {
         return $header["curId"];
     }
     
-    function getUploads($post,$power,$location)
+    function getUploads($fid,$tid,$pid,$upload_ids,$power,$location,$userid)
 	  {
-      if ((int)$_COOKIE['power_env'] >= (int)$power)
+      if ($upload_ids == "" or $upload_ids == "0" or $upload_ids == false)
+      return;
+      $output =  "";
+      $downloads = "";
+      $ids = explode(",",$upload_ids);
+      
+      
+      foreach ($ids as $id)
       {
-        $uploadId = (int) $post;
-        if($uploadId > 0) 
+        if($id > 0) 
         {
           //check information is in the upload database
-          $q = $this->get("uploads", $uploadId, array("name", "downloads","file_loca"));
+          $q = $this->get("uploads", $id, array("name", "downloads","file_loca"));
           if(!empty($q[0]) && file_exists($location."/".$q[0]['file_loca'])) 
           {
-            
             $attachName = $q[0]["name"];
             $attachDownloads = $q[0]["downloads"];
             $attachSize = floor(filesize($location."/".$q[0]['file_loca'])/1024);
-            return "<p><fieldset><legend>Attached File(s)</legend><a href='downloadattachment.php?id={$uploadId}'>{$attachName}</a> ({$attachSize}KB  / $attachDownloads Downloads)</fieldset>";
+            $downloads .= "<a href='downloadattachment.php?id=$id'>{$attachName}</a> ({$attachSize}KB  / $attachDownloads Downloads)";
+            if ((int)$_COOKIE['power_env'] >= 3 or $userid == (int)$_COOKIE['id_env'])
+              $downloads .= " <a href=\"javascript:deleteFile($fid,$tid,$pid,$id,'$attachName',".(int)$_COOKIE['id_env'].",'$fid-$tid-$pid-attach')\">Delete</a>";
+            $downloads .= "<p>";
           }
         }
+        }
+      
+      if ((int)$_COOKIE['power_env'] >= (int)$power and $downloads != "")
+      {
+        $output .= "<p><fieldset><legend>Attached File(s)</legend>";
+        $output .= $downloads;
+        $output .= "</fieldset>";
       }
-      return;
+      return $output;
     }
 }
 ?>

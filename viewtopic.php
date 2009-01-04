@@ -65,7 +65,7 @@
   echo "<div name='current_posts' id='current_posts'>";
   foreach($pRecs as $pRec) {
 		// display each post in the current topic
-		echo "
+    echo "
 			<a name='{$pRec['id']}'>
       <div name='post{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='post{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>
       <div class='main_cat_wrapper'>
@@ -127,8 +127,9 @@
         
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$vars['page']."'>Add Reply</a></div>";
 		else $reply = "";
-		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
-		$msg .= $tdb->getUploads($pRec['upload_id'],$fRec[0]['download'],$_CONFIG['fileupload_location']);
+
+    $msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
+		$msg .= "<div id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}-attach'>".$tdb->getUploads($_GET['id'],$_GET['t_id'],$pRec['id'],$pRec['upload_id'],$fRec[0]['download'],$_CONFIG['fileupload_location'],$pRec['user_id'])."</div>";
     echo "
 			<tr>
 				<th><div class='post_name'>";
@@ -152,7 +153,14 @@
 						".gmdate("Y-m-d", user_date($user[0]["date_added"]))."
 					</div>
 					<br />
-					<div class='post_info_extra'>";
+					<img src='images/report.png' alt='Report Post' title='Report Post'> &nbsp;";
+					$online = whos_online($whos_online_log, $_STATUS,'view');
+					if (empty($online['who']) or !in_array($pRec['user_id'],$online['who']))
+            echo "<img src='images/offline.png' alt='User Offline' title='User Offline'>";
+          else
+            echo "<img src='images/online.png' alt='User Online' title='User Online'>";
+          echo "<br />
+          <div class='post_info_extra'>";
 		if ($user[0]["aim"] != "") echo "&nbsp;<a href='aim:goim?screenname=".$user[0]["aim"]."'><img src='images/aol.gif' border='0' alt='AIM: ".$user[0]["aim"]."'></a>&nbsp;&nbsp;";
 		if ($user[0]["msn"] != "") echo "&nbsp;<a href='http://members.msn.com/".$user[0]["msn"]."' target='_blank'><img src='images/msn.gif' border='0' alt='MSN: ".$user[0]["msn"]."'></a>&nbsp;&nbsp;";
 		if ($user[0]["icq"] != "") echo "&nbsp;<a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$user[0]["icq"]."&action=message'><img src='images/icq.gif' border='0' alt='ICQ: ".$user[0]["icq"]."'></a>&nbsp;&nbsp;";
@@ -161,7 +169,7 @@
 		echo"</div>";
 		echo "</td>
 				<td class='$table_color' valign='top'>
-					<div style='width:85%;padding:12px;margin-bottom:20px;overflow:auto;' id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' name='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>$msg</div>
+					<div class='msg_block' id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' name='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>$msg</div>
 					<div style='padding:12px;'>".$sig."</div></td>
 			</tr>
 			<tr>
@@ -169,7 +177,6 @@
 				if ($pRec["user_id"] != "0") echo "";
 		if ($pm != "") echo $pm."";
 
-        //echo "<div name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' style='float: right;'>";
 		if (!empty($pRec['edited_by']) && !empty($pRec['edited_by_id']) && !empty($pRec['edited_date'])) echo "
 					<div class='post_edited' name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>Last edited by: <a href='profile.php?action=get&id=".$pRec['edited_by_id']." target='_blank'><strong>".$pRec['edited_by']."</strong></a> on ".gmdate("M d, Y g:i:s a", user_date($pRec['edited_date']))."</div>";
 		else

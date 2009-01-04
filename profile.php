@@ -135,31 +135,53 @@ if (isset($_POST["u_edit"])) {
 		$statuscolor = $status_config['statuscolor'];
 		if ($rec[0]["status"] != "") $status = $rec[0]["status"];
 		require_once('./includes/header.php');
-		echo "";
+		require_once('./includes/class/posts.class.php');
+		
 		echoTableHeading("Viewing profile for ".$rec[0]["user_name"]."", $_CONFIG);
+		echo "<tr><th width='20%'>Forum Info</th><th colspan='2'>Contact Info</th></tr>";
 		echo "
 			<tr>
-				<td colspan='2' id='topcontent'>
-				<div class='pro_container'>
+				<td class='area_1' rowspan='5'>
 						<span style='color:#".$statuscolor.";font-size:14px;'>".$rec[0]["user_name"]."</span>
 						<br />
-						<br />
-						<img src=\"".$rec[0]["avatar"]."\" alt='' title='' />
-						<br />
-						<div class='link_pm'>";
-		if($_COOKIE['power_env'] >= 3 && $rec[0]['level'] <= $_COOKIE['power_env']) print "<a href='admin_members.php?action=edit&id={$_GET['id']}'>Edit Member</a><br/>";
+						<br />";
+              echo "<img src='".$rec[0]["avatar"]."' alt='' title='' />";
+            echo "<br /><span style='color:#".$statuscolor."'><strong>$status &nbsp;&nbsp;&nbsp;</strong></span><br>";
+            
+    
+    echo "<strong>Joined:</strong> ".gmdate("Y-m-d", user_date($rec[0]["date_added"]))."<br><strong>Posts made:</strong> ".$rec[0]["posts"]."<br><strong>Last Visit:</strong> ".gmdate("Y-m-d", user_date($rec[0]["lastvisit"]));
+    if($_COOKIE['power_env'] >= 3 && $rec[0]['level'] <= $_COOKIE['power_env']) 
+    echo "<p><a href='admin_members.php?action=edit&id={$_GET['id']}'>Edit Member</a>";
+    	echo "</td>";
+
+    
 		require_once('./includes/inc/privmsg.inc.php');
 		$blockedList = getUsersPMBlockedList($_GET["id"]);
-		if ($_GET["id"] == $_COOKIE["id_env"]) {
-			echo "";
+		echo "<td class='pro_area_1' width='20%' valign='top'><div class='pro_area_2'><strong>Private Message:</strong></div></td><td valign='top' class='pro_area_1'>";
+    if ($_GET["id"] == $_COOKIE["id_env"]) {
+			echo "Hi";
 		} elseif($_COOKIE["id_env"] == "" || $_COOKIE["id_env"] == "0") {
 			echo "Login to contact";
 		} elseif(in_array($_COOKIE["id_env"], $blockedList)) {
 			echo "You are banned from using the PM system";
 		} else {
-			echo "<a href='newpm.php?to=".$_GET["id"]."' target='_blank'>Send private message?</a>";
+			echo "<a href='newpm.php?to=".$_GET["id"]."' target='_blank'>Send private message?</a></td></tr>";
 		}
-		
+		echo "<tr><td class='pro_area_1' valign='top'><div class='pro_area_2'><strong>ICQ:</strong></div></td><td class='pro_area_1'>";
+    if (@$rec[0]["icq"] != "") 
+      echo "<a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$rec[0]["icq"]."&action=message'>Contact via ICQ</a>";
+		echo "</td></tr><tr><td class='pro_area_1' valign='top'><div class='pro_area_2'><strong>AIM:</strong></div></td><td class='pro_area_1'>";
+    if (@$rec[0]["aim"] != "") 
+      echo "<a href='aim:goim?screenname=".$rec[0]["aim"]."'>Contact via AIM</a>";
+    echo "</td></tr><tr><td class='pro_area_1' valign='top'><div class='pro_area_2'><strong>MSN:</strong></div></td><td class='pro_area_1'>";
+		if (@$rec[0]["msn"] != "") 
+      echo "<a href='http://members.msn.com/".$rec[0]["msn"]."' target='_blank'>Contact via MSN</a>";
+    echo "</td></tr><tr><td class='pro_area_1' valign='top'><div class='pro_area_2'><strong>Yahoo!</strong></div></td><td class='pro_area_1'>";
+		if (@$rec[0]["yahoo"] != "") 
+      echo "<a href='http://edit.yahoo.com/config/send_webmesg?.target=".$rec[0]["yahoo"]."&.src=pg'>Contact via Yahoo!</a>";
+    echo "</td></tr>";
+
+    echoTableFooter(SKIN_DIR);
     for($i=1;$i<=6;$i++)
     {
     $custom = $config_tdb->basicQuery('config',"name","custom_profile$i");
@@ -167,57 +189,22 @@ if (isset($_POST["u_edit"])) {
       $customs[] = array($custom[0]['value'],$rec[0]["custom_profile$i"]);
     }
     
-    $split = ceil(count($customs)/2);
-    
-    echo "</div></div></td></tr><tr><td id='leftcontent' valign='top'>
-					<div class='pro_container'>
-						<div class='pro_area_1'><div class='pro_area_2'><strong>Joined: </strong></div>".gmdate("Y-m-d", user_date($rec[0]["date_added"]))."</div>
-						<div class='pro_area_1'><div class='pro_area_2'><strong>Posts made: </strong></div>".$rec[0]["posts"]."</div>";
-
-
-  echo "
-			<div class='pro_area_1'><div class='pro_area_2'><strong>Homepage: </strong></div>";
+    echoTableHeading("Viewing profile for ".$rec[0]["user_name"]."", $_CONFIG);
+    echo "<tr><td valign='top' class='pro_area_1' width='20%'><div class='pro_area_2'><strong>Homepage:</strong></div></td><td class='pro_area_1'>";
 		if (strlen($rec[0]['url']) != 0)
+    if ($rec[0]['url'] != "http://")
     echo "<a href='".$rec[0]["url"]."' target='_blank'>".$rec[0]["url"]."</a>";
-		echo "&nbsp;</div>";
-		
-    foreach ($customs as $key => $value)
-		{
-      if ($key < $split )
-        echo "
-			<div class='pro_area_1'><div class='pro_area_2'><strong>".$value[0].":</strong></div>".nl2br($value[1])."</div>";
-    }
-  echo "</div>
-			</td><td id='rightcontent'>
-			<div class='pro_container'>
-						<div class='pro_area_1' style='white-space:nowrap;'><div class='pro_area_2'><strong>Status: </strong></div>
-							<span style='color:#".$statuscolor."'><strong>$status &nbsp;&nbsp;&nbsp;</strong></span></div>
-						<div class='pro_area_1'><div class='pro_area_2'><strong>Email: </strong></div>";
+    echo "</td></tr>\n<tr><td class='pro_area_1' valign='top'><div class='pro_area_2'><strong>Email: </strong></div></td><td class='pro_area_1'>";
 		if ((bool)$rec[0]["view_email"]) echo "<a href='mailto:".$rec[0]["email"]."'>".$rec[0]["email"]."</a>";
 		else echo "not public";
-		echo "</div>";
-  echo "<div class='pro_area_1'><div class='pro_area_2'><strong>Location: </strong></div>".$rec[0]["location"]."&nbsp;</div>";
-	foreach ($customs as $key => $value)
+		echo "</td></tr>\n";
+  echo "<tr><td class='pro_area_1' valign='top'><div class='pro_area_2'><strong>Location:</strong></div></td><td class='pro_area_1'>".$rec[0]["location"]."</td></tr>\n";
+    foreach ($customs as $key => $value)
 		{
-      if ($key >= $split )
         echo "
-			<div class='pro_area_1'><div class='pro_area_2'><strong>".$value[0].":</strong></div>".$value[1]."</div>";
+			<tr><td class='pro_area_1' valign='top'><div class='pro_area_2'><strong>".$value[0].":</strong></div></td><td class='pro_area_1'>".nl2br($value[1])."</td></tr>\n";
     }
-		echo "</div></td></tr>";
-    if (@$rec[0]["icq"] != "" or @$rec[0]["aim"] != "" or @$rec[0]["msn"] != "" or @$rec[0]["yahoo"] != "")
-  {
-  
-  echo "<tr><td><div class='pro_contact'>";
-		if (@$rec[0]["icq"] != "") echo "
-							<div class='pro_area_1'><div class='pro_area_2'><strong>icq</strong><a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$rec[0]["icq"]."&action=message'><img src='images/icq.gif' border='0'></div>&nbsp;".$rec[0]["icq"]."</a></div>";
-		if (@$rec[0]["aim"] != "") echo "
-							<div class='pro_area_1'><div class='pro_area_2'><strong>aim</strong><a href='aim:goim?screenname=".$rec[0]["aim"]."'><img src='images/aol.gif' border='0'></div>&nbsp;".$rec[0]["aim"]."</a></div>";
-		if (@$rec[0]["msn"] != "") echo "
-							<div class='pro_area_1'><div class='pro_area_2'><strong>msn</strong><a href='http://members.msn.com/".$rec[0]["msn"]."' target='_blank'><img src='images/msn.gif' border='0'></div>&nbsp;".$rec[0]["msn"]."</a></div>";
-		if (@$rec[0]["yahoo"] != "") echo "
-							<div class='pro_area_1'><div class='pro_area_2'><strong>Y!</strong><a href='http://edit.yahoo.com/config/send_webmesg?.target=".$rec[0]["yahoo"]."&.src=pg'><img border=0 src='http://opi.yahoo.com/online?u=".$rec[0]["yahoo"]."&m=g&t=0'></div>&nbsp;".$rec[0]["yahoo"]."</a></div>";
-		echo "</div></td></tr>";
-		}
+	
   	
 		if (@$rec[0]["sig"] != "") echo "
 				<tr>
@@ -228,6 +215,23 @@ if (isset($_POST["u_edit"])) {
 						</div></td>
 				</tr>";
 		echoTableFooter(SKIN_DIR);
+    echo "////////////BASIC IMPLEMENTATION USING FIXED DATA\\\\\\\\\\\\\\\\\\\\\\\\";
+    echoTableHeading("Topic Subscriptions", $_CONFIG);
+    echo "<tr><th width='50%'>Thread</th><th>Thread Starter</th><th>Last Post</th></tr>";
+    $catid=3;
+    $threadid=2;
+    $posts_tdb = new posts(DB_DIR."/", "posts.tdb");
+    $posts_tdb->setFp("topics", $catid."_topics");
+	  $posts_tdb->set_forum($fRec);
+	  $tRecs1 = $posts_tdb->query("topics", "id>'0'", 1);
+	  foreach ($tRecs1 as $tRec){
+    $posts_tdb->set_topic(array($tRec));
+	  echo "<tr><td class='area_2'>".$tRec["subject"]."</td><td class='area_2'>".$tRec["topic_starter"]."</td><td class='area_1'><span class='latest_topic'><span class='date'>".gmdate("M d, Y g:i:s a", user_date($tRec["last_post"]))."</span>
+				<br />
+				<strong>By:</strong> ";
+				if ($tRec["user_id"] != "0") echo "<span class='link_2'><a href='profile.php?action=get&id=".$tRec["user_id"]."' style='color : #".$status_config['statuscolor'].";'>".$tRec["user_name"]."</a></span></td></tr>";
+    }
+    echoTableFooter(SKIN_DIR);
 		require_once('./includes/footer.php');
 	}
 } elseif($_GET['action'] == 'edit') {

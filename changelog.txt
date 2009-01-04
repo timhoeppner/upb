@@ -11,6 +11,14 @@ Fixed broken signature preview
 Javascript detection bugs fixed.
 Attached file information no longer disappears after Quick Edit
 Fixed new category order not being displayed correctly after changing
+Fixed wide images breaking forum layout
+New topic creation now redirects to the topic rather than the forum
+Fixed wide text breaking forum layout
+Foreign languages now work when using Quick Edit and Topic Title editing
+
+Security Fixes
+--------------
+Possible use of XSS attack using quick edit
 
 New Features
 ------------
@@ -23,7 +31,7 @@ Skin selection now dropdown list rather than text box
 New BBcode buttons by Nightmare
 Removed some BBcode buttons for signatures (lists and videos)
 Page navigation rewritten and working at the bottom
-Avatar Upload size is separate from file upload size
+Avatar Upload size is separate from File Upload size
 Settings for file uploads and downloads for each forum
 Re-worked attached file display
 Removed ICQ, MSN, Yahoo and AIM logos from profile editing to make it easier for skinning

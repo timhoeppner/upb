@@ -2,6 +2,7 @@
 require_once('./includes/upb.initialize.php');
 require_once("./includes/class/upload.class.php");
 require_once("./includes/class/posts.class.php");
+require_once("./includes/class/func.class.php");
 
 $ajax_type = $_POST['type'];
 
@@ -31,7 +32,7 @@ switch ($ajax_type)
     else
     {     
       $attach_msg .= $tdb->getUploads($pRec[0]['upload_id'],$fRec[0]['download'],$_CONFIG['fileupload_location']);
-      $output = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($pRec[0]['message'])))), $_CONFIG)).$attach_msg;
+      $output = format_text(filterLanguage(UPBcoding(encode_text(stripslashes($pRec[0]['message']))), $_CONFIG)).$attach_msg;
     }
     echo $output;
 
@@ -50,16 +51,16 @@ switch ($ajax_type)
     if($pRec[0]["user_id"] != $_COOKIE["id_env"] && $_COOKIE["power_env"] < 2) exitPage("You are not authorized to edit this post.");
     $msg = "";
     
-    $msg = format_text(filterLanguage(UPBcoding(utf8_decode(stripslashes($_POST["newedit"]))), $_CONFIG));
+    $msg = encode_text(filterLanguage(UPBcoding(stripslashes($_POST["newedit"])), $_CONFIG));
 
-    $dbmsg = encode_text(stripslashes(utf8_decode($_POST["newedit"])),ENT_NOQUOTES);
+    $dbmsg = encode_text(stripslashes($_POST["newedit"]),ENT_NOQUOTES);
 
     $posts_tdb->edit("posts", $_POST["postid"], array("message" => $dbmsg, "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate()));
 //clearstatcache();
     $pRec2 = $posts_tdb->get("posts", $_POST["postid"]);
 
-    $attach_msg .= $tdb->getUploads($pRec[0]['upload_id'],$fRec[0]['download'],$_CONFIG['fileupload_location']);
-    $msg = format_text(filterLanguage(utf8_decode(stripslashes($msg)), $_CONFIG)).$attach_msg;
+    $attach_msg .= $tdb->getUploads($_GET['id'],$_GET['t_id'],$pRec['id'],$pRec['upload_id'],$fRec[0]['download'],$_CONFIG['fileupload_location'],$pRec['user_id']);
+    $msg = format_text(filterLanguage(stripslashes($msg)), $_CONFIG).$attach_msg;
     
     $div = $_POST['forumid']."-".$_POST['threadid']."-".$_POST['postid'];
 
@@ -143,7 +144,7 @@ switch ($ajax_type)
 
     $p = createPageNumbers($page, $num_pages, $query,true);
     $p = str_replace('ajax.php', 'viewtopic.php', $p);
-    $pagelinks1 = $posts_tdb->d_posting($p,$page);
+    $pagelinks1 = $posts_tdb->d_posting($p,$page,$num_pages);
     //$pagelinks2 = $posts_tdb->d_posting($p,$page,"bottom");
 
     //BEGIN NEW REPLY OUTPUT
@@ -263,7 +264,7 @@ switch ($ajax_type)
 		</tbody>
 		</table>
 		<div class='footer'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></div>
-	</div>
+	</div><div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,$vars['page'],$num_pages,"bottom") . "</div>
 	<br />";
 }
 
@@ -512,7 +513,30 @@ switch ($ajax_type)
       echo $sig."<!--divider-->".$sig_title;
       break 1;
       
-    default:
+      case "delfile":
+      $fRec = $tdb->get("forums", $_POST["forumid"]);
+      $posts_tdb = new posts(DB_DIR."/", "posts.tdb");
+      $posts_tdb->setFp("topics", $_POST["forumid"]."_topics");
+      $posts_tdb->setFp("posts", $_POST["forumid"]);
+      $upload = new upload(DB_DIR, $_CONFIG["fileupload_size"],$_CONFIG["fileupload_location"]);
+      $details = $upload->get('uploads',$_POST['fileid']);
+      //$output .= dump($details);
+      $upload->deleteFile($_POST['fileid']);
+      $pRec = $posts_tdb->get("posts", $_POST["postid"]);
+
+      $split = explode(",",$pRec[0]['upload_id']);
+      $key = array_search($_POST['fileid'],$split);
+      unset($split[$key]);
+      $new = implode(',',$split);
+      $posts_tdb->edit("posts", $_POST["postid"], array("message" => $dbmsg, "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate(),'upload_id'=>$new));
+      $pRec2 = $posts_tdb->get("posts", $_POST["postid"]);
+      //$output .= dump($pRec);
+      $output .= $tdb->getUploads($_POST['forumid'],$_POST['threadid'],$_POST["postid"],$pRec2[0]['upload_id'],$_COOKIE['power_env'],$_CONFIG['fileupload_location'],$_POST['userid']);
+      $edited = "Last edited by: <a href='profile.php?action=get&id=".$pRec2[0]['edited_by_id']."' target='_new'>".$pRec2[0]['edited_by']."</a> on ".gmdate("M d, Y g:i:s a", user_date($pRec2[0]['edited_date']));
+      echo $output."<!--divider-->".$edited;
+      break;
+          
+      default:
       echo "Something has gone horribly wrong. You should never see this text";
       break 1;
 }
