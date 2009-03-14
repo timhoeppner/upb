@@ -57,7 +57,8 @@
 				$x--;
 			}
 			$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
-			echo "
+			echo $pRec['message'];
+      echo "
 				<div class='simple_head' style='text-align:left;'>".$pRec["user_name"]."</div>";
 			echo "
 				<div class='simple_content'>$msg</div>";
