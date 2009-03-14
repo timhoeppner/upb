@@ -156,7 +156,6 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 			}
 		} else {
 			$list = explode("\n", file_get_contents(DB_DIR."/banneduser.dat"));
-
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 
 		echo "
@@ -186,7 +185,8 @@ echo "
 			<tr>
 				<th colspan='3'>Managing your banned members.</th>
 			</tr>";
-			if(trim($list[0]) == "") echo "
+			
+      if(trim($list[0]) == "") echo "
 			<tr>
 				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='3'>No members banned.</td>
 			</tr>";

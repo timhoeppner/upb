@@ -50,19 +50,7 @@
 					if(!$dir_777) print "You have to chmod upb's root directory to 0777 before you can proceed";
 					else {
 					    print 'Just select "Proceed" below and follow the instructions.<br />';
-					    /*
-					    $mysql_disabled = ((extension_loaded('mysql')) ? '' : ' disabled');
-					    $pgsql_disabled = ((extension_loaded('pgsql')) ? '' : ' disabled');
-					    $sqlite_disabled = ((extension_loaded('sqlite')) ? '' : ' disabled');
-					   ?>Pick the type of database you wish to use, then select \"Proceed\" below and follow the instructions.<br />
-					   <select name="db_type">
-					     <option value="tdb">TextDB</option>
-					     <option value="mysql"<?php print $mysql_disabled; ?>>MySQL</option>
-					     <option value="pgsql"<?php print $pgsql_disabled; ?>>PostgreSQL</option>
-					     <option value="sqlite"<?php print $sqlite_disabled; ?>>SQLite</option>
-					     <?php
-					   print '</select>';
-					   */
+					    
 					} ?><br /><br />
 			<input type='hidden' name='add' value='1' /><input type='submit' value='Proceed'<?php print (($dir_777) ? '': ' DISABLED');?>>
 			</td>

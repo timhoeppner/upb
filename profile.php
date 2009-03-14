@@ -10,6 +10,7 @@ if(!isset($_GET['action']) || $_GET['action'] == '') $_GET['action'] = 'edit';
 if ($_GET['action'] == "get" || $_GET['action'] == 'view') $where = "Member Profile";
 elseif ($_GET['action'] == "bookmarks") $where = "Favorited Topics";
 elseif($_GET['action'] == "edit")$where = "User CP";
+
 if (isset($_POST["u_edit"])) {
 	if (!($tdb->is_logged_in())) {
 		echo "<html><head><meta http-equiv='refresh' content='2;URL=login.php?ref=profile.php'></head></html>";
@@ -169,7 +170,7 @@ if (isset($_POST["u_edit"])) {
 		}
 		echo "<tr><td class='pro_area_1' valign='top'><div class='pro_area_2'><strong>ICQ:</strong></div></td><td class='pro_area_1'>";
     if (@$rec[0]["icq"] != "") 
-      echo "<a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$rec[0]["icq"]."&action=message'>Contact via ICQ</a>";
+      echo "<a href='http://www.icq.com/people/cmd.php?uin=".$rec[0]["icq"]."&action=message'>Contact via ICQ</a>";
 		echo "</td></tr><tr><td class='pro_area_1' valign='top'><div class='pro_area_2'><strong>AIM:</strong></div></td><td class='pro_area_1'>";
     if (@$rec[0]["aim"] != "") 
       echo "<a href='aim:goim?screenname=".$rec[0]["aim"]."'>Contact via AIM</a>";

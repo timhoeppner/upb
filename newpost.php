@@ -13,7 +13,7 @@
 	$message = "";
   if (!empty($_POST))
 		{
-      $message = stripslashes($_POST['newentry']);
+      $message = stripslashes($_POST['message']);
       foreach ($_POST as $key => $value)
       {
         $_GET[$key] = $value;
@@ -34,7 +34,7 @@
 		$_COOKIE["power_env"] = 0;
 		$_COOKIE["id_env"] = 0;
 	}
-	if ($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0) exitPage("<div class='alert'><div class='alert_text'>
+  if ($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0) exitPage("<div class='alert'><div class='alert_text'>
 		<strong>Caution!</strong></div><div style='padding:4px;'>You do not have the rights to perform this action.</div></div>");
 	if (!($_GET["id"] != "" && ctype_digit($_GET["id"]))) exitPage("<div class='alert'><div class='alert_text'>
 		<strong>Caution!</strong></div><div style='padding:4px;'>Invalid Forum ID/Information.</div></div>");
@@ -47,9 +47,12 @@
 			<strong>Caution!</strong></div><div style='padding:4px;'>Please select a message icon.</div></div>");
 		if ($_GET["t"] == 1 && trim($_POST["subject"]) == "") exitPage("<div class='alert'><div class='alert_text'>
 			<strong>Caution!</strong></div><div style='padding:4px;'>You must enter a subject!</div></div>");
-		if ($_POST["message"] == "") exitPage("<div class='alert'><div class='alert_text'>
+		if ($_POST["message"] == ""){
+    exitPage("<div class='alert'><div class='alert_text'>
 			<strong>Caution!</strong></div><div style='padding:4px;'>You must type in a message!</div></div>");
-		if ($_GET["t"] != 1 && isset($_GET["t_id"]) && (bool) $tRec[0]["locked"]) exitPage("<div class='alert'><div class='alert_text'>
+		}
+    
+    if ($_GET["t"] != 1 && isset($_GET["t_id"]) && (bool) $tRec[0]["locked"]) exitPage("<div class='alert'><div class='alert_text'>
 			<strong>Caution!</strong></div><div style='padding:4px;'>The topic is closed to further posting.</div></div>");
 		//FILE UPLOAD BEGIN
     $uploadId = array();
@@ -180,6 +183,7 @@
 
 		if (!isset($_GET["page"]) or $_GET['page'] == "") $vars['page'] = 1;
 
+    
     if ($_GET["t"] == 1) {
 			$tpc = "
 			<tr>
@@ -221,8 +225,8 @@
 					</div><br />";
 		}
 		$icons = message_icons();
-
-		echo "
+    
+    echo "
 			<form action='newpost.php?id=".$_GET["id"]."&t=".$_GET["t"]."&quote=".$_GET["quote"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."' method='POST' name='newentry' enctype='multipart/form-data' onSubmit='return validate_$check();'>
 			<input type='hidden' name='a' value='1'>";
 
@@ -250,7 +254,7 @@
 					<div style='text-align:center;'></div></td>
 				<td class='area_2'>
         ".bbcodebuttons('look1')."<textarea name='message' id='look1'>".$message."</textarea><br>
-					<span id='msg_err' class='err'></span><div style='padding:8px;'>".getSmilies('look1')."</div></td>
+					<span id='msg_err' class='err'></span><fieldset><legend>Smilies</legend><div style='padding:8px;'>".getSmilies('look1')."</fieldset></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
@@ -271,11 +275,13 @@
 		}
 		echo "
 			<tr>
-				<td class='footer_3a' style='text-align:center;' colspan='2'><input type='submit' name='submit' value='Submit'></td>
+				<td class='footer_3a' style='text-align:center;' colspan='2'><input type='reset' name='reset' value='Reset'><input type='button' onclick='postPreview()' value='Preview Post'><input type='submit' name='submit' value='Submit'></td>
 			</tr>";
       echoTableFooter(SKIN_DIR);
       echo "
 	</form>
+	<div id='preview'></div>
+	
 	".$iframe."";
 	}
 	require_once('./includes/footer.php');

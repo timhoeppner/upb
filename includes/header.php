@@ -139,14 +139,13 @@
 <link rel='stylesheet' type='text/css' href='".SKIN_DIR."/css/style.css' />
 <link rel='stylesheet' type='text/css' href='skins/disabled.css' />
 <script type='text/javascript' src='./includes/scripts.js'></script>
-<script type='text/javascript' src='./includes/script-styles.js'></script>
 </head>
 <body>
 <div id='upb_container'>
 	<div class='main_cat_wrapper2'>
 		<table class='main_table_2' cellspacing='1'>
 			<tr>
-				<td id='logo'><img src='".$_CONFIG['logo']."' alt='' title='' /></td>
+				<td id='logo'><img src='".$_CONFIG['logo']."' alt='' title='' width='200'/></td>
 			</tr>
 		</table>
 	</div>

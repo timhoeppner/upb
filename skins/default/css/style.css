@@ -156,6 +156,7 @@ textarea#newentry {
 #logo {
 	background-color : #7997c0;
 	padding : 0px;
+	text-align: right;
 }
 
 /* --------------------- */

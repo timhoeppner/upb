@@ -39,7 +39,8 @@ function format_text($text) {
 
 function encode_text($text)
 {
-  $string = str_replace(array('<','>'),array('&lt;','&gt;'),$text);
+  $string = str_replace(array('<','>','"',"&#"),array('<','>','&quot;',"&amp;#"),$text);
+  $string = str_replace("'","&#39;",$string);
   return $string;
 }
 
@@ -117,12 +118,22 @@ function UPBcoding($text) {
     $msg = preg_replace("/\[url=(http:\/\/)?(.*?)\](.*?)\[\/url\]/si", "<a href=\"\\1\\2\" target='_blank'>\\3</a>", $msg);
     $msg = preg_replace("/\[email\](.*?)\[\/email\]/si", "<a href=\"mailto:\\1\">\\1</a>", $msg);
     $msg = preg_replace("/\[email=(.*?)\](.*?)\[\/email\]/si", "<a href=\"mailto:\\1\">\\2</a>", $msg);
-    $msg = preg_replace("/\[img\](.*?)\[\/img\]/si", "<div class=\"image_block\"><img src=\"\\1\" border=\"0\"></div>", $msg);
-    $msg = preg_replace("/\[img=(.*?)x(.*?)](.*?)\[\/img\]/si","<img src=\"\\3\" border=\"0\" width=\"\\1\" height=\"\\2\">",$msg);
+    //$msg = preg_replace("/\[img\](.*?)\[\/img\]/si", "<div class=\"image_block\"><img src=\"\\1\" border=\"0\"></div>", $msg);
     $msg = preg_replace("/\[offtopic\](.*?)\[\/offtopic\]/si", "<font color='blue'>Offtopic: \\1</font>", $msg);
     $msg = preg_replace("/\[youtube\](.*?)\[\/youtube\]/si", '<object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/\\1&hl=en&fs=1"></param><param name="allowFullScreen" value="true"></param><embed src="http://www.youtube.com/v/\\1&hl=en&fs=1" type="application/x-shockwave-flash" allowfullscreen="true" width="425" height="344"></embed></object>', $msg);
     $msg = preg_replace("/\[google\](.*?)\[\/google\]/si", '<embed style="width:425px; height:350px;" id="VideoPlayback" type="application/x-shockwave-flash" src="http://video.google.com/googleplayer.swf?docId=\\1" flashvars=""></embed>',$msg);
 
+    $img_matches = array();
+    preg_match_all("/\[img\](.*?)\[\/img\]/si",$msg,$img_matches);
+
+    if ($img_matches[1][0] != "")
+    {
+      $msg .= "<div class='image_block'>";
+      foreach ($img_matches[1] as $img)
+        $msg .= "<img src='$img' border='0'>";
+      $msg .= "</div>";
+    }
+    
     while (preg_match("/\[quote(.*?)\](.*?)\[\/quote\]/si", $msg))
     {
       $msg = preg_replace_callback("/\[quote(.*?)\](.*?)\[\/quote\]/si",'parse_quote',$msg);
@@ -134,7 +145,6 @@ function UPBcoding($text) {
     
     foreach($code_matches[1] as $thecode) {
     	$newcode = "<?php\n".$thecode."\n?>";
-    	?><?php //allows code highlighting to show again in editors
     	$newcode = str_replace(array('&lt;','&gt;','&quot;'),array('<','>', '"'),$newcode);
     	$newcode = highlight_string($newcode, true);
     	$newcode = str_replace("<font color=\"#0000BB\">&lt;?php", "<font>", $newcode);

@@ -48,7 +48,7 @@
 	if (empty($pRecs)) {
     $msg = 'No posts could be found for this topic';
     if ((int)$_COOKIE["power_env"] >= 2)
-      $msg .= "<br>To delete this topic click <a href='managetopic.php?id=2&t_id=2'>here</a>";
+      $msg .= "<br>To delete this topic click <a href='managetopic.php?id=".$_GET['id']."&t_id=".$_GET['t_id']."'>here</a>";
     die(str_replace('__TITLE__', 'Fatal Error:', str_replace('__MSG__', $msg, ALERT_MSG)).MINIMAL_BODY_FOOTER);
     
     require_once('./includes/footer.php');
@@ -163,7 +163,7 @@
           <div class='post_info_extra'>";
 		if ($user[0]["aim"] != "") echo "&nbsp;<a href='aim:goim?screenname=".$user[0]["aim"]."'><img src='images/aol.gif' border='0' alt='AIM: ".$user[0]["aim"]."'></a>&nbsp;&nbsp;";
 		if ($user[0]["msn"] != "") echo "&nbsp;<a href='http://members.msn.com/".$user[0]["msn"]."' target='_blank'><img src='images/msn.gif' border='0' alt='MSN: ".$user[0]["msn"]."'></a>&nbsp;&nbsp;";
-		if ($user[0]["icq"] != "") echo "&nbsp;<a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$user[0]["icq"]."&action=message'><img src='images/icq.gif' border='0' alt='ICQ: ".$user[0]["icq"]."'></a>&nbsp;&nbsp;";
+		if ($user[0]["icq"] != "") echo "&nbsp;<a href='http://www.icq.com/people/cmd.php?uin=".$user[0]["icq"]."&action=message'><img src='images/icq.gif' border='0' alt='ICQ: ".$user[0]["icq"]."'></a>&nbsp;&nbsp;";
 		if ($user[0]["yahoo"] != "") echo "&nbsp;<a href='http://edit.yahoo.com/config/send_webmesg?.target=".$user[0]["yahoo"]."&.src=pg'><img border=0 src='http://opi.yahoo.com/online?u=".$user[0]["yahoo"]."&m=g&t=0' alt='Y!: ".$user[0]["yahoo"]."'></a>";
 
 		echo"</div>";

@@ -10,7 +10,12 @@
 	if ($tdb->is_logged_in()) {
 		if ($_GET["page"] == "") $_GET["page"] = 1;
 		$users = $tdb->listRec("users", ($_GET["page"] * $_CONFIG["topics_per_page"] - $_CONFIG["topics_per_page"] + 1), $_CONFIG["topics_per_page"]);
-		$c = $tdb->getNumberOfRecords("users");
+		foreach ($users as $key => $user)
+		{
+      if ($user['reg_code'] != '')
+        unset($users[$key]);
+    }
+    $c = count($users);
 		if ($c <= $_CONFIG["topics_per_page"]) {
 			$num_pages = 1;
 		} elseif (($c % $_CONFIG["topics_per_page"]) == 0) {

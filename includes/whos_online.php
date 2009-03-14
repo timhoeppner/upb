@@ -52,7 +52,7 @@
 				'time' => rtrim(substr($whos_online_array[$i], 37, 14))  );
 			if ($wUser['user_power'] == '0') {
 				$return['guests']++;
-			} else {
+      } else {
 				if ($wUser['user_power'] == '1') $color = "#".$_STATUS['userColor'];
 				elseif($wUser['user_power'] == '2') $color = "#".$_STATUS['modColor'];
 				elseif($wUser['user_power'] >= '3') $color = "#".$_STATUS['adminColor'];

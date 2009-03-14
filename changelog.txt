@@ -15,6 +15,7 @@ Fixed wide images breaking forum layout
 New topic creation now redirects to the topic rather than the forum
 Fixed wide text breaking forum layout
 Foreign languages now work when using Quick Edit and Topic Title editing
+Fixed possible bug with IIS not using $_SERVER['REQUEST_URI'] properly
 
 Security Fixes
 --------------
@@ -37,3 +38,4 @@ Re-worked attached file display
 Removed ICQ, MSN, Yahoo and AIM logos from profile editing to make it easier for skinning
 Configurable file upload extensions
 Multiple file uploads per post
+User online/offline status shown next to posts

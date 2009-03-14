@@ -51,17 +51,15 @@ switch ($ajax_type)
     if($pRec[0]["user_id"] != $_COOKIE["id_env"] && $_COOKIE["power_env"] < 2) exitPage("You are not authorized to edit this post.");
     $msg = "";
     
-    $msg = encode_text(filterLanguage(UPBcoding(stripslashes($_POST["newedit"])), $_CONFIG));
-
     $dbmsg = encode_text(stripslashes($_POST["newedit"]),ENT_NOQUOTES);
 
     $posts_tdb->edit("posts", $_POST["postid"], array("message" => $dbmsg, "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate()));
 //clearstatcache();
     $pRec2 = $posts_tdb->get("posts", $_POST["postid"]);
 
-    $attach_msg .= $tdb->getUploads($_GET['id'],$_GET['t_id'],$pRec['id'],$pRec['upload_id'],$fRec[0]['download'],$_CONFIG['fileupload_location'],$pRec['user_id']);
-    $msg = format_text(filterLanguage(stripslashes($msg)), $_CONFIG).$attach_msg;
-    
+    $attach_msg = "";//.= $tdb->getUploads($_GET['id'],$_GET['t_id'],$pRec['id'],$pRec['upload_id'],$fRec[0]['download'],$_CONFIG['fileupload_location'],$pRec['user_id']);
+    $msg = encode_text(format_text(filterLanguage(UPBcoding(stripslashes($_POST["newedit"]))), $_CONFIG).$attach_msg);
+    //$msg .= dump($_POST['newedit']);
     $div = $_POST['forumid']."-".$_POST['threadid']."-".$_POST['postid'];
 
     if(!empty($pRec2[0]['edited_by']) && !empty($pRec2[0]['edited_by_id']) && !empty($pRec2[0]['edited_date']))
@@ -535,7 +533,19 @@ switch ($ajax_type)
       $edited = "Last edited by: <a href='profile.php?action=get&id=".$pRec2[0]['edited_by_id']."' target='_new'>".$pRec2[0]['edited_by']."</a> on ".gmdate("M d, Y g:i:s a", user_date($pRec2[0]['edited_date']));
       echo $output."<!--divider-->".$edited;
       break;
-          
+      
+      case "preview":
+        if (trim($_POST['message']) == '' or empty($_POST['message']))
+          echo "";
+        else
+        {
+          echoTableHeading("Post Preview", $_CONFIG);
+          $msg = format_text(filterLanguage(UPBcoding($_POST["message"]), $_CONFIG));
+          echo "<tr><td class='area_2'><div class='msg_block'>".$msg."</div></td></tr>";
+          echoTableFooter(SKIN_DIR);
+        }
+        break 1;
+       
       default:
       echo "Something has gone horribly wrong. You should never see this text";
       break 1;

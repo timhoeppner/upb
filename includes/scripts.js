@@ -626,6 +626,8 @@ var http_request = false;
         http_request.onreadystatechange = CheckEmail;
       else if (type == 'delfile')
         http_request.onreadystatechange = DelFile;
+      else if (type == 'preview')
+        http_request.onreadystatechange = PreviewPost;
       else
         http_request.onreadystatechange = Error;
       http_request.open('POST', url, true);
@@ -794,6 +796,23 @@ var http_request = false;
       }
    }
    
+   function PreviewPost() {
+    if (http_request.readyState == 3)
+    {
+      html = "<img src='images/spinner.gif' alt='' title='' style='vertical-align:middle;'>Creating Post Preview";
+      document.getElementById('preview').innerHTML = html;
+    }
+    if (http_request.readyState == 4) {
+         if (http_request.status == 200) {
+            result = http_request.responseText;
+            document.getElementById('preview').innerHTML = result;
+         } else {
+            alert(http_request.status)
+            alert('There was a problem with the request.');
+         }
+      }
+   }
+   
    function getEdit(obj,divname) {
       div = divname;
       var poststr = "newedit=" + escape(Utf8.encode( replaceSubstring(document.getElementById("newedit").value,"+","&#43;")));
@@ -862,12 +881,19 @@ var http_request = false;
    
     function sigPreview(obj,id,status)
     {
-    var poststr = "sig="+escape(Utf8.encode(replaceSubstring(document.getElementById("u_sig").value,"+","&#43;")));
-    poststr += "&id="+escape(Utf8.encode(id));
-    poststr += "&status="+escape(Utf8.encode(status));
-    poststr += "&type=sig";
+      var poststr = "sig="+escape(Utf8.encode(replaceSubstring(document.getElementById("u_sig").value,"+","&#43;")));
+      poststr += "&id="+escape(Utf8.encode(id));
+      poststr += "&status="+escape(Utf8.encode(status));
+      poststr += "&type=sig";
     
     makePOSTRequest('./ajax.php', poststr,'sig'); 
+    }
+    
+    function postPreview(obj)
+    {
+      var poststr = "message="+escape(Utf8.encode(document.getElementById("look1").value));
+      poststr += "&type=preview";
+      makePOSTRequest('./ajax.php',poststr,'preview');
     }
     
     function getUsername(username,type)
