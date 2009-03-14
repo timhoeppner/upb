@@ -1,41 +1,6 @@
-2.2.3 Changelog
+This is the changelog for this product's working copy.
 
-Bug Fixes
----------
+IMPORTANT SECURITY UPDATE
 
-Minor bug in upb.initialise.php.
-Move topics bug
-Stripped slashes on config page.
-Attach file section of form is not displayed if filesize and/or location is 0 or not set and dependent of new forum permissions.
-Fixed broken signature preview
-Javascript detection bugs fixed.
-Attached file information no longer disappears after Quick Edit
-Fixed new category order not being displayed correctly after changing
-Fixed wide images breaking forum layout
-New topic creation now redirects to the topic rather than the forum
-Fixed wide text breaking forum layout
-Foreign languages now work when using Quick Edit and Topic Title editing
-Fixed possible bug with IIS not using $_SERVER['REQUEST_URI'] properly
+Cross Site Scripting detection added
 
-Security Fixes
---------------
-Possible use of XSS attack using quick edit
-
-New Features
-------------
-
-Custom Profile Fields
-Password Strength Meter
-Send a PM via Messenger System
-Version number displayed in footer
-Skin selection now dropdown list rather than text box
-New BBcode buttons by Nightmare
-Removed some BBcode buttons for signatures (lists and videos)
-Page navigation rewritten and working at the bottom
-Avatar Upload size is separate from File Upload size
-Settings for file uploads and downloads for each forum
-Re-worked attached file display
-Removed ICQ, MSN, Yahoo and AIM logos from profile editing to make it easier for skinning
-Configurable file upload extensions
-Multiple file uploads per post
-User online/offline status shown next to posts

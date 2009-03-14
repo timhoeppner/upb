@@ -55,7 +55,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 		$cats = $config_tdb->fetchCategories();
 		while(list($type, $title) = each($cats)) {
 			print "
-			        <li><a href='admin_config.php?action=".$type."#skip_nav' title=\"".$title."\"><span>".$title."</span></a></li>";
+			        <li><a href='admin_config.php?action=".$type."#skip_nav' title='".$title."'><span>".$title."</span></a></li>";
 		}
 		echo "    </ul>
 			</div>
@@ -77,9 +77,10 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 					echo "
 		<tr>
 			<td class='area_1' style='width:35%;padding:8px;'><strong>".$configVars[$i]["title"]."</strong>";
-					if($configVars[$i]["description"] != "") echo "<br />".stripslashes($configVars[$i]["description"])."";
+					if($configVars[$i]["description"] != "") echo "<br />".$configVars[$i]["description"]."";
 					echo "</td>
 			<td class='area_2'>";
+
 					switch($configVars[$i]["form_object"]) {
 						default:
 						case "text":
@@ -117,29 +118,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 								}
 							} else print "<i>Unable to display dropdown list</i>";
 							break 1;
-						case "skin":
-              $skins = array();
-              if (is_dir('./skins')) {
-                if ($dh = opendir('./skins')) {
-                  while (($file = readdir($dh)) !== false) {
-               if (substr($file,0,1) != "." and is_dir('./skins/'.$file))
-               $skins[] = $file;
-              }
-              closedir($dh);
-              }
-              }
-              echo "<select name=\"{$configVars[$i]['name']}\">\n";
-              foreach ($skins as $skin)
-              {
-                $selected = "";
-                $value = "./skins/".$skin;
-                if ($value == $configVars[$i]["value"])
-                  $selected = "selected"; 
-                echo "<option value=\"./skins/$skin\" $selected>".stripslashes($skin)."</option>";
-              }
-              echo "</select>";
-							break 1;
-            case "hidden":
+						case "hidden":
 							break 1;
 					}
 					echo "</td>

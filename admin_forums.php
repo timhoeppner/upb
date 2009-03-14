@@ -150,7 +150,7 @@
 						else $cRec[0]["sort"] = $fRec[0]["id"];
 						$tdb->edit("cats", $_POST["cat"], array("sort" => $cRec[0]["sort"]));
 					}
-					$tdb->edit("forums", $_GET["id"], array("forum" => $_POST["u_forum"], "cat" => $_POST["cat"], "des" => $_POST["des"], "view" => $_POST["u_view"], "post" => $_POST["u_post"], "reply" => $_POST["u_reply"], "upload" => $_POST['u_upload'],'download'=>$_POST['u_download']));
+					$tdb->edit("forums", $_GET["id"], array("forum" => $_POST["u_forum"], "cat" => $_POST["cat"], "des" => $_POST["des"], "view" => $_POST["u_view"], "post" => $_POST["u_post"], "reply" => $_POST["u_reply"]));
 					echo "
 						<div class='alert_confirm'>
 						<div class='alert_confirm_text'>
@@ -169,10 +169,8 @@
 					$select .= "</select>";
 					$whoView = "<select size='1' name='u_view'>".createUserPowerMisc($fRec[0]["view"], 1)."</select>";
 					$whoPost = "<select size='1' name='u_post'>".createUserPowerMisc($fRec[0]["post"], 1)."</select>";
-					$whoReply = "<select size='1' name='u_reply'>".createUserPowerMisc($fRec[0]["reply"], 1)."</select>";        
-					$whoUpload = "<select size='1' name='u_upload'>".createUserPowerMisc($fRec[0]["upload"], 1)."</select>";        
-					$whoDownload = "<select size='1' name='u_download'>".createUserPowerMisc($fRec[0]["download"], 1)."</select>";        
-          echo "<form action='".$_SERVER['PHP_SELF']."?action=edit_forum&id=".$_GET["id"]."' method=POST>";
+					$whoReply = "<select size='1' name='u_reply'>".createUserPowerMisc($fRec[0]["reply"], 1)."</select>";
+					echo "<form action='".$_SERVER['PHP_SELF']."?action=edit_forum&id=".$_GET["id"]."' method=POST>";
 		  echoTableHeading("Editing a forum", $_CONFIG);
 					echo "
 			<tr>
@@ -203,19 +201,11 @@
 				<td class='area_2'>$whoReply</td>
 			</tr>
 			<tr>
-				<td class='area_1'><strong>Who can upload files in this forum?</strong></td>
-				<td class='area_2'>$whoUpload</td>
-			</tr>
-			<tr>
-				<td class='area_1'><strong>Who can download files in this forum?</strong></td>
-				<td class='area_2'>$whoDownload</td>
-			</tr>
-			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Forum description</strong></td>
-				<td class='area_2'>".bbcodebuttons('desc','desc')."<textarea cols=30 rows=5 maxlength=50 name='desc'>".$fRec[0]["des"]."</textarea></td>
+				<td class='area_2'><textarea cols=30 rows=5 maxlength=50 name=des>".$fRec[0]["des"]."</textarea></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
@@ -270,14 +260,12 @@
 			//add new forum
 			if (isset($_POST["u_forum"])) {
 				$record = array(
-				"forum" => htmlspecialchars($_POST["u_forum"]),
+				"forum" => $_POST["u_forum"],
 					"cat" => $_POST["cat"],
 					"view" => $_POST["u_view"],
 					"post" => $_POST["u_post"],
 					"reply" => $_POST["u_reply"],
-					"des" => htmlspecialchars($_POST["des"]),
-					"upload" => $_POST['u_upload'],
-					"download" => $_POST['u_download'],
+					"des" => $_POST["des"],
 					"topics" => 0,
 					"posts" => 0 );
 				$_GET["id"] = $tdb->add("forums", $record);
@@ -296,7 +284,7 @@
 					array('edited_by_id', 'number', 7),
 					array('edited_date', 'number', 14),
 					array("id", "id"),
-					array("upload_id", "memo")
+					array("upload_id", "number", 10)
 				));
 				//chown(DB_DIR."/".$_GET["id"].".memo", "nobody");
 				//chown(DB_DIR."/".$_GET["id"].".ref", "nobody");
@@ -341,8 +329,6 @@
 				$whoView = "<select size='1' name='u_view'>".createUserPowerMisc(0, 1)."</select>";
 				$whoPost = "<select size='1' name='u_post'>".createUserPowerMisc(1, 1)."</select>";
 				$whoReply = "<select size='1' name='u_reply'>".createUserPowerMisc(1, 1)."</select>";
-				$whoDownload = "<select size='1' name='u_download'>".createUserPowerMisc(0, 1)."</select>";
-				$whoUpload = "<select size='1' name='u_upload'>".createUserPowerMisc(1, 1)."</select>";
 				echo "<form action='admin_forums.php?action=add_forum' method=POST>";
 		echoTableHeading("Creating a new forum", $_CONFIG);
 				echo "
@@ -351,7 +337,7 @@
 			</tr>";
 				echo "
 			<tr>
-				<td class='area_1' style='width:30%'><strong>Name of new forum</strong></td>
+				<td class='area_1' style='width:20%'><strong>Name of new forum</strong></td>
 				<td class='area_2'><input type=text name=u_forum maxlength=50 size='40'></td>
 			</tr>
 			<tr>
@@ -374,19 +360,11 @@
 				<td class='area_2'>$whoReply</td>
 			</tr>
 			<tr>
-				<td class='area_1'><strong>Who can upload files in this forum?</strong></td>
-				<td class='area_2'>$whoUpload</td>
-			</tr>
-			<tr>
-				<td class='area_1'><strong>Who can download files in this forum?</strong></td>
-				<td class='area_2'>$whoDownload</td>
-			</tr>
-			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Forum description</strong></td>
-				<td class='area_2'>".bbcodebuttons('desc','desc')."<textarea cols='40' rows='5' maxlength='70' name='desc'></textarea></td>
+				<td class='area_2'><textarea cols=30 rows=5 maxlength=70 name=des></textarea></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
@@ -486,12 +464,10 @@
 		    echo "
 			<tr>
 			    <th style='width:7%;'>&nbsp;</th>
-				<th style='width:58%;'>Name</th>
+				<th style='width:68%;'>Name</th>
 				<th style='width:5%;text-align:center;'>View</th>
 				<th style='width:5%;text-align:center;'>Post</th>
 				<th style='width:5%;text-align:center;'>Reply</th>
-				<th style='width:5%;text-align:center;'>Upload</th>
-				<th style='width:5%;text-align:center;'>Download</th>
 				<th style='width:10%;text-align:center;'>Edit?</th>
 				<th style='width:10%;text-align:center;'>Delete?</th>
 			</tr>";
@@ -508,20 +484,26 @@
 			<tr>
 			    <td class='area_1' style='padding:8px;text-align:center;'>";
           if ($i>0) {
-              echo "<span id='enabled_msg'><a href=\"javascript:forumSort('cat',  'up','".$cRecs[$i]['id']."');\"><img src='./images/up.gif'></a></span>";
-              echo "<span id='disabled_msg'><a href='admin_forums.php?action=shift&what=cat&where=up&id=".$cRecs[$i]['id']."'><img src='./images/up.gif'></a></span>";
+            if (isset($_COOKIE['javascript']))
+              echo "<a href=\"javascript:forumSort('cat',  'up','".$cRecs[$i]['id']."');\">";
+            else
+              echo "<a href='admin_forums.php?action=shift&what=cat&where=up&id=".$cRecs[$i]['id']."'>";
+            echo "<img src='./images/up.gif'></a>";
           }
           else 
             echo "&nbsp;&nbsp;&nbsp;";
           if ($i<($c1-1)) {
-              echo "<span id='enabled_msg'><a href=\"javascript:forumSort('cat','down','".$cRecs[$i]['id']."');\"><img src='./images/down.gif'></a></span>";
-              echo "<span id='disabled_msg'><a href='admin_forums.php?action=shift&what=cat&where=down&id=".$cRecs[$i]['id']."'><img src='./images/down.gif'></a></span>";
+            if (isset($_COOKIE['javascript'])) 
+              echo "<a href=\"javascript:forumSort('cat','down','".$cRecs[$i]['id']."');\">";
+            else
+              echo "<a href='admin_forums.php?action=shift&what=cat&where=down&id=".$cRecs[$i]['id']."'>";
+            echo "<img src='./images/down.gif'></a>";
           }
           else
-            echo "&nbsp;&nbsp;&nbsp;";
+            echo "";
         echo "</td>";
 				echo "<td class='area_1' style='padding:8px;'><strong>".$cRecs[$i]["name"]."</strong></td>
-				<td class='area_1' style='padding:8px;text-align:center;' colspan='5'>$view</td>
+				<td class='area_1' style='padding:8px;text-align:center;' colspan=3>$view</td>
 				<td class='area_1' style='padding:8px;text-align:center;'><a href='admin_forums.php?action=edit_cat&id=".$cRecs[$i]["id"]."'>Edit</a></td>
 				<td class='area_1' style='padding:8px;text-align:center;'><a href='admin_forums.php?action=delete_cat&id=".$cRecs[$i]["id"]."'>Delete</a></td>
 			</tr>";
@@ -540,23 +522,26 @@
                 			$whoView = createUserPowerMisc($fRec[0]["view"], 3);
                 			$whoPost = createUserPowerMisc($fRec[0]["post"], 3);
                 			$whoReply = createUserPowerMisc($fRec[0]["reply"], 3);
-                			$whoUpload = createUserPowerMisc($fRec[0]["upload"], 3);
-                			$whoDownload = createUserPowerMisc($fRec[0]["download"], 3);
                 			//show each forum
-                			
-                      echo "
+                			echo "
 			<tr>
 			    <td class='area_2' style='padding:8px;text-align:center;'>";
           
           if ($j>0) {
-              echo "<span id='enabled_msg'><a href=\"javascript:forumSort('forum','up','".$fRec[0]['id']."');\"><img src='./images/up.gif'></a></span>";
-              echo "<span id='disabled_msg'><a href='admin_forums.php?action=shift&what=forum&where=up&id=".$fRec[0]['id']."'><img src='./images/up.gif'></a></span>";
+            if (isset($_COOKIE['javascript']))
+              echo "<a href=\"javascript:forumSort('forum','up','".$fRec[0]['id']."');\">";
+            else
+              echo "<a href='admin_forums.php?action=shift&what=forum&where=up&id=".$fRec[0]['id']."'>";
+            echo "<img src='./images/up.gif'></a>";
           }
           else echo "&nbsp;&nbsp;&nbsp;";
           
           if ($j<($c2-1)) {
-              echo "<span id='enabled_msg'><a href=\"javascript:forumSort('forum','down','".$fRec[0]['id']."');\"><img src='./images/down.gif'></a></span>";
-              echo "<span id='disabled_msg'><a href='admin_forums.php?action=shift&what=forum&where=down&id=".$fRec[0]['id']."'><img src='./images/down.gif'></a></span>";
+            if (isset($_COOKIE['javascript']))
+              echo "<a href=\"javascript:forumSort('forum','down','".$fRec[0]['id']."');\">";
+            else
+              echo "<a href='admin_forums.php?action=shift&what=forum&where=down&id=".$fRec[0]['id']."'>";
+            echo "<img src='./images/down.gif'></a>";
           }
           else echo "&nbsp;&nbsp;&nbsp;";
           
@@ -565,8 +550,6 @@
 				<td class='area_2' style='padding:8px;text-align:center;'>$whoView</td>
 				<td class='area_2' style='padding:8px;text-align:center;'>$whoPost</td>
 				<td class='area_2' style='padding:8px;text-align:center;'>$whoReply</td>
-				<td class='area_2' style='padding:8px;text-align:center;'>$whoUpload</td>
-				<td class='area_2' style='padding:8px;text-align:center;'>$whoDownload</td>
 				<td class='area_2' style='padding:8px;text-align:center;'><a href='admin_forums.php?action=edit_forum&id=".$fRec[0]["id"]."'>Edit</a></td>
 				<td class='area_2' style='padding:8px;text-align:center;'><a href='admin_forums.php?action=delete_forum&id=".$fRec[0]["id"]."'>Delete</a></td>
 			</tr>";

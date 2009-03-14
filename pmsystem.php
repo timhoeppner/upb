@@ -29,7 +29,6 @@
 					<li><a href='pmsystem.php?section=inbox'><span>View Inbox</span></a></li>
 					<li><a href='pmsystem.php?section=outbox'><span>View Outbox</span></a></li>
 					<li><a href='pmblocklist.php'><span>Manage Blocked Users</span></a></li>
-					<li><a href='newpm.php'><span>Send a PM</span></a></li>
 					<!--<li><a href='pmblocklist.php?action=adduser'><span>Block a User</span></a></li>-->
 				</ul>
 			</div>
@@ -124,7 +123,6 @@
 					<li><a href='pmsystem.php?section=inbox'><span>View Inbox</span></a></li>
 					<li><a href='pmsystem.php?section=outbox'><span>View Outbox</span></a></li>
 					<li><a href='pmblocklist.php'><span>Manage Blocked Users</span></a></li>
-					<li><a href='newpm.php'><span>Send a PM</span></a></li>
 					<!--<li><a href='pmblocklist.php?action=adduser'><span>Block a User</span></a></li>-->
 				</ul>
 			</div>
@@ -187,7 +185,6 @@
 					<li><a href='pmsystem.php?section=inbox'><span>View Inbox</span></a></li>
 					<li><a href='pmsystem.php?section=outbox'><span>View Outbox</span></a></li>
 					<li><a href='pmblocklist.php'><span>Manage Blocked Users</span></a></li>
-					<li><a href='newpm.php'><span>Send a PM</span></a></li>
 					<!--<li><a href='pmblocklist.php?action=adduser'><span>Block a User</span></a></li>-->
 				</ul>
 			</div>
@@ -238,7 +235,6 @@
 					<li><a href='pmsystem.php?section=inbox'><span>View Inbox</span></a></li>
 					<li><a href='pmsystem.php?section=outbox'><span>View Outbox</span></a></li>
 					<li><a href='pmblocklist.php'><span>Manage Blocked Users</span></a></li>
-					<li><a href='newpm.php'><span>Send a PM</span></a></li>
 					<!--<li><a href='pmblocklist.php?action=adduser'><span>Block a User</span></a></li>-->
 				</ul>
 			</div>

@@ -1,5 +1,5 @@
 **************************
-UPB 2.2.2 RELEASE NOTES
+UPB 2.2.3 RELEASE NOTES
 **************************
 
 
@@ -14,7 +14,7 @@ Getting Started:
 == UPGRADING FROM 2.1.1b ==
   Backup everything in your forum directory by downloading it to your harddrive
   Upload all the files found in the zip file and overwrite any changed files EXCEPT config.php
-  Execute the update2_2_2.php
+  Execute the update2_2_2.php and update_2_2_3.php
   It should have no errors, if there is then please report them to myupb.com
   DELETE update1.x-2.0.php, update2_2_1.php, update2_2_2.php, and install.php, they are a security risk
 

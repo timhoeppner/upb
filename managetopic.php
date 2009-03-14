@@ -147,7 +147,7 @@
 			$tNewRec = array();
 			if ($_POST["open_forum"] == "0") $tNewRec["locked"] = 0;
 			else $tNewRec["locked"] = 1;
-			$tNewRec["subject"] = str_replace($_CONFIG['sticky_note'], "", encode_text(stripslashes($_POST["subject"])));
+			$tNewRec["subject"] = str_replace($_CONFIG['sticky_note'], "", htmlentities(stripslashes($_POST["subject"])));
 			if ($_POST["sticky"] == "1") $tNewRec["sticky"] = 1;
 			else $tNewRec["sticky"] = 0;
 			$tRec[0]["subject"] = str_replace("[Sticky Note]", "", $tRec[0]["subject"]);
@@ -156,7 +156,7 @@
 			{
 				$p_ids = explode(",", $tRec[0]["p_ids"]);
 				$pRec = $posts_tdb->get("posts", $p_ids[0]);
-				$posts_tdb->edit("posts", $pRec[0]["id"], array("subject" => encode_text(stripslashes($tNewRec["subject"]))));
+				$posts_tdb->edit("posts", $pRec[0]["id"], array("subject" => htmlentities(stripslashes($tNewRec["subject"]))));
 			}
 			$posts_tdb->edit("topics", $_GET["t_id"], $tNewRec);
 			print str_replace('__TITLE__', 'Redirecting:', str_replace('__MSG__', 'Successfully edited topic properties', CONFIRM_MSG));
@@ -411,7 +411,7 @@
 					echo "
 			<tr>
 				<td class='footer_3' colspan='3'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
-			</tr>
+			</tr
 			<tr>
 				<td class='area_1' style='width:5%;text-align:center;padding:20px;' valign='top'><input type='checkbox' name='ids[]' value='{$pRec["id"]}'></td>
 				<td class='area_1' style='width:20%;padding:20px;' valign='top'><span class='link_2'><a href='profile.php?id=".$pRec["user_id"]."'>".$pRec["user_name"]."</a></span></td>

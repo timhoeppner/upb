@@ -31,7 +31,6 @@
 
 	if ($_COOKIE["power_env"] == "" || empty($_COOKIE["power_env"]) || trim($_COOKIE["power_env"]) == "") $_COOKIE["power_env"] = "0";
 	require_once("./includes/header.php");
-
 //print '<pre>'; print_r($_SESSION['newTopics']); print "\n".mkdate(); print '</pre>';
 	if($_COOKIE['power_env'] == '0' && $_REGIST['disable_reg']) {
 	    print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'Public Registration has been disabled.  This may be a private bulletin board.<br /> Please contact an Administrator if you would like to register.', ALERT_MSG));
@@ -187,10 +186,8 @@
 	$whos_t = $whos["users"]+$whos["guests"];
 	$users_string = "";
 	if ($whos["users"] > 0) $users_string = $whos["who"];
-	$mem = $tdb->basicQuery('users','reg_code','',1,-1,array('id','user_name'));
-	$mem_total = count($mem);
-  $mem_last[] = $mem[$mem_total-1];
-
+	$mem_total = $tdb->getNumberOfRecords("users");
+	$mem_last = $tdb->listRec("users", $mem_total, 1);
 	$mt = explode(' ', microtime());
 	$script_end_time = $mt[0] + $mt[1];
 	echo "

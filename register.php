@@ -6,8 +6,7 @@
 	// Using textdb Version: 4.3.2
 	// Ultimate PHP Board Register
 	require_once('./includes/upb.initialize.php');
-
-  $where = "Register";
+	$where = "Register";
 	$required = "#ff0000";
 	if ($tdb->is_logged_in() && $_COOKIE['power_env'] < 3)
 	   exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You cannot register if you are already logged in.', ALERT_MSG)), true);
@@ -96,7 +95,7 @@
 		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You did not fill in all required fields. (*)', ALERT_MSG)), true);
 
 		if($_POST['u_email'] != $_POST['u_email2'])
-		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You\'r e-mail addresses do not match.', ALERT_MSG)), true);
+		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You\'re e-mails do not match.', ALERT_MSG)), true);
 
 	    if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[_a-z0-9-]+(\.[_a-z0-9-]+)*)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["u_email"]))
 		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'Please enter a valid e-mail (ex: you@host.com).', ALERT_MSG)), true);
@@ -174,7 +173,7 @@
                 if(!$_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '1'));
             }
         $_CONFIG['email_mode'] = $email_status;
-         
+
         //Set reg_code if e-mail is sent out
         if($reg_code != '') {
 			clearstatcache();
@@ -232,7 +231,7 @@
 	} else {
 		require_once('./includes/header.php');
 		?> <script language='javascript' src='includes/pwd_strength.js'></script>
-		<?php 
+		<? 
 		// security mod if enabled
 		if ((bool) $_REGIST['security_code'] === true && !$tdb->is_logged_in())
     {
@@ -251,7 +250,7 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='width:45%;'> <strong>User Name:</strong> <span style='color:$required;'>*</span><br />Your identity throughout the bulletin board.</td>
-				<td class='area_2'><input type=text name='u_login' size=40 onblur=\"getUsername(this.value,'reg');\"><span class='err' id='namecheck'></span></td>
+				<td class='area_2'><input type=text name='u_login' size=40 onblur=\"getUsername(this.value);\"><span class='err' id='namecheck'></span></td>
 			</tr>
 			<tr>
 				<td class='area_1'>
@@ -290,7 +289,7 @@
 					<strong>Password:</strong> <span style='color:$required;'>*</span><br />
 					<span style='description'>Your Password must be at least 6 characters long.</span>
 			    </td>
-				<td class='area_2'><input type='password' name='u_pass' size='40' onkeyup=\"runPassword(this.value, 'u_pass');\"><div style=\"font-size: 10px;\">Password Strength: <span id=\"u_pass_text\" style=\"font-size: 10px;\"></span></div></td>
+				<td class='area_2'><input type='password' name='u_pass' size='40' onkeyup=\"runPassword(this.value, 'u_pass');\">&nbsp;Password Strength: <div id=\"u_pass_text\" style=\"font-size: 10px;\"></div></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Confirm Password:</strong> <span style='color:$required;'>*</span></td>
@@ -310,7 +309,7 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='width:45%;'><strong>Location:</strong><br />Where are you from? (it can be anything)</td>
-				<td class='area_2'><input type=text name='u_loca' size='4'></td>
+				<td class='area_2'><input type=text name='u_loca' size='4';</td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Website URL:</strong><br />please include the http:// in front of url</td>

@@ -3,7 +3,7 @@
 	// designed for Ultimate PHP Board
 	// Author: Jerroyd Moore, aka Rebles
 	// Website: http://www.myupb.com
-	// Version: 2.2.2
+	// Version: 2.2.3
 	// Using textdb Version: 4.4.1
 	ignore_user_abort();
 	if (TRUE !== is_writable('config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
@@ -15,7 +15,7 @@
 	    ?><!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.2.1 Installer</title>
+<title>UPB v2.2.3 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>
@@ -31,7 +31,7 @@
 	<br />
 <form action='<?php print $_SERVER['PHP_SELF']; ?>' method='post'>
 	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.2.1 Installer</div>
+		<div class='cat_area_1'>myUPB v2.2.3 Installer</div>
 		<table class='main_table' cellspacing='1'>
 			<tr>
 				<th style='text-align:center;'>&nbsp;</th>
@@ -50,7 +50,19 @@
 					if(!$dir_777) print "You have to chmod upb's root directory to 0777 before you can proceed";
 					else {
 					    print 'Just select "Proceed" below and follow the instructions.<br />';
-					    
+					    /*
+					    $mysql_disabled = ((extension_loaded('mysql')) ? '' : ' disabled');
+					    $pgsql_disabled = ((extension_loaded('pgsql')) ? '' : ' disabled');
+					    $sqlite_disabled = ((extension_loaded('sqlite')) ? '' : ' disabled');
+					   ?>Pick the type of database you wish to use, then select \"Proceed\" below and follow the instructions.<br />
+					   <select name="db_type">
+					     <option value="tdb">TextDB</option>
+					     <option value="mysql"<?php print $mysql_disabled; ?>>MySQL</option>
+					     <option value="pgsql"<?php print $pgsql_disabled; ?>>PostgreSQL</option>
+					     <option value="sqlite"<?php print $sqlite_disabled; ?>>SQLite</option>
+					     <?php
+					   print '</select>';
+					   */
 					} ?><br /><br />
 			<input type='hidden' name='add' value='1' /><input type='submit' value='Proceed'<?php print (($dir_777) ? '': ' DISABLED');?>>
 			</td>
@@ -79,7 +91,7 @@
 		if (!defined('DB_DIR')) {
 			define('DB_DIR', './'.uniqid('data_', true), true);
 			$f = fopen('config.php', 'w');
-			fwrite($f, "<?php\ndefine('UPB_VERSION', '2.2.2', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
+			fwrite($f, "<?php\ndefine('UPB_VERSION', '2.2.3', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
       ?><?php
       //allows syntax highlighting to be work again for coding purposes
 			fclose($f);
@@ -241,7 +253,7 @@
 		?><?php
 		require_once('./includes/class/config.class.php');
 		$config_tdb = new configSettings();
-		$config_tdb->add('ver', '2.2.2', 'config', 'text', 'hidden', '','','','');
+		$config_tdb->add('ver', '2.2.3', 'config', 'text', 'hidden', '','','','');
 		$config_tdb->add('email_mode', '1', 'config', 'bool', 'hidden','','','','');
 		$config_tdb->add('admin_catagory_sorting', '', 'config', 'text', 'hidden', '', '', '', '');
 		$config_tdb->add('banned_words', 'shit,fuck,cunt,pussy,bitch,arse', 'config', 'text', 'hidden', '','','','');
@@ -439,7 +451,7 @@
 		?><!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.2.1 Installer</title>
+<title>UPB v2.2.3 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>
@@ -455,7 +467,7 @@
 	<br />
 <form action='<?php print $_SERVER['PHP_SELF']; ?>' method='post'>
 	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.2.1 Installer</div>
+		<div class='cat_area_1'>myUPB v2.2.3 Installer</div>
 		<table class='main_table' cellspacing='1'>
 			<tr>
 				<th style='text-align:center;'>&nbsp;</th>
@@ -535,7 +547,7 @@
 		if($_POST['register_msg'] != '' && FALSE === strpos($_POST['register_msg'], '<login>')) $error[] = 'You must include the tag &lt;login&gt; in the <b>Register E-mail Message</b> field.';
         if($_POST['register_msg'] != '' && FALSE === strpos($_POST['register_msg'], '<password>')) $error[] = 'You must include the tag &lt;password&gt; in the <b>Register E-mail Message</b> field.';
         if($_POST['register_msg'] != '' && FALSE === strpos($_POST['register_msg'], '<url>')) $error[] = 'You must include the tag &lt;url&gt; in the <b>Register E-mail Message</b> field.';
-        if($_POST['fileupload_size'] == '') $error[] = 'You cannot leave the <b>Size limits for file upload</b> field blank.';
+        if($_POST['fileupload_size'] == '') $error[] = 'You cannot leave the <b>Size limites for file upload</b> field blank.';
         if($_POST['fileupload_size'] != '' && !ctype_digit($_POST['fileupload_size'])) $error[] = 'You must provide a number to the <b>Size limits for file upload</b> field.';
         if($_POST['admin_email'] == '') $error[] = 'You cannot leave the <b>Admin E-mail</b> field blank.';
         if($_POST['admin_email'] != '' && !eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["admin_email"])) $error[] = 'You must provide a <i>valid</i> email for the <b>Admin E-mail</b> field.';
@@ -578,7 +590,7 @@
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.2.1 Installer</title>
+<title>UPB v2.2.3 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>
@@ -678,7 +690,7 @@
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.2.1 Installer</title>
+<title>UPB v2.2.3 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>

@@ -48,16 +48,15 @@
 	if (empty($pRecs)) {
     $msg = 'No posts could be found for this topic';
     if ((int)$_COOKIE["power_env"] >= 2)
-      $msg .= "<br>To delete this topic click <a href='managetopic.php?id=".$_GET['id']."&t_id=".$_GET['t_id']."'>here</a>";
+      $msg .= "<br>To delete this topic click <a href='managetopic.php?id=2&t_id=2'>here</a>";
     die(str_replace('__TITLE__', 'Fatal Error:', str_replace('__MSG__', $msg, ALERT_MSG)).MINIMAL_BODY_FOOTER);
     
     require_once('./includes/footer.php');
     die();
   }
 	$num_pages = ceil(($tRec[0]["replies"] + 1) / $_CONFIG["posts_per_page"]);
-
 	$p = createPageNumbers($vars["page"], $num_pages, $_SERVER['QUERY_STRING']);
-  echo "<div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page'],$num_pages)."</div>";
+  echo "<br /><div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page']) . "</div>";
 	if ($vars['page'] == 1) $first_post = $pRecs[0]['id'];
 	else $first_post = 0;
 	$x = +1;
@@ -65,7 +64,7 @@
   echo "<div name='current_posts' id='current_posts'>";
   foreach($pRecs as $pRec) {
 		// display each post in the current topic
-    echo "
+		echo "
 			<a name='{$pRec['id']}'>
       <div name='post{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='post{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>
       <div class='main_cat_wrapper'>
@@ -85,7 +84,6 @@
 		$status = '';
 		$statuscolor = '';
 		$pm = "";
-
 		if ($pRec["user_id"] != "0") {
 			$user = $tdb->get("users", $pRec["user_id"]);
             if($user === false) {
@@ -124,13 +122,23 @@
     if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1)
       $quote = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&q_id=".$pRec['id']."&page=".$vars["page"]."'>Quote</a></div>"; 
     else $quote = "";
-        
+
+		$uploadId = (int) $pRec["upload_id"];
+        if($uploadId > 0) {
+            //check information is in the upload database
+            $q = $tdb->get("uploads", $uploadId, array("name", "downloads","file_loca"));
+            if(!empty($q[0]) && file_exists($_CONFIG['fileupload_location']."/".$q[0]['file_loca'])) {
+                $attachName = $q[0]["name"];
+                $attachDownloads = $q[0]["downloads"];
+
+                $pRec["message"] = "<div class='download1'><div class='download2'><div class='download3'><div class='download4'><img src='images/attachment.gif' class='example'> Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)</div></div></div></div>\n\n<p>" . $pRec["message"];
+            }
+        }
+
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$vars['page']."'>Add Reply</a></div>";
 		else $reply = "";
-
-    $msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
-		$msg .= "<div id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}-attach'>".$tdb->getUploads($_GET['id'],$_GET['t_id'],$pRec['id'],$pRec['upload_id'],$fRec[0]['download'],$_CONFIG['fileupload_location'],$pRec['user_id'])."</div>";
-    echo "
+		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
+		echo "
 			<tr>
 				<th><div class='post_name'>";
 		if ($pRec["user_id"] != "0") echo "<a href='profile.php?action=get&amp;id=".$pRec["user_id"]."'>".$pRec["user_name"]."</b>";
@@ -139,7 +147,7 @@
 				<th><div style='float:left;'><img src='".SKIN_DIR."/icons/post_icons/".$pRec["icon"]."'></div><div align='right'>$delete $edit $quote $reply</div></th>
 			</tr>
 			<tr>
-				<td class='$table_color' valign='top' style='width:15%;' colspan='$attached'>";
+				<td class='$table_color' valign='top' style='width:15%;'>";
 		if (@$user[0]["avatar"] != "") echo "<br /><img src=\"".$user[0]["avatar"]."\" border='0' alt='' title=''><br />";
 		else if ($pRec["user_id"] != "0")
         echo "<br /><a href='profile.php'><img src='images/avatars/blank.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
@@ -153,23 +161,16 @@
 						".gmdate("Y-m-d", user_date($user[0]["date_added"]))."
 					</div>
 					<br />
-					<img src='images/report.png' alt='Report Post' title='Report Post'> &nbsp;";
-					$online = whos_online($whos_online_log, $_STATUS,'view');
-					if (empty($online['who']) or !in_array($pRec['user_id'],$online['who']))
-            echo "<img src='images/offline.png' alt='User Offline' title='User Offline'>";
-          else
-            echo "<img src='images/online.png' alt='User Online' title='User Online'>";
-          echo "<br />
-          <div class='post_info_extra'>";
+					<div class='post_info_extra'>";
 		if ($user[0]["aim"] != "") echo "&nbsp;<a href='aim:goim?screenname=".$user[0]["aim"]."'><img src='images/aol.gif' border='0' alt='AIM: ".$user[0]["aim"]."'></a>&nbsp;&nbsp;";
 		if ($user[0]["msn"] != "") echo "&nbsp;<a href='http://members.msn.com/".$user[0]["msn"]."' target='_blank'><img src='images/msn.gif' border='0' alt='MSN: ".$user[0]["msn"]."'></a>&nbsp;&nbsp;";
-		if ($user[0]["icq"] != "") echo "&nbsp;<a href='http://www.icq.com/people/cmd.php?uin=".$user[0]["icq"]."&action=message'><img src='images/icq.gif' border='0' alt='ICQ: ".$user[0]["icq"]."'></a>&nbsp;&nbsp;";
+		if ($user[0]["icq"] != "") echo "&nbsp;<a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$user[0]["icq"]."&action=message'><img src='images/icq.gif' border='0' alt='ICQ: ".$user[0]["icq"]."'></a>&nbsp;&nbsp;";
 		if ($user[0]["yahoo"] != "") echo "&nbsp;<a href='http://edit.yahoo.com/config/send_webmesg?.target=".$user[0]["yahoo"]."&.src=pg'><img border=0 src='http://opi.yahoo.com/online?u=".$user[0]["yahoo"]."&m=g&t=0' alt='Y!: ".$user[0]["yahoo"]."'></a>";
 
 		echo"</div>";
 		echo "</td>
 				<td class='$table_color' valign='top'>
-					<div class='msg_block' id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' name='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>$msg</div>
+					<div style='width:85%;padding:12px;margin-bottom:20px;overflow:auto;' id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' name='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>$msg</div>
 					<div style='padding:12px;'>".$sig."</div></td>
 			</tr>
 			<tr>
@@ -177,6 +178,7 @@
 				if ($pRec["user_id"] != "0") echo "";
 		if ($pm != "") echo $pm."";
 
+        //echo "<div name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' style='float: right;'>";
 		if (!empty($pRec['edited_by']) && !empty($pRec['edited_by_id']) && !empty($pRec['edited_date'])) echo "
 					<div class='post_edited' name='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='edit{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>Last edited by: <a href='profile.php?action=get&id=".$pRec['edited_by_id']." target='_blank'><strong>".$pRec['edited_by']."</strong></a> on ".gmdate("M d, Y g:i:s a", user_date($pRec['edited_date']))."</div>";
 		else
@@ -195,11 +197,13 @@
 
   }
 	echo "</div>";
-  echo "<div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,$vars['page'],$num_pages,"bottom") . "</div>";
-  
-  if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0 ) and $tRec[0]['locked'] != 1)
+
+	//$p = createPageNumbers($vars['page'], $num_pages, $_SERVER['QUERY_STRING']);
+  //echo "<div id='pagelink1' name='pagelink1'>" . $posts_tdb->d_posting($p,$vars['page']) . "</div>";
+  //echo "<div id='pagelink2' name='pagelink2'>" . $posts_tdb->d_posting($p,$vars['page'],"bottom") . "</div>";
+	if (!($_COOKIE["power_env"] < $fRec[0]["post"] && $_GET["t"] == 1 || $_COOKIE["power_env"] < $fRec[0]["reply"] && $_GET["t"] == 0 ) and $tRec[0]['locked'] != 1)
 {
-  echo "<br /><div id='enabled_msg'><div id='quickreplyform' name='quickreplyform'>";
+  echo "<div id='enabled_msg'><div id='quickreplyform' name='quickreplyform'>";
   echo "<form name='quickreplyfm' action='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$vars["page"]."' id='quickreplyfm' method='POST'>\n";
   echoTableHeading("Quick Reply", $_CONFIG);
   echo "<table class='main_table' cellspacing='1'>";
