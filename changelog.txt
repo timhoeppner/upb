@@ -1,6 +1,0 @@
-This is the changelog for this product's working copy.
-
-IMPORTANT SECURITY UPDATE
-
-Cross Site Scripting detection added
-
