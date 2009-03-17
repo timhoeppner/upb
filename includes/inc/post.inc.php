@@ -28,14 +28,10 @@ function message_icons()
   return $output;
 }
 
-function format_text($text,$type='') {
-    if ($type != 'edit')
-    {
-      $text = str_replace("\n", "<br />", $text);
-      $text = str_replace("  ", "&nbsp; ", $text);
-      $text = str_replace("&amp;#", "&#", $text);
-    }
-    $text = str_replace('&lt;x&gt;','',$text);
+function format_text($text) {
+    $text = str_replace("\n", "<br />", $text);
+    $text = str_replace("  ", "&nbsp; ", $text);
+    $text = str_replace("&amp;#", "&#", $text);
     return $text;
 }
 
@@ -43,7 +39,7 @@ function format_text($text,$type='') {
 
 function encode_text($text)
 {
-  $string = str_replace(array('<','>',),array('&lt;','&gt;'),$text);
+  $string = str_replace(array('<','>'),array('&lt;','&gt;'),$text);
   return $string;
 }
 

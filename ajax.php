@@ -21,7 +21,7 @@ switch ($ajax_type)
       $output .= "<input type='hidden' id='userid' name='userid' value='".$_POST["userid"]."'>";
       $output .= "<input type='hidden' id='threadid' name='threadid' value='".$_POST["threadid"]."'>";
       $output .= "<input type='hidden' id='postid' name='postid' value='".$_POST["postid"]."'>";
-      $output .= "<textarea name='newedit' id='newedit' cols='60' rows='18'>".format_text($pRec[0]['message'],'edit')."</textarea><br>";
+      $output .= "<textarea name='newedit' id='newedit' cols='60' rows='18'>".$pRec[0]['message']."</textarea><br>";
       $output .= "\n<input type='button' onclick='javascript:getEdit(document.getElementById(\"quickedit\"),\"".$_POST['divname']."\");'\' name='qedit' value='Save'>";
       $output .= "\n<input type='button' name='cancel_edit' onClick=\"javascript:getPost('".$_POST["userid"]."','".$_POST["forumid"]."-".$_POST["threadid"]."-".$_POST["postid"]."','cancel');\" value='Cancel'>";
       $output .= "\n<input type='submit' name='submit' value='Advanced'>";
@@ -62,7 +62,7 @@ switch ($ajax_type)
         }
     }
 
-    $msg = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($attach_msg.$_POST["newedit"])))), $_CONFIG));
+    $msg = format_text(filterLanguage(UPBcoding(utf8_decode(stripslashes($attach_msg.$_POST["newedit"]))), $_CONFIG));
 
     $dbmsg = encode_text(stripslashes(utf8_decode($attach_msg.$_POST["newedit"])),ENT_NOQUOTES);
 
@@ -88,7 +88,7 @@ switch ($ajax_type)
             $msg = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n". $msg;
         }
     }
-    //$msg = format_text(filterLanguage(utf8_decode(stripslashes($msg)), $_CONFIG));
+    $msg = format_text(filterLanguage(utf8_decode(stripslashes($msg)), $_CONFIG));
 
     $div = $_POST['forumid']."-".$_POST['threadid']."-".$_POST['postid'];
 
@@ -250,9 +250,8 @@ switch ($ajax_type)
 
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_POST["id"]."&t=0&t_id=".$_POST["t_id"]."&page=$page'>Add Reply</a></div>";
 		else $reply = "";
-
-		$msg = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($pRec["message"])))), $_CONFIG));
-    $output .= "
+		$msg = format_text(filterLanguage(UPBcoding($pRec["message"]), $_CONFIG));
+		$output .= "
 			<tr>
 				<th><div class='post_name'>";
 		if ($pRec["user_id"] != "0") $output .= "<a href='profile.php?action=get&id=".$pRec["user_id"]."'>".$pRec["user_name"]."</b>";

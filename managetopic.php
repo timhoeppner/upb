@@ -394,7 +394,7 @@
 			}
 			echo "
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Submit' name='submit2'><input type='reset' value='Reset' name='Reset'></td>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='button' value='Submit' name='submit2'><input type='reset' value='Reset' name='Reset'></td>
 			</tr>
 		</form>";
 	   echoTableFooter(SKIN_DIR);
