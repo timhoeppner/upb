@@ -1294,17 +1294,18 @@ class tdb {
     function parseQueryString($query) {
         if(trim($query) == "") return FALSE;
 
-        //first thing is first, we need to find out if we are using =,?,<,>
+        //first thing is first, we need to find out if we are using =,?,<,>,!
         $pos1 = strpos($query, "=");
         $pos2 = strpos($query, "?");
         $pos3 = strpos($query, ">");
         $pos4 = strpos($query, "<");
+        $pos5 = strpos($query, "!");
 
         $pointer = 0;
         $result = array();
         $lenquery = strlen($query);
         $i = 0;
-        while($pos1 !== FALSE || $pos2 !== FALSE || $pos3 !== FALSE || $pos4 !== FALSE) {
+        while($pos1 !== FALSE || $pos2 !== FALSE || $pos3 !== FALSE || $pos4 !== FALSE || $pos5 !== FALSE) {
             //find out which one came first
             $pos = FALSE;
 
@@ -1326,6 +1327,10 @@ class tdb {
             if($pos4 !== FALSE && $pos4 < $pos || $pos4 !== FALSE && $pos === FALSE) {
                 $pos = $pos4;
                 $type = "<";
+            }
+            if($pos5 !== FALSE && $pos5 < $pos || $pos5 !== FALSE && $pos === FALSE) {
+                $pos = $pos5;
+                $type = "!";
             }
 
             $field = substr($query, $pointer, ($pos - $pointer));
@@ -1361,6 +1366,7 @@ class tdb {
             $pos2 = strpos($query, "?", $pointer);
             $pos3 = strpos($query, ">", $pointer);
             $pos4 = strpos($query, "<", $pointer);
+            $pos5 = strpos($query, "!", $pointer);
         }
 
         if($result !== FALSE) return $result;
@@ -1474,8 +1480,10 @@ class tdb {
                         if((double) $fieldValue >= (double) $value) $pass = false;
                     } elseif($query[$i]["type"] == ">") {
                         if((double) $fieldValue <= (double) $value) $pass = false;
+                    } elseif($query[$i]["type"] == "!") {
+                        if(trim(strtolower($fieldValue)) == strtolower($value)) $pass = false;
                     } else {
-                        $this->sendError(E_USER_ERROR, "Invalid query syntax, missing '?' or '='", __LINE__);
+                        $this->sendError(E_USER_ERROR, "Invalid query syntax, missing operator (=,?,>,<,!)", __LINE__);
                         $pass = false;
                     }
                 }

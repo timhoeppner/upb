@@ -6,22 +6,6 @@
 // Using textdb Version: 4.3.2
 require_once('./includes/upb.initialize.php');
 
-/*if ($_POST['status'] == "set")
-{
-  if ($)
-  $sig = format_text(filterLanguage(UPBcoding($_POST["sig"]), $_CONFIG));
-  $sig_title = "<strong>Signature Preview:</strong><br>To save this signature press Submit below";
-      }
-      else
-      {
-        $rec = $tdb->get("users", $_POST["id"]);
-        $sig = format_text(filterLanguage(UPBcoding($rec[0]['sig']), $_CONFIG));
-        $sig_title = "<strong>Current Signature:</strong>";
-      }
-      echo $sig."<!--divider-->".$sig_title;
-
-      die();
-}*/
 if(!isset($_GET['action']) || $_GET['action'] == '') $_GET['action'] = 'edit';
 if ($_GET['action'] == "get" || $_GET['action'] == 'view') $where = "Member Profile";
 elseif ($_GET['action'] == "bookmarks") $where = "Favorited Topics";
@@ -330,7 +314,7 @@ if (isset($_POST["u_edit"])) {
 		echoTableHeading("Other Information", $_CONFIG);
 		echo "
 			<tr>
-				<td class='area_1' style='width:35%;'><strong>Homepage:</strong></td>
+				<td class='area_1' style='width:20%;'><strong>Homepage:</strong></td>
 				<td class='area_2'><input type='text' name='u_site' value='";
     if ($rec[0]["url"] == '')
       echo "http://";
@@ -342,19 +326,19 @@ if (isset($_POST["u_edit"])) {
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='bar_icq'><strong>ICQ:</strong></td>
+				<td class='area_1'><strong>ICQ:</strong></td>
 				<td class='area_2'><input type='text' name='u_icq' value='".$rec[0]["icq"]."' /></td>
 			</tr>
 			<tr>
-				<td class='bar_aim'><strong>AIM:</strong></td>
+				<td class='area_1'><strong>AIM:</strong></td>
 				<td class='area_2'><input type='text' name='u_aim' value='".$rec[0]["aim"]."' /> </td>
 			</tr>
 			<tr>
-				<td class='bar_yim'><strong>Yahoo!:</strong></td>
+				<td class='area_1'><strong>Yahoo!:</strong></td>
 				<td class='area_2'><input type='text' name='u_yahoo' value='".$rec[0]["yahoo"]."' /></td>
 			</tr>
 			<tr>
-				<td class='bar_msnm'><strong>MSN:</strong></td>
+				<td class='area_1'><strong>MSN:</strong></td>
 				<td class='area_2'><input type='text' name='u_msn' value='".$rec[0]["msn"]."' /></td>
 			</tr>
 			<tr>
@@ -362,10 +346,10 @@ if (isset($_POST["u_edit"])) {
 			</tr>
     <tr>
 				<td class='area_1' valign='top'><strong>Signature:</strong></td>
-				<td class='area_2'>".bbcodebuttons('u_sig','sig')."<textarea id='u_sig' name='u_sig' cols='45' rows='10'>".$rec[0]["sig"]."</textarea><br /><input type='button' onclick=\"javascript:sigPreview(document.getElementById('newentry'),'".$_COOKIE['id_env']."','set');\" value='Preview Signature' /></td></tr>
+				<td class='area_2'>".bbcodebuttons('u_sig','sig')."<textarea id='u_sig' name='u_sig' cols='45' rows='10'>".format_text(encode_text($rec[0]["sig"]),'edit')."</textarea><br /><input type='button' onclick=\"javascript:sigPreview(document.getElementById('u_sig'),'".$_COOKIE['id_env']."','set');\" value='Preview Signature' /></td></tr>
 			<tr>
 				<td class='area_1' valign='top'><div id='sig_title'><strong>Current Signature:</strong></div></td>
-				<td class='area_2'><div style='display:inline;' id='sig_preview'>".format_text(filterLanguage(UPBcoding($rec[0]["sig"]), $_CONFIG))."</div></td>
+				<td class='area_2'><div style='display:inline;' id='sig_preview'>".display_msg($rec[0]["sig"])."</div></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
@@ -376,7 +360,7 @@ if (isset($_POST["u_edit"])) {
       print timezonelist($rec[0]["timezone"]);
 			echo "</td></tr>
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='reset' name='reset' value='Reset' onclick=\"javascript:sigPreview(document.getElementById('newentry'),'".$_COOKIE['id_env']."','reset');\" /><input type='submit' name='u_edit' value='Submit' /></td>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='reset' name='reset' value='Reset' onclick=\"javascript:sigPreview(document.getElementById('u_sig'),'".$_COOKIE['id_env']."','reset');\" /><input type='submit' name='u_edit' value='Submit' /></td>
 			</tr>";
     echoTableFooter(SKIN_DIR);
     echo "</form>";

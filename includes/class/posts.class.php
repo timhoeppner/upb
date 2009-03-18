@@ -90,13 +90,12 @@ class posts extends tdb {
 		return true;
 	}
 
-	function d_posting($page_string, $page, $position = "top")
+	function d_posting($page_string, $page,$num_pages, $position = "top")
   {
     if(!$this->check_topic() || !$this->check_forum() || !$this->check_user_info()) return false;
-    $output = "<br><div id='tabstyle_pagenum'>
-  <span class='pagination_current'>Page:</span>$page_string
-   </div>
-      <div style='clear:both;'></div>";
+    $output = "";
+    if ($num_pages != 1)
+    $output .= "<table><tr><td class='pagination_title'>Pages ($num_pages):</td>$page_string</tr></table><div style='clear:both;'></div>";
       if ($position == "top")
       {
       $output .= "<div class='tabstyle_1'>

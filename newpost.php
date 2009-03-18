@@ -13,7 +13,7 @@
 	$message = "";
   if (!empty($_POST))
 		{
-      $message = stripslashes($_POST['newentry']);
+      $message = format_text(encode_text($_POST['newentry']),'edit');
       foreach ($_POST as $key => $value)
       {
         $_GET[$key] = $value;

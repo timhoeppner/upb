@@ -620,8 +620,10 @@ var http_request = false;
         http_request.onreadystatechange = SortForums;
       else if (type == 'username')
         http_request.onreadystatechange = CheckUsername;
-      else if (type == 'email')
-        http_request.onreadystatechange = CheckEmail;
+      else if (type == 'emailcheck')
+        http_request.onreadystatechange = EmailCheck;
+      else if (type == 'emailvalid')
+        http_request.onreadystatechange = EmailValid;
       else
         http_request.onreadystatechange = Error;
       http_request.open('POST', url, true);
@@ -725,8 +727,8 @@ var http_request = false;
             document.getElementById('current_posts').innerHTML = result_array[0];
             
             document.getElementById('pagelink1').innerHTML = result_array[1];
-            //document.getElementById('pagelink2').innerHTML = result_array[2];
-            document.getElementById('quickreplyform').innerHTML = result_array[2];
+            document.getElementById('pagelink2').innerHTML = result_array[2];
+            document.getElementById('quickreplyform').innerHTML = result_array[3];
          } else {
             alert(http_request.status)
             alert('There was a problem with the request.');
@@ -744,7 +746,12 @@ var http_request = false;
       if (http_request.readyState == 4) {
          if (http_request.status == 200) {
             result = http_request.responseText;
-            document.getElementById('namecheck').innerHTML = result;
+            result_array = result.split("<!--divider-->");
+            if (result_array[0] == "false")
+              document.getElementById('submit').disabled = true;
+            else
+              document.getElementById('submit').disabled = false;
+            document.getElementById('namecheck').innerHTML = result_array[1];
          } else {
             alert(http_request.status)
             alert('There was a problem with the request.');
@@ -752,7 +759,30 @@ var http_request = false;
       }
    }
    
-   function CheckEmail() {
+   function EmailValid() {
+      
+      if (http_request.readyState == 3)
+      {
+        html = "<img src='images/spinner.gif' alt='' title='' style='vertical-align: middle;'>Checking Email Address";
+        document.getElementById('emailvalid').innerHTML = html;
+      }
+      if (http_request.readyState == 4) {
+         if (http_request.status == 200) {
+            result = http_request.responseText;
+            result_array = result.split("<!--divider-->");
+            if (result_array[0] == "false")
+              document.getElementById('submit').disabled = true;
+            else
+              document.getElementById('submit').disabled = false;
+            document.getElementById('emailvalid').innerHTML = result_array[1];
+         } else {
+            alert(http_request.status)
+            alert('There was a problem with the request.');
+         }
+      }
+   }
+   
+   function EmailCheck() {
       
       if (http_request.readyState == 3)
       {
@@ -762,7 +792,12 @@ var http_request = false;
       if (http_request.readyState == 4) {
          if (http_request.status == 200) {
             result = http_request.responseText;
-            document.getElementById('emailcheck').innerHTML = result;
+            result_array = result.split("<!--divider-->");
+            if (result_array[0] == "false")
+              document.getElementById('submit').disabled = true;
+            else
+              document.getElementById('submit').disabled = false;
+            document.getElementById('emailcheck').innerHTML = result_array[1];
          } else {
             alert(http_request.status)
             alert('There was a problem with the request.');
@@ -843,8 +878,7 @@ var http_request = false;
     poststr += "&status="+escape(Utf8.encode(status));
     poststr += "&type=sig";
     
-    //makePOSTRequest('./ajax.php', poststr,'sig'); 
-    makePOSTRequest('./profile.php', poststr,'sig'); 
+    makePOSTRequest('./ajax.php', poststr,'sig');  
     }
     
     function getUsername(username)
@@ -854,11 +888,19 @@ var http_request = false;
       makePOSTRequest('./ajax.php',poststr,'username');
     }
     
-    function getEmail(email)
+    function ValidEmail(email)
     {
       var poststr = 'email='+escape(Utf8.encode(email));
-      poststr += '&type=email';
-      makePOSTRequest('./ajax.php',poststr,'email');
+      poststr += '&type=emailvalid';
+      makePOSTRequest('./ajax.php',poststr,'emailvalid');
+    }
+    
+    function CheckEmail(email1,email2)
+    {
+      var poststr = 'email1='+escape(Utf8.encode(email1));
+      poststr += '&email2='+escape(Utf8.encode(email2));
+      poststr += '&type=emailcheck';
+      makePOSTRequest('./ajax.php',poststr,'emailcheck');
     }
 //END OF AJAX SCRIPTS
 

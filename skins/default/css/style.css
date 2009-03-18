@@ -106,7 +106,7 @@ textarea#u_sig {
 textarea#newedit {
 	font-family: Tahoma, sans-serif;
 	font-size: 11px;
-	width: 600px;
+	width: 500px;
 	height: 200px;
 	background-image: url(bg.gif);
 	background-position: bottom right;
@@ -519,6 +519,19 @@ vertical-align: middle;
 	margin: 0 1px 0 0;
 	position:relative;
 }
+
+/* This controls the look of the current page box */
+.pagination_title {
+	font-size : 10px;
+	color : #333333;
+	background-color : #a8bad3;
+	padding:2px;
+	border: 1px solid #0b2a4f;
+	margin: 0 1px 0 0;
+	position:relative;
+	text-align: center;
+}
+
 .pagination_current a:link, .pagination_current a:visited, .pagination_current a:active { 
 	color : #FFFFFF;
 	text-decoration : underline;

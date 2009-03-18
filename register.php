@@ -242,7 +242,7 @@
 		  // rather than the hidden field we have
 		  $_SESSION['u_keycheck'] = $verify_string;
 		}
-    echo "<form name='registration' action='register.php' method='POST'>";
+    echo "<form name='registration' id='registration' action='register.php' method='POST'>";
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
 			<tr>
@@ -254,16 +254,15 @@
 			</tr>
 			<tr>
 				<td class='area_1'>
-					<strong>E-mail Address:</strong> <span style='color:$required;'>*</span><br />
-					<span style='description'>Must be a valid email address (you@host.com).";
+					<strong>E-mail Address:</strong> <span style='color:$required;'>*</span>";
           if ((bool)$_REGIST['security_code'] && !$tdb->is_logged_in())
-          echo "A confirmation e-mail is sent to the email address that you provide.<br>If you use a hotmail email account, please be aware that there have been alot of missing activation emails. This is a hotmail problem.";
-          echo "</span></td>
-				<td class='area_2'><input type=text name='u_email' size='40' onblur=\"getEmail(this.value);\"><span class='err' id='emailcheck'></span></td>
+          echo "<br /><span class='description'>A confirmation e-mail is sent to the email address that you provide.</span>";
+          echo "</td>
+				<td class='area_2'><input type='text' name='u_email' size='40' onblur=\"ValidEmail(this.value);\"><span class='err' id='emailvalid'></span></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Confirm E-mail Address:</strong> <span style='color:$required;'>*</span></td>
-				<td class='area_2'><input type='text' name='u_email2' size='40'></td>
+				<td class='area_2'><input type='text' name='u_email2' size='40' onblur=\"CheckEmail(document.registration.u_email.value,this.value);\"><span class='err' id='emailcheck'></span></td>
 			</tr>
 			<tr>
 				<td class='area_1'>
@@ -287,13 +286,13 @@
 			<tr>
 				<td class='area_1'>
 					<strong>Password:</strong> <span style='color:$required;'>*</span><br />
-					<span style='description'>Your Password must be at least 6 characters long.</span>
+					<span class='description'>Your Password must be at least 6 characters long.</span>
 			    </td>
-				<td class='area_2'><input type='password' name='u_pass' size='40' onkeyup=\"runPassword(this.value, 'u_pass');\">&nbsp;Password Strength: <div id=\"u_pass_text\" style=\"font-size: 10px;\"></div></td>
+				<td class='area_2'><input type='password' name='u_pass' size='40'></div></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Confirm Password:</strong> <span style='color:$required;'>*</span></td>
-				<td class='area_2'><input type=password name=u_pass2 size=40></td>
+				<td class='area_2'><input type='password' name='u_pass2' size='40'></td>
 			</tr>";
 			print "<tr>
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
@@ -324,19 +323,19 @@
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='bar_icq'><strong>ICQ:</strong><br />If you have ICQ put your number here</td>
+				<td class='area_1'><strong>ICQ:</strong><br />If you have ICQ put your number here</td>
 				<td class='area_2'><input type=text name=u_icq size=40></td>
 			</tr>
 			<tr>
-				<td class='bar_aim'><strong>AIM:</strong><br />If you have AOL Instant messanger, please type your SN</td>
+				<td class='area_1'><strong>AIM:</strong><br />If you have AOL Instant messanger, please type your SN</td>
 				<td class='area_2'><input type=text name=u_aim size=40></td>
 			</tr>
 			<tr>
-				<td class='bar_yim'><strong>Yahoo!:</strong><br />If you have Yahoo! messanger, please type your SN</td>
+				<td class='area_1'><strong>Yahoo!:</strong><br />If you have Yahoo! messanger, please type your SN</td>
 				<td class='area_2'><input type=text name=u_yahoo size=40></td>
 			</tr>
 			<tr>
-				<td class='bar_msnm'><strong>MSN:</strong><br />If you have MSN Instant messanger please type your SN</td>
+				<td class='area_1'><strong>MSN:</strong><br />If you have MSN Instant messanger please type your SN</td>
 				<td class='area_2'><input type=text name=u_msn size=40></td>
 			</tr>
 			<tr>
@@ -354,7 +353,7 @@
 				<td class='area_2'>".timezonelist()."</td></tr>";
 		echo "
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit name=submit value='Submit'></td>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' id='submit' name='submit' value='Submit' disabled>&nbsp;<input type='reset' id='reset' name='reset' value='Reset'></td>
 			</tr>";
 		echoTableFooter(SKIN_DIR);
     echo "</form>";

@@ -28,10 +28,14 @@ function message_icons()
   return $output;
 }
 
-function format_text($text) {
-    $text = str_replace("\n", "<br />", $text);
-    $text = str_replace("  ", "&nbsp; ", $text);
-    $text = str_replace("&amp;#", "&#", $text);
+function format_text($text,$type='') {
+    if ($type != 'edit')
+    {
+      $text = str_replace("\n", "<br />", $text);
+      $text = str_replace("  ", "&nbsp; ", $text);
+      $text = str_replace("&amp;#", "&#", $text);
+    }
+    $text = str_replace('&lt;x&gt;','',$text);
     return $text;
 }
 
@@ -134,7 +138,6 @@ function UPBcoding($text) {
     
     foreach($code_matches[1] as $thecode) {
     	$newcode = "<?php\n".$thecode."\n?>";
-    	?><?php //allows code highlighting to show again in editors
     	$newcode = str_replace(array('&lt;','&gt;','&quot;'),array('<','>', '"'),$newcode);
     	$newcode = highlight_string($newcode, true);
     	$newcode = str_replace("<font color=\"#0000BB\">&lt;?php", "<font>", $newcode);
@@ -227,6 +230,8 @@ function bbcodebuttons($txtarea='message',$type='post') {
     $bb_buttons .= "<a href=\"javascript:add_link('img','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/img.gif' border='0' title='image' /></a> ";
     $bb_buttons .= "<a href=\"javascript:add_link('url','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/url.gif' border='0' title='url' /></a> ";
     $bb_buttons .= "<a href=\"javascript:add_link('email','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/email.gif' border='0' title='email' /></a>";
+    if ($type != 'sig' and $type != 'desc')
+    {
     $bb_buttons .= "<img src='".SKIN_DIR."/images/bbcode/separator.gif' border='0' title='' />";
     $bb_buttons .= "<a href=\"javascript:add_list('ul','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/ul.gif' border='0' title='unordered list' /></a> ";
     $bb_buttons .= "<a href=\"javascript:add_list('ol','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/ol.gif' border='0' title='ordered list' /></a>";
@@ -237,6 +242,7 @@ function bbcodebuttons($txtarea='message',$type='post') {
     $bb_buttons .= "<img src='".SKIN_DIR."/images/bbcode/separator.gif' border='0' title='' />";
     $bb_buttons .= "<a href=\"javascript:add_link('google','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/google.gif' border='0' title='off topic' /></a> ";
     $bb_buttons .= "<a href=\"javascript:add_link('youtube','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/youtube.gif' border='0' title='off topic' /></a>";
+    }
     $bb_buttons .= "<img src='".SKIN_DIR."/images/bbcode/separator.gif' border='0' title='' />";
     $bb_buttons .= "<a href=\"javascript:removeBBcode('$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/removeformat.gif' border='0' title='remove bbcode' /></a></div>";
 
@@ -292,4 +298,14 @@ if ($user[0]["level"] == "1") {
 			$statconf = array('status' => $status,'statuscolor'=>$statuscolor);
       return $statconf;
 }
+
+function display_msg($text,$attach = '')
+{
+  $text = filterLanguage(format_text(encode_text(UPBcoding($text))), $_CONFIG);
+  if(get_magic_quotes_gpc())
+    return stripslashes($text);
+  else
+    return $text;
+}
+
 ?>

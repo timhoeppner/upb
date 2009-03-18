@@ -28,8 +28,6 @@
 		exit;
 	} elseif($_POST["s"] == 1) {
   
-		$_POST['subject'] = htmlentities(stripslashes($_POST['subject']));
-		$_POST['message'] = htmlentities(stripslashes($_POST['message']));
 		$error_msg = "";
 		if (!isset($_POST["icon"])) {
 			$error_msg .= str_replace('__TITLE__','Caution!',str_replace('__MSG__',"Must be submitted through the form.",ALERT_MSG));
