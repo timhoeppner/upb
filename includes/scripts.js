@@ -15,6 +15,28 @@
 	}
 }());
 
+
+ var message="Right Click Disabled";
+ function click(z) {
+  if (document.all) {
+   if (event.button == 2) {
+    alert(message);
+    return false;
+   }
+  }
+  if (document.layers) {
+   if (z.which == 3) {
+    alert(message);
+    return false;
+   }
+  }
+ }
+ if (document.layers) {
+  document.captureEvents(Event.MOUSEDOWN);
+ }
+ document.onmousedown=click;
+
+
 //START OF BBCODE SCRIPTS
 var clientInfo = navigator.userAgent.toLowerCase();
 var isIE = ( clientInfo.indexOf("msie") != -1 );
@@ -881,10 +903,11 @@ var http_request = false;
     makePOSTRequest('./ajax.php', poststr,'sig');  
     }
     
-    function getUsername(username)
+    function getUsername(username,area)
     {
       var poststr = 'username='+escape(Utf8.encode(username));
       poststr += '&type=username';
+      poststr += '&area='+escape(Utf8.encode(area));
       makePOSTRequest('./ajax.php',poststr,'username');
     }
     

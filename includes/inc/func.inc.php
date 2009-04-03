@@ -169,9 +169,9 @@ function createPageNumbers($current_page, $total_number_of_pages, $url_string=''
     else {
         if ($current_page != 1)
           $pageStr = "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=".($current_page-1)."'><</a></td>";
-        if ($current_page-3 != 1 and $current_page-3 > 1)
+        if ($current_page-2 != 1 and $current_page-2 > 1)
               $pageStr .= "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=1'>1</a></td><td>...</td>";
-        for($i=($current_page-3);$i<=($current_page+3);$i++) {
+        for($i=($current_page-2);$i<=($current_page+2);$i++) {
             if ($i < 1)
               continue;
             if ($i > $num_pages)
@@ -181,7 +181,7 @@ function createPageNumbers($current_page, $total_number_of_pages, $url_string=''
             else 
               $pageStr .= "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=".$i."'>".$i."</a></td> ";
         }
-        if ($current_page+3 < $num_pages)
+        if ($current_page+2 < $num_pages)
               $pageStr .= "<td>...</td><td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=$num_pages'>$num_pages</a></td>";
         
         if ($current_page != $num_pages)

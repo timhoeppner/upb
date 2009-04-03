@@ -171,15 +171,19 @@
 		        if($_POST['verify'] == 'Ok') {
 		            $ids = unserialize(stripslashes($_POST['ids']));
 		            $p_ids = explode(',', $tRec[0]['p_ids']);
+		            
 		            foreach($ids as $id) {
 		                if(FALSE !== ($key = array_search($id, $p_ids))) unset($p_ids[$key]);
 		                $posts_tdb->delete('posts', $id);
 		            }
-		            $posts_tdb->edit('topics', $_GET['t_id'], array("p_ids" => implode(',', $p_ids)));
+		            $tRec = $posts_tdb->get("topics", $_GET["t_id"]);
+                
+                $replies = $tRec[0]['replies'] - count($ids);          
+                $posts_tdb->edit('topics', $_GET['t_id'], array("p_ids" => implode(',', $p_ids),'replies'=>$replies));
 		            require_once('./includes/header.php');
 		            print str_replace('__TITLE__', 'Redirecting:', str_replace('__MSG__', 'Successfully deleted '.count($ids).' post(s).', CONFIRM_MSG));
 		            include_once './includes/footer.php';
-		            redirect("{$_SERVER['PHP_SELF']}?id={$_GET['id']}&t_id={$_GET['t_id']}", 2);
+		            //redirect("{$_SERVER['PHP_SELF']}?id={$_GET['id']}&t_id={$_GET['t_id']}", 2);
 		        } elseif($_POST['verify'] == 'Cancel') {
 		            include_once './includes/footer.php';
 		            redirect("{$_SERVER['PHP_SELF']}?id={$_GET['id']}&t_id={$_GET['t_id']}", 0);
@@ -208,19 +212,21 @@
 				$ids = explode(",", $ids);
 				$count = count($ids);
 				$num = 0;
-				foreach($ids as $p_id) {
+				
+        foreach($ids as $p_id) {
 					$posts_tdb->delete("posts", $p_id, false);
 					$key = array_search($p_id, $p_ids);
 					unset($p_ids[$key]);
 					$num++;
 					unset($key);
 				}
+			
 				$posts_tdb->reBuild("posts");
 				$p_ids = implode(",", $p_ids);
 				$posts_tdb->edit("topics", $_GET["t_id"], array("p_ids" => $p_ids));
 				echo "Successfully deleted ".$num." Post(s)";
 				require_once("./includes/footer.php");
-				redirect($_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"], "2");
+				//redirect($_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"], "2");
 				exit;
 			} elseif($_POST["verify"] == "Cancel") {
 				unset($_POST["action"]);
@@ -420,7 +426,7 @@
 				}
 				echo "
 			<tr>
-				<td class='footer_3a' colspan='3' style='text-align:center;'><input type='submit' value='Delete Selected' name='action' onclick=\"alert('Button clicked')\"/></td>
+				<td class='footer_3a' colspan='3' style='text-align:center;'><input type='submit' value='Delete Selected' name='action'\"/></td>
 			</tr>
 	</form>";
 				echoTableFooter(SKIN_DIR); }

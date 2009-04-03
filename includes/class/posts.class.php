@@ -67,16 +67,11 @@ class posts extends tdb {
 	}
 	// end check functions
 
-	function d_topic($page_string) {
+	function d_topic($p,$page,$num_pages) {
 		if(!$this->check_user_info()) return false;
-		echo "
-	<br />
-    <div id='tabstyle_pagenum'>
-<span class='pagination_current'>Page:</span>".$page_string."
-</div>
+    echo $this->d_posting($p,$page,$num_pages,'top','forum');
 
-    <div style='clear:both;'></div>
-    <div class='tabstyle_1'>
+    echo "<div class='tabstyle_1'>
         <ul>";
 		if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"]){
 			echo "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=' title='Create a new topic?'><span>Create New Topic</span></a></li>";
@@ -90,13 +85,13 @@ class posts extends tdb {
 		return true;
 	}
 
-	function d_posting($page_string, $page,$num_pages, $position = "top")
+	function d_posting($page_string, $page,$num_pages, $position = "top",$type = 'topic')
   {
-    if(!$this->check_topic() || !$this->check_forum() || !$this->check_user_info()) return false;
+    if(($type == 'topic' && !$this->check_topic()) || !$this->check_forum() || !$this->check_user_info()) return false;
     $output = "";
     if ($num_pages != 1)
     $output .= "<table><tr><td class='pagination_title'>Pages ($num_pages):</td>$page_string</tr></table><div style='clear:both;'></div>";
-      if ($position == "top")
+      if ($position == "top" && $type=='topic')
       {
       $output .= "<div class='tabstyle_1'>
          <ul>";

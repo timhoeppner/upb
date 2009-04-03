@@ -489,24 +489,48 @@ switch ($ajax_type)
         break 1;
 
     case "username" :
-      $_POST['username'] = format_text(encode_text(trim($_POST['username'])));
-      if (trim($_POST['username']) == "")
-      {
-        $reply = "<br /><img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'>Username Required";
-        $valid = "false";
-      }
-      else 
+      if ($_POST['area'] == "pm")
       {
         $q = $tdb->query("users", "user_name='".strtolower($_POST["username"])."'", 1, 1);
-        if (strtolower($_POST["username"]) == strtolower($q[0]["user_name"]))
+        
+        if ($q === false)
         {
-          $reply = "<br /><img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'>Username already exists";
+          $reply = "<img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'>User doesn't exist";
+          $valid = "false";
+        }
+        else if ($_COOKIE['id_env'] == $q[0]['id'])
+        {
+          $reply = "<br /><img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'>You can't send a PM to yourself";
+          $valid = "false";
+        }
+        else
+        {
+          $reply = "<img src='images/tick.gif' alt='' title='' style='vertical-align: middle;'>";
+          $valid = "true";
+        }
+        
+      }
+      else
+      {
+        $_POST['username'] = format_text(encode_text(trim($_POST['username'])));
+        if (trim($_POST['username']) == "")
+        {
+          $reply = "<br /><img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'>Username Required";
           $valid = "false";
         }
         else 
         {
-          $reply = "<img src='images/tick.gif' alt='' title='' style='vertical-align: middle;'>";
-          $valid = "true";
+          $q = $tdb->query("users", "user_name='".strtolower($_POST["username"])."'", 1, 1);
+          if (strtolower($_POST["username"]) == strtolower($q[0]["user_name"]))
+          {
+            $reply = "<br /><img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'>Username already exists";
+            $valid = "false";
+          }
+          else 
+          {
+            $reply = "<img src='images/tick.gif' alt='' title='' style='vertical-align: middle;'>";
+            $valid = "true";
+          }
         }
       }
       echo $valid."<!--divider-->".$reply;
@@ -557,7 +581,7 @@ switch ($ajax_type)
       }
       echo $valid."<!--divider-->".$reply;
       break 1;
-    
+      
     case "sig":
       if ($_POST['status'] == "set")
 {
@@ -571,6 +595,9 @@ switch ($ajax_type)
         $sig_title = "<strong>Current Signature:</strong>";
       }
       echo $sig."<!--divider-->".$sig_title;
+      break 1;
+    
+    case "validate":
       break 1;
     
     default:

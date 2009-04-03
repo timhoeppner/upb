@@ -250,7 +250,7 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='width:45%;'> <strong>User Name:</strong> <span style='color:$required;'>*</span><br />Your identity throughout the bulletin board.</td>
-				<td class='area_2'><input type=text name='u_login' size=40 onblur=\"getUsername(this.value);\"><span class='err' id='namecheck'></span></td>
+				<td class='area_2'><input type=text name='u_login' size=40 onblur=\"getUsername(this.value,'register');\"><span class='err' id='namecheck'></span></td>
 			</tr>
 			<tr>
 				<td class='area_1'>

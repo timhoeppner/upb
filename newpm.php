@@ -28,6 +28,12 @@
 		exit;
 	} elseif($_POST["s"] == 1) {
   
+    if (isset($_POST['pm_recip']))
+		{
+      $q = $tdb->query("users", "user_name='".strtolower($_POST["pm_recip"])."'", 1, 1,array('id'));
+		  $_POST['to'] = $q[0]['id'];
+    }
+    
 		$error_msg = "";
 		if (!isset($_POST["icon"])) {
 			$error_msg .= str_replace('__TITLE__','Caution!',str_replace('__MSG__',"Must be submitted through the form.",ALERT_MSG));
@@ -105,21 +111,20 @@
 					<iframe src='viewpm_simple.php?id=".$_GET["r_id"]."' class='review_frame' scrolling='auto' frameborder='0'></iframe></div></td>
 			</tr>";
 	} else {
-		if (!isset($_GET['to'])) 
-    {
-      echo str_replace('__TITLE__','Error:',str_replace('__MSG__',"You must click on 'Send PM' from a user's profile or post.",ALERT_MSG));
-			require_once('./includes/footer.php');
-			exit();
-		}
-    if (!is_numeric($_GET['to'])) 
+    if (isset($_GET['to']) && !is_numeric($_GET['to'])) 
     {
       echo str_replace('__TITLE__','Error:',str_replace('__MSG__',"Invalid User ID",ALERT_MSG));
 			require_once('./includes/footer.php');
 			exit();
 		}
-    $send_to = $tdb->get('users', $_GET['to']);
-		$send_to = $send_to[0]['user_name'].'<input type="hidden" name="to" value="'.$_GET['to'].'">';
-		$hed = "New Topic";
+    if (isset($_GET['to']))
+    {
+      $send_to = $tdb->get('users', $_GET['to']);
+		  $send_to = $send_to[0]['user_name'].'<input type="hidden" name="to" value="'.$_GET['to'].'">';
+		}
+		else
+		  $send_to = false;
+    $hed = "New Topic";
 		$iframe = "";
 	}
 	$icons = message_icons();
@@ -158,7 +163,12 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Send to:</strong></td>
-				<td class='area_2'>".$send_to."</td>
+				<td class='area_2'>";
+        if ($send_to !== false)
+          echo $send_to;
+        else
+          echo "<input type='text' name='pm_recip' size=40 onblur=\"getUsername(this.value,'pm');\"><span class='err' id='namecheck'></span>";
+        echo "</td>
 			</tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Subject:</strong></td>
@@ -188,7 +198,7 @@
 				<td class='footer_3' colspan='6'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='footer_3a' colspan='6' style='text-align:center;'><input name='submit' type='submit' value='Send PM'></td>
+				<td class='footer_3a' colspan='6' style='text-align:center;'><input name='submit' id='submit' type='submit' value='Send PM' disabled> <input name='reset' id='reset' type='reset' value='Reset'></td>
 			</tr>
 	</form>";
 	echoTableFooter(SKIN_DIR);

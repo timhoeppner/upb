@@ -15,7 +15,8 @@
 	$posts_tdb->setFp("topics", $_GET["id"]."_topics");
 	$posts_tdb->setFp("posts", $_GET["id"]);
 	if (FALSE === ($tRec = $posts_tdb->get("topics", $_GET["t_id"]))) exitPage("Invalid Topic.", true);
-	$posts_tdb->set_topic($tRec);
+
+  $posts_tdb->set_topic($tRec);
 	$posts_tdb->set_forum($fRec);
 	if (!($tdb->is_logged_in())) {
 		$posts_tdb->set_user_info("guest", "password", "0", "0");
@@ -62,6 +63,7 @@
 	$x = +1;
 
   echo "<div name='current_posts' id='current_posts'>";
+   
   foreach($pRecs as $pRec) {
 		// display each post in the current topic
 		echo "

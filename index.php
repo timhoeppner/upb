@@ -227,7 +227,8 @@
 					<strong>Total Members:</strong> $mem_total<br />
 					<strong>Newest Member:</strong> <span class='link_2'><a href='profile.php?action=get&amp;id=".$mem_last[0]["id"]."'>".$mem_last[0]["user_name"]."</a></span><br />
 					<strong>Forum Page Views:</strong> $hits_today<br />
-					<strong>Page Rendering Time:</strong> ".round($script_end_time - $script_start_time, 5)." seconds</span></td>
+					<strong>Busiest Day:</strong> $hits_record Page Views on $hits_date<br />
+          <strong>Page Rendering Time:</strong> ".round($script_end_time - $script_start_time, 5)." seconds</span></td>
 			</tr>";
       echoTableFooter(SKIN_DIR);
 	//End Statistic Table

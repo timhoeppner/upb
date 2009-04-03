@@ -46,6 +46,15 @@ if(!file_exists(DB_DIR.'/ip.log') || filesize(DB_DIR.'/ip.log') == 0) {
     fclose($f);
 }
 print $pageStr;
+echo "<div style='clear:both;'></div>
+
+    <div class='tabstyle_1'>
+        <ul>
+			<li><a href='admin_iplog_action.php?action=download' title='Download a copy of the IP Log?'><span>Download IP Log</span></a></li>
+        	<li><a href='admin_iplog_action.php?action=clear' title='Clear the IP Log?'><span>Clear the IP Log</span></a></li>
+        </ul>
+    </div>
+";
 
 echoTableHeading("Visitor's Log", $_CONFIG);
 echo "
