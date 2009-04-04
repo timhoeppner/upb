@@ -35,7 +35,8 @@ if(!file_exists(DB_DIR.'/ip.log') || filesize(DB_DIR.'/ip.log') == 0) {
     $log = "cut\toff\tdata\n---\t---\t---\t---\t---\nsome\tmore\tcut\toff\tdata";
 } else {
     $pageStr = createPageNumbers($_GET['page'], (filesize(DB_DIR.'/ip.log')/(1024*20)));
-	$pageStr =  "<table class='pagenum_container' cellspacing='1'>
+	
+  $pageStr =  "<table class='pagenum_container' cellspacing='1'>
 			<tr>
 				<td style='text-align:left;height:23px;'><span class='pagination_current'>Pages: </span>".$pageStr."</td>
 			</tr>
@@ -45,7 +46,18 @@ if(!file_exists(DB_DIR.'/ip.log') || filesize(DB_DIR.'/ip.log') == 0) {
     $log = fread($f, (1024 * 20));
     fclose($f);
 }
-print $pageStr;
+
+$pos1 = strpos($log, "\n");
+$pos2 = strrpos($log, "\n") - 1;
+$log = array_reverse(explode("\n", substr($log, $pos1+1, $pos2 - $pos1)));
+$sublog = array_slice($log,($_GET['page']*$_CONFIG["posts_per_page"])-$_CONFIG["posts_per_page"],$_CONFIG["posts_per_page"]); 
+$num_pages = ceil((count($log) + 1) / $_CONFIG["posts_per_page"]);
+
+$p = createPageNumbers($_GET['page'], $num_pages, $_SERVER['QUERY_STRING']);
+
+echo pagination($p,$_GET['page'],$num_pages);
+
+
 echo "<div style='clear:both;'></div>
 
     <div class='tabstyle_1'>
@@ -59,16 +71,13 @@ echo "<div style='clear:both;'></div>
 echoTableHeading("Visitor's Log", $_CONFIG);
 echo "
 	<tr>
-		<th style='width:10%;'>REMOTE_HOST</th>
+    <th style='width:10%;'>REMOTE_HOST</th>
 		<th style='width:10%;'>Username</th>
 		<th style='width:20%;text-align:center;'>URL</th>
 		<th style='width:15%;'>Access Date</th>
 		<th style='width:35%;text-align:center;'>HTTP_USER_AGENT</th>
 	</tr>";
 
-$pos1 = strpos($log, "\n");
-$pos2 = strrpos($log, "\n") - 1;
-$log = array_reverse(explode("\n", substr($log, $pos1+1, $pos2 - $pos1)));
 //bot list format: $i = HTTP_USER_AGENT keyword; $i+1 = user mask
 $bot_list = array(
 'Yahoo! Slurp'    , 'Y! Web Crawler',
@@ -85,7 +94,8 @@ $bot_list = array(
 'findlinks'       , 'Findlinks Spider',
 'Yahoo-MMCrawler' , 'Yahoo MMCrawler'
 );
-foreach($log as $entry) {
+
+foreach($sublog as $entry) {
     $entry = explode("\t", $entry, 5);
     //bot detection
     for($i=0,$c=count($bot_list);$i<$c;$i+=2) {
@@ -96,7 +106,7 @@ foreach($log as $entry) {
     }
 	echo "
 	<tr>
-		<td class='area_1' style='padding:8px;'><strong>{$entry[0]}</strong></td>
+    <td class='area_1' style='padding:8px;'><strong>{$entry[0]}</strong></td>
 		<td class='area_2'>{$entry[1]}</td>
 		<td class='area_1'>{$entry[2]}</td>
 		<td class='area_2'>".(ctype_digit(($entry[3])) ? date('r', $entry[3]) : $entry[3])."</td>
@@ -104,7 +114,7 @@ foreach($log as $entry) {
 	</tr>";
 }
 echoTableFooter(SKIN_DIR);
-print $pageStr;
+echo pagination($p,$_GET['page'],$num_pages);
 
 require_once("./includes/footer.php");
 ?>

@@ -350,5 +350,16 @@ function xml_clean($string)
 		function isValidURL($url)
 {
  return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url);
-}  
+}
+
+function pagination($page_string, $page,$num_pages)
+{
+  $output = "";
+  if ($num_pages != 1)
+  {  
+    $output .= "<table><tr><td class='pagination_title'>Pages ($num_pages):</td>$page_string</tr></table><div style='clear:both;'></div>";
+    $output .= "<div style='clear:both;'></div>";
+  }
+  return $output;
+}
 ?>
