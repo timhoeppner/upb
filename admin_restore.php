@@ -62,7 +62,7 @@
 		$list = substr($list, 1);
 		closedir($dir);
 		$zip->create($list, PCLZIP_OPT_REMOVE_ALL_PATH);
-		echo 'Successfully backed up the current database to <strong>'.DB_DIR.'/backup/'.$filename.'</strong>.  Would you like to <a href="admin_restore.php?action=download&file='.DB_DIR.'/backup/'.$filename.'">download it?</a>';
+		echo 'Successfully backed up the current database to <strong>'.DB_DIR.'/backup/'.$filename.'</strong>.  Would you like to <a href="admin_restore.php?action=download&file='.$filename.'">download it?</a>';
 	} elseif($_GET['action'] == 'restore') {
 		if (!isset($_GET['file'])) {
 			echo '<p>Which backedup database would you like to restore?<br />';
@@ -140,7 +140,7 @@
 		if (!isset($_GET['file'])) {
 			echo '<p>Download:</p><p>';
 			$any_files = false;
-			if (FALSE !== ($handle = opendir(DB_DIR.'/backup'))) {
+			if (FALSE !== ($handle = opendir(DB_DIR.'/backup/'))) {
 				while (FALSE !== ($filename = readdir($handle))) {
 					if ($filename != '.' && $filename != '..') {
 						$any_files = true;
@@ -151,7 +151,7 @@
 				echo '</p>';
 			}
 			else echo 'Unable to retrieve backup list: Could not open the directory.';
-		} elseif($_GET['file'] != '') {
+		} elseif($_GET['file'] != '' and file_exists(DB_DIR.'/backup/'.$_GET['file'])) {
 			header("Pragma: public");
 			header("Expires: 0");
 			header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
@@ -181,12 +181,14 @@
 				echo '</p>';
 			}
 			else echo 'Unable to retrieve backup list: Could not open the directory.';
-			echo '<p><i>Note: to import a backedup database, put the file in the backup folder in the upb root directory.  the "backup" folder must be readable and writable (CHMOD to 0777).</p>';
+			echo '<p><i>Note: to import a backedup database, put the file in the backup folder in the upb root directory.  The "backup" folder must be readable and writable (CHMOD to 0777).</p>';
 		} elseif($_GET['file'] != '') {
 			if (!isset($_POST['verify'])) ok_cancel('admin_restore.php?action=import&file='.$_GET['file'], 'Are you sure you wish to import <strong>'.$_GET['file'].'</strong>?');
 			elseif($_POST['verify'] == 'Cancel') redirect('admin_restore.php', 0);
 			elseif($_POST['verify'] == 'Ok') {
-				if (rename('./backup/'.$_GET['file'], DB_DIR.'/backup/'.$_GET['file'])) echo 'Successfully imported <strong>'.$_GET['file'].'</strong>.  Note this backedup database was not "restored" or loaded.';
+				if (rename('./backup/'.$_GET['file'], DB_DIR.'/backup/'.$_GET['file']))
+        echo 'Successfully imported <strong>'.$_GET['file'].'</strong><br>
+        Note this backed up database was not "restored" or loaded.<br>To restore this backup, click <a href="admin_restore.php?action=restore&file='.$_GET['file'].'">here</a>';
 				else echo 'Importing failed.';
 			}
 			else echo 'Unable to process request: Invalid verify';

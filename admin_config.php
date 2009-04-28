@@ -77,7 +77,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 					echo "
 		<tr>
 			<td class='area_1' style='width:35%;padding:8px;'><strong>".$configVars[$i]["title"]."</strong>";
-					if($configVars[$i]["description"] != "") echo "<br />".$configVars[$i]["description"]."";
+					if($configVars[$i]["description"] != "") echo "<br />".stripslashes($configVars[$i]["description"]);
 					echo "</td>
 			<td class='area_2'>";
 

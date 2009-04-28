@@ -93,7 +93,7 @@
                 $pRec['user_id'] = '0';
             }
 			if ($user[0]["sig"] != "") {
-				$sig = format_text(filterLanguage(UPBcoding($user[0]["sig"]), $_CONFIG));
+				$sig = display_msg($user[0]["sig"]);
 				$sig = "<div class='signature'>$sig</div>";
 			}
 			$status_config = status($user);
@@ -133,7 +133,7 @@
                 $attachName = $q[0]["name"];
                 $attachDownloads = $q[0]["downloads"];
 
-                $pRec["message"] = "<div class='download1'><div class='download2'><div class='download3'><div class='download4'><img src='images/attachment.gif' class='example'> Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)</div></div></div></div>\n\n<p>" . $pRec["message"];
+                $pRec["message"] = $pRec['message']."<div class='download1'><div class='download2'><div class='download3'><div class='download4'><img src='images/attachment.gif' class='example'> Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)</div></div></div></div>\n\n<p>" . $pRec["message"];
             }
         }
 
@@ -141,7 +141,7 @@
 		else $reply = "";
 		
     $msg = display_msg($pRec['message']);
-    
+    $msg .= "<div id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}-attach'>".$tdb->getUploads($_GET['id'],$_GET['t_id'],$pRec['id'],$pRec['upload_id'],$fRec[0]['download'],$_CONFIG['fileupload_location'],$pRec['user_id'])."</div>";
     echo "
 			<tr>
 				<th><div class='post_name'>";
@@ -174,7 +174,7 @@
 		echo"</div>";
 		echo "</td>
 				<td class='$table_color' valign='top'>
-					<div style='width:85%;padding:12px;margin-bottom:20px;overflow:auto;' id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' name='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>$msg</div>
+					<div class='msg_block' id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' name='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>$msg</div>
 					<div style='padding:12px;'>".$sig."</div></td>
 			</tr>
 			<tr>

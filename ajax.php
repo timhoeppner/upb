@@ -21,7 +21,7 @@ switch ($ajax_type)
       $output .= "<input type='hidden' id='userid' name='userid' value='".$_POST["userid"]."'>";
       $output .= "<input type='hidden' id='threadid' name='threadid' value='".$_POST["threadid"]."'>";
       $output .= "<input type='hidden' id='postid' name='postid' value='".$_POST["postid"]."'>";
-      $output .= "<textarea name='newedit' id='newedit' cols='60' rows='18'>".format_text($pRec[0]['message'],'edit')."</textarea><br>";
+      $output .= "<textarea name='newedit' id='newedit' cols='60' rows='18'>".format_text(encode_text($pRec[0]['message']),'edit')."</textarea><br>";
       $output .= "\n<input type='button' onclick='javascript:getEdit(document.getElementById(\"quickedit\"),\"".$_POST['divname']."\");'\' name='qedit' value='Save'>";
       $output .= "\n<input type='button' name='cancel_edit' onClick=\"javascript:getPost('".$_POST["userid"]."','".$_POST["forumid"]."-".$_POST["threadid"]."-".$_POST["postid"]."','cancel');\" value='Cancel'>";
       $output .= "\n<input type='submit' name='submit' value='Advanced'>";
@@ -62,9 +62,9 @@ switch ($ajax_type)
         }
     }
 
-    $msg = format_text(filterLanguage(UPBcoding(encode_text(utf8_decode(stripslashes($attach_msg.$_POST["newedit"])))), $_CONFIG));
+    $msg = display_msg(encode_text($attach_msg.$_POST['newedit']));
 
-    $dbmsg = encode_text(stripslashes(utf8_decode($attach_msg.$_POST["newedit"])),ENT_NOQUOTES);
+    $dbmsg = encode_text(stripslashes($attach_msg.$_POST["newedit"]),ENT_NOQUOTES);
 
     $posts_tdb->edit("posts", $_POST["postid"], array("message" => $dbmsg, "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate()));
 //clearstatcache();
@@ -396,7 +396,11 @@ switch ($ajax_type)
 
       $cRecs = $tdb->listRec("cats", 1);
       $config_tdb->clearcache();
-      $cSorting = explode(",", $_CONFIG['admin_catagory_sorting']);
+      
+      $query = $config_tdb->basicQuery('config','name',"admin_catagory_sorting");
+
+      $cSorting = explode(",", $query[0]['value']);
+      
       $k = 0;
     	$i = 0;
     	$sorted = array();
@@ -585,7 +589,7 @@ switch ($ajax_type)
     case "sig":
       if ($_POST['status'] == "set")
 {
-  $sig = display_msg($_POST["sig"]);
+  $sig = display_msg(encode_text($_POST["sig"]));
   $sig_title = "<strong>Signature Preview:</strong><br>To save this signature press Submit below";
       }
       else
@@ -596,6 +600,42 @@ switch ($ajax_type)
       }
       echo $sig."<!--divider-->".$sig_title;
       break 1;
+    
+    case "delfile":
+      $fRec = $tdb->get("forums", $_POST["forumid"]);
+      $posts_tdb = new posts(DB_DIR."/", "posts.tdb");
+      $posts_tdb->setFp("topics", $_POST["forumid"]."_topics");
+      $posts_tdb->setFp("posts", $_POST["forumid"]);
+      $upload = new upload(DB_DIR, $_CONFIG["fileupload_size"],$_CONFIG["fileupload_location"]);
+      $details = $upload->get('uploads',$_POST['fileid']);
+      //$output .= dump($details);
+      $upload->deleteFile($_POST['fileid']);
+      $pRec = $posts_tdb->get("posts", $_POST["postid"]);
+
+      $split = explode(",",$pRec[0]['upload_id']);
+      $key = array_search($_POST['fileid'],$split);
+      unset($split[$key]);
+      $new = implode(',',$split);
+      $posts_tdb->edit("posts", $_POST["postid"], array("message" => $dbmsg, "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate(),'upload_id'=>$new));
+      $pRec2 = $posts_tdb->get("posts", $_POST["postid"]);
+      //$output .= dump($pRec);
+      $output .= $tdb->getUploads($_POST['forumid'],$_POST['threadid'],$_POST["postid"],$pRec2[0]['upload_id'],$_COOKIE['power_env'],$_CONFIG['fileupload_location'],$_POST['userid']);
+      $edited = "Last edited by: <a href='profile.php?action=get&id=".$pRec2[0]['edited_by_id']."' target='_new'>".$pRec2[0]['edited_by']."</a> on ".gmdate("M d, Y g:i:s a", user_date($pRec2[0]['edited_date']));
+      echo $output."<!--divider-->".$edited;
+      break;
+      
+    case "preview":
+        if (trim($_POST['message']) == '' or empty($_POST['message']))
+          echo "";
+        else
+        {
+          echoTableHeading("Post Preview", $_CONFIG);
+          $msg = display_msg($_POST["message"]);
+          $msg = $_POST['message'];
+          echo "<tr><td class='area_2'><div class='msg_block'>".$msg."</div></td></tr>";
+          echoTableFooter(SKIN_DIR);
+        }
+        break 1;
     
     case "validate":
       break 1;

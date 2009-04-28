@@ -66,7 +66,7 @@
 			$_POST["subject"] = trim($_POST["subject"], $_CONFIG['stick_note']);
 			if (trim($_POST["subject"]) == "") exitPage("<div class='alert'><div class='alert_text'>
 				<strong>Caution!</strong></div><div style='padding:4px;'>You must enter a subject!</div></div>");
-			$_GET["t_id"] = $posts_tdb->add("topics", array(
+			$_GET['t_id'] = $posts_tdb->add("topics", array(
 			"icon" => $_POST["icon"],
 				"subject" => $_POST["subject"],
 				"topic_starter" => $_COOKIE["user_env"],
@@ -85,7 +85,7 @@
 		</div>
 	</div>";
 			$tdb->edit("forums", $_GET["id"], array("topics" => ((int)$fRec[0]["topics"] + 1), "posts" => ((int)$fRec[0]["posts"] + 1)));
-			$redirect = "viewforum.php?id=".$_GET["id"];
+			$redirect = "viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET['t_id'];
 			$pre = "";
 		} else {
 			echo "
@@ -205,12 +205,14 @@
 					<div style='text-align:center;'></div></td>
 				<td class='area_2'>
         ".bbcodebuttons('look1')."<textarea name='message' id='look1'>".$message."</textarea><br>
-					<span id='msg_err' class='err'></span><div style='padding:8px;'>".getSmilies('look1')."</div></td>
+					<span id='msg_err' class='err'></span><div style='padding:8px;'><fieldset><legend>Smilies</legend><div style='padding:8px;'>".getSmilies('look1')."</fieldset></div></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
-		if (!(($_CONFIG["fileupload_size"] == "0" || $_CONFIG["fileupload_size"] == "") && $_CONFIG["fileupload_location"] == "")) {
+    //if filesize set to 0 or filesize set to nothing and uploadlocation exists
+    if ($_CONFIG["fileupload_size"] != "0" && $_CONFIG["fileupload_size"] != "" && is_numeric($_CONFIG["fileupload_size"]) && $_CONFIG["fileupload_location"] != "")
+    {
 			echo "
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Attach file:</strong></td>
@@ -221,11 +223,11 @@
 		}
 		echo "
 			<tr>
-				<td class='footer_3a' style='text-align:center;' colspan='2'><input type='submit' name='submit' value='Submit'></td>
+				<td class='footer_3a' style='text-align:center;' colspan='2'><input type='reset' name='reset' value='Reset'><input type='button' onclick='postPreview()' value='Preview Post'><input type='submit' name='submit' value='Submit'></td>
 			</tr>";
       echoTableFooter(SKIN_DIR);
       echo "
-	</form>
+	</form> <div id='preview'></div>
 	".$iframe."";
 	}
 	require_once('./includes/footer.php');

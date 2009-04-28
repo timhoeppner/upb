@@ -173,6 +173,12 @@ require_once("./includes/inc/privmsg.inc.php");
 
 //installation precausion
 //globalize resource $tdb to prevent multiple occurances
+if(!file_exists(DB_DIR."/main.tdb"))
+{
+echo "File missing";
+die();
+}
+
 if(file_exists(DB_DIR."/main.tdb")) {
     $tdb = new functions(DB_DIR.'/', 'main.tdb');
     //$tdb->define_error_handler(array(&$errorHandler, 'add_error'));

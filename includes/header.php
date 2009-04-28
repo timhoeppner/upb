@@ -139,7 +139,6 @@
 <link rel='stylesheet' type='text/css' href='".SKIN_DIR."/css/style.css' />
 <link rel='stylesheet' type='text/css' href='skins/disabled.css' />
 <script type='text/javascript' src='./includes/scripts.js'></script>
-<script type='text/javascript' src='./includes/script-styles.js'></script>
 </head>
 <body>
 <div id='upb_container'>
@@ -209,7 +208,7 @@
 	if ($_CONFIG["servicemessage"] != "" && ($_SESSION['servicemessage'] != md5($_CONFIG['servicemessage']) || basename($_SERVER['PHP_SELF']) == 'index.php')) {
 	    $_SESSION['servicemessage'] = md5($_CONFIG['servicemessage']);
 		echoTableHeading("Announcements", $_CONFIG);
-		echo "
+    echo "
 			<tr>
 			<td class='area_1' style='text-align:left;'>".$_CONFIG["servicemessage"]."</td>
 			</tr>";

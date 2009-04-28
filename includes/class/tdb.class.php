@@ -1624,7 +1624,8 @@ class tdb {
             $return .= substr(rtrim(fread($f, $header["blockLength"] - 7)), 0, -1);
         }
         fclose($f);
-        return $return;
+        //str_replace added to remove <x> from all queries. Should not be used for non-UPB context.
+        return str_replace('&lt;x&gt;','',$return); 
     }
 
     /**
@@ -1811,6 +1812,12 @@ class tdb {
      */
     function version() {
         return "4.4.3";
+    }
+    
+    function deXSS($text) {
+      //echo "$text::".substr_count('&lt;x&gt;',$text)."<br>";
+      
+      return str_replace('&lt;x&gt;','',$text);
     }
 }
 ?>

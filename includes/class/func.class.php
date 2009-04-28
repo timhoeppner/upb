@@ -89,5 +89,42 @@ class functions extends tdb {
         $this->readHeader($fp, $header);
         return $header["curId"];
     }
+    
+    function getUploads($fid,$tid,$pid,$upload_ids,$power,$location,$userid)
+	  {
+      if ($upload_ids == "" or $upload_ids == "0" or $upload_ids == false)
+      return;
+      $output =  "";
+      $downloads = "";
+      $ids = explode(",",$upload_ids);
+
+
+      foreach ($ids as $id)
+      {
+        if($id > 0)
+        {
+          //check information is in the upload database
+          $q = $this->get("uploads", $id, array("name", "downloads","file_loca"));
+          if(!empty($q[0]) && file_exists($location."/".$q[0]['file_loca']))
+          {
+            $attachName = $q[0]["name"];
+            $attachDownloads = $q[0]["downloads"];
+            $attachSize = floor(filesize($location."/".$q[0]['file_loca'])/1024);
+            $downloads .= "<a href='downloadattachment.php?id=$id'>{$attachName}</a> ({$attachSize}KB  / $attachDownloads Downloads)";
+            if ((int)$_COOKIE['power_env'] >= 3 or $userid == (int)$_COOKIE['id_env'])
+              $downloads .= " <a href=\"javascript:deleteFile($fid,$tid,$pid,$id,'$attachName',".(int)$_COOKIE['id_env'].",'$fid-$tid-$pid-attach')\">Delete</a>";
+            $downloads .= "<p>";
+          }
+        }
+        }
+
+      if ((int)$_COOKIE['power_env'] >= (int)$power and $downloads != "")
+      {
+        $output .= "<p><fieldset><legend>Attached File(s)</legend>";
+        $output .= $downloads;
+        $output .= "</fieldset>";
+      }
+      return $output;
+    }
 }
 ?>

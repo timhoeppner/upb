@@ -168,7 +168,7 @@
 		}
 	}
   echoTableFooter(SKIN_DIR);
-  echo "<br />".$posts_tdb->d_topic($p,$vars['page'],$num_pages,'bottom','forum');
+  echo "<br />".$posts_tdb->d_posting($p,$vars['page'],$num_pages,'bottom','forum');
 
 	require_once('./includes/footer.php');
 ?>

@@ -41,12 +41,9 @@
 
 			<tr>
 				<td class='area_1' style='padding:8px;' valign='top'><strong>Message:</strong>";
-    if (isset($_POST['newedit']))
-      $message = stripslashes($_POST['newedit']);
-    else
-      $message = $pRec[0]['message'];
+				
 		echo "<div style='text-align:center;'></div></td>
-				<td class='area_2'>".bbcodebuttons('look1')."<textarea name='message' id='look1'>".$message."</textarea>
+				<td class='area_2'>".bbcodebuttons('look1')."<textarea name='message' id='look1'>".format_text(encode_text($pRec[0]['message']),'edit')."</textarea>
 					<div style='padding:8px;'>".getSmilies()."</div></td>
 			</tr>
 			<tr>

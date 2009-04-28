@@ -33,9 +33,9 @@ function format_text($text,$type='') {
     {
       $text = str_replace("\n", "<br />", $text);
       $text = str_replace("  ", "&nbsp; ", $text);
-      $text = str_replace("&amp;#", "&#", $text);
+      
     }
-    $text = str_replace('&lt;x&gt;','',$text);
+    $text = str_replace("&amp;#", "&#", $text);
     return $text;
 }
 
@@ -43,7 +43,7 @@ function format_text($text,$type='') {
 
 function encode_text($text)
 {
-  $string = str_replace(array('<','>'),array('&lt;','&gt;'),$text);
+  $string = str_replace(array('<','>','<x>'),array('&lt;','&gt;',''),$text);
   return $string;
 }
 
@@ -60,6 +60,16 @@ function filterLanguage($text) {
     }
     //end bad words filter
     return $msg;
+}
+
+function display_msg($text,$type = '')
+{
+  $text = filterLanguage(format_text(UPBcoding($text)), $_CONFIG);
+  $text = str_replace('&lt;x&gt;','',$text);
+  if(get_magic_quotes_gpc())
+    return stripslashes($text);
+  else
+    return $text;
 }
 
 function UPBcoding($text) {
@@ -298,14 +308,4 @@ if ($user[0]["level"] == "1") {
 			$statconf = array('status' => $status,'statuscolor'=>$statuscolor);
       return $statconf;
 }
-
-function display_msg($text,$attach = '')
-{
-  $text = filterLanguage(format_text(encode_text(UPBcoding($text))), $_CONFIG);
-  if(get_magic_quotes_gpc())
-    return stripslashes($text);
-  else
-    return $text;
-}
-
 ?>

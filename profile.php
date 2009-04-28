@@ -217,9 +217,7 @@ if (isset($_POST["u_edit"])) {
 		$rec = $tdb->get("users", $_COOKIE["id_env"]);
 		require_once('./includes/header.php');
 		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
-		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
-		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
-		@$rec[0]["sig"] = str_replace("<br />", "\n", $rec[0]["sig"]);
+
 		echo "<form action='{$_SERVER['PHP_SELF']}' id='newentry' name='newentry' method='post' enctype=\"multipart/form-data\">";
         echo "
         <div id='tabstyle_2'>
@@ -315,7 +313,7 @@ if (isset($_POST["u_edit"])) {
 		echo "
 			<tr>
 				<td class='area_1' style='width:20%;'><strong>Homepage:</strong></td>
-				<td class='area_2'><input type='text' name='u_site' value='";
+				<td class='area_2'><input type='text' name='u_site' size='50' value='";
     if ($rec[0]["url"] == '')
       echo "http://";
     else
@@ -327,19 +325,19 @@ if (isset($_POST["u_edit"])) {
 			</tr>
 			<tr>
 				<td class='area_1'><strong>ICQ:</strong></td>
-				<td class='area_2'><input type='text' name='u_icq' value='".$rec[0]["icq"]."' /></td>
+				<td class='area_2'><input type='text' name='u_icq' size='50' value='".$rec[0]["icq"]."' /></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>AIM:</strong></td>
-				<td class='area_2'><input type='text' name='u_aim' value='".$rec[0]["aim"]."' /> </td>
+				<td class='area_2'><input type='text' name='u_aim' size='50' value='".$rec[0]["aim"]."' /> </td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Yahoo!:</strong></td>
-				<td class='area_2'><input type='text' name='u_yahoo' value='".$rec[0]["yahoo"]."' /></td>
+				<td class='area_2'><input type='text' name='u_yahoo' size='50' value='".$rec[0]["yahoo"]."' /></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>MSN:</strong></td>
-				<td class='area_2'><input type='text' name='u_msn' value='".$rec[0]["msn"]."' /></td>
+				<td class='area_2'><input type='text' name='u_msn' size='50' value='".$rec[0]["msn"]."' /></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
@@ -347,7 +345,7 @@ if (isset($_POST["u_edit"])) {
     <tr>
 				<td class='area_1' valign='top'><strong>Signature:</strong></td>
 				<td class='area_2'>".bbcodebuttons('u_sig','sig')."<textarea id='u_sig' name='u_sig' cols='45' rows='10'>".format_text(encode_text($rec[0]["sig"]),'edit')."</textarea><br /><input type='button' onclick=\"javascript:sigPreview(document.getElementById('u_sig'),'".$_COOKIE['id_env']."','set');\" value='Preview Signature' /></td></tr>
-			<tr>
+      <tr>
 				<td class='area_1' valign='top'><div id='sig_title'><strong>Current Signature:</strong></div></td>
 				<td class='area_2'><div style='display:inline;' id='sig_preview'>".display_msg($rec[0]["sig"])."</div></td>
 			</tr>
