@@ -362,4 +362,25 @@ function pagination($page_string, $page,$num_pages)
   }
   return $output;
 }
+
+function resize_img($image,$target)
+{
+  $sizes = getimagesize($image);
+  //dump($sizes);
+  
+  $width = $sizes[0];
+  $height = $sizes[1];
+  if ($width < $target and $height < $target)
+    return;
+  if ($width > $height) {
+    $percentage = ($target / $width);
+  } else {
+  $percentage = ($target / $height);
+  }
+
+$width = round($width * $percentage);
+$height = round($height * $percentage);
+
+return "width='$width' height='$height'";
+}
 ?>

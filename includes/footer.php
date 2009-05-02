@@ -11,8 +11,8 @@
 		$script_end_time = $mt[0] + $mt[1];
 	}
 	echo "
-	<div class='copy'>Powered by myUPB&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href='http://www.myupb.com/'>PHP Outburst</a>
-	&nbsp;&nbsp;&copy;2002 - ".date("Y",time())."</div>
+	<div class='copy'><a href='http://forum.myupb.com/'>Powered by myUPB</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+	&copy; PHP Outburst 2002 - ".date("Y",time())."</div>
 </div>
 </body>
 </html>";

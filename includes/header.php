@@ -145,11 +145,11 @@
 	<div class='main_cat_wrapper2'>
 		<table class='main_table_2' cellspacing='1'>
 			<tr>
-				<td id='logo'><img src='".$_CONFIG['logo']."' alt='' title='' /></td>
+				<td class='logo'><img src='".$_CONFIG['logo']."' alt='' title='' /></td>
 			</tr>
 		</table>
 	</div>
-	<br />
+ <br />
 	<br />
 	<div class='tabstyle_1'>
 		<ul>";

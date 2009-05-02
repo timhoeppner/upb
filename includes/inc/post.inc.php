@@ -33,7 +33,6 @@ function format_text($text,$type='') {
     {
       $text = str_replace("\n", "<br />", $text);
       $text = str_replace("  ", "&nbsp; ", $text);
-      
     }
     $text = str_replace("&amp;#", "&#", $text);
     return $text;

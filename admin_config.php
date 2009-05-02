@@ -63,6 +63,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 
 		$minicats = $config_tdb->fetchMiniCategories($_GET['action']);
 		$configVars = $config_tdb->getVars($_GET["action"], true);
+
 		echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
 	 
 		echoTableHeading("&nbsp;", $_CONFIG);

@@ -48,17 +48,24 @@ if (isset($_POST["u_edit"])) {
 		if ($user[0]["view_email"] != $_POST["show_email"]) $rec["view_email"] = $_POST["show_email"];
 		if ($user[0]["mail_list"] != $_POST["email_list"]) $rec["mail_list"] = $_POST["email_list"];
 		if ($user[0]["location"] != $_POST["u_loca"]) $rec["location"] = $_POST["u_loca"];
-	    if($_REGIST['custom_avatars'] == 2 && isset($_FILES["avatar2"]["name"]) && trim($_FILES["avatar2"]["name"]) != "") {
-	        if($_FILES['avatar2']['error'] == UPLOAD_ERR_OK) {
+	    if($_REGIST['custom_avatars'] > 1 && (isset($_FILES["avatar2file"]["name"]) || isset($_POST['avatar2url'])))
+      {
+      if (isset($_FILES["avatar2file"]["name"]) && trim($_FILES["avatar2file"]["name"]) != "") {
+          if($_FILES['avatar2file']['size'] > $_REGIST['avatarupload_size']*1024)
+          {
+            $upload_err = "The filesize of the uploaded avatar is too big.<br>The maximum filesize is ".$_REGIST['avatarupload_size']."KB<br>The file you uploaded was ".ceil($_FILES['avatar2file']['size']/1024)."KB";
+          }
+          else
+          if($_FILES['avatar2file']['error'] == UPLOAD_ERR_OK) {
                 require_once('./includes/class/upload.class.php');
-    			$upload = new upload(DB_DIR, $_CONFIG["fileupload_size"], $_CONFIG["fileupload_location"]);
-    			$uploadId = $upload->storeFile($_FILES["avatar2"]);
+    			$upload = new upload(DB_DIR, $_REGIST["avatarupload_size"], $_CONFIG["fileupload_location"]);
+          $uploadId = $upload->storeFile($_FILES["avatar2file"]);
     			if ($uploadId !== false) {
     			    $rec['avatar'] = 'downloadattachment.php?id='.$uploadId;
     			}
 	        } else {
 	            $upload_err = "The uploaded avatar ";
-	            switch ($_FILES['avatar2']['error']) {
+	            switch ($_FILES['avatar2file']['error']) {
 	                case UPLOAD_ERR_INI_SIZE:
 	                    $upload_err .= "exceeds the <strong>upload_max_filesize</strong> directive in <i>php.ini.</i>";
 	                    break;
@@ -80,20 +87,23 @@ if (isset($_POST["u_edit"])) {
 	                case 8: //UPLOAD_ERR_EXTENSION (PHP Version >= 5.2.0)
 	                   $upload_err = "The avatar upload stopped by extension.";
 	                default:
-	                    $upload_err .= "encountered an unknown error while trying to upload";
-	            }
+                    $upload_err .= "encountered an unknown error while trying to upload";
+              }
 	        }
-	    } elseif($_REGIST['custom_avatars'] == 1 && isset($_POST['avatar2']) && $_POST['avatar2'] != '') {
-          $rec['avatar'] = $_POST['avatar2'];
-	    } elseif(isset($_POST['avatar']) && $_POST['avatar'] != '') {
+	    }
+      elseif(isset($_POST['avatar2url']) && $_POST['avatar2url'] != '') {
+          $rec['avatar'] = $_POST['avatar2url'];
+      }
+	    }
+      elseif(isset($_POST['avatar']) && $_POST['avatar'] != '') {
 	        $rec['avatar'] = $_POST['avatar'];
 	    }
-        if(isset($rec['avatar']) && FALSE !== strpos($user[0]['avatar'], 'downloadattachment.php?id=')) {
+      if(isset($rec['avatar']) && FALSE !== strpos($user[0]['avatar'], 'downloadattachment.php?id=')) {
             $id = substr($user[0]['avatar'], 26);
             if(ctype_digit($id)) {
                 if(!isset($upload)) {
                     require_once('./includes/class/upload.class.php');
-                    $upload = new upload(DB_DIR, $_CONFIG["fileupload_size"], $_CONFIG["fileupload_location"]);
+                    $upload = new upload(DB_DIR, $_REGIST["avatarupload_size"], $_CONFIG["fileupload_location"]);
                 }
                 $upload->deleteFile($id);
             }
@@ -109,13 +119,21 @@ if (isset($_POST["u_edit"])) {
 
   $tdb->edit("users", $_COOKIE["id_env"], $rec);
     require_once('./includes/header.php');
-  echo "<div class='alert_confirm'>
+  if (!isset($upload_err))
+    echo "<div class='alert_confirm'>
 				<div class='alert_confirm_text'>
 				<strong>User Profile Update:</strong></div><div style='padding:4px;'>Your user profile has been successfully updated
 				</div>
 				</div>
 				<meta http-equiv='refresh' content='2;URL=".$_GET["ref"]."'>";
-		require_once('./includes/footer.php');
+    else
+echo "<div class='alert'>
+				<div class='alert_text'>
+				<strong>Avatar Upload Error:</strong></div><div style='padding:4px;'>$upload_err<br><br>All other changes to your user profile has been made.<br>Click <a href='".$_GET['ref']."'>here</a> to continue.
+				</div>
+				</div>";
+
+    require_once('./includes/footer.php');
 	}
 } elseif($_GET["action"] == 'get' || $_GET['action'] == 'view') {
 	if (!isset($_GET["id"])) {
@@ -281,15 +299,19 @@ if (isset($_POST["u_edit"])) {
 		echo "
 			<tr>
 				<th style='text-align:center;'>Current avatar</th>
-				<th style='text-align:center;'>Select a local avatar</th>".(($custom_avatar) ? "
-				<th style='text-align:center;'>".(($_REGIST['custom_avatars'] == '2') ? 'Upload' : 'Link')." an avatar</th>" : "")."
+				<th style='text-align:center;'>Select a local avatar</th>
 			</tr>
 			<tr>
-				<td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'>";
-		if (@$rec[0]["avatar"] != "") echo "<img src=\"".$rec[0]["avatar"]."\" border='0'><br />";
-		else echo "<img src='images/avatars/noavatar.gif' alt='' title='' />";
+				<td class='area_1' valign='middle' style='text-align:center;padding:20px;height:150px;'>";
+  if (@$rec[0]["avatar"] != "")
+  {
+    if (substr($rec[0]['avatar'],0,7) == 'http://')
+      $resize = resize_img($rec[0]['avatar'],$_REGIST["avatarupload_dim"]);
+    echo "<img src='".$rec[0]["avatar"]."' $resize border='0'><br />";
+  }
+  else echo "<img src='images/avatars/noavatar.gif' alt='' title='' />";
 		echo "</td>
-				<td class='area_2' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'>
+				<td class='area_2' valign='middle' style='text-align:center;padding:20px;height:150px;'>
 					<table cellspacing='0px' style='width:100%;'>
 						<tr>
 							<td style='text-align:center;width:50%;'>
@@ -299,14 +321,30 @@ if (isset($_POST["u_edit"])) {
 		returnimages();
 		echo "</select></td></tr>
 					</table>
-				</td>";
+				</td></tr>";
+    if ($custom_avatar)
+    {
+      echo "<tr><th style='text-align:center;' colspan='2'>Custom Avatar</th></tr>";
+      echo "<tr><td class='area_1'><strong>Custom Avatar:</strong><p>Maximum avatar size is ".$_REGIST["avatarupload_dim"]."px by ".$_REGIST["avatarupload_dim"]."px".(($_REGIST['custom_avatars'] == '2') ? '<br>Valid filetypes are jpg, jpeg and gif.<br>Maximum filesize is '.$_REGIST["avatarupload_size"].'KB.' : '')."<br />";
+      echo "<td class='area_2' valign='middle' style='text-align:center;padding:20px;height:150px;'>";
 
-    if($custom_avatar) {
-		    echo "<td class='area_1' valign='middle' style='width:45%;text-align:center;padding:20px;height:150px;'><input type='".(($_REGIST['custom_avatars'] == '2') ? "file'" : "text' value=''")." name='avatar2' /><p><i>Consult the forum admin for acceptable dimensions.  ".(($_REGIST['custom_avatars'] == '2') ? 'Valid filetypes include JPG, JPEG, and GIF.  Maximum filesize is '.$_CONFIG["fileupload_size"].'Kb.' : '')."</i></p></td></tr>";
-		}
-		echo "
+      echo "You may upload a custom image using the control(s) below.";
+      if ($_REGIST['custom_avatars'] > 1)
+      {
+        
+        echo "<p>Option 1 - Enter the URL of an image below<br />
+        <input type='text' size='40' name='avatar2url' value='http://' />";
+        echo "<p>Option 2 - Upload image from your computer <br />
+        <input type='file' size='40' name='avatar2file' />";
+      }
+      else
+        echo "<p>Option 1 - Enter the URL of an image below<br />
+        <input type='text' size='40' name='avatar2url' value='http://' />";
+      echo "<p>Any image exceeding the dimensions specified will be resized</td></tr>";
+    }
+    echo "
 			<tr>
-				<td class='footer_3' colspan='".(($custom_avatar) ? '3' : '2')."'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
+				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
 		echoTableFooter(SKIN_DIR);
 		echoTableHeading("Other Information", $_CONFIG);

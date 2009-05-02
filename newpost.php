@@ -57,8 +57,15 @@
 		if (trim($_FILES["file"]["name"]) != "") {
 			$upload = new upload(DB_DIR, $_CONFIG["fileupload_size"],$_CONFIG["fileupload_location"]);
 			$uploadId = $upload->storeFile($_FILES["file"]);
-			if ($uploadId === false) $uploadId = 0;
-		}
+			if ($uploadId === false || $uploadId == "Uploaded file is too large" ) 
+      {
+        if ($uploadId === false)
+          echo "An error ocurred during the upload process";
+        else
+          echo "The uploaded file ".$uploadId;
+        $uploadId = 0;
+      }
+    }
 		//END
 		if ($_GET["t"] == 1) {
 			if (!isset($_POST["sticky"])) $_POST["sticky"] = "0";

@@ -125,23 +125,11 @@
       $quote = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&q_id=".$pRec['id']."&page=".$vars["page"]."'>Quote</a></div>"; 
     else $quote = "";
 
-		$uploadId = (int) $pRec["upload_id"];
-        if($uploadId > 0) {
-            //check information is in the upload database
-            $q = $tdb->get("uploads", $uploadId, array("name", "downloads","file_loca"));
-            if(!empty($q[0]) && file_exists($_CONFIG['fileupload_location']."/".$q[0]['file_loca'])) {
-                $attachName = $q[0]["name"];
-                $attachDownloads = $q[0]["downloads"];
-
-                $pRec["message"] = $pRec['message']."<div class='download1'><div class='download2'><div class='download3'><div class='download4'><img src='images/attachment.gif' class='example'> Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)</div></div></div></div>\n\n<p>" . $pRec["message"];
-            }
-        }
-
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$vars['page']."'>Add Reply</a></div>";
 		else $reply = "";
-		
+
     $msg = display_msg($pRec['message']);
-    $msg .= "<div id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}-attach'>".$tdb->getUploads($_GET['id'],$_GET['t_id'],$pRec['id'],$pRec['upload_id'],$fRec[0]['download'],$_CONFIG['fileupload_location'],$pRec['user_id'])."</div>";
+    $msg .= "<div id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}-attach'>".$tdb->getUploads($_GET['id'],$_GET['t_id'],$pRec['id'],$pRec['upload_id'],$_CONFIG['fileupload_location'],$pRec['user_id'])."</div>";
     echo "
 			<tr>
 				<th><div class='post_name'>";

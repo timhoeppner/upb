@@ -90,10 +90,10 @@ class functions extends tdb {
         return $header["curId"];
     }
     
-    function getUploads($fid,$tid,$pid,$upload_ids,$power,$location,$userid)
+    function getUploads($fid,$tid,$pid,$upload_ids,$location,$userid)
 	  {
       if ($upload_ids == "" or $upload_ids == "0" or $upload_ids == false)
-      return;
+        return;
       $output =  "";
       $downloads = "";
       $ids = explode(",",$upload_ids);

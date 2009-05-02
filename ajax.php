@@ -45,25 +45,9 @@ switch ($ajax_type)
 
     if($pRec[0]["user_id"] != $_COOKIE["id_env"] && $_COOKIE["power_env"] < 2) exitPage("You are not authorized to edit this post.");
     $msg = "";
-    $uploadId = (int) $pRec["upload_id"];
 
-    if($uploadId > 0) {
-        // We have an attachment, query the database for the info
-        $tdb->setFp("uploads", "uploads");
-
-        $q = $tdb->get("uploads", $uploadId, array("name", "downloads"));
-
-        // Make sure the attachment exists
-        if($q !== false) {
-            $attachName = $q[0]["name"];
-            $attachDownloads = $q[0]["downloads"];
-
-            $attach_msg = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n";
-        }
-    }
-
-    $msg = display_msg(encode_text($attach_msg.$_POST['newedit']));
-
+    $msg = display_msg(encode_text($_POST['newedit']));
+    $msg .= "<div id='{$_POST["forumid"]}-{$_POST['threadid']}-{$_POST['postid']}-attach'>".$tdb->getUploads($_POST["forumid"],$_POST['threadid'],$pRec[0]['id'],$pRec[0]['upload_id'],$_CONFIG['fileupload_location'],$pRec[0]['user_id'])."</div>";
     $dbmsg = encode_text(stripslashes($attach_msg.$_POST["newedit"]),ENT_NOQUOTES);
 
     $posts_tdb->edit("posts", $_POST["postid"], array("message" => $dbmsg, "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate()));
@@ -71,26 +55,8 @@ switch ($ajax_type)
     $posts_tdb->cleanup();
     $posts_tdb->setFp("posts", $_POST["forumid"]);
     $pRec2 = $posts_tdb->get("posts", $_POST["postid"]);
-    $uploadId = (int) $pRec2[0]["upload_id"];
 
-    if($uploadId > 0) {
-
-        // We have an attachment, query the database for the info
-        $tdb->setFp("uploads", "uploads");
-
-        $q = $tdb->get("uploads", $uploadId, array("name", "downloads"));
-
-        // Make sure the attachment exists
-        if($q !== false) {
-            $attachName = $q[0]["name"];
-            $attachDownloads = $q[0]["downloads"];
-
-            $msg = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n". $msg;
-        }
-    }
-    //$msg = format_text(filterLanguage(utf8_decode(stripslashes($msg)), $_CONFIG));
-
-    $div = $_POST['forumid']."-".$_POST['threadid']."-".$_POST['postid'];
+    //$div = $_POST['forumid']."-".$_POST['threadid']."-".$_POST['postid'];
 
 
     if(!empty($pRec2[0]['edited_by']) && !empty($pRec2[0]['edited_by_id']) && !empty($pRec2[0]['edited_date']))

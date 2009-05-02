@@ -10,7 +10,7 @@ if (!isset($_GET["id"]) || !ctype_digit($_GET["id"])) die("Invalid Forum ID");
 //if (!isset($_GET["t_id"]) || !ctype_digit($_GET["t_id"])) die("Invalid Topic ID");
 	
 $fRec = $tdb->get("forums", $_GET["id"]);
-if ((int)$_COOKIE["power_env"] < $fRec[0]["view"]) die("You do not have enough Power to view this topic");
+//if ((int)$_COOKIE["power_env"] < $fRec[0]["view"]) die("You do not have enough Power to view this topic");
 
 $posts_tdb = new posts(DB_DIR."/", "posts.tdb");
 $posts_tdb->setFp("topics", $_GET['id']."_topics");
@@ -37,10 +37,10 @@ if (!isset($_GET['t_id'])) {
 		$url= "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
 		$replace = "viewtopic.php?id=".$_GET['id']."&t_id=".$tRec['id'];
 		$newurl = str_replace('xml.php',$replace,$url);
-		$xml .= "<item>
+  $xml .= "<item>
 		<title>".xml_clean($tRec['subject'])."</title>
 		<link>".xml_clean($newurl)."</link>
-		<description>".xml_clean(format_text(filterLanguage(UPBcoding($post[0]['message']))))."</description>
+		<description>".xml_clean(format_text(filterLanguage($post[0]['message'])))."</description>
 		<guid isPermaLink=\"false\">".xml_clean($url)."</guid>
 		</item>";
 	}
@@ -64,10 +64,10 @@ if (!isset($_GET['t_id'])) {
 	foreach ($pRecs as $key => $pRec) {
 	  $newurl = str_replace('xml.php',$replace,$url);
 	  $newurl .= '&page='.$pRec['page']."#".$pRec['id'];
-	  $xml .= "<item>
+   $xml .= "<item>
 	  <title>Post by ".xml_clean($pRec['user_name'])." on ".xml_clean(gmdate("M d, Y @ g:i:s a", user_date($pRec["date"])))."</title>
 	  <link>".xml_clean($newurl)."</link>
-	  <description>".xml_clean(format_text(filterLanguage(UPBcoding($pRec['message']))))."</description>
+	  <description>".xml_clean(format_text(filterLanguage($pRec['message'])))."</description>
 	  <guid isPermaLink=\"false\">".xml_clean($url)."</guid>
 	  </item>";
 	}
