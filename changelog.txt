@@ -1,6 +1,43 @@
 This is the changelog for this product's working copy.
 
-IMPORTANT SECURITY UPDATE
+== SECURITY FIX ==
+# Possible use of XSS attack using quick edit
 
-Cross Site Scripting detection added
+== BUG FIXES ==
+# <x> display bug fixed
+# Foreign language characters should work in all sections
+# Minor bug in upb.initialise.php.
+# Move topics bug
+# Stripped slashes on config page.
+# Attach file section of form is not displayed if filesize and/or location is 0 or not set and dependent of new forum permissions.
+# Fixed broken signature preview
+# Javascript detection bugs fixed.
+# Attached file information no longer disappears after Quick Edit
+# Fixed new category order not being displayed correctly after changing
+# Fixed wide images and text breaking forum layout
+# Fixed possible bug with IIS not using $_SERVER['REQUEST_URI'] properly
+# Incorrect page count after post deletion
+
+
+== NEW FEATURES ==
+# Sending a PM from the PM system rather than having to find a user and click on the Send PM button has been added.
+# The IPlog view has download and delete options courtesy of Jono
+# Version number displayed in footer
+# New BB code buttons courtesy of Nightmare
+# Removed some BB code buttons for signatures and forum descriptions (lists and videos)
+# Page navigation rewritten and working at the top and bottom of pages.
+# Removed ICQ, MSN, Yahoo and AIM logos from profile editing to make it easier for skinning
+# New file upload display and deletion feature.
+# Option to allow both link and upload avatar options
+# Avatar file upload size independent of file upload size
+# Maximum dimensions for avatars can be set.
+# Avatar image size check for linked and local images and resized if appropriate.
+# New topic creation now redirects to the topic rather than the forum
+# Preview Post
+
+
+
+
+
+
 
