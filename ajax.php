@@ -197,27 +197,12 @@ switch ($ajax_type)
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1) $quote = "<div class='button_pro1'><a href=\"javascript:addQuote('".$pRec["user_name"]."-".$pRec["id"]."-".$pRec['date']."','".$pRec["message"]."')\">\"Quote\"</a></div>";
 		else $quote = "";
 
-		$uploadId = (int) $pRec["upload_id"];
-
-    if($uploadId > 0) {
-        // We have an attachment, query the database for the info
-        $tdb->setFp("uploads", "uploads");
-
-        $q = $tdb->get("uploads", $uploadId, array("name", "downloads"));
-
-        // Make sure the attachment exists
-        if($q !== false) {
-            $attachName = $q[0]["name"];
-            $attachDownloads = $q[0]["downloads"];
-
-            $pRec["message"] = "[img]images/attachment.gif[/img] Attachment: [url=downloadattachment.php?id={$uploadId}]{$attachName}[/url] (Downloaded [b]{$attachDownloads}[/b] times)\n\n" . $pRec["message"];
-        }
-    }
-
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1) $reply = "<div class='button_pro1'><a href='newpost.php?id=".$_POST["id"]."&t=0&t_id=".$_POST["t_id"]."&page=$page'>Add Reply</a></div>";
 		else $reply = "";
 
 		$msg = display_msg($pRec["message"]);
+		$msg .= "<div id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}-attach'>".$tdb->getUploads($_GET['id'],$_GET['t_id'],$pRec['id'],$pRec['upload_id'],$_CONFIG['fileupload_location'],$pRec['user_id'])."</div>";
+		
     $output .= "
 			<tr>
 				<th><div class='post_name'>";
@@ -228,8 +213,12 @@ switch ($ajax_type)
 			</tr>
 			<tr>
 				<td class='$table_color' valign='top' style='width:15%;'>";
-		if (@$user[0]["avatar"] != "") $output .= "<br /><img src=\"".$user[0]["avatar"]."\" border='0' alt='' title=''><br />";
-		else $output .= "<br /><a href='profile.php'><img src='images/avatars/blank.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
+		if (@$user[0]["avatar"] != "")
+    {
+      $resize = resize_img($user[0]['avatar'],$_REGIST["avatarupload_dim"]);
+      $output .= "<br /><img src=\"".$user[0]["avatar"]."\" $resize border='0' alt='' title=''><br />";
+    }
+    else $output .= "<br /><a href='profile.php'><img src='images/avatars/blank.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
         $output .= "<div class='post_info'><span style='color:#".$statuscolor."'><strong>".$status."</strong></span></div>";
         if ($pRec["user_id"] != "0") $output .= "
 
@@ -596,8 +585,7 @@ switch ($ajax_type)
         else
         {
           echoTableHeading("Post Preview", $_CONFIG);
-          $msg = display_msg($_POST["message"]);
-          $msg = $_POST['message'];
+          $msg = display_msg(encode_text($_POST["message"]));
           echo "<tr><td class='area_2'><div class='msg_block'>".$msg."</div></td></tr>";
           echoTableFooter(SKIN_DIR);
         }
