@@ -231,7 +231,7 @@
 	} else {
 		require_once('./includes/header.php');
 		?> <script language='javascript' src='includes/pwd_strength.js'></script>
-		<? 
+		<?php
 		// security mod if enabled
 		if ((bool) $_REGIST['security_code'] === true && !$tdb->is_logged_in())
     {

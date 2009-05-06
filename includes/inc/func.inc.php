@@ -366,8 +366,7 @@ function pagination($page_string, $page,$num_pages)
 function resize_img($image,$target)
 {
   $sizes = getimagesize($image);
-  //dump($sizes);
-  
+
   $width = $sizes[0];
   $height = $sizes[1];
   if ($width < $target and $height < $target)

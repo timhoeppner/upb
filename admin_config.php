@@ -109,7 +109,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 						case "dropdownlist":
 						case "dropdown":
 						case "list":
-							if(FALSE !== ($arr = unserialize($configVars[$i]['data_list']))) {
+              if(FALSE !== ($arr = unserialize($configVars[$i]['data_list']))) {
 								print "<select name=\"{$configVars[$i]['name']}\">\n";
 								$glb_var = '_'.strtoupper($_GET['action']);
 								$glb_var =& $$glb_var;

@@ -305,8 +305,7 @@ echo "<div class='alert'>
 				<td class='area_1' valign='middle' style='text-align:center;padding:20px;height:150px;'>";
   if (@$rec[0]["avatar"] != "")
   {
-    if (substr($rec[0]['avatar'],0,7) == 'http://')
-      $resize = resize_img($rec[0]['avatar'],$_REGIST["avatarupload_dim"]);
+    $resize = resize_img($rec[0]['avatar'],$_REGIST["avatarupload_dim"]);
     echo "<img src='".$rec[0]["avatar"]."' $resize border='0'><br />";
   }
   else echo "<img src='images/avatars/noavatar.gif' alt='' title='' />";
@@ -325,22 +324,29 @@ echo "<div class='alert'>
     if ($custom_avatar)
     {
       echo "<tr><th style='text-align:center;' colspan='2'>Custom Avatar</th></tr>";
-      echo "<tr><td class='area_1'><strong>Custom Avatar:</strong><p>Maximum avatar size is ".$_REGIST["avatarupload_dim"]."px by ".$_REGIST["avatarupload_dim"]."px".(($_REGIST['custom_avatars'] == '2') ? '<br>Valid filetypes are jpg, jpeg and gif.<br>Maximum filesize is '.$_REGIST["avatarupload_size"].'KB.' : '')."<br />";
+      echo "<tr><td class='area_1'><strong>Custom Avatar:</strong><p>Maximum avatar size is ".$_REGIST["avatarupload_dim"]."px by ".$_REGIST["avatarupload_dim"]."px";
+
+      if ($_REGIST['custom_avatars'] > '2' and $_REGIST['avatarupload_size'] > 0)
+      echo '<br>Valid filetypes are jpg, jpeg and gif.<br>Maximum filesize is '.$_REGIST["avatarupload_size"].'KB.';
       echo "<td class='area_2' valign='middle' style='text-align:center;padding:20px;height:150px;'>";
 
       echo "You may upload a custom image using the control(s) below.";
-      if ($_REGIST['custom_avatars'] > 1)
+
+      if ($_REGIST['custom_avatars'] == 1)
+        echo "<p>Enter the URL of an image below<br />
+        <input type='text' size='40' name='avatar2url' value='http://' />";
+      else if ($_REGIST['custom_avatars'] == 2)
+        echo "<p>Upload image from your computer <br />
+        <input type='file' size='40' name='avatar2file' />";
+      else
       {
-        
         echo "<p>Option 1 - Enter the URL of an image below<br />
         <input type='text' size='40' name='avatar2url' value='http://' />";
-        echo "<p>Option 2 - Upload image from your computer <br />
+        if ($_REGIST['avatarupload_size'] > 0)
+          echo "<p>Option 2 - Upload image from your computer <br />
         <input type='file' size='40' name='avatar2file' />";
       }
-      else
-        echo "<p>Option 1 - Enter the URL of an image below<br />
-        <input type='text' size='40' name='avatar2url' value='http://' />";
-      echo "<p>Any image exceeding the dimensions specified will be resized</td></tr>";
+      echo "<p>If either the width or height exceeds this limit the avatar will be resized maintaining the correct ratio</td></tr>";
     }
     echo "
 			<tr>
