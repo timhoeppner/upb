@@ -12,13 +12,7 @@ session_start();
     require_once('config.php');
 	}
 
-if (!defined('DB_DIR'))
-{
-if (TRUE !== is_writable('./config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
-	if (filesize('./config.php') > 0) {
-		require_once('./config.php');
-	}
-	if(!isset($_POST['add'])) $_POST['add'] = '';
+if(!isset($_POST['add'])) $_POST['add'] = '';
 	if ($_POST["add"] == "") {
 	    ?><!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
@@ -85,10 +79,11 @@ if (TRUE !== is_writable('./config.php')) die('Unable to continue with the insta
 		//define and create the new database folder
 		if (!defined('DB_DIR')) {
 			define('DB_DIR', './'.uniqid('data_', true), true);
-			$f = fopen('../config.php', 'w');
+			$f = fopen('./config.php', 'w');
 			fwrite($f, "<?php\ndefine('UPB_VERSION', '2.2.4', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
 			fclose($f);
 		}
+		
 		if (!is_dir(DB_DIR)) {
 			if (!mkdir(DB_DIR, 0777)) die('The forum must be able to create a folder in the root forum folder.  Please chmod() the root folder to 777 and rerun the script');
 			@mkdir(DB_DIR.'/backup', 0777);
@@ -276,8 +271,8 @@ if (TRUE !== is_writable('./config.php')) die('Unable to continue with the insta
 
         $config_tdb->add('newuseravatars', '50', 'regist', 'number', 'text', '8', '1', 'New User Avatars', 'Prevent new users from choosing their own avatars (if "Custom Avatars" is enabled), by defining a minimum post count they must have (Set to 0 to disable)');
         $config_tdb->add('avatarupload_size', '10', 'regist', 'number', 'text', '8', '2', 'Size Limits For Avatar Uploads', 'In kilobytes, type in the maximum size allowed for avatar uploads<br><i>Note: Setting to 0 will only allow linked avatars</i>');
-$config_tdb->add('avatarupload_dim', '100', 'regist', 'number', 'text', '8', '3', 'Dimension Limits For Avatar Uploads', 'In pixels, type in the maximum size allowed for avatar uploads<br>e.g. 100 will allow avatars up to 100x100px.<br>If either the width or height exceeds this limit the avatar will be resized maintaining the correct ratio<br><i>Note: Setting to 0 will only allow linked avatars</i><br>');
-$config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8', '4', 'Custom Avatars', 'Allow users to link or upload their own avatars instead of choosing them locally in images/avatars/<br>Choosing Upload allows <b>both</b> link and upload avatars', 'a:4:{i:0;s:7:"Disable";i:1;s:4:"Link";i:2;s:6:"Upload";i:3;s:4:"Both";}');
+$config_tdb->add('avatarupload_dim', '100', 'regist', 'number', 'text', '8', '3', 'Dimension Limits For Avatar Uploads', 'In pixels, type in the maximum size allowed for avatar uploads<br>e.g.100 will allow avatars up to 100x100px. If one dimension exceeds this limit the avatar will be resized<br><i>Note: Setting to 0 will only allow linked avatars</i>');
+$config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8', '4', 'Custom Avatars', 'Allow users to link or upload their own avatars instead of choosing them locally in images/avatars/<br>Choosing Upload allows <b>both</b> link and upload avatars', 'a:3:{i:0;s:7:"Disable";i:1;s:4:"Link";i:2;s:6:"Upload";}');
         //$_STATUS
 		$tdb->add("ext_config", array("name" => "member_status1", "value" => "n00b", "type" => "status", "title" => "Member post status 1", "description" => "According to post count", "form_object" => "text", "data_type" => "string", "minicat" => "2", "sort" => "1"));
 		$tdb->add("config", array("name" => "member_status1", "value" => "n00b", "type" => "status"));
@@ -520,14 +515,14 @@ $config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8',
 			$f = fopen(DB_DIR."/new_pm.dat", 'w');
 			fwrite($f, " 0");
 			fclose($f);
-			$config_file = file('../config.php');
+			$config_file = file('./config.php');
 			unset($config_file[count($config_file) - 1]);
 			$config_file[] = "define('ADMIN_EMAIL', '".$_POST["email"]."', true);";
 			$config_file[] = '?>';
 
 			?><?php
 			$config_file = implode("\n", $config_file);
-			$f = fopen('../config.php', 'w');
+			$f = fopen('./config.php', 'w');
 			fwrite($f, $config_file);
 			fclose($f);
 			unset($config_file);
@@ -781,97 +776,4 @@ $config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8',
 </body>
 </html>";
 	}
-}
-}
-else
-  $current_update = '2.2.4';
-  define('UPB_VERSION','2.1.1b');
-
-if (substr(UPB_VERSION,0,1) == 1)
-{
-die("Your version is very outdated and uses a completely new database system.<br>Please install the latest version: $current_update");
-}
-echo "update required from v".UPB_VERSION." to v$current_update<p>";
-
-function get_updates()
-{
-  $alter = str_replace('.','_',UPB_VERSION);
-  $file_list = array();
-  $d = dir("install");
-  while (false !== ($entry = $d->read())) {
-   if (substr_count($entry,'update') == 1)
-    $file_list[] = $entry;
-  }
-  $d->close();
-
-  $key_alter = array_search('update'.$alter.'.php',$file_list);
-  
-  if ($alter == "1_0")
-    $key_alter = -1;
-  
-  $files_needed = array_slice($file_list,$key_alter+1);
-  
-  return $files_needed;
-}
-
-$_SESSION['files'] = get_updates();
-$_SESSION['update_version'] = $current_update;
 ?>
-<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
-<head>
-<title>UPB v2.2.4 Updater</title>
-<link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
-</head>
-<body>
-<div id='upb_container'>
-	<div class='main_cat_wrapper2'>
-		<table class='main_table_2' cellspacing='1'>
-			<tr>
-				<td id='logo'><img src='skins/default/images/logo.png' alt='' title='' /></td>
-			</tr>
-		</table>
-	</div>
-	<br />
-	<br />
-<form action='<?php print $_SERVER['PHP_SELF']; ?>' method='post'>
-	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.2.4 Updater</div>
-		<table class='main_table' cellspacing='1'>
-			<tr>
-				<th style='text-align:center;'>&nbsp;</th>
-			</tr>
-			<tr>
-				<td class='area_welcome'><div class='welcome_text'>If you have any problems, please seek support at <a href='http://www.myupb.com/'>myupb.com's support forums!</a></div></td>
-			</tr>
-			<tr>
-				<td class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
-			</tr>
-			<tr>
-				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;'>
-					Thank you for choosing my Ultimate PHP Board.<br /><br />
-					This script will guide you through the process of updating your myUPB bulletin board.<br />
-          <?php
-					$dir_777 = is_readable('./') && is_writable('./');
-					if(!$dir_777) print "You have to chmod upb's root directory to 0777 before you can proceed";
-					else {
-          echo "<p>You are currently running v".UPB_VERSION." and the current version available is v".$current_update."<br>";
-          echo (count($_SESSION['files']) == 1) ? "There is 1 update file that needs to be run.": "There are ".count($_SESSION['files']). " updates which will be run one after the other.";
-          echo "<br>If you need to input any information you will be prompted.<br>After each section of the upgrade has been completed you will be prompted to proceed to the next step.";
-          echo '<p>Click on the "Proceed" to continue<br />';
-	} ?><br /><br />
-			<input type='hidden' name='add' value='1' /><input type='submit' value='Proceed'<?php print (($dir_777) ? '': ' DISABLED');?>>
-			</td>
-			</tr>
-			<tr>
-				<td class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
-			</tr>
-		</table>
-		<div class='footer'><img src='skins/default/images/spacer.gif' alt='' title='' /></div>
-	</div>
-</form>
-<br />
-<div class='copy'>Powered by myUPB&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href='http://www.myupb.com/'>PHP Outburst</a>
-	&nbsp;&nbsp;&copy;2002 - <?php echo date("Y",time()); ?></div>
-</div>
-</body>
-</html>

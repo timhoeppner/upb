@@ -4,12 +4,10 @@ $from_version = "2.2.3";
 $to_version = "2.2.4";
 
 $where = "Updating to $to_version";
-echo "Updating from $from_version to $to_version";
 if (file_exists('./includes/script-styles.js'))
   unlink('./includes/script-styles.js');
 
 $result = $config_tdb->basicQuery('config','name','custom_avatars');
-dump($result);
 
 if (!empty($_POST))
 {

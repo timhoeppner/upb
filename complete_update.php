@@ -1,12 +1,12 @@
 <?php
 session_start();
   ignore_user_abort();
-	if (TRUE !== is_writable('../config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
-	if (filesize('../config.php') > 0) {
-    require_once('../config.php');
+	if (TRUE !== is_writable('./config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
+	if (filesize('./config.php') > 0) {
+    require_once('./config.php');
 	}
 
-$lines = explode("\n", file_get_contents('../config.php'));
+$lines = explode("\n", file_get_contents('./config.php'));
 
 for($i=0;$i<count($lines);$i++) {
 		if(FALSE !== strpos($lines[$i], 'INSTALLATION_MODE')) unset($lines[$i]);
@@ -15,7 +15,7 @@ for($i=0;$i<count($lines);$i++) {
         break;
     }
 
-    $f = fopen('../config.php', 'w');
+    $f = fopen('./config.php', 'w');
     fwrite($f, implode("\n", $lines));
     fclose($f);
 ?>

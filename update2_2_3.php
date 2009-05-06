@@ -36,7 +36,7 @@ $where = "Updating $from_version to $to_version";
 				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;'>
 					<p><?php echo $where; ?>
 					<p>
-					<input type='button' onclick="location.href='update2_2_3.php'" value='Click here to proceed to next step'>
+					<input type='button' onclick="location.href='update2_2_4.php'" value='Click here to proceed to next step'>
 			</td>
 			</tr>
 			<tr>

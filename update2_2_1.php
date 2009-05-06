@@ -181,12 +181,15 @@ if ($_POST['next'] == 0) {
 		fclose($f);
 	}
 	print "<P>Created a new uploads directory";
+    if (count($uploads) > 0)
+    {
     foreach($uploads as $file) {
         $file_name = md5(uniqid(rand(), true));
         $f = fopen($uploads_dir.'/'.$file_name, 'xb');
         fwrite($f, $file['data']);
         fclose($f);
         $tdb->edit('uploads', $file['id'], array('user_level' => 0, 'file_loca' => $file_name));
+    }
     }
     $tdb->removeField('uploads', 'data');
 
@@ -355,10 +358,9 @@ if ($_POST['next'] == 0) {
 
     if(is_dir('./icon') && @rmdir('./icon/')) print "<p>Unable to remove the \"./icon\" directory.";
 } else if($_POST['next'] == $last_step) {
-    $msg = "<input type='button' onclick='location.href='update2_2_2.php' value='Click to Proceed to next section' name='next step'>";
-
-
-
+    ?>
+    <center><input type="button" onclick="location.href='update2_2_2.php';" value='Click to Proceed to next section' name='next step'>
+  <?php
 }
 if($_POST['next'] != $last_step) {
     echo "<tr>
