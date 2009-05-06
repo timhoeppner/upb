@@ -84,7 +84,8 @@ $_SESSION['update_version'] = $current_update;
           
           echo "<p>You are currently running v".UPB_VERSION." and the current version available is v".$current_update."<br>";
           echo (count($_SESSION['files']) == 1) ? "There is 1 update file that needs to be run.": "There are ".count($_SESSION['files']). " updates which will be run one after the other.";
-          echo "<br>If you need to input any information you will be prompted.<br>After each section of the upgrade has been completed you will be prompted to proceed to the next step.";
+          echo "<p>Please backup your skin, database and upload directories before proceeding.";
+          echo "<p>If you need to input any information you will be prompted.<br>After each section of the upgrade has been completed you will be prompted to proceed to the next step.";
           echo '<p>Click on the "Proceed" to continue<br />';
           var_dump($_SESSION['files']);
 	} ?><br /><br />
