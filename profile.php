@@ -48,8 +48,6 @@ if (isset($_POST["u_edit"])) {
 		if ($user[0]["view_email"] != $_POST["show_email"]) $rec["view_email"] = $_POST["show_email"];
 		if ($user[0]["mail_list"] != $_POST["email_list"]) $rec["mail_list"] = $_POST["email_list"];
 		if ($user[0]["location"] != $_POST["u_loca"]) $rec["location"] = $_POST["u_loca"];
-	    if($_REGIST['custom_avatars'] > 1 && (isset($_FILES["avatar2file"]["name"]) || isset($_POST['avatar2url'])))
-      {
       if (isset($_FILES["avatar2file"]["name"]) && trim($_FILES["avatar2file"]["name"]) != "") {
           if($_FILES['avatar2file']['size'] > $_REGIST['avatarupload_size']*1024)
           {
@@ -94,10 +92,10 @@ if (isset($_POST["u_edit"])) {
       elseif(isset($_POST['avatar2url']) && $_POST['avatar2url'] != '') {
           $rec['avatar'] = $_POST['avatar2url'];
       }
-	    }
       elseif(isset($_POST['avatar']) && $_POST['avatar'] != '') {
 	        $rec['avatar'] = $_POST['avatar'];
 	    }
+	    
       if(isset($rec['avatar']) && FALSE !== strpos($user[0]['avatar'], 'downloadattachment.php?id=')) {
             $id = substr($user[0]['avatar'], 26);
             if(ctype_digit($id)) {
@@ -116,7 +114,6 @@ if (isset($_POST["u_edit"])) {
 			$rec["timezone"] = $_POST["u_timezone"];
 			setcookie("timezone", $_POST["u_timezone"], (time() + (60 * 60 * 24 * 7)));
 		}
-
   $tdb->edit("users", $_COOKIE["id_env"], $rec);
     require_once('./includes/header.php');
   if (!isset($upload_err))
@@ -303,6 +300,7 @@ echo "<div class='alert'>
 			</tr>
 			<tr>
 				<td class='area_1' valign='middle' style='text-align:center;padding:20px;height:150px;'>";
+
   if (@$rec[0]["avatar"] != "")
   {
     $resize = resize_img($rec[0]['avatar'],$_REGIST["avatarupload_dim"]);
@@ -334,14 +332,14 @@ echo "<div class='alert'>
 
       if ($_REGIST['custom_avatars'] == 1)
         echo "<p>Enter the URL of an image below<br />
-        <input type='text' size='40' name='avatar2url' value='http://' />";
+        <input type='text' size='40' name='avatar2url' value='' />";
       else if ($_REGIST['custom_avatars'] == 2)
         echo "<p>Upload image from your computer <br />
         <input type='file' size='40' name='avatar2file' />";
       else
       {
         echo "<p>Option 1 - Enter the URL of an image below<br />
-        <input type='text' size='40' name='avatar2url' value='http://' />";
+        <input type='text' size='40' name='avatar2url' value='' />";
         if ($_REGIST['avatarupload_size'] > 0)
           echo "<p>Option 2 - Upload image from your computer <br />
         <input type='file' size='40' name='avatar2file' />";
