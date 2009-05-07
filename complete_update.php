@@ -11,7 +11,7 @@ $lines = explode("\n", file_get_contents('./config.php'));
 for($i=0;$i<count($lines);$i++) {
 		if(FALSE !== strpos($lines[$i], 'INSTALLATION_MODE')) unset($lines[$i]);
         if(FALSE === strpos($lines[$i], 'UPB_VERSION')) continue;
-        $lines[$i] = "define('UPB_VERSION','".$_SESSION['update_version']."', true);";
+        $lines[$i] = "define('UPB_VERSION','2.2.4', true);";
         break;
     }
 

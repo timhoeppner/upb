@@ -198,7 +198,10 @@
 				<td class='footer_3' colspan='6'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='footer_3a' colspan='6' style='text-align:center;'><input name='submit' id='submit' type='submit' value='Send PM' disabled> <input name='reset' id='reset' type='reset' value='Reset'></td>
+				<td class='footer_3a' colspan='6' style='text-align:center;'><input name='submit' id='submit' type='submit' value='Send PM' ";
+        if ($send_to === false)
+          echo "disabled";
+        echo "> <input name='reset' id='reset' type='reset' value='Reset'></td>
 			</tr>
 	</form>";
 	echoTableFooter(SKIN_DIR);

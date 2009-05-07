@@ -37,8 +37,7 @@ function get_updates()
   return $files_needed;
 }
 
-$_SESSION['files'] = get_updates();
-$_SESSION['update_version'] = $current_update;
+$files = get_updates();
 ?>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
@@ -83,13 +82,13 @@ $_SESSION['update_version'] = $current_update;
 					else {
           
           echo "<p>You are currently running v".UPB_VERSION." and the current version available is v".$current_update."<br>";
-          echo (count($_SESSION['files']) == 1) ? "There is 1 update file that needs to be run.": "There are ".count($_SESSION['files']). " updates which will be run one after the other.";
+          echo (count($files) == 1) ? "There is 1 update file that needs to be run.": "There are ".count($_SESSION['files']). " updates which will be run one after the other.";
           echo "<p>Please backup your skin, database and upload directories before proceeding.";
           echo "<p>If you need to input any information you will be prompted.<br>After each section of the upgrade has been completed you will be prompted to proceed to the next step.";
           echo '<p>Click on the "Proceed" to continue<br />';
-          var_dump($_SESSION['files']);
+          
 	} ?><br /><br />
-			<input type='button' onclick="location.href='<?php echo $_SESSION['files'][0];?>';" value='Proceed'>
+			<input type='button' onclick="location.href='<?php echo $files[0];?>';" value='Proceed'>
       <?php
       }
       else

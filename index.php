@@ -186,8 +186,10 @@
 	$whos_t = $whos["users"]+$whos["guests"];
 	$users_string = "";
 	if ($whos["users"] > 0) $users_string = $whos["who"];
-	$mem_total = $tdb->getNumberOfRecords("users");
-	$mem_last = $tdb->listRec("users", $mem_total, 1);
+	$mem = $tdb->basicQuery('users','reg_code','',1,-1,array('id','user_name'));
+	$mem_total = count($mem);
+  $mem_last[] = $mem[$mem_total-1];
+  
 	$mt = explode(' ', microtime());
 	$script_end_time = $mt[0] + $mt[1];
 	echo "
