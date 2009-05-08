@@ -139,7 +139,8 @@ class posts extends tdb {
 				break;
 				continue;
 			}
-			if(FALSE === ($fileId = $this->fileIdById($fp, $p_id))) {
+			
+			if(FALSE === ($fileId = $this->fileIdById($fp, $p_id)) and substr_count($_SERVER['PHP_SELF'],'managetopic') != 1) {
 				echo "<b><font color='red'>ERROR</font></b>: Unable to find the p_id $p_id(\$p_ids = <br />";
 				print_r($p_ids);
 				echo ") <br />";

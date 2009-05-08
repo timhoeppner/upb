@@ -1,6 +1,6 @@
 <?php
-$from_version = "2.2.2";
-$to_version = "2.2.3";
+$from_version = "2.2.4";
+$to_version = "2.2.5";
 
 $where = "Updating $from_version to $to_version";
 ?>
@@ -21,7 +21,7 @@ $where = "Updating $from_version to $to_version";
 	<br />
 	<br />
 	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.2.4 Updater</div>
+		<div class='cat_area_1'>myUPB v2.2.5 Updater</div>
 		<table class='main_table' cellspacing='1'>
 			<tr>
 				<th style='text-align:center;'>&nbsp;</th>
@@ -36,7 +36,7 @@ $where = "Updating $from_version to $to_version";
 				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;'>
 					<p><?php echo $where; ?>
 					<p>
-					<input type='button' onclick="location.href='update2_2_4.php'" value='Click here to proceed to next step'>
+					<input type='button' onclick="location.href='complete_update.php'" value='Click here to proceed to next step'>
 			</td>
 			</tr>
 			<tr>

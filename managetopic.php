@@ -169,18 +169,33 @@
 		        print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'Cannot Delete any posts.<br />'.ALERT_GENERIC_MSG, ALERT_MSG));
 		    } else {
 		        if($_POST['verify'] == 'Ok') {
-		            $ids = unserialize(stripslashes($_POST['ids']));
+                $posts_tdb->set_topic($tRec);
+                $posts_tdb->setFp("topics", $_GET["id"]."_topics");
+		            $posts_tdb->setFp("posts", $_GET["id"]);
+
+                $ids = unserialize(stripslashes($_POST['ids']));
 		            $p_ids = explode(',', $tRec[0]['p_ids']);
-		            
+
 		            foreach($ids as $id) {
 		                if(FALSE !== ($key = array_search($id, $p_ids))) unset($p_ids[$key]);
 		                $posts_tdb->delete('posts', $id);
 		            }
 		            $tRec = $posts_tdb->get("topics", $_GET["t_id"]);
-                
-                $replies = $tRec[0]['replies'] - count($ids);          
-                $posts_tdb->edit('topics', $_GET['t_id'], array("p_ids" => implode(',', $p_ids),'replies'=>$replies));
-		            require_once('./includes/header.php');
+
+                $replies = $tRec[0]['replies'] - count($ids);
+
+                $result = $posts_tdb->getPosts('posts');
+                foreach ($result as $key => $res)
+                {
+                  if ($res['t_id'] != $_GET['t_id'])
+                    unset($result[$key]);
+                }
+                $key = count($result) - 1;
+                $latest = $result[$key];
+
+                $posts_tdb->edit('topics', $_GET['t_id'], array("p_ids" => implode(',', $p_ids),'replies'=>$replies,'last_post'=>$latest['date'],'user_name'=>$latest['user_name'],'user_id'=>$latest['user_id']));
+
+                require_once('./includes/header.php');
 		            print str_replace('__TITLE__', 'Redirecting:', str_replace('__MSG__', 'Successfully deleted '.count($ids).' post(s).', CONFIRM_MSG));
 		            include_once './includes/footer.php';
 		            //redirect("{$_SERVER['PHP_SELF']}?id={$_GET['id']}&t_id={$_GET['t_id']}", 2);
@@ -212,7 +227,7 @@
 				$ids = explode(",", $ids);
 				$count = count($ids);
 				$num = 0;
-				
+
         foreach($ids as $p_id) {
 					$posts_tdb->delete("posts", $p_id, false);
 					$key = array_search($p_id, $p_ids);
@@ -220,7 +235,7 @@
 					$num++;
 					unset($key);
 				}
-			
+
 				$posts_tdb->reBuild("posts");
 				$p_ids = implode(",", $p_ids);
 				$posts_tdb->edit("topics", $_GET["t_id"], array("p_ids" => $p_ids));
@@ -261,7 +276,7 @@
 						$x++;
 					} else {
 						$table_color = $table2;
-						
+
 						$x--;
 					}
 					echo "
@@ -410,8 +425,9 @@
         echo "
 		<form method='POST' action='".$_SERVER['PHP_SELF']."?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."'>";
 		echoTableHeading("Delete Multiple Posts", $_CONFIG);
-				
+
 				$x = 1;
+				unset($pRecs[0]);
 				foreach($pRecs as $pRec) {
 					$msg = format_text(UPBcoding(filterLanguage($pRec["message"], $_CONFIG)));
 					echo "

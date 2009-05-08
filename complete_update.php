@@ -11,7 +11,7 @@ $lines = explode("\n", file_get_contents('./config.php'));
 for($i=0;$i<count($lines);$i++) {
 		if(FALSE !== strpos($lines[$i], 'INSTALLATION_MODE')) unset($lines[$i]);
         if(FALSE === strpos($lines[$i], 'UPB_VERSION')) continue;
-        $lines[$i] = "define('UPB_VERSION','2.2.4', true);";
+        $lines[$i] = "define('UPB_VERSION','2.2.5', true);";
         break;
     }
 
@@ -21,7 +21,7 @@ for($i=0;$i<count($lines);$i++) {
 ?>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.2.4 Updater</title>
+<title>UPB v2.2.5 Updater</title>
 <link rel='stylesheet' type='text/css' href='./skins/default/css/style.css' />
 </head>
 <body>
@@ -36,7 +36,7 @@ for($i=0;$i<count($lines);$i++) {
 	<br />
 	<br />
 	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.2.4 Updater</div>
+		<div class='cat_area_1'>myUPB v2.2.5 Updater</div>
 		<table class='main_table' cellspacing='1'>
 			<tr>
 				<th style='text-align:center;'>&nbsp;</th>
@@ -50,7 +50,7 @@ for($i=0;$i<count($lines);$i++) {
 			<tr>
 				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;'>
 					Congratulations<P>
-					Your forum has now been updated to version <?php echo $_SESSION['update_version']; ?><p>
+					Your forum has now been updated to version 2.2.5<p>
 					<p style='font-weight:bold;'>Please remove install.php, all the update files and complete_update.php after closing this page.<br>Failure to do so is a security risk.</p>
           Keep an eye out for future updates on the myUPB forums or by clicking on "Check for updates" in your admin panel.<br />Progress updates can be found on the <a href='http://www.myupb.com/news/'>Blog</a>
 <br /><br />

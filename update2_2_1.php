@@ -40,8 +40,7 @@ if ($_POST['next'] == 0) {
 				<th colspan='2'><strong>Welcome to myUPB v2.2.1</strong></th>
 			</tr>
 			<tr>
-			<td class='area_2' colspan='2'>Welcome to myUPB <b>v2.2.1</b><p>
-			You are currently using <b>v".UPB_VERSION."</b>";
+			<td class='area_2' colspan='2'>";
 	if(UPB_VERSION == '2.2.1') {
 		echo '<P>The bulletin board is already using <b>v2.2.1</b>';
 		$proceed = false;

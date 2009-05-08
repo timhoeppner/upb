@@ -1,5 +1,19 @@
 This is the changelog for this product's working copy.
 
+v2.2.5 Changelog - 08/05/2009
+
+== BUG FIXES ==
+# Incorrect last post details showing after post deletion
+# Broken PM system
+
+== NEW FEATURES ==
+
+# Unconfirmed members no longer appear in members list
+
+------------------------------
+
+v2.2.4 Changelog - 06/05/2009
+
 == SECURITY FIX ==
 # Possible use of XSS attack using quick edit
 
@@ -18,7 +32,6 @@ This is the changelog for this product's working copy.
 # Fixed possible bug with IIS not using $_SERVER['REQUEST_URI'] properly
 # Incorrect page count after post deletion
 
-
 == NEW FEATURES ==
 # Sending a PM from the PM system rather than having to find a user and click on the Send PM button has been added.
 # The IPlog view has download and delete options courtesy of Jono
@@ -35,9 +48,17 @@ This is the changelog for this product's working copy.
 # New topic creation now redirects to the topic rather than the forum
 # Preview Post
 
+== SKIN CHANGES ==
+textarea#newedit: 
+	width changed to 600
 
-
-
-
+.image_block:
+	removed 
+		max-height
+	added 
+		max-width: 650px;
+	
+added .pagination_title
+added .msg_block
 
 

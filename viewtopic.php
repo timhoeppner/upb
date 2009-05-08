@@ -46,7 +46,7 @@
 		$vars['page'] = ceil((substr_count($tRec[0]['p_ids'], ',') + 1) / $_CONFIG['posts_per_page']);
 	}
 	$pRecs = $posts_tdb->getPosts("posts", (($_CONFIG["posts_per_page"] * $vars['page'])-$_CONFIG["posts_per_page"]), $_CONFIG["posts_per_page"]);
-	if (empty($pRecs)) {
+  if (empty($pRecs)) {
     $msg = 'No posts could be found for this topic';
     if ((int)$_COOKIE["power_env"] >= 2)
       $msg .= "<br>To delete this topic click <a href='managetopic.php?id=2&t_id=2'>here</a>";

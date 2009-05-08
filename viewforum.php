@@ -104,7 +104,7 @@
 		</tr>";
 	} else {
 		foreach($tRecs as $tRec) {
-			if ($tRec["icon"] != "") {
+   if ($tRec["icon"] != "") {
           $posts_tdb->set_topic(array($tRec));
 			    if(($tRec['last_post'] > $_SESSION['newTopics']['lastVisitForums'][$_GET['id']] && !isset($_SESSION['newTopics']['f'.$_GET['id']]['t'.$tRec['id']]))) {
 					$tRec['icon'] = 'new.gif';

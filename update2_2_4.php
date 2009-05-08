@@ -19,7 +19,7 @@ $config_tdb->editVars('regist',array('custom_avatars'=>$result[0]['value']));
 ?>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.2.4 Updater</title>
+<title>UPB v2.2.5 Updater</title>
 <link rel='stylesheet' type='text/css' href='./skins/default/css/style.css' />
 </head>
 <body>
@@ -51,7 +51,7 @@ $config_tdb->editVars('regist',array('custom_avatars'=>$result[0]['value']));
 
 
           <p>
-					<input type='button' onclick="location.href='complete_update.php'" value='Click here to proceed to next step'>
+					<input type='button' onclick="location.href='update2_2_5.php'" value='Click here to proceed to next step'>
 			</td>
 			</tr>
 			<tr>
@@ -74,7 +74,7 @@ else
 
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.2.4 Updater</title>
+<title>UPB v2.2.5 Updater</title>
 <link rel='stylesheet' type='text/css' href='./skins/default/css/style.css' />
 </head>
 <body>

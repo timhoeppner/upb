@@ -6,7 +6,7 @@ $where = "Updating $from_version to $to_version";
 ?>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.2.4 Updater</title>
+<title>UPB v2.2.5 Updater</title>
 <link rel='stylesheet' type='text/css' href='./skins/default/css/style.css' />
 </head>
 <body>

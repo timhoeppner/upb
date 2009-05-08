@@ -90,7 +90,7 @@
   
 	if (isset($_GET["r_id"]) && is_numeric($_GET["r_id"])) {
 		$reply = $PrivMsg->get("CuBox", $_GET["r_id"]);
-		$u_reply = $tdb->get("users", $reply[0]["from"]);
+    $u_reply = $tdb->get("users", $reply[0]["from"]);
 		$ids = getUsersPMBlockedList($u_reply[0]['id']);
 		if(in_array($_COOKIE['id_env'], $ids)) {
 		   echo str_replace('__TITLE__','Denied!',str_replace('__MSG__',"The User you are sending does not wish to recieve messages from you. (You are blocked)",ALERT_MSG));
@@ -102,7 +102,7 @@
 			while (substr($reply[subject], 0, 4) == "RE: ") {
 				$reply[0]["subject"] = substr($reply[0]["subject"], 5);
 			}
-			$sbj = "RE: ".$reply[0]["subject"];
+			$sbj = "RE: ".str_replace('<x>','',$reply[0]["subject"]);
 		}
 		$hed = "Replying to ".$u_reply[0]["user_name"]."'s message";
 		$iframe = "

@@ -4,7 +4,7 @@ if (TRUE !== is_writable('config.php')) die('Unable to continue with the install
     require_once('config.php');
 	}
 
-$current_update = '2.2.4';
+$current_update = '2.2.5';
 
 if (substr(UPB_VERSION,0,1) == 1)
 {
@@ -41,7 +41,7 @@ $files = get_updates();
 ?>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.2.4 Updater</title>
+<title>UPB v2.2.5 Updater</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>
@@ -57,7 +57,7 @@ $files = get_updates();
 	<br />
 <form action='<?php print $_SERVER['PHP_SELF']; ?>' method='post'>
 	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.2.4 Updater</div>
+		<div class='cat_area_1'>myUPB v2.2.5 Updater</div>
 		<table class='main_table' cellspacing='1'>
 			<tr>
 				<th style='text-align:center;'>&nbsp;</th>
@@ -82,7 +82,7 @@ $files = get_updates();
 					else {
           
           echo "<p>You are currently running v".UPB_VERSION." and the current version available is v".$current_update."<br>";
-          echo (count($files) == 1) ? "There is 1 update file that needs to be run.": "There are ".count($_SESSION['files']). " updates which will be run one after the other.";
+          echo (count($files) == 1) ? "There is 1 update file that needs to be run.": "There are ".count($files). " updates which will be run one after the other.";
           echo "<p>Please backup your skin, database and upload directories before proceeding.";
           echo "<p>If you need to input any information you will be prompted.<br>After each section of the upgrade has been completed you will be prompted to proceed to the next step.";
           echo '<p>Click on the "Proceed" to continue<br />';
