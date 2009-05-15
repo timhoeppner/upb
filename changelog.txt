@@ -1,11 +1,12 @@
 This is the changelog for this product's working copy.
 
-v2.2.5 Changelog - 08/05/2009
+v2.2.5 Changelog - 16/05/2009
 
 == BUG FIXES ==
 # Incorrect last post details showing after post deletion
 # Broken PM system
 # Fixed pagination and member listing on page
+# Topic and post counts corrected if needed
 
 == NEW FEATURES ==
 
