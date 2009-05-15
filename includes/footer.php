@@ -10,10 +10,13 @@
 		$mt = explode(' ', microtime());
 		$script_end_time = $mt[0] + $mt[1];
 	}
-	echo "
-	<div class='copy'><a href='http://forum.myupb.com/'>Powered by myUPB v".UPB_VERSION."</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-	&copy; PHP Outburst 2002 - ".date("Y",time())."</div>
+	?>
+	<div class='copy'><a href='http://forum.myupb.com/'>
+  <?php
+  echo "Powered by myUPB v".UPB_VERSION."</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+	&copy; PHP Outburst 2002 - ".date("Y",time());
+  ?><br><br>
+  <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0;" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png" align='absmiddle' /></a></div>
 </div>
 </body>
-</html>";
-?>
+</html>

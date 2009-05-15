@@ -155,6 +155,7 @@ function ok_cancel($action, $text) {
 }
 
 function createPageNumbers($current_page, $total_number_of_pages, $url_string='') {
+
     if($current_page == '') $current_page = '1';
     $num_pages = (int) $total_number_of_pages;
     $url_string = str_replace('page='.$current_page, '', $url_string);
@@ -365,6 +366,8 @@ function pagination($page_string, $page,$num_pages)
 
 function resize_img($image,$target)
 {
+  if (substr_count($image,'downloadattachment.php') > 0)
+    return;
   $sizes = getimagesize($image);
 
   $width = $sizes[0];

@@ -249,8 +249,8 @@ function bbcodebuttons($txtarea='message',$type='post') {
     $bb_buttons .= "<a href=\"javascript:createBBtag('[quote]','[/quote]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/quote.gif' border='0' title='quote' /></a> ";
     $bb_buttons .= "<a href=\"javascript:createBBtag('[offtopic]','[/offtopic]','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/offtopic.gif' border='0' title='off topic' /></a>";
     $bb_buttons .= "<img src='".SKIN_DIR."/images/bbcode/separator.gif' border='0' title='' />";
-    $bb_buttons .= "<a href=\"javascript:add_link('google','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/google.gif' border='0' title='off topic' /></a> ";
-    $bb_buttons .= "<a href=\"javascript:add_link('youtube','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/youtube.gif' border='0' title='off topic' /></a>";
+    $bb_buttons .= "<a href=\"javascript:add_link('google','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/google.gif' border='0' title='Google Video' /></a> ";
+    $bb_buttons .= "<a href=\"javascript:add_link('youtube','$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/youtube.gif' border='0' title='YouTube Video' /></a>";
     }
     $bb_buttons .= "<img src='".SKIN_DIR."/images/bbcode/separator.gif' border='0' title='' />";
     $bb_buttons .= "<a href=\"javascript:removeBBcode('$txtarea')\"><img src='".SKIN_DIR."/images/bbcode/removeformat.gif' border='0' title='remove bbcode' /></a></div>";
@@ -274,37 +274,80 @@ function getSmilies($field = 'message')
   $output .= "</tr><tr><td colspan='10' class='more_smilie'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></td></tr></table></div>";
   return $output;
 }
-
+?><?
 function status($user)
 {
 $_STATUS = $GLOBALS['_STATUS'];
+
 if ($user[0]["level"] == "1") {
-				$status = "Member";
+
+        //$status = "Member";
         $statuscolor = $_STATUS["userColor"];
-				if ($user[0]["posts"] >= $_STATUS["member_post1"]) $status = $_STATUS["member_status1"];
-				if ($user[0]["posts"] >= $_STATUS["member_post2"]) $status = $_STATUS["member_status2"];
-				if ($user[0]["posts"] >= $_STATUS["member_post3"]) $status = $_STATUS["member_status3"];
-				if ($user[0]["posts"] >= $_STATUS["member_post4"]) $status = $_STATUS["member_status4"];
-				if ($user[0]["posts"] >= $_STATUS["member_post5"]) $status = $_STATUS["member_status5"];
+        $status_rank = "./skins/default/images/rank/member.png";
+
+        if ($user[0]["posts"] >= $_STATUS["member_post1"])
+          $status = $_STATUS["member_status1"];
+
+				if ($user[0]["posts"] >= $_STATUS["member_post2"])
+          $status = $_STATUS["member_status2"];
+
+				if ($user[0]["posts"] >= $_STATUS["member_post3"])
+				  $status = $_STATUS["member_status3"];
+
+				if ($user[0]["posts"] >= $_STATUS["member_post4"])
+				$status = $_STATUS["member_status4"];
+
+				if ($user[0]["posts"] >= $_STATUS["member_post5"])
+				$status = $_STATUS["member_status5"];
+
 			} elseif($user[0]["level"] == "2") {
 				$statuscolor = $_STATUS["modColor"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post1"]) $status = $_STATUS["mod_status1"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post2"]) $status = $_STATUS["mod_status2"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post3"]) $status = $_STATUS["mod_status3"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post4"]) $status = $_STATUS["mod_status4"];
-				if ($user[0]["posts"] >= $_STATUS["mod_post5"]) $status = $_STATUS["mod_status5"];
+				$status_rank = "./skins/default/images/rank/mod.png";
+				
+				if ($user[0]["posts"] >= $_STATUS["mod_post1"])
+        $status = $_STATUS["mod_status1"];
+
+				if ($user[0]["posts"] >= $_STATUS["mod_post2"])
+				$status = $_STATUS["mod_status2"];
+
+				if ($user[0]["posts"] >= $_STATUS["mod_post3"])
+				$status = $_STATUS["mod_status3"];
+
+				if ($user[0]["posts"] >= $_STATUS["mod_post4"])
+				$status = $_STATUS["mod_status4"];
+
+				if ($user[0]["posts"] >= $_STATUS["mod_post5"])
+ 			$status = $_STATUS["mod_status5"];
+
 			} elseif($user[0]["level"] >= 3) {
+
 				$statuscolor = $_STATUS["adminColor"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post1"]) $status = $_STATUS["admin_status1"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post2"]) $status = $_STATUS["admin_status2"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post3"]) $status = $_STATUS["admin_status3"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post4"]) $status = $_STATUS["admin_status4"];
-				if ($user[0]["posts"] >= $_STATUS["admin_post5"]) $status = $_STATUS["admin_status5"];
+				$status_rank = "./skins/default/images/rank/admin.png";
+				
+				if ($user[0]["posts"] >= $_STATUS["admin_post1"])
+			$status = $_STATUS["admin_status1"];
+
+				if ($user[0]["posts"] >= $_STATUS["admin_post2"])
+				$status = $_STATUS["admin_status2"];
+
+
+				if ($user[0]["posts"] >= $_STATUS["admin_post3"])
+				$status = $_STATUS["admin_status3"];
+
+
+				if ($user[0]["posts"] >= $_STATUS["admin_post4"])
+				$status = $_STATUS["admin_status4"];
+
+
+				if ($user[0]["posts"] >= $_STATUS["admin_post5"])
+				$status = $_STATUS["admin_status5"];
+
 			} else {
-				$status = "Member";
-				$statuscolor = $_STATUS["membercolor"];
+				//$status = "Member";
+      	$statuscolor = $_STATUS["membercolor"];
+				$status_rank = "./images/rank/member.png";
 			}
-			$statconf = array('status' => $status,'statuscolor'=>$statuscolor);
+			$statconf = array('status' => $status,'statuscolor'=>$statuscolor,'rank' => $status_rank);
       return $statconf;
 }
 ?>

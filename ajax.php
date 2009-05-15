@@ -164,10 +164,11 @@ switch ($ajax_type)
 
 			$x--;
 		}
-		unset($user, $status, $statuscolor);
+		unset($user, $status, $statuscolor,$statusrank);
 		$sig = '';
 		$status = '';
 		$statuscolor = '';
+		$statusrank = '';
 		$pm = "";
 		if ($pRec["user_id"] != "0") {
 			$user = $tdb->get("users", $pRec["user_id"]);
@@ -182,6 +183,7 @@ switch ($ajax_type)
 			$status_config = status($user);
 			$status = $status_config['status'];
 			$statuscolor = $status_config['statuscolor'];
+			$statusrank = $status_config['rank'];
 			if ($user[0]["status"] != "") $status = $user[0]["status"];
 			if (isset($_COOKIE["id_env"]) && $pRec["user_id"] != $_COOKIE["id_env"]) {
 				$user_blList = getUsersPMBlockedList($pRec["user_id"]);
@@ -216,10 +218,10 @@ switch ($ajax_type)
 		if (@$user[0]["avatar"] != "")
     {
       $resize = resize_img($user[0]['avatar'],$_REGIST["avatarupload_dim"]);
-      $output .= "<br /><img src=\"".$user[0]["avatar"]."\" $resize border='0' alt='' title=''><br />";
+      $output .= "<br /><center><img src=\"".$user[0]["avatar"]."\" border='0' $resize alt='' title=''></center><br />";
     }
-    else $output .= "<br /><a href='profile.php'><img src='images/avatars/blank.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
-        $output .= "<div class='post_info'><span style='color:#".$statuscolor."'><strong>".$status."</strong></span></div>";
+    else $output .= "<br /><br />";
+        $output .= "<div class='post_info'><center><span style='color:#".$statuscolor."'><img src='".$statusrank."'><br><strong>".$status."</strong></span></center></div>";
         if ($pRec["user_id"] != "0") $output .= "
 
 					<div class='post_info'>

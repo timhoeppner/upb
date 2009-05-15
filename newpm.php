@@ -19,7 +19,7 @@
 			for($i = 50; $i < ($c_outbox_recs); $i++) {
 				$PrivMsg->delete("CuBox", $recs[$i]["id"], false);
 			}
-			$PrivMsg->reBuild("CuBox");
+			//$PrivMsg->reBuild("CuBox");
 		}
 		echo str_replace('__TITLE__','Redirecting:',str_replace('__MSG__',"Message successfully sent!",CONFIRM_MSG));
 		require_once("./includes/footer.php");

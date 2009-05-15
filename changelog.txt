@@ -5,10 +5,14 @@ v2.2.5 Changelog - 08/05/2009
 == BUG FIXES ==
 # Incorrect last post details showing after post deletion
 # Broken PM system
+# Fixed pagination and member listing on page
 
 == NEW FEATURES ==
 
 # Unconfirmed members no longer appear in members list
+# Rank images (created by Nightmare)
+# Slightly modified layout of member details next to post
+# Preview Post for Edit
 
 ------------------------------
 
@@ -49,6 +53,8 @@ v2.2.4 Changelog - 06/05/2009
 # Preview Post
 
 == SKIN CHANGES ==
+Skin changes need to be made in style.css which is located in skins/[SKIN FOLDER NAME]/css/
+
 textarea#newedit: 
 	width changed to 600
 

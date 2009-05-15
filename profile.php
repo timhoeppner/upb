@@ -48,11 +48,14 @@ if (isset($_POST["u_edit"])) {
 		if ($user[0]["view_email"] != $_POST["show_email"]) $rec["view_email"] = $_POST["show_email"];
 		if ($user[0]["mail_list"] != $_POST["email_list"]) $rec["mail_list"] = $_POST["email_list"];
 		if ($user[0]["location"] != $_POST["u_loca"]) $rec["location"] = $_POST["u_loca"];
+    $dim = getimagesize($_FILES['avatar2file']['tmp_name']);
       if (isset($_FILES["avatar2file"]["name"]) && trim($_FILES["avatar2file"]["name"]) != "") {
           if($_FILES['avatar2file']['size'] > $_REGIST['avatarupload_size']*1024)
           {
             $upload_err = "The filesize of the uploaded avatar is too big.<br>The maximum filesize is ".$_REGIST['avatarupload_size']."KB<br>The file you uploaded was ".ceil($_FILES['avatar2file']['size']/1024)."KB";
           }
+          else if ($dim[0] > $_REGIST["avatarupload_dim"] or $dim[1] > $_REGIST["avatarupload_dim"])
+            $upload_err = "The dimensions of the uploaded avatar are too big.<br>The maximum dimensions are ".$_REGIST['avatarupload_dim']."px by ".$_REGIST['avatarupload_dim']."px";
           else
           if($_FILES['avatar2file']['error'] == UPLOAD_ERR_OK) {
                 require_once('./includes/class/upload.class.php');
@@ -146,6 +149,7 @@ echo "<div class='alert'>
 		$status_config = status($rec);
 		$status = $status_config['status'];
 		$statuscolor = $status_config['statuscolor'];
+    $statusrank = $status_config['rank'];
 		if ($rec[0]["status"] != "") $status = $rec[0]["status"];
 		require_once('./includes/header.php');
 		echo "";
@@ -159,6 +163,8 @@ echo "<div class='alert'>
 						<br />
 						<img src=\"".$rec[0]["avatar"]."\" alt='' title='' />
 						<br />
+						<img src='$statusrank'>
+            <br />
 						<div class='link_pm'>";
 		if($_COOKIE['power_env'] >= 3 && $rec[0]['level'] <= $_COOKIE['power_env']) print "<a href='admin_members.php?action=edit&id={$_GET['id']}'>Edit Member</a><br/>";
 		require_once('./includes/inc/privmsg.inc.php');

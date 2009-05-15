@@ -121,8 +121,9 @@
     					$sort = explode(",", $cRec["sort"]);
     					while (!empty($sort)) {
     						$fRec = $tdb->get("forums", $sort[0]);
+
     						$fRec = $fRec[0];
-    						if ((int)$fRec["view"] <= (int)($_COOKIE["power_env"])) {
+                if ((int)$fRec["view"] <= (int)($_COOKIE["power_env"])) {
     							//if($fRec["cat"] == $cRec["id"]) {
     							if(!isset($_SESSION['newTopics']['lastVisitForums'][$fRec['id']])) $_SESSION['newTopics']['lastVisitForums'][$fRec['id']] = $_COOKIE['lastvisit'];
     							$posts->setFp("topics", $fRec["id"]."_topics");
@@ -187,7 +188,7 @@
 	$users_string = "";
 	if ($whos["users"] > 0) $users_string = $whos["who"];
 	$mem = $tdb->basicQuery('users','reg_code','',1,-1,array('id','user_name'));
-	$mem_total = count($mem);
+ $mem_total = count($mem);
   $mem_last[] = $mem[$mem_total-1];
   
 	$mt = explode(' ', microtime());

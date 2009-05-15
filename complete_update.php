@@ -52,7 +52,7 @@ for($i=0;$i<count($lines);$i++) {
 					Congratulations<P>
 					Your forum has now been updated to version 2.2.5<p>
 					<p style='font-weight:bold;'>Please remove install.php, all the update files and complete_update.php after closing this page.<br>Failure to do so is a security risk.</p>
-          Keep an eye out for future updates on the myUPB forums or by clicking on "Check for updates" in your admin panel.<br />Progress updates can be found on the <a href='http://www.myupb.com/news/'>Blog</a>
+          Keep an eye out for future updates on the myUPB forums or by clicking on "Check for updates" in your admin panel.<br />Progress about future updates can be found on the <a href='http://www.myupb.com/news/'>Blog</a>
 <br /><br />
 			
 			</td>

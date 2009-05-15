@@ -432,17 +432,13 @@
 		} else {
 		    $users = $tdb->query('users', "user_name?'{$_GET['u']}'", $start, $_CONFIG['topics_per_page']);
 		}
-		if ($c <= $_CONFIG["topics_per_page"]) $num_pages = 1;
-		elseif (($c % $_CONFIG["topics_per_page"]) == 0) $num_pages = ($c / $_CONFIG["topics_per_page"]);
-		else $num_pages = ($c / $_CONFIG["topics_per_page"]) + 1;
-		$pageStr = createPageNumbers($_GET["page"], $num_pages, $_SERVER['QUERY_STRING']);
-        print "<br /><br />
-          <div id='tabstyle_pagenum'>
-            <span class='pagination_current'>Pages:</span>{$pageStr}
-          </div>
 
-          <div style='clear:both;'></div>
-          <div id='tabstyle_2'>
+    $num_pages = ceil(($c + 1) / $_CONFIG["topics_per_page"]);
+
+    $p = createPageNumbers($_GET["page"], $num_pages, $_SERVER['QUERY_STRING']);
+        echo pagination($p,$_GET['page'],$num_pages);
+
+         echo "<div id='tabstyle_2'>
             <ul>
               <li><a href='register.php' title='Add Member'><span>Add Member</span></a></li>";
               if($_REGIST['reg_approval']) echo "<li><a href='admin_members.php?action=confirm#skip_nav' title='Confirm New Members'><span>Confirm New Members</span></a></li>";
@@ -526,12 +522,7 @@
 				<td class='area_1' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='10'>An <i>italized</i> e-mail states that this member has chosen to have his/her email address non-viewable to all but admins.</td>
 			</tr>";
 		echoTableFooter(SKIN_DIR);
-		echo "
-		<table class='pagenum_container' cellspacing='1'>
-			<tr>
-				<td style='text-align:left;height:23px;'><span class='pagination_current'>Pages: </span>".$pageStr."</td>
-			</tr>
-		</table>";
+		echo pagination($p,$_GET['page'],$num_pages);
 	}
 	require_once("./includes/footer.php");
 ?>

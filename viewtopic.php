@@ -81,10 +81,11 @@
 
 			$x--;
 		}
-		unset($user, $status, $statuscolor);
+		unset($user, $status, $statuscolor,$statusrank);
 		$sig = '';
 		$status = '';
 		$statuscolor = '';
+		$statusrank = '';
 		$pm = "";
 		if ($pRec["user_id"] != "0") {
 			$user = $tdb->get("users", $pRec["user_id"]);
@@ -99,6 +100,7 @@
 			$status_config = status($user);
 			$status = $status_config['status'];
 			$statuscolor = $status_config['statuscolor'];
+      $statusrank = $status_config['rank'];
 
 			if ($user[0]["status"] != "") $status = $user[0]["status"];
 			if (isset($_COOKIE["id_env"]) && $pRec["user_id"] != $_COOKIE["id_env"] && $pRec['user_id'] != 0) {
@@ -143,11 +145,11 @@
 		if (@$user[0]["avatar"] != "")
     {
       $resize = resize_img($user[0]['avatar'],$_REGIST["avatarupload_dim"]);
-      echo "<br /><img src=\"".$user[0]["avatar"]."\" border='0' $resize alt='' title=''><br />";
+      echo "<br /><center><img src=\"".$user[0]["avatar"]."\" border='0' $resize alt='' title=''></center><br />";
     }
     else if ($pRec["user_id"] != "0")
-        echo "<br /><a href='profile.php'><img src='images/avatars/blank.gif' alt='Click here to set avatar' title='Click here to set avatar' /></a><br />";
-        print "<div class='post_info'><span style='color:#".$statuscolor."'><strong>".$status."</strong></span></div>";
+        echo "<br /><br />";
+        print "<div class='post_info'><center><span style='color:#".$statuscolor."'><img src='".$statusrank."'><br><strong>".$status."</strong></span></center></div>";
         if ($pRec["user_id"] != "0") echo "
 					<div class='post_info'>
 						<strong>Posts:</strong> ".$user[0]["posts"]."

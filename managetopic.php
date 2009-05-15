@@ -181,7 +181,8 @@
 		                $posts_tdb->delete('posts', $id);
 		            }
 		            $tRec = $posts_tdb->get("topics", $_GET["t_id"]);
-
+                $fRec = $tdb->get("forums", $_GET["id"]);
+                
                 $replies = $tRec[0]['replies'] - count($ids);
 
                 $result = $posts_tdb->getPosts('posts');
@@ -193,12 +194,13 @@
                 $key = count($result) - 1;
                 $latest = $result[$key];
 
+                $tdb->edit("forums", $_GET["id"], array("posts" => ((int)$fRec[0]["posts"] - count($ids))));
                 $posts_tdb->edit('topics', $_GET['t_id'], array("p_ids" => implode(',', $p_ids),'replies'=>$replies,'last_post'=>$latest['date'],'user_name'=>$latest['user_name'],'user_id'=>$latest['user_id']));
 
                 require_once('./includes/header.php');
 		            print str_replace('__TITLE__', 'Redirecting:', str_replace('__MSG__', 'Successfully deleted '.count($ids).' post(s).', CONFIRM_MSG));
 		            include_once './includes/footer.php';
-		            //redirect("{$_SERVER['PHP_SELF']}?id={$_GET['id']}&t_id={$_GET['t_id']}", 2);
+		            redirect("{$_SERVER['PHP_SELF']}?id={$_GET['id']}&t_id={$_GET['t_id']}", 2);
 		        } elseif($_POST['verify'] == 'Cancel') {
 		            include_once './includes/footer.php';
 		            redirect("{$_SERVER['PHP_SELF']}?id={$_GET['id']}&t_id={$_GET['t_id']}", 0);
@@ -236,7 +238,7 @@
 					unset($key);
 				}
 
-				$posts_tdb->reBuild("posts");
+				//$posts_tdb->reBuild("posts");
 				$p_ids = implode(",", $p_ids);
 				$posts_tdb->edit("topics", $_GET["t_id"], array("p_ids" => $p_ids));
 				echo "Successfully deleted ".$num." Post(s)";

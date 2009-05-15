@@ -1,7 +1,10 @@
 <?php
 $from_version = "2.2.4";
 $to_version = "2.2.5";
+          require_once('includes/upb.initialize.php');
+require_once('includes/class/posts.class.php');
 
+$posts_tdb = new posts(DB_DIR."/", "posts.tdb");
 $where = "Updating $from_version to $to_version";
 ?>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
@@ -35,7 +38,37 @@ $where = "Updating $from_version to $to_version";
 			<tr>
 				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;'>
 					<p><?php echo $where; ?>
-					<p>
+          <p>Fixing post counts ....
+          <?php
+
+$userlist = $tdb->query('users',"id>'0'",1,-1,array('user_name','id','posts'));
+
+$forumlist = $tdb->query('forums',"id>'0'",1,-1,array('id','forum','topics','posts'));
+
+$postcount = array();
+
+foreach ($forumlist as $forum)
+{
+  $posts_tdb->setFp("topics", $forum['id']."_topics");
+	$posts_tdb->setFp("posts", $forum["id"]);
+	$posts = $posts_tdb->query('posts',"id>'0'",1,-1,array('user_name','user_id','id'));
+  $topics = $posts_tdb->query('topics',"id>'0'");
+
+  $tdb->edit('forums',$forum['id'],array('topics'=>count($topics),'posts'=>count($posts)));
+
+  foreach ($posts as $post)
+	{
+    $postcount[$post['user_id']] = $postcount[$post['user_id']] + 1;
+  }
+}
+
+foreach ($postcount as $key => $value)
+{
+$tdb->edit('users',$key,array('posts'=>$value));
+}
+echo "done";
+          ?>
+          <p>
 					<input type='button' onclick="location.href='complete_update.php'" value='Click here to proceed to next step'>
 			</td>
 			</tr>

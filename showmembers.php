@@ -9,46 +9,25 @@
 	require_once('./includes/header.php');
 	if ($tdb->is_logged_in()) {
 		if ($_GET["page"] == "") $_GET["page"] = 1;
-		$users = $tdb->listRec("users", ($_GET["page"] * $_CONFIG["topics_per_page"] - $_CONFIG["topics_per_page"] + 1), $_CONFIG["topics_per_page"]);
-		foreach ($users as $key => $user)
+		$users = $tdb->listRec("users", ($_GET["page"] * $_CONFIG["topics_per_page"] - $_CONFIG["topics_per_page"] + 1),$_CONFIG["topics_per_page"]);
+
+    foreach ($users as $key => $user)
 		{
       if ($user['reg_code'] != '')
         unset($users[$key]);
     }
-		$c = count($users);
-		if ($c <= $_CONFIG["topics_per_page"]) {
-			$num_pages = 1;
-		} elseif (($c % $_CONFIG["topics_per_page"]) == 0) {
-			$num_pages = ($c / $_CONFIG["topics_per_page"]);
-		} else {
-			$num_pages = ($c / $_CONFIG["topics_per_page"]) + 1;
-		}
-		$num_pages = (int) $num_pages;
-		if ($num_pages == 1) {
-			$pageStr = "<span class='pagination_current'>$num_pages</span>";
-		} else {
-			//$pageStr = "<font face='$font_face' size='$font_s'><span class=pagenumstatic>";
-			for($i = 1; $i <= $num_pages; $i++) {
-				if ($_GET["page"] == $i) {
-					$pageStr .= "<span class='pagination_current'>".$i."</span>";
-				} else {
-					$pageStr .= "<span class='pagination_link'><a href='showmembers.php?page=".$i."'>".$i."</a></span> ";
-				}
-			}
-			//$pageStr .= "</font></span>";
-			unset($num_pages);
-		}
-		echo "
-		<table class='pagenum_container' cellspacing='1'>
-			<tr>
-				<td style='text-align:left;height:23px;'><span class='pagination_current'>Pages: </span>".$pageStr."</td>
-			</tr>
-		</table>";
-		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
+		$c = $tdb->getNumberOfRecords("users");
+
+    $num_pages = ceil(($c + 1) / $_CONFIG["topics_per_page"]);
+	$p = createPageNumbers($_GET["page"], $num_pages, $_SERVER['QUERY_STRING']);
+  echo pagination($p,$_GET['page'],$num_pages);
+
+    echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 		echo "
 			<tr>
 				<th style='width:3%; text-align:center;'>ID</th>
 				<th style='width:15%'>Username</th>
+				<th style='text-align:center;'>Rank</th>
 				<th style='width:20%; text-align:center;'>Location</th>
 				<th style='width:5%; text-align:center;'>Posts</th>
 				<th style='width:15%; text-align:center;'>AIM</th>
@@ -63,14 +42,18 @@
 			</tr>";
 		} else {
 			foreach($users as $user) {
-				if ($user["level"] == "2") $userColor = $_STATUS["moderatcolor"];
-				elseif($user["level"] >= 3) $userColor = $_STATUS["admcolor"];
-				else $userColor = $_STATUS["membercolor"];
+//$array[0] = ;
+        $status_config = status(array(0 => array('level'=>$user['level'],'posts'=>$user['posts'])));
+			   $status = $status_config['status'];
+			 $statuscolor = $status_config['statuscolor'];
+        $statusrank = $status_config['rank'];
+        
 				/* location, # of posts, aim, msn, yahoo, icq */
 				echo "
 			<tr>
 				<td class='area_1' style='padding:8px;'>".$user["id"]."</td>
-				<td class='area_2'><span class='link_1'><a href='profile.php?action=get&amp;id=".$user["id"]."'>".$user["user_name"]."</a></span></td>
+				<td class='area_2'><span class='link_1'><a href='profile.php?action=get&amp;id=".$user["id"]."' style='color:#".$statuscolor."'>".$user["user_name"]."</a></span></td>
+				<td class='area_2' style='text-align:center;'><img src='".$statusrank."'></td>
 				<td class='area_2' style='text-align:center;'>".$user["location"]."</td>
 				<td class='area_1' style='text-align:center;'>".$user["posts"]."</td>
 				<td class='area_2' style='text-align:center;'>";
@@ -89,12 +72,7 @@
 			}
 		}
 		echoTableFooter(SKIN_DIR);
-		echo "
-		<table class='pagenum_container' cellspacing='1'>
-			<tr>
-				<td style='text-align:left;height:23px;'><span class='pagination_current'>Pages: </span>".$pageStr."</td>
-			</tr>
-		</table>";
+		echo pagination($p,$_GET['page'],$num_pages);
 	} else {
 		echo "<div class='alert'><div class='alert_text'>
 <strong>Access Denied!</strong></div><div style='padding:4px;'>you are not authorized to be here.</div></div>";

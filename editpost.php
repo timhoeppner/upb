@@ -51,14 +51,14 @@
 			</tr>
 			<tr>
 				<td class='footer_3a' style='text-align:center;' colspan='2'>
-        <input type=submit value='Edit'>
-        <input type=reset value='Reset'>";
-        echo "<input type=button onClick=\"javascript:window.location='viewtopic.php?id=".$_GET['id']."&t_id=".$_GET['t_id']."#".$_GET['p_id']."' value='Cancel Edit'>
+        <input type=submit value='Edit'><input type='button' onclick='postPreview()' value='Preview'>";
+        echo "<input type=button onClick=\"javascript:window.location='viewtopic.php?id=".$_GET['id']."&t_id=".$_GET['t_id']."#".$_GET['p_id']."'\" value='Cancel Edit'>
         </td>
-			</tr>";
+			</tr>
+      <tr></tr>";
       echoTableFooter(SKIN_DIR);
       echo "
-	</form>";
+	</form><div id='preview'></div>";
 	}
 	require_once("./includes/footer.php");
 ?>

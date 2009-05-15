@@ -102,7 +102,7 @@
 		$status = $status_config['status'];
 		$statuscolor = $status_config['statuscolor'];
 	
-    $message = display_msg($pmRec[0]["message"]);
+    $message = display_msg(encode_text($pmRec[0]["message"]));
     echo "
 			<tr>
 				<th style='width:15%;'><div class='post_name'><a href='profile.php?action=get&id=".$user[0]["id"]."'>".$user[0]["user_name"]."</a></div></th>
