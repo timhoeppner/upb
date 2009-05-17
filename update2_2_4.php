@@ -1,7 +1,7 @@
 <?php
 require_once("./includes/upb.initialize.php");
-$from_version = "2.2.3";
-$to_version = "2.2.4";
+$from_version = UPB_VERSION;
+$to_version = "2.2.5";
 
 $where = "Updating to $to_version";
 if (file_exists('./includes/script-styles.js'))
@@ -34,7 +34,7 @@ $config_tdb->editVars('regist',array('custom_avatars'=>$result[0]['value']));
 	<br />
 	<br />
 	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.2.4 Updater</div>
+		<div class='cat_area_1'>myUPB v2.2.5 Updater</div>
 		<table class='main_table' cellspacing='1'>
 			<tr>
 				<th style='text-align:center;'>&nbsp;</th>
@@ -89,7 +89,7 @@ else
 	<br />
 	<br />
 	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.2.4 Updater</div>
+		<div class='cat_area_1'>myUPB v2.2.5 Updater</div>
 		<table class='main_table' cellspacing='1'>
 			<tr>
 				<th style='text-align:center;' colspan='2'>&nbsp;</th>

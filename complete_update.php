@@ -1,7 +1,7 @@
 <?php
 session_start();
   ignore_user_abort();
-	if (TRUE !== is_writable('./config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
+ if (TRUE !== is_writable('./config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
 	if (filesize('./config.php') > 0) {
     require_once('./config.php');
 	}

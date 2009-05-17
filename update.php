@@ -1,7 +1,7 @@
 <?php
-if (TRUE !== is_writable('config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
-	if (filesize('config.php') > 0) {
-    require_once('config.php');
+	 if (TRUE !== is_writable('./config.php')) die('Unable to continue with the installation process.  "config.php" in the root upb directory MUST exist and MUST BE writable.');
+	if (filesize('./config.php') > 0) {
+    require_once('./config.php');
 	}
 
 $current_update = '2.2.5';
@@ -55,7 +55,55 @@ $files = get_updates();
 	</div>
 	<br />
 	<br />
+
+<?php
+if (empty($_POST))
+{
+?>
 <form action='<?php print $_SERVER['PHP_SELF']; ?>' method='post'>
+	<div class='main_cat_wrapper'>
+		<div class='cat_area_1'>myUPB v2.2.5 Updater</div>
+		<table class='main_table' cellspacing='1'>
+			<tr>
+				<th style='text-align:center;'>&nbsp;</th>
+			</tr>
+			<tr>
+				<td class='area_welcome'><div class='welcome_text'>If you have any problems, please seek support at <a href='http://www.myupb.com/'>myupb.com's support forums!</a></div></td>
+			</tr>
+			<tr>
+				<td class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
+			</tr>
+			<tr>
+				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;'>
+Thank you for choosing my Ultimate PHP Board.<br /><br />
+<textarea name='license' style='text-align:left' cols='80' rows='25' scrolling='auto'>
+          <?php
+          $license = file('./license.txt');
+          foreach ($license as $line)
+          {
+            echo $line;
+          }
+          echo "</textarea><p>";
+          echo "<b>I agree with the Terms and Conditions of this license: <input type='checkbox' name='agree'>";
+          echo '<p>Click on the "Proceed" to continue<br />';
+ ?><br /><br />
+			<input type='submit' name='submit' value='Proceed'>
+      </td>
+			</tr>
+			<tr>
+				<td class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
+			</tr>
+		</table>
+		<div class='footer'><img src='skins/default/images/spacer.gif' alt='' title='' /></div>
+	</div>
+</form>
+<?php
+}
+else
+{
+if ($_POST['agree'] == 'on')
+{
+?>
 	<div class='main_cat_wrapper'>
 		<div class='cat_area_1'>myUPB v2.2.5 Updater</div>
 		<table class='main_table' cellspacing='1'>
@@ -88,12 +136,13 @@ $files = get_updates();
           echo '<p>Click on the "Proceed" to continue<br />';
           
 	} ?><br /><br />
-			<input type='button' onclick="location.href='<?php echo $files[0];?>';" value='Proceed'>
+			<input type='button' name='proceed' onclick="location.href='<?php echo $files[0];?>';" value='Proceed'>
       <?php
       }
       else
       {
-        echo "<p>You are already running the latest release of myUPB.<p>Please delete install.php, complete_update.php and other files as they are a security risk";
+        echo "<p>You are already running the latest release of myUPB.<p>Please delete install.php, complete_update.php and other update files as they are a security risk<p>";
+        echo "<input type='button' onclick=\"location.href='index.php'\" value='Proceed'>";
       }
       ?>
       </td>
@@ -104,7 +153,40 @@ $files = get_updates();
 		</table>
 		<div class='footer'><img src='skins/default/images/spacer.gif' alt='' title='' /></div>
 	</div>
-</form>
+<?php
+}
+else
+{
+?>
+<div class='main_cat_wrapper'>
+		<div class='cat_area_1'>myUPB v2.2.5 Updater</div>
+		<table class='main_table' cellspacing='1'>
+			<tr>
+				<th style='text-align:center;'>&nbsp;</th>
+			</tr>
+			<tr>
+				<td class='area_welcome'><div class='welcome_text'>If you have any problems, please seek support at <a href='http://www.myupb.com/'>myupb.com's support forums!</a></div></td>
+			</tr>
+			<tr>
+				<td class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
+			</tr>
+			<tr>
+				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;'>
+You must accept the Terms and Conditions of the license before proceeding the update<br /><br />
+<p><a href='update.php'>Return to License</a><br />
+<br /><br />
+      </td>
+			</tr>
+			<tr>
+				<td class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
+			</tr>
+		</table>
+		<div class='footer'><img src='skins/default/images/spacer.gif' alt='' title='' /></div>
+	</div>
+<?php
+}
+}
+?>
 <br />
 <div class='copy'>Powered by myUPB&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href='http://www.myupb.com/'>PHP Outburst</a>
 	&nbsp;&nbsp;&copy;2002 - <?php echo date("Y",time()); ?></div>

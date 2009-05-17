@@ -27,7 +27,6 @@
 			<tr>
 				<th style='width:3%; text-align:center;'>ID</th>
 				<th style='width:15%'>Username</th>
-				<th style='text-align:center;'>Rank</th>
 				<th style='width:20%; text-align:center;'>Location</th>
 				<th style='width:5%; text-align:center;'>Posts</th>
 				<th style='width:15%; text-align:center;'>AIM</th>
@@ -46,14 +45,12 @@
         $status_config = status(array(0 => array('level'=>$user['level'],'posts'=>$user['posts'])));
 			   $status = $status_config['status'];
 			 $statuscolor = $status_config['statuscolor'];
-        $statusrank = $status_config['rank'];
         
 				/* location, # of posts, aim, msn, yahoo, icq */
 				echo "
 			<tr>
 				<td class='area_1' style='padding:8px;'>".$user["id"]."</td>
 				<td class='area_2'><span class='link_1'><a href='profile.php?action=get&amp;id=".$user["id"]."' style='color:#".$statuscolor."'>".$user["user_name"]."</a></span></td>
-				<td class='area_2' style='text-align:center;'><img src='".$statusrank."'></td>
 				<td class='area_2' style='text-align:center;'>".$user["location"]."</td>
 				<td class='area_1' style='text-align:center;'>".$user["posts"]."</td>
 				<td class='area_2' style='text-align:center;'>";

@@ -1,5 +1,5 @@
 <?php
-$from_version = "2.2.2";
+$from_version = UPB_VERSION;
 $to_version = "2.2.3";
 
 $where = "Updating $from_version to $to_version";
@@ -21,7 +21,7 @@ $where = "Updating $from_version to $to_version";
 	<br />
 	<br />
 	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.2.4 Updater</div>
+		<div class='cat_area_1'>myUPB v2.2.5 Updater</div>
 		<table class='main_table' cellspacing='1'>
 			<tr>
 				<th style='text-align:center;'>&nbsp;</th>

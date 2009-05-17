@@ -4,6 +4,7 @@ UPB 2.2.5 RELEASE NOTES
 
 Testing by pete917 and new images by Nightmare
 
+PLEASE READ THE LICENSE.TXT FILE BEFORE CONTINUING
 
 
 Getting Started:

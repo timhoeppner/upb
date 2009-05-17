@@ -1,5 +1,5 @@
 <?php
-$from_version = "2.2.4";
+$from_version = UPB_VERSION;
 $to_version = "2.2.5";
           require_once('includes/upb.initialize.php');
 require_once('includes/class/posts.class.php');
@@ -49,6 +49,7 @@ $postcount = array();
 
 foreach ($forumlist as $forum)
 {
+
   $posts_tdb->setFp("topics", $forum['id']."_topics");
 	$posts_tdb->setFp("posts", $forum["id"]);
 	$posts = $posts_tdb->query('posts',"id>'0'",1,-1,array('user_name','user_id','id'));
@@ -56,15 +57,20 @@ foreach ($forumlist as $forum)
 
   $tdb->edit('forums',$forum['id'],array('topics'=>count($topics),'posts'=>count($posts)));
 
-  foreach ($posts as $post)
-	{
-    $postcount[$post['user_id']] = $postcount[$post['user_id']] + 1;
+  if ($posts !== false)
+  {
+    foreach ($posts as $post)
+    {
+      $postcount[$post['user_id']] = $postcount[$post['user_id']] + 1;
+    }
   }
 }
 
 foreach ($postcount as $key => $value)
 {
-$tdb->edit('users',$key,array('posts'=>$value));
+$uquery = $tdb->basicQuery('users','id',$key);
+if ($uquery !== false)
+  $tdb->edit('users',$key,array('posts'=>$value));
 }
 echo "done";
           ?>

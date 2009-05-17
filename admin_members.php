@@ -470,13 +470,16 @@
 			$bList = file(DB_DIR."/banneduser.dat");
 			foreach($users as $user) {
 			   $lastvisit = $user['lastvisit'];
+			   $status_config = status(array(0 => array('level'=>$user['level'],'posts'=>$user['posts'])));
+			   $status = $status_config['status'];
+			 $statuscolor = $status_config['statuscolor'];
 				//if(gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d')) $lastvisit =
 				//(gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d') ? '<i>today</i>' : (gmdate('Y-m-d', $lastvisit) == gmdate('Y-m-d', mktime(0, 0, 0, gmdate('m'), ((int)gmdate('d') - 1), gmdate('Y'))) ? '<i>yesterday</i>' : gmdate("Y-m-d", user_date($lastvisit))))
 				//show each user
 				echo "
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>".$user["id"]."</strong></td>
-				<td class='area_2'><span class='link_1'><a href='profile.php?action=get&id=".$user["id"]."'>".$user["user_name"]."</a></span></td>
+				<td class='area_2'><span class='link_1'><a href='profile.php?action=get&id=".$user["id"]."' style='color:#".$statuscolor."'>".$user["user_name"]."</a></span></td>
 				<td class='area_1' style='text-align:center;'>".createUserPowerMisc($user["level"], 4)."</td>";
 				if ($user['view_email']) echo "
 				<td class='area_2'>".$user["email"]."</td>";

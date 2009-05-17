@@ -2,11 +2,16 @@ This is the changelog for this product's working copy.
 
 v2.2.5 Changelog - 16/05/2009
 
+== IMPORTANT ==
+License has been added. Please read license.txt before continuing
+
+
 == BUG FIXES ==
 # Incorrect last post details showing after post deletion
 # Broken PM system
 # Fixed pagination and member listing on page
 # Topic and post counts corrected if needed
+# Add forum link not showing up for Super Administrators
 
 == NEW FEATURES ==
 

@@ -3,7 +3,7 @@
 	// designed for Ultimate PHP Board
 	// Author: Clark
 	// Website: http://www.myupb.com
-	// Version: 2.2.4
+	// Version: 2.2.5
 	// Using textdb Version: 4.4.1
 session_start();
   ignore_user_abort();
@@ -17,7 +17,7 @@ if(!isset($_POST['add'])) $_POST['add'] = '';
 	    ?><!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.2.4 Installer</title>
+<title>UPB v2.2.5 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>
@@ -33,7 +33,7 @@ if(!isset($_POST['add'])) $_POST['add'] = '';
 	<br />
 <form action='<?php print $_SERVER['PHP_SELF']; ?>' method='post'>
 	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.2.4 Installer</div>
+		<div class='cat_area_1'>myUPB v2.2.5 Installer</div>
 		<table class='main_table' cellspacing='1'>
 			<tr>
 				<th style='text-align:center;'>&nbsp;</th>
@@ -47,12 +47,21 @@ if(!isset($_POST['add'])) $_POST['add'] = '';
 			<tr>
 				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;'>
 					Thank you for choosing my Ultimate PHP Board.<br /><br />
-					This script will guide you through the process of installing your new myUPB bulletin board.<br /><?php
-					$dir_777 = is_readable('./') && is_writable('./');
+					This script will guide you through the process of installing your new myUPB bulletin board.<p />
+          Please read the following license carefully before proceeding<p>
+          <textarea name='license' style='text-align:left' cols='80' rows='25' scrolling='auto'>
+          <?php
+          $license = file('./license.txt');
+          foreach ($license as $line)
+          {
+            echo $line;
+          }
+          echo "</textarea><p>";
+          echo "<b>I agree with the Terms and Conditions of this license: <input type='checkbox' name='agree'>";
+
+          $dir_777 = is_readable('./') && is_writable('./');
 					if(!$dir_777) print "You have to chmod upb's root directory to 0777 before you can proceed";
-					else {
-					    print 'Just select "Proceed" below and follow the instructions.<br />';
-					} ?><br /><br />
+					 ?><br /><br />
 			<input type='hidden' name='add' value='1' /><input type='submit' value='Proceed'<?php print (($dir_777) ? '': ' DISABLED');?>>
 			</td>
 			</tr>
@@ -65,12 +74,68 @@ if(!isset($_POST['add'])) $_POST['add'] = '';
 </form>
 <br />
 <div class='copy'>Powered by myUPB&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href='http://www.myupb.com/'>PHP Outburst</a>
-	&nbsp;&nbsp;&copy;2002 - 2008</div>
+	&nbsp;&nbsp;&copy;2002 - 2009</div>
 </div>
 </body>
 </html><?php
 	} else if($_POST['add'] == '1') {
-	    //Set the errorHandler
+
+if ($_POST['agree'] != 'on')
+{
+?>
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+<title>UPB v2.2.5 Installer</title>
+<link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
+</head>
+<body>
+<div id='upb_container'>
+	<div class='main_cat_wrapper2'>
+		<table class='main_table_2' cellspacing='1'>
+			<tr>
+				<td id='logo'><img src='skins/default/images/logo.png' alt='' title='' /></td>
+			</tr>
+		</table>
+	</div>
+	<br />
+	<br />
+	<div class='main_cat_wrapper'>
+		<div class='cat_area_1'>myUPB v2.2.5 Installer</div>
+		<table class='main_table' cellspacing='1'>
+			<tr>
+				<th style='text-align:center;'>&nbsp;</th>
+			</tr>
+			<tr>
+				<td class='area_welcome'><div class='welcome_text'>If you have any problems, please seek support at <a href='http://www.myupb.com/'>myupb.com's support forums!</a></div></td>
+			</tr>
+			<tr>
+				<td class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
+			</tr>
+			<tr>
+				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;'>
+You must accept the Terms and Conditions of the license before proceeding with the installation<br /><br />
+<p><a href='install.php'>Return to License</a><br />
+<br /><br />
+      </td>
+			</tr>
+			<tr>
+				<td class='footer_3'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
+			</tr>
+		</table>
+		<div class='footer'><img src='skins/default/images/spacer.gif' alt='' title='' /></div>
+	</div>
+<br />
+<div class='copy'>Powered by myUPB&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href='http://www.myupb.com/'>PHP Outburst</a>
+	&nbsp;&nbsp;&copy;2002 - 2009</div>
+</div>
+</body>
+</html>
+<?php
+die();
+}
+
+      //Set the errorHandler
 	    require_once('./includes/class/error.class.php');
         $errorHandler = &new errorhandler();
         set_error_handler(array(&$errorHandler, 'add_error'));
@@ -80,7 +145,7 @@ if(!isset($_POST['add'])) $_POST['add'] = '';
 		if (!defined('DB_DIR')) {
 			define('DB_DIR', './'.uniqid('data_', true), true);
 			$f = fopen('./config.php', 'w');
-			fwrite($f, "<?php\ndefine('UPB_VERSION', '2.2.4', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
+			fwrite($f, "<?php\ndefine('UPB_VERSION', '2.2.5', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
 			fclose($f);
 		}
 		
@@ -241,7 +306,7 @@ if(!isset($_POST['add'])) $_POST['add'] = '';
 		?><?php
 		require_once('./includes/class/config.class.php');
 		$config_tdb = new configSettings();
-		$config_tdb->add('ver', '2.2.4', 'config', 'text', 'hidden', '','','','');
+		$config_tdb->add('ver', '2.2.5', 'config', 'text', 'hidden', '','','','');
 		$config_tdb->add('email_mode', '1', 'config', 'bool', 'hidden','','','','');
 		$config_tdb->add('admin_catagory_sorting', '', 'config', 'text', 'hidden', '', '', '', '');
 		$config_tdb->add('banned_words', 'shit,fuck,cunt,pussy,bitch,arse', 'config', 'text', 'hidden', '','','','');
@@ -270,9 +335,9 @@ if(!isset($_POST['add'])) $_POST['add'] = '';
         $config_tdb->add('reg_approval', '0', 'regist', 'bool', 'checkbox', '10', '3', 'Approve New Users', 'Checking this will mean after new users register, their account will be disabled until an admin approves their account via "Manage Members"');
 
         $config_tdb->add('newuseravatars', '50', 'regist', 'number', 'text', '8', '1', 'New User Avatars', 'Prevent new users from choosing their own avatars (if "Custom Avatars" is enabled), by defining a minimum post count they must have (Set to 0 to disable)');
-        $config_tdb->add('avatarupload_size', '10', 'regist', 'number', 'text', '8', '2', 'Size Limits For Avatar Uploads', 'In kilobytes, type in the maximum size allowed for avatar uploads<br><i>Note: Setting to 0 will only allow linked avatars</i>');
-$config_tdb->add('avatarupload_dim', '100', 'regist', 'number', 'text', '8', '3', 'Dimension Limits For Avatar Uploads', 'In pixels, type in the maximum size allowed for avatar uploads<br>e.g.100 will allow avatars up to 100x100px. If one dimension exceeds this limit the avatar will be resized<br><i>Note: Setting to 0 will only allow linked avatars</i>');
-$config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8', '4', 'Custom Avatars', 'Allow users to link or upload their own avatars instead of choosing them locally in images/avatars/<br>Choosing Upload allows <b>both</b> link and upload avatars', 'a:3:{i:0;s:7:"Disable";i:1;s:4:"Link";i:2;s:6:"Upload";}');
+        $config_tdb->add('avatarupload_size', 10, 'regist', 'number', 'text', '8', '2', 'Size Limits For Avatar Uploads', 'In kilobytes, type in the maximum size allowed for avatar uploads<br><i>Note: Setting to 0 will only allow linked avatars</i>');
+$config_tdb->add('avatarupload_dim', 100, 'regist', 'number', 'text', '8', '3', 'Dimension Limits For Avatar Uploads', 'In pixels, type in the maximum size allowed for avatar uploads<br>e.g.100 will allow avatars up to 100x100px. If either the width or height exceeds this limit the avatar will be resized maintaining the correct ratio<br><i>Note: Setting to 0 will only allow linked avatars</i>');
+$config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8', '4', 'Custom Avatars', 'Allow users to link or upload their own avatars instead of choosing them locally in images/avatars/. Select <b>Both</b> to allow both types of avatar', 'a:4:{i:0;s:7:"Disable";i:1;s:4:"Link";i:2;s:6:"Upload";i:3;s:4:"Both";}');
         //$_STATUS
 		$tdb->add("ext_config", array("name" => "member_status1", "value" => "n00b", "type" => "status", "title" => "Member post status 1", "description" => "According to post count", "form_object" => "text", "data_type" => "string", "minicat" => "2", "sort" => "1"));
 		$tdb->add("config", array("name" => "member_status1", "value" => "n00b", "type" => "status"));
@@ -440,7 +505,7 @@ $config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8',
 		?><!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.2.4 Installer</title>
+<title>UPB v2.2.5 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>
@@ -456,7 +521,7 @@ $config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8',
 	<br />
 <form action='<?php print $_SERVER['PHP_SELF']; ?>' method='post'>
 	<div class='main_cat_wrapper'>
-		<div class='cat_area_1'>myUPB v2.2.4 Installer</div>
+		<div class='cat_area_1'>myUPB v2.2.5 Installer</div>
 		<table class='main_table' cellspacing='1'>
 			<tr>
 				<th style='text-align:center;'>&nbsp;</th>
@@ -489,7 +554,7 @@ $config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8',
 </form>
 <br />
 <div class='copy'>Powered by myUPB&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href='http://www.myupb.com/'>PHP Outburst</a>
-	&nbsp;&nbsp;&copy;2002 - 2008</div>
+	&nbsp;&nbsp;&copy;2002 - 2009</div>
 </div>
 </body>
 </html><?php
@@ -579,7 +644,7 @@ $config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8',
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.2.4 Installer</title>
+<title>UPB v2.2.5 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>
@@ -663,7 +728,7 @@ $config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8',
 </form>
 <br />
 <div class='copy'>Powered by myUPB&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href='http://www.myupb.com/'>PHP Outburst</a>
-	&nbsp;&nbsp;&copy;2002 - 2008</div>
+	&nbsp;&nbsp;&copy;2002 - 2009</div>
 </div>
 </body>
 </html>";
@@ -679,7 +744,7 @@ $config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8',
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<title>UPB v2.2.4 Installer</title>
+<title>UPB v2.2.5 Installer</title>
 <link rel='stylesheet' type='text/css' href='skins/default/css/style.css' />
 </head>
 <body>
@@ -741,15 +806,15 @@ $config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8',
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='bar_icq'><strong>ICQ:</strong></td>
+				<td class='area_1'><strong>ICQ:</strong></td>
 				<td class='area_2'><input type='text' name='icq' size='20' value='".$_POST["icq"]."' tabindex='9' maxlength='20'></td>
 			</tr>
 			<tr>
-				<td class='bar_aim'><strong>AIM:</strong></td>
+				<td class='area_1'><strong>AIM:</strong></td>
 				<td class='area_2'><input type='text' name='aim' size='20' value='".$_POST["aim"]."' tabindex='10' maxlength='24'></td>
 			</tr>
 			<tr>
-				<td class='bar_msnm'><strong>MSN:</strong></td>
+				<td class='area_1'><strong>MSN:</strong></td>
 				<td class='area_2'><input type='text' name='msn' size='20' value='".$_POST["msn"]."' tabindex='11'></td>
 			</tr>
 			<tr>
@@ -771,7 +836,7 @@ $config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8',
 </form>
 <br />
 <div class='copy'>Powered by myUPB&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href='http://www.myupb.com/'>PHP Outburst</a>
-	&nbsp;&nbsp;&copy;2002 - 2008</div>
+	&nbsp;&nbsp;&copy;2002 - 2009</div>
 </div>
 </body>
 </html>";

@@ -43,13 +43,8 @@
 			<div class='alert'><div class='alert_text'>
 			<strong>Attention!</strong></div><div style='padding:4px;'>No categories have been added yet.<br />";
 		if ($_COOKIE["power_env"] < 3) {
-			echo " Please contact an Administrator";
-			if ($_COOKIE["power_env"] > 0) {
-                echo " via <a href='newpm.php?to=1'>PM Message</a>";
-                if ($_CONFIG['email_mode'])
-                echo " or <a href='email.php?id=1'>web email</a>";
-		    }
-        } else {
+			echo "";
+           } else {
 			echo " To add a Category, <a href='admin_forums.php?action=add_cat'>click here</a>.";
 		}
 		echo '</div></div>';
@@ -105,12 +100,8 @@
     					echo "
     			<tr>
     				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='2'>No forums have been added to this Category yet.<br />";
-    					if ($_COOKIE["power_env"] != "3") {
-    						echo " Please contact an Administrator";
-                            if ($_COOKIE["power_env"] > 0) {
-                                echo " via <a href='newpm.php?to=1'>PM Message</a>";
-                                if ($_CONFIG['email_mode']) echo " or <a href='email.php?id=1'>web email</a>";
-        					}
+    					if ($_COOKIE["power_env"] < "3") {
+    						echo "";
     					} else {
     						echo " To add a forum, <a href='admin_forums.php?action=add_forum&cat_id=".$cRec["id"]."'>click here</a>.";
     					}
