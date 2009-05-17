@@ -15,15 +15,16 @@ Details can be found in the license.txt file.
 
 == INSTALLATION==
 
-
+Upload all the files from upb2.2.5.php
   CHMOD the root UPB directory to 0777
-  CHMOD the config.php to 0644
+  CHMOD the config.php to 0666
   Execute the install.php
   
 
 == UPGRADE ==
+Upload all the
 CHMOD the root UPB directory to 0777
-  CHMOD the config.php to 0644
+  CHMOD the config.php to 0666
 Execute the update.php - it will automatically detect which version you are using and perform the necessary upgrades
   
 
