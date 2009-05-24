@@ -722,7 +722,7 @@ class tdb {
                     } elseif($header[$i]["fType"] == "string") {
                         $field = substr($field, 0, $header[$i]["fLength"]);
                     } elseif($header[$i]["fType"] == "number") {
-                        $field = eregi_replace("[^0-9.]", "", $field);
+                        $field = eregi_replace("[^0-9.-]", "", $field);
                         $field = substr($field, 0, $header[$i]["fLength"]);
                     } elseif($header[$i]["fType"] == "id") {
                         $field = $header["curId"];
@@ -878,7 +878,7 @@ class tdb {
                     //$field = eregi_replace("[^a-z0-9 ,.:?/#]", "", $field);
                     $field = substr($field, 0, $header[$i]["fLength"]);
                 } elseif($header[$i]["fType"] == "number") {
-                    $field = eregi_replace("[^0-9.]", "", $field);
+                    $field = eregi_replace("[^0-9.-]", "", $field);
                     $field = substr($field, 0, $header[$i]["fLength"]);
                 } elseif($header[$i]["fType"] == "id") {
                     $theId = trim(fread($f, $header[$i]["fLength"]));

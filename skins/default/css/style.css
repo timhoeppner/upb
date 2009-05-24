@@ -1568,9 +1568,14 @@ vertical-align:middle;
 }
 
 .code_block {
-	border: 1px solid black;
-	max-height: 300px;
-	overflow: auto;
+max-width: 700px;
+max-height: 400px;
+overflow: auto;
+padding: 5px;
+border-color: #000000;
+border-width: 1px;
+border-style: solid;
+color: #000088;
 }
 
 .image_block {

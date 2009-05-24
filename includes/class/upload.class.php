@@ -26,7 +26,7 @@ class upload extends tdb {
         $this->tdb($dir."/", "main.tdb");
 
         // Check if the upload mod has been installed
-        if(!file_exists($dir."/main_uploads.ta")) $this->sendError(E_USER_ERROR, "Uploads have not been installed", __LINE__);
+        if(!file_exists($dir."/main_uploads.ta")) $this->sendError(E_USER_ERROR, "Upload database has not been installed", __LINE__);
         else {
             // Set this file pointer
             $this->setFp("uploads", "uploads");
@@ -65,7 +65,7 @@ class upload extends tdb {
                     "file_loca" => $file_name,
                 ));
 
-            return $id;
+            return (int)$id;
         }
 
         return false;

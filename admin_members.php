@@ -189,7 +189,9 @@
 			if ($_POST["icq"] != $rec[0]["icq"]) $new["icq"] = $_POST["icq"];
 			if ($_POST["yahoo"] != $rec[0]["yahoo"]) $new["yahoo"] = $_POST["yahoo"];
 			if ($_POST["msn"] != $rec[0]["msn"]) $new["msn"] = $_POST["msn"];
-			if (chop($_POST["sig"]) != $rec[0]["sig"]) $new["sig"] = chop($_POST["sig"]);
+      if ($_POST["aim"] != $rec[0]["aim"]) $new["aim"] = $_POST["aim"];
+      if ($_POST["skype"] != $rec[0]["skype"]) $new["skype"] = $_POST["skype"];
+      if (chop($_POST["sig"]) != $rec[0]["sig"]) $new["sig"] = chop($_POST["sig"]);
 			if ($_POST["timezone"] != $rec[0]["timezone"]) $new["timezone"] = $_POST["timezone"];
 			if (!empty($new)) $tdb->edit("users", $_GET["id"], $new);
 			echo "
@@ -267,18 +269,26 @@
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='bar_msnm' style='padding:8px;'><strong>MSN:</strong></td>
+				<td class='area_1' style='padding:8px;'><img src='images/msn.gif' border='0' align='absmiddle'>&nbsp;<strong>MSN:</strong></td>
 				<td class='area_2'><input type='text' name='msn' size='20' value='".$rec[0]["msn"]."' /></td>
 			</tr>
 			<tr>
-				<td class='bar_yim' style='padding:8px;'><strong>YIM:</strong></td>
+				<td class='area_1' style='padding:8px;'><img src='images/yahoo.gif' border='0' align='absmiddle'>&nbsp;<strong>YIM:</strong></td>
 				<td class='area_2'><input type='text' name='yahoo' size='20' value='".$rec[0]["yahoo"]."' /></td>
 			</tr>
 			<tr>
-				<td class='bar_icq' style='padding:8px;'><strong>ICQ:</strong></td>
+				<td class='area_1' style='padding:8px;'><img src='images/icq.gif' border='0' align='absmiddle'>&nbsp;<strong>ICQ:</strong></td>
 				<td class='area_2'><input type='text' name='icq' size='20' value='".$rec[0]["icq"]."' /></td>
 			</tr>
-			<tr>
+      <tr>
+				<td class='area_1' style='padding:8px;'><img src='images/aol.gif' border='0' align='absmiddle'>&nbsp;<strong>AOL:</strong></td>
+				<td class='area_2'><input type='text' name='icq' size='20' value='".$rec[0]["aim"]."' /></td>
+			</tr>
+      <tr>
+				<td class='area_1' style='padding:8px;'><img src='images/skype.gif' border='0' align='absmiddle'>&nbsp;<strong>Skype:</strong></td>
+				<td class='area_2'><input type='text' name='skype' size='20' value='".$rec[0]["skype"]."' /></td>
+			</tr>
+      <tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>

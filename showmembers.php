@@ -26,13 +26,14 @@
 		echo "
 			<tr>
 				<th style='width:3%; text-align:center;'>ID</th>
-				<th style='width:15%'>Username</th>
-				<th style='width:20%; text-align:center;'>Location</th>
+				<th style='width:14%'>Username</th>
+				<th style='width:17%; text-align:center;'>Location</th>
 				<th style='width:5%; text-align:center;'>Posts</th>
-				<th style='width:15%; text-align:center;'>AIM</th>
-				<th style='width:15%; text-align:center;'>MSN</th>
-				<th style='width:15%; text-align:center;'>Yahoo!</th>
+				<th style='width:12%; text-align:center;'>AIM</th>
+				<th style='width:13%; text-align:center;'>MSN</th>
+				<th style='width:13%; text-align:center;'>Yahoo!</th>
 				<th style='width:12%; text-align:center;'>ICQ</th>
+				<th style='text-align:center;'>Skype</th>
 			</tr>";
 		if ($users[0]["id"] == "") {
 			echo "
@@ -60,11 +61,12 @@
 				if ($user["msn"] != "") echo "<a href='http://members.msn.com/".$user["msn"]."' target='_blank'><img src='images/msn.gif' border='0'>&nbsp;".$user["msn"]."</a>";
 				echo "</td>
 				<td class='area_2' style='text-align:center;'>";
-				if ($user["yahoo"] != "") echo "<a href='http://edit.yahoo.com/config/send_webmesg?.target=".$user["yahoo"]."&.src=pg'><img border=0 src='http://opi.yahoo.com/online?u=".$user["yahoo"]."&m=g&t=0'>&nbsp;".$user["yahoo"]."</a>";
+				if ($user["yahoo"] != "") echo "<a href='http://edit.yahoo.com/config/send_webmesg?.target=".$user["yahoo"]."&.src=pg'><img border=0 src='images/yahoo.gif'>&nbsp;".$user["yahoo"]."</a>";
 				echo "</td>
 				<td class='area_1' style='text-align:center;'>";
 				if ($user["icq"] != "") echo "<a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$user["icq"]."&action=message'><img src='images/icq.gif' border='0'>&nbsp;".$user["icq"]."</a>";
-				echo "</td>
+				echo "</td><td class='area_2' style='text-align:center;'>";
+				if ($user["skype"] != "") echo "<img src='images/skype.gif' border='0'>&nbsp;".$user["skype"]."</td>
 			</tr>";
 			}
 		}

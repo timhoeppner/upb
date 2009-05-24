@@ -368,7 +368,7 @@ function resize_img($image,$target)
 {
   if (substr_count($image,'downloadattachment.php') > 0)
     return;
-  $sizes = getimagesize($image);
+  $sizes = @getimagesize($image);
 
   $width = $sizes[0];
   $height = $sizes[1];
@@ -385,4 +385,43 @@ $height = round($height * $percentage);
 
 return "width='$width' height='$height'";
 }
+
+function delete_topics($tRec,$forumid)
+{
+global $tdb,$posts_tdb,$_CONFIG;
+
+$p_ids = explode(",", $tRec[0]["p_ids"]);
+        $subtract_user_post_count = array();
+
+        foreach($p_ids as $p_id) {
+					$pRec = $posts_tdb->get('posts', $p_id);
+
+if ($pRec[0]['upload_id'] != 0)
+{
+
+          $upload_ids = explode(",",$pRec[0]['upload_id']);
+
+        $upload = new upload(DB_DIR, $_CONFIG["fileupload_size"],$_CONFIG["fileupload_location"]);
+
+      foreach ($upload_ids as $upload_id)
+           $upload->deleteFile($upload_id);
+}
+					if (!isset($subtract_user_post_count[$pRec[0]['user_id']])) {
+						$subtract_user_post_count[$pRec[0]['user_id']] = 1;
+					}
+					else $subtract_user_post_count[$pRec[0]['user_id']]++;
+					$posts_tdb->delete("posts", $p_id, false);
+				}
+
+				while (list($user_id, $post_count) = each($subtract_user_post_count)) {
+					$user = $tdb->get('users', $user_id);
+					$tdb->edit('users', $user_id, array('posts' => (int)$user[0]['posts'] - $post_count));
+				}
+				
+				$posts_tdb->delete("topics", $tRec[0]['id']);
+          
+				$fRec = $tdb->get("forums", $forumid);
+			
+				$tdb->edit("forums", $forumid, array("topics" => ((int)$fRec[0]["topics"] - 1), "posts" => ((int)$fRec[0]["posts"] - count($p_ids))));
+				}
 ?>

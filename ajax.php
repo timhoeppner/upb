@@ -47,6 +47,7 @@ switch ($ajax_type)
     $msg = "";
 
     $msg = display_msg(encode_text($_POST['newedit']));
+    $msg = display_msg($_POST['newedit']);
     $msg .= "<div id='{$_POST["forumid"]}-{$_POST['threadid']}-{$_POST['postid']}-attach'>".$tdb->getUploads($_POST["forumid"],$_POST['threadid'],$pRec[0]['id'],$pRec[0]['upload_id'],$_CONFIG['fileupload_location'],$pRec[0]['user_id'])."</div>";
     $dbmsg = encode_text(stripslashes($attach_msg.$_POST["newedit"]),ENT_NOQUOTES);
 
@@ -128,6 +129,7 @@ switch ($ajax_type)
 
     $postids = $tRec[0]['p_ids'];
     $postnums = explode(",",$postids);
+    
     $count = count($postnums);
 
     $num_pages = ceil($count/$_CONFIG["posts_per_page"]);
@@ -194,8 +196,11 @@ switch ($ajax_type)
       $edit = "<div class='button_pro1'><a href=\"javascript:getPost('{$pRec["user_id"]}','{$_POST["id"]}-{$_POST["t_id"]}-{$pRec["id"]}','edit');\">Edit</a></div>";
      //$edit = "<div class='button_pro1'><a href=\"editpost.php?id={$_POST["id"]}&t_id={$_POST["t_id"]}&p_id={$pRec["id"]}\">Edit</a></div>";
 		else $edit = "";
-		if ((($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) && $pRec['id'] != $first_post) $delete = "<div class='button_pro1'><a href='delete.php?action=delete&t=0&id=".$_POST["id"]."&t_id=".$_POST["t_id"]."&p_id=".$pRec["id"]."'>X</a></div>";
+		if ((($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) && $pRec['id'] != $postnums[0])
+    $delete = "<div class='button_pro1'><a href='delete.php?action=delete&t=0&id=".$_POST["id"]."&t_id=".$_POST["t_id"]."&p_id=".$pRec["id"]."'>X</a></div>";
 		else $delete = "";
+		
+		
 		if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1) $quote = "<div class='button_pro1'><a href=\"javascript:addQuote('".$pRec["user_name"]."-".$pRec["id"]."-".$pRec['date']."','".$pRec["message"]."')\">\"Quote\"</a></div>";
 		else $quote = "";
 
@@ -564,8 +569,7 @@ switch ($ajax_type)
       $posts_tdb->setFp("topics", $_POST["forumid"]."_topics");
       $posts_tdb->setFp("posts", $_POST["forumid"]);
       $upload = new upload(DB_DIR, $_CONFIG["fileupload_size"],$_CONFIG["fileupload_location"]);
-      $details = $upload->get('uploads',$_POST['fileid']);
-      //$output .= dump($details);
+      
       $upload->deleteFile($_POST['fileid']);
       $pRec = $posts_tdb->get("posts", $_POST["postid"]);
 
@@ -575,8 +579,7 @@ switch ($ajax_type)
       $new = implode(',',$split);
       $posts_tdb->edit("posts", $_POST["postid"], array("message" => $dbmsg, "edited_by_id" => $_COOKIE["id_env"], "edited_by" => $_COOKIE["user_env"], "edited_date" => mkdate(),'upload_id'=>$new));
       $pRec2 = $posts_tdb->get("posts", $_POST["postid"]);
-      //$output .= dump($pRec);
-      $output .= $tdb->getUploads($_POST['forumid'],$_POST['threadid'],$_POST["postid"],$pRec2[0]['upload_id'],$_COOKIE['power_env'],$_CONFIG['fileupload_location'],$_POST['userid']);
+      $output .= $tdb->getUploads($_POST['forumid'],$_POST['threadid'],$_POST["postid"],$pRec2[0]['upload_id'],$_CONFIG['fileupload_location'],$_POST['userid']);
       $edited = "Last edited by: <a href='profile.php?action=get&id=".$pRec2[0]['edited_by_id']."' target='_new'>".$pRec2[0]['edited_by']."</a> on ".gmdate("M d, Y g:i:s a", user_date($pRec2[0]['edited_date']));
       echo $output."<!--divider-->".$edited;
       break;

@@ -5,6 +5,8 @@
 // Version: 2.0
 
 //Special Posting Functions
+require_once('./includes/inc/geshi.inc.php');
+
 function message_icons()
 {
   $tdb = new tdb(DB_DIR.'/', 'bbcode.tdb');
@@ -140,19 +142,9 @@ function UPBcoding($text) {
     {
       $msg = preg_replace_callback("/\[quote(.*?)\](.*?)\[\/quote\]/si",'parse_quote',$msg);
     }
-    //$msg = preg_replace("/\[code\](.*?)\[\/code\]/si", "<font color='red'>Code:<hr><pre>\\1<hr></pre></font>", $msg);
 
-    $code_matches = array();
-    preg_match_all("/\[code\](.*?)\[\/code\]/si", $msg, $code_matches);
-    
-    foreach($code_matches[1] as $thecode) {
-    	$newcode = "<?php\n".$thecode."\n?>";
-    	$newcode = str_replace(array('&lt;','&gt;','&quot;'),array('<','>', '"'),$newcode);
-    	$newcode = highlight_string($newcode, true);
-    	$newcode = str_replace("<font color=\"#0000BB\">&lt;?php", "<font>", $newcode);
-    	$newcode = str_replace("<font color=\"#0000BB\">?&gt;", "<font>", $newcode);
-    	$msg = str_replace("[code]{$thecode}[/code]", "<div class=\"code_block\">{$newcode}</div>", $msg);
-    }
+    $msg = preg_replace_callback("!\[code=([\w\-]+)](.*)\[/code]!Us","geshify", $msg);
+    $msg = preg_replace_callback("!\[code\](.*)\[/code]!Us","geshify", $msg);
     
     $msg = preg_replace("/\[center\](.*?)\[\/center\]/si", "<span style='text-align:center';>\\1</span>", $msg);
     $msg = preg_replace("/\[left\](.*?)\[\/left\]/si", "<span style='text-align:left;'>\\1</span>", $msg);

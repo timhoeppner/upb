@@ -192,7 +192,7 @@ if(file_exists(DB_DIR."/main.tdb")) {
     $config_tdb = new configSettings();
     $config_tdb->setFp("config", "config");
     $config_tdb->setFp("ext_config", "ext_config");
-    
+
     $_CONFIG = $config_tdb->getVars("config");
 
     $_REGISTER = $config_tdb->getVars("regist");
@@ -202,7 +202,6 @@ if(file_exists(DB_DIR."/main.tdb")) {
     //integrate into admin_config
     $_CONFIG["where_sep"] = "<b>&gt;</b>";
     $_CONFIG["table_sep"] = "<b>::</b>";
-
 
     define('SKIN_DIR', $_CONFIG['skin_dir'], true);
 

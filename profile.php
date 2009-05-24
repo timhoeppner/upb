@@ -5,6 +5,7 @@
 // Version: 2.0
 // Using textdb Version: 4.3.2
 require_once('./includes/upb.initialize.php');
+require_once('./includes/class/upload.class.php');
 
 if(!isset($_GET['action']) || $_GET['action'] == '') $_GET['action'] = 'edit';
 if ($_GET['action'] == "get" || $_GET['action'] == 'view') $where = "Member Profile";
@@ -42,6 +43,15 @@ if (isset($_POST["u_edit"])) {
     $rec["url"] = $_POST["u_site"];
   if ($_POST['u_site'] == "http://" or $rec['url'] == 'http://')
     $rec['url'] = "";
+for ($i = 1;$i <= 5; $i++)
+{
+  if (array_key_exists("custom_profile$i",$_POST))
+  {
+    if ($user[0]["custom_profile$i"] != $_POST["custom_profile$i"])
+      $rec["custom_profile$i"] = $_POST["custom_profile$i"];
+  }
+}
+
   if ($_POST["u_timezone"]{0} == '+') $_POST["u_timezone"] = substr($_POST["u_timezone"], 1);
     if ($_POST["show_email"] != "1") $_POST["show_email"] = "0";
 		if ($_POST["email_list"] != "1") $_POST["email_list"] = "0";
@@ -57,41 +67,11 @@ if (isset($_POST["u_edit"])) {
           else if ($dim[0] > $_REGIST["avatarupload_dim"] or $dim[1] > $_REGIST["avatarupload_dim"])
             $upload_err = "The dimensions of the uploaded avatar are too big.<br>The maximum dimensions are ".$_REGIST['avatarupload_dim']."px by ".$_REGIST['avatarupload_dim']."px";
           else
-          if($_FILES['avatar2file']['error'] == UPLOAD_ERR_OK) {
-                require_once('./includes/class/upload.class.php');
-    			$upload = new upload(DB_DIR, $_REGIST["avatarupload_size"], $_CONFIG["fileupload_location"]);
+          {
+          $upload = new upload(DB_DIR, $_REGIST["avatarupload_size"], $_CONFIG["fileupload_location"]);
           $uploadId = $upload->storeFile($_FILES["avatar2file"]);
-    			if ($uploadId !== false) {
-    			    $rec['avatar'] = 'downloadattachment.php?id='.$uploadId;
-    			}
-	        } else {
-	            $upload_err = "The uploaded avatar ";
-	            switch ($_FILES['avatar2file']['error']) {
-	                case UPLOAD_ERR_INI_SIZE:
-	                    $upload_err .= "exceeds the <strong>upload_max_filesize</strong> directive in <i>php.ini.</i>";
-	                    break;
-	                case UPLOAD_ERR_FORM_SIZE:
-	                    $upload_err .= "exceeds the <b><i>MAX_FILE_SIZE</i></b> directive that was specified in the HTML form.";
-	                    break;
-	                case UPLOAD_ERR_PARTIAL:
-	                    $upload_err .= "was only partially uploaded.";
-	                    break;
-	                case UPLOAD_ERR_NO_FILE:
-	                    $upload_err .= "was not uploaded.";
-	                    break;
-	                case UPLOAD_ERR_NO_TMP_DIR:
-	                    $upload_err = "Uploaded Avatar Error: Missing a temporary folder.";
-	                    break;
-	                case 7: //UPLOAD_ERR_CANT_WRITE (PHP Version >= 5.1.0)
-	                   $upload_err = "Uploaded Avatar Error: Failed to write file to disk.";
-	                   break;
-	                case 8: //UPLOAD_ERR_EXTENSION (PHP Version >= 5.2.0)
-	                   $upload_err = "The avatar upload stopped by extension.";
-	                default:
-                    $upload_err .= "encountered an unknown error while trying to upload";
-              }
 	        }
-	    }
+      }
       elseif(isset($_POST['avatar2url']) && $_POST['avatar2url'] != '') {
           $rec['avatar'] = $_POST['avatar2url'];
       }
@@ -113,6 +93,7 @@ if (isset($_POST["u_edit"])) {
 		if ($user[0]["aim"] != $_POST["u_aim"]) $rec["aim"] = $_POST["u_aim"];
 		if ($user[0]["yahoo"] != $_POST["u_yahoo"]) $rec["yahoo"] = $_POST["u_yahoo"];
 		if ($user[0]["msn"] != $_POST["u_msn"]) $rec["msn"] = $_POST["u_msn"];
+		if ($user[0]["skype"] != $_POST["u_skype"]) $rec["skype"] = $_POST["u_skype"];
 		if ($user[0]["timezone"] != $_POST["u_timezone"]) {
 			$rec["timezone"] = $_POST["u_timezone"];
 			setcookie("timezone", $_POST["u_timezone"], (time() + (60 * 60 * 24 * 7)));
@@ -145,7 +126,6 @@ echo "<div class='alert'>
 		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'This user was either deleted or not found.', ALERT_MSG)),
 		    true);
 		}
-
 		$status_config = status($rec);
 		$status = $status_config['status'];
 		$statuscolor = $status_config['statuscolor'];
@@ -153,16 +133,42 @@ echo "<div class='alert'>
 		if ($rec[0]["status"] != "") $status = $rec[0]["status"];
 		require_once('./includes/header.php');
 		echo "";
-		echoTableHeading("Viewing profile for ".$rec[0]["user_name"]."", $_CONFIG);
+    for($i=1;$i<=5;$i++)
+    {
+    $custom = $config_tdb->basicQuery('config',"name","custom_profile$i");
+    if (trim($custom[0]['value']) != "")
+      $customs[] = array($custom[0]['value'],$rec[0]["custom_profile$i"]);
+    }
+
+    echoTableHeading("Viewing profile for ".$rec[0]["user_name"]."", $_CONFIG);
+    echo "<tr><td><span style='color:#".$statuscolor.";font-size:14px;'>".$rec[0]["user_name"]."</span>
+						<br />
+						<br />
+						";
+if (@$rec[0]["avatar"] != "")
+  {
+    $resize = resize_img($rec[0]['avatar'],$_REGIST["avatarupload_dim"]);
+    echo "<img src='".$rec[0]["avatar"]."' $resize border='0' alt='' title='' /><br />";
+  }
+						echo "<br />
+						<img src='$statusrank'></td><td></td><td></td><td></td></tr>";
+    echoTableFooter(SKIN_DIR);
+    
+    echoTableHeading("Viewing profile for ".$rec[0]["user_name"]."", $_CONFIG);
 		echo "
 			<tr>
 				<td colspan='2' id='topcontent'>
-				<div class='pro_container'>
+
 						<span style='color:#".$statuscolor.";font-size:14px;'>".$rec[0]["user_name"]."</span>
 						<br />
 						<br />
-						<img src=\"".$rec[0]["avatar"]."\" alt='' title='' />
-						<br />
+						";
+if (@$rec[0]["avatar"] != "")
+  {
+    $resize = resize_img($rec[0]['avatar'],$_REGIST["avatarupload_dim"]);
+    echo "<img src='".$rec[0]["avatar"]."' $resize border='0' alt='' title='' /><br />";
+  }
+						echo "<br />
 						<img src='$statusrank'>
             <br />
 						<div class='link_pm'>";
@@ -178,7 +184,7 @@ echo "<div class='alert'>
 		} else {
 			echo "<a href='newpm.php?to=".$_GET["id"]."' target='_blank'>Send private message?</a>";
 		}
-		echo "</div></div></td></tr><tr><td id='leftcontent'>
+		echo "</div></td></tr><tr><td id='leftcontent'>
 					<div class='pro_container'>
 						<div class='pro_area_1'><div class='pro_area_2'><strong>Joined: </strong></div>".gmdate("Y-m-d", user_date($rec[0]["date_added"]))."</div>
 						<div class='pro_area_1'><div class='pro_area_2'><strong>Posts made: </strong></div>".$rec[0]["posts"]."</div>";
@@ -200,25 +206,47 @@ echo "<div class='alert'>
 		echo "</div>";
   echo "<div class='pro_area_1'><div class='pro_area_2'><strong>Location: </strong></div>".$rec[0]["location"]."&nbsp;</div>";
 		echo "</div>";
-		if (@$rec[0]["icq"] != "" and @$rec[0]["aim"] != "" and @$rec[0]["msn"] != "" and @$rec[0]["yahoo"] != "")
-  {
-  echo "<div class='pro_contact'>";
-		if (@$rec[0]["icq"] != "") echo "
-							<strong>icq</strong><a href='http://wwp.icq.com/scripts/contact.dll?msgto=".$rec[0]["icq"]."&action=message'><img src='images/icq.gif' border='0'>&nbsp;".$rec[0]["icq"]."</a>";
-		if (@$rec[0]["aim"] != "") echo "
-							<strong>aim</strong><a href='aim:goim?screenname=".$rec[0]["aim"]."'><img src='images/aol.gif' border='0'>&nbsp;".$rec[0]["aim"]."</a>";
-		if (@$rec[0]["msn"] != "") echo "
-							<strong>msn</strong><a href='http://members.msn.com/".$rec[0]["msn"]."' target='_blank'><img src='images/msn.gif' border='0'>&nbsp;".$rec[0]["msn"]."</a>";
-		if (@$rec[0]["yahoo"] != "") echo "
-							<strong>Y!</strong><a href='http://edit.yahoo.com/config/send_webmesg?.target=".$rec[0]["yahoo"]."&.src=pg'><img border=0 src='http://opi.yahoo.com/online?u=".$rec[0]["yahoo"]."&m=g&t=0'>&nbsp;".$rec[0]["yahoo"]."</a>";
-		echo "</div>";
-		}
-  //		<div class='pro_blank'>Just imagine what could go here!</div>
-		//		<br />
-		//		<div class='pro_blank2'>Or here!</div>
-		//	";
+
+  echo " <tr>
+				<td class='pro_area_1' valign='top'>
+<fieldset><legend>Contact Details</legend>
+
+<table>
+			<tr><td class='pro_area_1' valign='top'>
+        <div class='pro_area_2'><strong><img src='images/icq.gif' border='0' align='absmiddle'>&nbsp;<strong>ICQ:</strong></div>".$rec[0]["icq"]."</td></tr>
+<tr>
+				<td class='pro_area_1' valign='top'><div class='pro_area_2'><img src='images/aol.gif' border='0' align='absmiddle'>&nbsp;<strong>AIM:</strong></div>".$rec[0]["aim"]."</td>
+			</tr>
+			<tr>
+				<td class='pro_area_1' valign='top'><div class='pro_area_2'><strong><img src='images/yahoo.gif' border='0' align='absmiddle'>&nbsp;<strong>Yahoo!:</strong></div>".$rec[0]["yahoo"]."</td>
+			</tr>
+			<tr>
+				<td class='pro_area_1' valign='top'><div class='pro_area_2'><strong><img src='images/msn.gif' border='0' align='absmiddle'>&nbsp;<strong>MSN:</strong></div>".$rec[0]["msn"]."</td>
+			</tr>
+			<tr>
+				<td class='pro_area_1' valign='top'><div class='pro_area_2'><strong><img src='images/skype.gif' border='0' align='absmiddle'>&nbsp;<strong>Skype:</strong>".$rec[0]["skype"]."</div></td>
+			</tr>
+
+</table>
+
+        </fieldset></td>
+        
+        
+			<td class='pro_area_1' valign='top'><fieldset><legend>Other Information</legend><table>";
+
+    foreach ($customs as $key => $value)
+		{
+        echo "
+			<tr><td class='pro_area_1' valign='top'><div class='pro_area_2'><strong>".$value[0].":</strong></div>".$value[1]."</td></tr>\n";
+    }
+    
+    echo "</table></fieldset>";
+    echo "</td></tr>
+			";
 		echo "</td>
 				</tr>";
+				
+
 		if (@$rec[0]["sig"] != "") echo "
 				<tr>
 					<td id='bottomcontent' colspan='2'>
@@ -372,22 +400,36 @@ echo "<div class='alert'>
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='area_1'><strong>ICQ:</strong></td>
+				<td class='area_1'><img src='images/icq.gif' border='0' align='absmiddle'>&nbsp;<strong>ICQ:</strong></td>
 				<td class='area_2'><input type='text' name='u_icq' size='50' value='".$rec[0]["icq"]."' /></td>
 			</tr>
 			<tr>
-				<td class='area_1'><strong>AIM:</strong></td>
+				<td class='area_1'><img src='images/aol.gif' border='0' align='absmiddle'>&nbsp;<strong>AIM:</strong></td>
 				<td class='area_2'><input type='text' name='u_aim' size='50' value='".$rec[0]["aim"]."' /> </td>
 			</tr>
 			<tr>
-				<td class='area_1'><strong>Yahoo!:</strong></td>
+				<td class='area_1'><img src='images/yahoo.gif' border='0' align='absmiddle'>&nbsp;<strong>Yahoo!:</strong></td>
 				<td class='area_2'><input type='text' name='u_yahoo' size='50' value='".$rec[0]["yahoo"]."' /></td>
 			</tr>
 			<tr>
-				<td class='area_1'><strong>MSN:</strong></td>
+				<td class='area_1'><img src='images/msn.gif' border='0' align='absmiddle'>&nbsp;<strong>MSN:</strong></td>
 				<td class='area_2'><input type='text' name='u_msn' size='50' value='".$rec[0]["msn"]."' /></td>
 			</tr>
 			<tr>
+				<td class='area_1'><img src='images/skype.gif' border='0' align='absmiddle'>&nbsp;<strong>Skype:</strong></td>
+				<td class='area_2'><input type='text' name='u_skype' size='50' value='".$rec[0]["skype"]."' /></td>
+			</tr>
+			";
+      for ($i=1;$i<=5;$i++)
+    {
+      $custom = $config_tdb->basicQuery('config',"name","custom_profile$i");
+      if (trim($custom[0]['value']) != "")
+      echo "<tr>
+				<td class='area_1'><strong>{$custom[0]['value']}</strong></td>
+				<td class='area_2'><input size='50' name='custom_profile$i' value='".$rec[0]["custom_profile$i"]."'/></td>
+			</tr>";
+    }
+			echo "<tr>
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
     <tr>

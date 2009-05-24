@@ -5,6 +5,8 @@
 	// Version: 2.0
 	// Using textdb Version: 4.3.2
 	require_once("./includes/upb.initialize.php");
+	require_once("./includes/class/upload.class.php");
+  require_once("./includes/class/posts.class.php");
 	$where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_forums.php'>Manage Forums</a>";
 	require_once('./includes/header.php');
 	$post_tdb = new functions(DB_DIR, "posts.tdb");
@@ -58,17 +60,40 @@
 					$sort = explode(",", $_CONFIG['admin_catagory_sorting']);
 					if (($i = array_search($_GET["id"], $sort)) !== FALSE) unset($sort[$i]);
 					$config_tdb->editVars("config", array("admin_catagory_sorting" => implode(",", $sort)));
-					$tdb->delete("cats", $_GET["id"]);
+					
 					$forums = $tdb->query('forums', "cat='{$_GET['id']}'");
-
+          //dump($forums);
           if ($forums !== false) {
           foreach($forums as $forum) {
-    					$tdb->delete("forums", $forum["id"]);
-    					$post_tdb->removeTable($forum["id"]);
-    					$post_tdb->removeTable($forum["id"]."_topics");
+          $fRec = $tdb->get("forums", $forum["id"]);
+					$cRec = $tdb->get("cats", $_GET['id']);
+					$posts_tdb = new posts(DB_DIR."/", "posts.tdb");
+					$posts_tdb->setFp("topics", $forum["id"]."_topics");
+          $posts_tdb->setFp("posts", $forum["id"]);
+          //$posts_tdb->set_topic($tRec);
+          $posts_tdb->set_forum($fRec);
+
+          $topic_list = $posts_tdb->listRec('topics',1);
+          //dump($topic_list);
+          $topics = explode(',',$fRec);
+          //dump($topics);
+          if (count($topics) > 0)
+          {
+            foreach ($topic_list as $topic)
+            {
+            //dump($topics);
+              $topic_array[0] = $topic;
+            //dump($topic);
+              delete_topics($topic_array,$forum["id"]);
+            }
+          }
+					$tdb->delete("forums", $forum["id"]);
+					$post_tdb->removeTable($forum["id"]);
+					$post_tdb->removeTable($forum["id"]."_topics");
     				}
     			}
-    				$post_tdb->cleanup();
+          $tdb->delete("cats", $_GET["id"]);
+            $post_tdb->cleanup();
 					echo "
 						<div class='alert_confirm'>
 						<div class='alert_confirm_text'>
@@ -79,7 +104,7 @@
 						";
 					redirect($_SERVER['PHP_SELF'], 2);
 				} elseif($_POST["verify"] == "Cancel") {
-					redirect($_SERVER['PHP_SELF'], 0);
+					redirect('admin_forums.php', 0);
 				} else {
 					ok_cancel("admin_forums.php?action=delete_cat&id=".$_GET["id"], "Are you sure you want to delete this category and all forums in this category?");
 				}
@@ -99,7 +124,8 @@
 				    $sort = $cat_id;
 				}
                 $config_tdb->editVars('config', array('admin_catagory_sorting' => $sort));
-				echo "
+        echo "\$config_tdb->editVars('config', array('admin_catagory_sorting' => $sort))";
+        echo "
 					<div class='alert_confirm'>
 					<div class='alert_confirm_text'>
 					<strong>Successfully added new category:</strong></div><div style='padding:4px;'>
@@ -223,10 +249,16 @@
 			}
 		} elseif($_GET["action"] == "delete_forum") {
 			//delete a forum
-			if (isset($_GET["id"])) {
+			if (isset($_GET["id"]))
+      {
 				if ($_POST["verify"] == "Ok") {
 					$fRec = $tdb->get("forums", $_GET["id"]);
 					$cRec = $tdb->get("cats", $fRec[0]["cat"]);
+					$posts_tdb = new posts(DB_DIR."/", "posts.tdb");
+					$posts_tdb->setFp("topics", $_GET["id"]."_topics");
+          $posts_tdb->setFp("posts", $_GET["id"]);
+          //$posts_tdb->set_topic($tRec);
+          $posts_tdb->set_forum($fRec);
 					$sort = explode(",", $cRec[0]["sort"]);
 					for($i = 0; $i < count($sort); $i++) {
 						if ($sort[$i] == $_GET["id"]) {
@@ -235,7 +267,16 @@
 						}
 					}
 					$sort = implode(",", $sort);
-					$tdb->edit("cats", $cRec[0]["id"], array("sort" => $sort));
+
+          $topics = $posts_tdb->listRec('topics',1);
+
+          foreach ($topics as $topic)
+          {
+            $topic_array[0] = $topic;
+            delete_topics($topic_array,$_GET['id']);
+          }
+         
+          $tdb->edit("cats", $cRec[0]["id"], array("sort" => $sort));
 					$tdb->delete("forums", $_GET["id"]);
 					$post_tdb->removeTable($_GET["id"]);
 					$post_tdb->removeTable($_GET["id"]."_topics");
@@ -248,8 +289,8 @@
 						</div>
 						</div>";
 						redirect($_SERVER['PHP_SELF'], 2);
-				} elseif($verify == "Cancel") {
-					redirect($_SERVER['PHP_SELF'], 0);
+				} elseif($_POST['verify'] == "Cancel") {
+          redirect('admin_forums.php', 0);
 				} else {
 					ok_cancel("admin_forums.php?action=delete_forum&id=".$_GET["id"], "Are you sure you want to delete this forum?");
 				}
@@ -284,7 +325,7 @@
 					array('edited_by_id', 'number', 7),
 					array('edited_date', 'number', 14),
 					array("id", "id"),
-					array("upload_id", "number", 10)
+					array("upload_id", "memo")
 				));
 				//chown(DB_DIR."/".$_GET["id"].".memo", "nobody");
 				//chown(DB_DIR."/".$_GET["id"].".ref", "nobody");
@@ -411,11 +452,11 @@
 		    //
 		    //
 			$cRecs = $tdb->listRec("cats", 1);
-
+      
 			if (empty($cRecs)) redirect('admin_forums.php?action=add_cat', 0);
 
     		// Sort categories in the order that they appear
-    		$cSorting = explode(",", $_CONFIG["admin_catagory_sorting"]);
+    	 	$cSorting = explode(",", $_CONFIG["admin_catagory_sorting"]);
 
         $k = 0;
     		$i = 0;
@@ -474,7 +515,7 @@
 		     if ($cRecs[0]["name"] == "") {
 				echo "
 			<tr>
-				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='6'>No categories found</td>
+				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='7'>No categories found</td>
 			</tr>";
 			} else {
 			    for($i=0,$c1=count($cRecs);$i<$c1;$i++) {

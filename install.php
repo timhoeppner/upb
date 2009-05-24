@@ -145,7 +145,7 @@ die();
 		if (!defined('DB_DIR')) {
 			define('DB_DIR', './'.uniqid('data_', true), true);
 			$f = fopen('./config.php', 'w');
-			fwrite($f, "<?php\ndefine('UPB_VERSION', '2.2.5', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
+			fwrite($f, "<?php\ndefine('UPB_VERSION', '2.2.6', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
 			fclose($f);
 		}
 		
@@ -229,6 +229,7 @@ die();
 			array("aim", "string", 24),
 			array("yahoo", "memo"),
 			array("msn", "memo"),
+			array("skype","memo"),
 			array("sig", "memo"),
 			array("posts", "number", 7),
 			array("date_added", "number", 14),
@@ -412,7 +413,12 @@ $config_tdb->add('custom_avatars', '1', 'regist', 'number', 'dropdownlist', '8',
 		$tdb->add("config", array("name" => "modColor", "value" => "006699", "type" => "status"));
 		$tdb->add("ext_config", array("name" => "adminColor", "value" => "BB0000", "type" => "status", "title" => "Admin Color", "description" => "The color of usernames of administrators in the who's online box", "form_object" => "text", "data_type" => "string", "minicat" => "6", "sort" => "3"));
 		$tdb->add("config", array("name" => "adminColor", "value" => "BB0000", "type" => "status"));
-		//$tdb->sortAndBuild("ext_config", "sort", "ASC");
+		$mini = $config_tdb->addMiniCategory('Profile Settings','config');
+
+for ($i=1;$i<=5;$i++)
+{
+  $config_tdb->add("custom_profile$i",'','config','text','text',$mini,$i,"Custom Profile Field $i","");
+}
 
 
         $tdb->tdb(DB_DIR.'/', 'bbcode.tdb');

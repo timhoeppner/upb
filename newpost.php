@@ -13,7 +13,7 @@
 	$message = "";
   if (!empty($_POST))
 		{
-      $message = format_text(encode_text($_POST['newentry']),'edit');
+      $message = stripslashes(format_text(encode_text($_POST['newentry']),'edit'));
       foreach ($_POST as $key => $value)
       {
         $_GET[$key] = $value;
@@ -52,19 +52,79 @@
 		if ($_GET["t"] != 1 && isset($_GET["t_id"]) && (bool) $tRec[0]["locked"]) exitPage("<div class='alert'><div class='alert_text'>
 			<strong>Caution!</strong></div><div style='padding:4px;'>The topic is closed to further posting.</div></div>");
 		//FILE UPLOAD BEGIN
-		$uploadText = '';
-		$uploadId = 0;
-		if (trim($_FILES["file"]["name"]) != "") {
-			$upload = new upload(DB_DIR, $_CONFIG["fileupload_size"],$_CONFIG["fileupload_location"]);
-			$uploadId = $upload->storeFile($_FILES["file"]);
-			if ($uploadId === false || $uploadId == "Uploaded file is too large" ) 
+
+    $uploadText = '';
+		$uploadId = array();
+		$maxsize = $_CONFIG['fileupload_size'] * 1024; //convert KB to bytes
+    $filetypes = explode(",",$_CONFIG['upload_types']);
+    $filetypes = array('zip','gif','jpg');
+    
+    $names = $_FILES['upload']['name'];
+    $enable_upload = false;
+
+    foreach ($names as $name)
+    {
+      if (trim($name) != "")
       {
-        if ($uploadId === false)
-          echo "An error ocurred during the upload process";
-        else
-          echo "The uploaded file ".$uploadId;
-        $uploadId = 0;
+        $enable_upload = true;
+        break;
       }
+    }
+    
+    if ($enable_upload === true)
+    {
+     for ($i = 0;$i < count($_FILES['upload']['name']);$i++)
+    {
+      if (trim($_FILES['upload']['name'][$i]) == '')
+        continue;
+
+      $type = substr(strrchr($_FILES['upload']['name'][$i], '.'),1);
+      
+      if (!in_array($type,$filetypes))
+      {
+        $error[$_FILES['upload']['name'][$i]] = 'type';
+        continue;
+      }
+      if ($files[$i]['size'] > $maxsize)
+      {
+        $error[$_FILES['upload']['name'][$i]] ='size';
+        continue;
+      }
+      $files[$i]['name'] = $_FILES['upload']['name'][$i];
+      $files[$i]['type'] = $_FILES['upload']['type'][$i];
+      $files[$i]['tmp_name'] = $_FILES['upload']['tmp_name'][$i];
+      $files[$i]['error'] = $_FILES['upload']['error'][$i];
+      $files[$i]['size'] = $_FILES['upload']['size'][$i];
+    }
+
+    //dump($error);
+
+
+    if (!empty($error))
+    {
+      echo "The following files will not be uploaded:";
+      foreach ($error as $key => $err)
+      {
+        if ($err == 'size')
+          echo $key." is too big<br>";
+        if ($err == 'type')
+          echo $key." is not an allowed filetype";
+      }
+    }
+
+    foreach ($files as $file)
+    {
+			if($_file['upload']['error'][$i] == UPLOAD_ERR_OK) {
+      $upload = new upload(DB_DIR, $_CONFIG["fileupload_size"],$_CONFIG["fileupload_location"]);
+			
+			$result = $upload->storeFile($file);
+      if (!is_int($result))
+        echo $result;
+      else
+        $uploadId[] = $result;
+   //if ($uploadId === false) $uploadId = 0;
+		}
+    }
     }
 		//END
 		if ($_GET["t"] == 1) {
@@ -128,10 +188,10 @@
 			"message" => $uploadText.$_POST["message"],
 			"user_id" => $_COOKIE["id_env"],
 			"t_id" => $_GET["t_id"],
-			"upload_id" => $uploadId ));
+			"upload_id" => implode(',',$uploadId) ));
+
 		$posts_tdb->edit("topics", $_GET["t_id"], array("p_ids" => $pre.$p_id));
-		//$tdb->setFp('rss', 'rssfeed');
-		//if($fRec[0]['view'] == 0) $tdb->add('rss', array('subject' => ((isset($_POST['subject'])) ? $_POST['subject'] : 'RE: ' . $rec[0]['subject']), 'user_name' => $_COOKIE['user_env'], 'date' => mkdate(), 'message' => $_POST['message'], 'f_id' => $_GET['id'], 't_id' => $_GET['t_id']));
+		
 		if ($_COOKIE["power_env"] != "0") {
 			$user = $tdb->get("users", $_COOKIE["id_env"]);
 			$tdb->edit("users", $_COOKIE["id_env"], array("posts" => ((int)$user[0]["posts"] + 1)));
@@ -218,14 +278,20 @@
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>";
     //if filesize set to 0 or filesize set to nothing and uploadlocation exists
+
     if ($_CONFIG["fileupload_size"] != "0" && $_CONFIG["fileupload_size"] != "" && is_numeric($_CONFIG["fileupload_size"]) && $_CONFIG["fileupload_location"] != "")
     {
 			echo "
 			<tr>
-				<td class='area_1' style='padding:8px;'><strong>Attach file:</strong></td>
-				<td class='area_2'><input type=file name='file' value='file_name' size=20><br /<br />
-					Valid file types: txt, gif, jpg, jpeg, zip.
-					<br />Maximum file size is ".$_CONFIG["fileupload_size"]." Kb. If your file does not meet the requirements, the file will be rejected with no warning.</td>
+				<td class='area_1' style='padding:8px;'><strong>Attach file(s):</strong></td>
+				<td class='area_2'>";
+				$allowed_size = ($_CONFIG['fileupload_size'] > 1024) ? round(($_CONFIG['fileupload_size'] / 1024),2). "MB" : $_CONFIG['fileupload_size']. "KB";
+        for ($i = 1;$i <= 5;$i++)
+        {
+        echo "File $i: <input type=\"file\" name=\"upload[]\" size=\"25\"><br /><br />";
+        }
+					echo "Valid file types: txt, gif, jpg, jpeg, zip.
+					<br />Maximum file size is ".$allowed_size." per file.</td>
 			</tr>";
 		}
 		echo "

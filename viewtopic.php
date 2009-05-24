@@ -7,6 +7,7 @@
 	// Ultimate PHP Board Topic display
 	require_once('./includes/upb.initialize.php');
 	require_once('./includes/class/posts.class.php');
+
 	$posts_tdb = new posts(DB_DIR."/", "posts.tdb");
 	$vars['page'] = ((isset($_GET['page'])) ? $_GET['page'] : '');
 	//check if the id exists
@@ -58,14 +59,19 @@
 	$num_pages = ceil(($tRec[0]["replies"] + 1) / $_CONFIG["posts_per_page"]);
 	$p = createPageNumbers($vars["page"], $num_pages, $_SERVER['QUERY_STRING']);
   echo "<br /><div id='pagelink1' name='pagelink1'>".$posts_tdb->d_posting($p,$vars['page'],$num_pages)."</div>";
-	if ($vars['page'] == 1) $first_post = $pRecs[0]['id'];
+
+  $post_ids = $tRec[0]['p_ids'];
+  $post_id_array = explode(",",$post_ids);
+
+  if ($vars['page'] == 1) $first_post = $post_id_array[0];
 	else $first_post = 0;
 	$x = +1;
 
   echo "<div name='current_posts' id='current_posts'>";
-   
+
   foreach($pRecs as $pRec) {
-		// display each post in the current topic
+
+    // display each post in the current topic
 		echo "
 			<a name='{$pRec['id']}'>
       <div name='post{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}' id='post{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}'>
@@ -120,7 +126,7 @@
       
 		}
     else $edit = "";
-		if ((($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) && $pRec['id'] != $first_post) $delete = "<div class='button_pro1'><a href='delete.php?action=delete&t=0&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."'>X</a></div>";
+		if ((($_COOKIE["id_env"] == $pRec["user_id"] && $tdb->is_logged_in()) || (int)$_COOKIE["power_env"] >= 2) && $pRec['id'] != $post_id_array[0]) $delete = "<div class='button_pro1'><a href='delete.php?action=delete&t=0&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$pRec["id"]."'>X</a></div>";
 		else $delete = "";
 
     if ((int)$_COOKIE["power_env"] >= (int)$fRec[0]["reply"] and $tRec[0]['locked'] != 1)
@@ -131,7 +137,11 @@
 		else $reply = "";
 
     $msg = display_msg($pRec['message']);
+
+    if ($pRec['upload_id'] != "")
+    {
     $msg .= "<div id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}-attach'>".$tdb->getUploads($_GET['id'],$_GET['t_id'],$pRec['id'],$pRec['upload_id'],$_CONFIG['fileupload_location'],$pRec['user_id'])."</div>";
+    }
     echo "
 			<tr>
 				<th><div class='post_name'>";

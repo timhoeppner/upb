@@ -6,6 +6,7 @@
 	// Using textdb Version: 4.3.2
 	require_once("./includes/upb.initialize.php");
 	require_once("./includes/class/posts.class.php");
+	require_once("./includes/class/upload.class.php");
 	$post_tdb = new posts(DB_DIR, "posts.tdb");
 	$post_tdb->setFp("topics", $_GET["id"]."_topics");
 	$post_tdb->setFp("posts", $_GET["id"]);
@@ -26,14 +27,24 @@
 			if (isset($_GET["t_id"])) {
 				$p_ids = explode(",", $tRec[0]["p_ids"]);
         $subtract_user_post_count = array();
-				foreach($p_ids as $p_id) {
+        
+        foreach($p_ids as $p_id) {
 					$pRec = $post_tdb->get('posts', $p_id);
+					
+					$upload_ids = explode(",",$pRec[0]['upload_id']);
+
+        $upload = new upload(DB_DIR, $_CONFIG["fileupload_size"],$_CONFIG["fileupload_location"]);
+
+        foreach ($upload_ids as $upload_id)
+           $upload->deleteFile($upload_id);
+           
 					if (!isset($subtract_user_post_count[$pRec[0]['user_id']])) {
 						$subtract_user_post_count[$pRec[0]['user_id']] = 1;
 					}
 					else $subtract_user_post_count[$pRec[0]['user_id']]++;
 					$post_tdb->delete("posts", $p_id, false);
 				}
+	
 				while (list($user_id, $post_count) = each($subtract_user_post_count)) {
 					$user = $tdb->get('users', $user_id);
 					$tdb->edit('users', $user_id, array('posts' => (int)$user[0]['posts'] - $post_count));
@@ -62,12 +73,21 @@
 		}
 		$pRec = $post_tdb->get("posts", $_GET["p_id"]);
 		if (!(($pRec[0]["user_id"] == $_COOKIE["id_env"]) || ($_COOKIE["power_env"] >= 2))) exitPage("<div class='alert'><div class='alert_text'><strong>You are not authorized to delete this post</strong></div><div style='padding:4px;'></div></div>");
-		$pRec[0]["message"] = format_text($pRec[0]["message"]);
+
 		if ($_POST["verify"] == "Ok") {
             if (($key = array_search($_GET["p_id"], $p_ids)) === FALSE) {
                 print "<div class='alert'><div class='alert_text'><strong>Unable to find the post the topic's record.  The post was NOT deleted.</strong></div><div style='padding:4px;'></div></div>";
             } else {
-				$update_topic = array("replies" => ((int)$tRec[0]["replies"] - 1));
+
+        
+        $upload_ids = explode(",",$pRec[0]['upload_id']);
+        
+        $upload = new upload(DB_DIR, $_CONFIG["fileupload_size"],$_CONFIG["fileupload_location"]);
+        
+        foreach ($upload_ids as $upload_id)
+           $upload->deleteFile($upload_id);
+        
+        $update_topic = array("replies" => ((int)$tRec[0]["replies"] - 1));
 
                 if ($key == (count($p_ids) - 1)) {
 					//last post, update last_post of topic
@@ -99,67 +119,6 @@
 			}
 		} elseif($_POST["verify"] == "Cancel") redirect("viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"], 0);
 		else {
-/*		echoTableHeading("Posted: ".gmdate("M d, Y g:i:s a", user_date($pRec[0]["date"]))."", $_CONFIG);
-			$table_color = $table1;
-
-			$user = $tdb->get("users", $pRec[0]["user_id"]);
-			if ($user[0]["sig"] != "") $user[0]["sig"] = "<div class='signature'>".UPBcoding(filterLanguage($user[0]["sig"], $_CONFIG))."</div>";
-      
-      $status_config = status($user);
-			$status = $status_config['status'];
-			$statuscolor = $status_config['statuscolor'];
-      
-			$msg = UPBcoding(filterLanguage($pRec[0]["message"], $_CONFIG));
-			echo "
-			<tr>
-				<th><div class='post_name'><a href='profile.php?action=get&id=".$pRec[0]["user_id"]."'>".$pRec[0]["user_name"]."</a></div></th>
-				<th><div style='float:left;'><img src='icon/".$pRec[0]["icon"]."'></div></th>
-			</tr>
-			<tr>
-				<td class='area_1' valign='top' style='width:15%;'>";
-			//add avatar
-			if (@$user[0]["avatar"] != "") {
-				$set_width = $avatar_width;
-				$set_height = $avatar_height;
-				if (@fclose(@fopen($user[0]["avatar"], "r"))) {
-					list($width, $height, $type, $attr) = getimagesize($user[0]["avatar"]);
-					if ($width > $height) {
-						$set_height = round(($avatar_width * $height) / $width);
-					} elseif($width < $height) {
-						$set_width = round(($avatar_height * $width) / $height);
-					} elseif($width <= $avatar_width && $height <= $avatar_height) {
-						$set_width = $width;
-						$set_height = $height;
-					}
-				}
-				echo "<br /><img src=\"".$user[0]["avatar"]."\" width='$set_width' height='$set_height' alt='' title=''><br />";
-			}
-			//end avatar
-			echo "<div class='post_info'><span style='color:#$statuscolor'><strong>$status</strong></span></div>
-				<div class='post_info'>
-				<strong>Posts:</strong> ".$user[0]["posts"]."
-				<br />
-				<strong>Registered:</strong>
-				<br />
-				".gmdate("Y-m-d", user_date($user[0]["date_added"]))."
-				</div>
-				<br />
-				<div class='post_info_extra'>";
-			echo "
-				</td>
-				<td class='area_1' valign='top'><table width='100%' border='0' cellspacing='0' cellpadding='0' height='100%'>
-					<tr valign='top'> <td height='99%'><table cellspacing=0 cellpadding=0 width='100%' border=0><tbody>
-				</table>
-				<table width=100% cellspacing=0 cellpadding=0>
-					<tr>
-						<td  height=1 bgcolor='$divider'></td>
-					</tr>
-				</table><br />$msg</td>
-			</tr>
-			<tr valign='bottom'>
-				<td height='1%'><br />".$user[0]["sig"]."</td>
-			</tr></table>";
-			echoTableFooter(SKIN_DIR); */
 			ok_cancel("delete.php?action=".$_GET["action"]."&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&p_id=".$_GET["p_id"], "Are you sure you want to delete this post?");
 		}
 	} else {
