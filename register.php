@@ -230,7 +230,7 @@
 		exit;
 	} else {
 		require_once('./includes/header.php');
-		?> <script language='javascript' src='includes/pwd_strength.js'></script>
+		?> <script language='javascript' src='includes/pwd_meter.js'></script>
 		<?php
 		// security mod if enabled
 		if ((bool) $_REGIST['security_code'] === true && !$tdb->is_logged_in())
@@ -275,9 +275,9 @@
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='area_1'><strong>Security Code:</strong> <span style='color:$required;'>*</span><br />Please enter the code in the image: (all lower case)<br /><br />
-					<a href='register.php'>Load new image?</a> (will reset this page)</td>
-				<td class='area_2'><img src='./includes/image.php?id=$encid&key=$key'><br /><input type=text name=s_key maxlength=7 size=12></td>
+				<td class='area_1'><strong>Security Code:</strong> <span style='color:$required;'>*</span><br />Please enter the code in the image: (all lower case)<br />
+          <a href='#' onclick='changeCaptcha();'>Load new image?</a></td>
+				<td class='area_2'><div id='captcha'><img src='./includes/image.php?id=$encid&key=$key'></div><input type=text name=s_key maxlength=7 size=12></td>
 			</tr>";
 			}
 			if(!$tdb->is_logged_in()) print "<tr>
@@ -286,9 +286,9 @@
 			<tr>
 				<td class='area_1'>
 					<strong>Password:</strong> <span style='color:$required;'>*</span><br />
-					<span class='description'>Your Password must be at least 6 characters long.</span>
+					<span class='description'>Your Password must be at least 6 characters long.<br>The strength meter is for guidance only</span>
 			    </td>
-				<td class='area_2'><input type='password' name='u_pass' size='40'></div></td>
+				<td class='area_2'><input type='password' name='u_pass' size='40' onkeyup=\"runPassword(this.value);\"><div style=\"font-size: 10px;\">Password Strength: <span id=\"u_pass_text\" style=\"font-size: 10px;\"></span></div></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Confirm Password:</strong> <span style='color:$required;'>*</span></td>

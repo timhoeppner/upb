@@ -266,7 +266,7 @@ function getSmilies($field = 'message')
   $output .= "</tr><tr><td colspan='10' class='more_smilie'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></td></tr></table></div>";
   return $output;
 }
-?><?
+
 function status($user)
 {
 $_STATUS = $GLOBALS['_STATUS'];

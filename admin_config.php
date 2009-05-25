@@ -6,6 +6,7 @@
 // Using textdb Version: 4.3.2
 
 require_once("./includes/upb.initialize.php");
+
 $where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_config.php'>Config Settings</a>";
 require_once('./includes/header.php');
 if(!isset($_GET['action']) || $_GET['action'] == '') $_GET['action'] = 'config';
@@ -63,7 +64,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 
 		$minicats = $config_tdb->fetchMiniCategories($_GET['action']);
 		$configVars = $config_tdb->getVars($_GET["action"], true);
-
+//dump($configVars);
 		echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
 	 
 		echoTableHeading("&nbsp;", $_CONFIG);
@@ -119,7 +120,30 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 								}
 							} else print "<i>Unable to display dropdown list</i>";
 							break 1;
-						case "hidden":
+						case "skin":
+              $skins = array();
+              if (is_dir('./skins')) {
+                if ($dh = opendir('./skins')) {
+                  while (($file = readdir($dh)) !== false) {
+               if (substr($file,0,1) != "." and is_dir('./skins/'.$file))
+               $skins[] = $file;
+              }
+              closedir($dh);
+              }
+              }
+              echo "<select name=\"{$configVars[$i]['name']}\">\n";
+              foreach ($skins as $skin)
+              {
+                $selected = "";
+                $value = "./skins/".$skin;
+                if ($value == $configVars[$i]["value"])
+                  $selected = "selected";
+                echo "<option value=\"./skins/$skin\" $selected>".stripslashes($skin)."</option>";
+              }
+              echo "</select>";
+							break 1;
+
+              case "hidden":
 							break 1;
 					}
 					echo "</td>

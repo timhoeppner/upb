@@ -628,6 +628,8 @@ var http_request = false;
         http_request.onreadystatechange = DelFile;
       else if (type == 'preview')
         http_request.onreadystatechange = PreviewPost;
+      else if (type == 'captcha')
+        http_request.onreadystatechange = AlterCaptcha;
       else
         http_request.onreadystatechange = Error;
       http_request.open('POST', url, true);
@@ -846,6 +848,24 @@ var http_request = false;
       }
    }
    
+   function AlterCaptcha()
+   {
+   if (http_request.readyState == 3)
+    {
+      html = "<img src='images/spinner.gif' alt='' title='' style='vertical-align:middle;'>Creating New Captcha";
+      document.getElementById('captcha').innerHTML = html;
+    }
+    if (http_request.readyState == 4) {
+         if (http_request.status == 200) {
+            result = http_request.responseText;
+            document.getElementById('captcha').innerHTML = result;
+         } else {
+            alert(http_request.status)
+            alert('There was a problem with the request.');
+         }
+      }
+   }
+   
    function getEdit(obj,divname) {
       div = divname;
       var poststr = "newedit=" + escape(Utf8.encode( replaceSubstring(document.getElementById("newedit").value,"+","&#43;")));
@@ -969,6 +989,13 @@ var http_request = false;
 
         makePOSTRequest('./ajax.php',poststr,'delfile');
       }
+    }
+    
+    function changeCaptcha()
+    {
+      div = 'captcha';
+      poststr = 'type=captcha';
+      makePOSTRequest('./ajax.php',poststr,'captcha');
     }
 //END OF AJAX SCRIPTS
 

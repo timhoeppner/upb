@@ -57,8 +57,7 @@
 		$uploadId = array();
 		$maxsize = $_CONFIG['fileupload_size'] * 1024; //convert KB to bytes
     $filetypes = explode(",",$_CONFIG['upload_types']);
-    $filetypes = array('zip','gif','jpg');
-    
+
     $names = $_FILES['upload']['name'];
     $enable_upload = false;
 
@@ -80,9 +79,10 @@
 
       $type = substr(strrchr($_FILES['upload']['name'][$i], '.'),1);
       
-      if (!in_array($type,$filetypes))
+      if (!in_array(strtolower($type),$filetypes))
       {
-        $error[$_FILES['upload']['name'][$i]] = 'type';
+        $type_key = $_FILES['upload']['name'][$i]."|".$type;
+        $error[$type_key] = 'type';
         continue;
       }
       if ($files[$i]['size'] > $maxsize)
@@ -102,16 +102,21 @@
 
     if (!empty($error))
     {
-      echo "The following files will not be uploaded:";
+      echo "The following files will not be uploaded: ";
       foreach ($error as $key => $err)
       {
         if ($err == 'size')
           echo $key." is too big<br>";
         if ($err == 'type')
-          echo $key." is not an allowed filetype";
+        {
+          list($err_file,$file_type) = explode("|",$key);
+          echo "$err_file - $file_type is not an allowed filetype";
+        }
       }
     }
 
+    if (count($files) > 0)
+    {
     foreach ($files as $file)
     {
 			if($_file['upload']['error'][$i] == UPLOAD_ERR_OK) {
@@ -124,6 +129,7 @@
         $uploadId[] = $result;
    //if ($uploadId === false) $uploadId = 0;
 		}
+    }
     }
     }
 		//END
@@ -290,7 +296,7 @@
         {
         echo "File $i: <input type=\"file\" name=\"upload[]\" size=\"25\"><br /><br />";
         }
-					echo "Valid file types: txt, gif, jpg, jpeg, zip.
+					echo "Valid file types: ".$_CONFIG['upload_types']."
 					<br />Maximum file size is ".$allowed_size." per file.</td>
 			</tr>";
 		}

@@ -1,6 +1,6 @@
 This is the changelog for this product's working copy.
 
-v2.2.6 Changelog - 22/05/2009
+v2.2.6 Changelog - 25/05/2009
 
 == BUG FIXES ==
 # Error message supressed if getimagesize doesn't work on avatars
@@ -9,6 +9,8 @@ v2.2.6 Changelog - 22/05/2009
 # Cancel button for forum deletion works
 # Topic and post counts corrected when forums or categories are removed.
 # Delete post button no longer appears on first post in a topic after quick reply.
+# File attachment sizes now displayed in bytes, KB or MB
+# Possible short-tag bug fixed in post.inc.php (Thanks Jim)
 
 
 == NEW FEATURES ==
@@ -18,6 +20,10 @@ v2.2.6 Changelog - 22/05/2009
 # Uploads removed when post, topic or category is removed
 # Multiple file uploads (up to 5)
 # Custom Profile Fileds (up to 5)
+# Password Strength Meter
+# Skin selection now dropdown based on skin directory name
+# Configurable file upload extensions
+# Loading new captcha image no longer resets registration form
 
 
 v2.2.5 Changelog - 16/05/2009

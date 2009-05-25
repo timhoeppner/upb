@@ -316,7 +316,7 @@ die();
 		$config_tdb->add('title', 'Discussion Forums', 'config', 'text', 'text', '1', '1', 'Title', 'Title of the forum.');
 		$config_tdb->add('logo', 'skins/default/images/logo.png', 'config', 'text', 'text', '1', '2', 'Logo Location', 'Can be relative or a URL.');
 		$config_tdb->add('homepage', 'http://www.myupb.com/', 'config', 'text', 'text', '1', '3', 'Homepage URL', 'Can be relative or a URL.');
-		$config_tdb->add('skin_dir', './skins/default', 'config', 'text', 'test', '1', '7', 'Skin Directory', 'Leave it unless you upload another skin.');
+		$config_tdb->add('skin_dir', './skins/default', 'config', 'text', 'skin', '1', '7', 'Skin Directory', 'Select a skin');
 		$config_tdb->add('servicemessage', '', 'config', 'text', 'textarea', '1', '8', 'Service Message', 'Service Messages appear above the forum, if nothing input, Announcements will not be displayed. Html is allowed.');
 
 		$config_tdb->add('posts_per_page', '20', 'config', 'number', 'text', '9', '1', 'Posts Per Page', 'this is how many posts will be displays on each page for topics.');
