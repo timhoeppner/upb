@@ -44,7 +44,7 @@
 				
 		echo "<div style='text-align:center;'></div></td>
 				<td class='area_2'>".bbcodebuttons('look1')."<textarea name='message' id='look1'>".format_text(encode_text($pRec[0]['message']),'edit')."</textarea>
-					<div style='padding:8px;'>".getSmilies()."</div></td>
+					<div style='padding:8px;'>".getSmilies('look1')."</div></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='".SKIN_DIR."/images/spacer.gif' alt='' title='' /></td>
