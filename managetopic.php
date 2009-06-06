@@ -32,12 +32,13 @@
 		$user = $tdb->get("users", $_COOKIE["id_env"]);
 		if ($tRec[0]["monitor"] == "") {
 			$posts_tdb->edit("topics", $_GET["t_id"], array("monitor" => $user[0]["email"]));
-			echo "You are now monitoring this topic.";
+			print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', "You are now monitoring this topic.", CONFIRM_MSG));
 		} elseif(FALSE === (strpos($tRec[0]["monitor"], ','))) {
 			if ($tRec[0]["monitor"] == $user[0]["email"]) {
 				if ($_POST["verify"] == "Ok") {
 					$posts_tdb->edit("topics", $_GET["t_id"], array("monitor" => ""));
-					echo "You are no longer monitoring this topic.";
+					//echo "You are no longer monitoring this topic.";
+					print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', "You are no longer monitoring this topic.", CONFIRM_MSG));
 				} elseif($_POST["verify"] != "Cancel") {
 					ok_cancel($_SERVER['PHP_SELF']."?action=watch&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"], "Are you sure you no longer wish to monitor this topic?");
 					exitPage('', false, true);
@@ -48,20 +49,20 @@
 			}
 		} else {
 			$monitor_list = explode(',', $tRec[0]["monitor"]);
-			if (!in_array($user[0]["email"], $monitor_list)) {
+			if (in_array($user[0]["email"], $monitor_list)) {
 				if ($_POST["verify"] == "Ok") {
 					$id_index = array_search($user[0]["email"], $monitor_list);
 					unset($monitor_list[$id_index]);
 					$monitor_list = implode(",", $monitor_list);
 					$posts_tdb->edit("topics", $_GET["t_id"], array("monitor" => $monitor_list));
-					print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You are no longer monitoring this topic.', ALERT_MSG));
+					print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You are no longer monitoring this topic.', CONFIRM_MSG));
 				} elseif($_POST["verify"] != "Cancel") {
 					ok_cancel($_SERVER['PHP_SELF']."?action=watch&id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"], "Are you sure you no longer wish to monitor this topic?");
 					exitPage('', false, true);
 				}
 			} else {
 				$posts_tdb->edit("topics", $_GET["t_id"], array("monitor" => $tRec[0]["monitor"].",".$user[0]["email"]));
-				"You are now monitoring this topic.";
+				print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', "You are now monitoring this topic.", CONFIRM_MSG));
 			}
 		}
 		require_once("./includes/footer.php");

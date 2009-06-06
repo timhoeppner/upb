@@ -74,9 +74,8 @@ class posts extends tdb {
     echo "<div class='tabstyle_1'>
         <ul>";
 		if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"]){
-			echo "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=' title='Create a new topic?'><span>Create New Topic</span></a></li>";
-      echo "<li><a href='search.php'><span>Search Forum</span></a></li>";
-    }else{
+			echo "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=' title='Create a new topic?'><span>Create New Topic</span></a></li><li><a href='search.php'><span>Search Forum</span></a></li>";
+		}else{
 			echo "<li><a href='search.php'><span>Search Forum</span></a></li>";
 		}
 		echo "
@@ -86,7 +85,7 @@ class posts extends tdb {
 		return true;
 	}
 
-	function d_posting($page_string, $page,$num_pages, $position = "top",$type = 'topic')
+	function d_posting($email_mode, $is_watching, $page_string, $page,$num_pages, $position = "top",$type = 'topic')
   {
     if(($type == 'topic' && !$this->check_topic()) || !$this->check_forum() || !$this->check_user_info()) return false;
     $output = "";
@@ -102,15 +101,18 @@ class posts extends tdb {
   			else $output .= "<li><a href='#' title='Topic Is Locked'><span>Topic Is Locked</span></a></li>";
   		}
   		if((int)$this->user["power"] > 0) {
-  		    if ($_CONFIG['email_mode'])
-            $output .= "<li><a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Watch This Topic?'><span>Watch Topic</span></a></li>";
+  		    if ($email_mode) {
+				$msg = "Watch";
+				if($is_watching) $msg = "Un-Watch";
+				$output .= "<li><a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='$msg This Topic?'><span>$msg Topic</span></a></li>";
+			}
 	        $output .= "<li><a href='managetopic.php?action=favorite&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Favorite this Topic?'><span>Bookmark Topic</span></a></li>";
   		}
     	if ((int)$_COOKIE["power_env"] >= 2) {
 		    $output .= "
 				<li><a href='managetopic.php?id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."'><span>Options</span></a></li>";
 	    }
-      //$bb_buttons = "<div id='disabled_msg'>Please enable Javascript to use text formatting<br></div>";
+   	//$bb_buttons = "<div id='disabled_msg'>Please enable Javascript to use text formatting<br></div>";
     //$bb_buttons .= "<div id='enabled_msg'><div id='colorpicker301' class='colorpicker301'></div>";
       $output .= "<div id='colorpicker301' class='colorpicker301'></div><div id='enabled_msg'><li><a href=\"javascript:popDiv()\"><span>Search Topic</span></a></li></div>";
      $output .= "
