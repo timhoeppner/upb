@@ -65,7 +65,7 @@
 	    ?><div class='alert_confirm'>
 			<div class='alert_confirm_text'>
 			  <strong>Attention:</strong></div>
-			<div style='padding:4px;'>A reconfirmation e-mail was successfully sent to your e-mail address on file.
+			<div style='padding:4px;'>A reconfirmation e-mail was successfully sent to your e-mail address on file. It should arrive in 2 - 5 minutes. If it doesn't arrive please check your Junk Mail folder. If you haven't received it after a short while please contact an administrator.
 			</div>
 		  </div><?php
 	    } else {
@@ -95,7 +95,7 @@
 		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You did not fill in all required fields. (*)', ALERT_MSG)), true);
 
 		if($_POST['u_email'] != $_POST['u_email2'])
-		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You\'re e-mails do not match.', ALERT_MSG)), true);
+		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'Your e-mails do not match.', ALERT_MSG)), true);
 
 	    if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[_a-z0-9-]+(\.[_a-z0-9-]+)*)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["u_email"]))
 		    exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'Please enter a valid e-mail (ex: you@host.com).', ALERT_MSG)), true);
@@ -213,7 +213,7 @@
             } else if($email_status && !$_REGIST['reg_approval']) {
                 print "<br />A confirmation email has been sent to your email account with your username and password.
                 You must click on the URL in the e-mail to verify your e-mail address before you can log in.
-                <br />It should arrive within 2 - 5 minutes.
+                <br />It should arrive within 2 - 5 minutes. If you don't receive it please check your Junk Mail folder.
                 <br />If you haven't received your e-mail after a significant amount of time please contact an administrator.";
             } else if(!$email_status && $_REGIST['reg_approval']) {
                 print "You won't be able to log in until an administrator approves your registration.";
@@ -230,8 +230,7 @@
 		exit;
 	} else {
 		require_once('./includes/header.php');
-		?> <script language='javascript' src='includes/pwd_meter.js'></script>
-		<?php
+		echo "<script language='javascript' src='includes/pwd_meter.js'></script>";
 		// security mod if enabled
 		if ((bool) $_REGIST['security_code'] === true && !$tdb->is_logged_in())
     {
@@ -250,7 +249,7 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='width:45%;'> <strong>User Name:</strong> <span style='color:$required;'>*</span><br />Your identity throughout the bulletin board.</td>
-				<td class='area_2'><input type=text name='u_login' size=40 onblur=\"getUsername(this.value,'register');\"><span class='err' id='namecheck'></span></td>
+				<td class='area_2'><input type=text name='u_login' size=40 onblur=\"getUsername(this.value,'changeuser');\"><span class='err' id='namecheck'></span></td>
 			</tr>
 			<tr>
 				<td class='area_1'>

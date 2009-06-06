@@ -479,6 +479,10 @@ switch ($ajax_type)
       else
       {
         $_POST['username'] = format_text(encode_text(trim($_POST['username'])));
+        if ($_POST['area'] == 'changeuser')
+          $newline = '&nbsp';
+        else
+          $newline = "<br />";
         if (trim($_POST['username']) == "")
         {
           $reply = "<br /><img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'>Username Required";
@@ -489,7 +493,7 @@ switch ($ajax_type)
           $q = $tdb->query("users", "user_name='".strtolower($_POST["username"])."'", 1, 1);
           if (strtolower($_POST["username"]) == strtolower($q[0]["user_name"]))
           {
-            $reply = "<br /><img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'>Username already exists";
+            $reply = "$newline<img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'>Username already exists";
             $valid = "false";
           }
           else 

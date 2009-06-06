@@ -11,6 +11,7 @@ v2.2.6 Changelog - 25/05/2009
 # Delete post button no longer appears on first post in a topic after quick reply.
 # File attachment sizes now displayed in bytes, KB or MB
 # Possible short-tag bug fixed in post.inc.php (Thanks Jim)
+# Strip slashes bug in pm reply box
 
 
 == NEW FEATURES ==
@@ -24,6 +25,8 @@ v2.2.6 Changelog - 25/05/2009
 # Skin selection now dropdown based on skin directory name
 # Configurable file upload extensions
 # Loading new captcha image no longer resets registration form
+# Administrators can change usernames
+# Extended colors available for bbcode to 40 using color swatch
 
 
 v2.2.5 Changelog - 16/05/2009

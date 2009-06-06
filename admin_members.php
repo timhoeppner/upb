@@ -209,7 +209,11 @@
 				<th colspan='2'>Complete the information below to edit this member</th>
 			</tr>
 			<tr>
-				<td class='area_1' style='width:25%;padding:8px;'><strong>".$rec[0]["user_name"].":</strong></td>
+				<td class='area_1' style='width:25%;padding:8px;'><strong>Username:</strong></td>
+				<td class='area_2'><span class='link_1'><a href='admin_members.php?action=changeuser&id=".$_GET['id']."'>Change Username?</a></span></td>
+			</tr>
+			<tr>
+				<td class='area_1' style='width:25%;padding:8px;'><strong>Password:</strong></td>
 				<td class='area_2'><span class='link_1'><a href='admin_members.php?action=pass&id=".$_GET['id']."'>Change Password?</a></span></td>
 			</tr>
 			<tr>
@@ -353,6 +357,7 @@
       echo "</div></td></tr>";
       echoTableFooter(SKIN_DIR);
 		} else {
+		echo "<script language='javascript' src='includes/pwd_meter.js'></script>";
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 			echo "
 			<tr>
@@ -373,7 +378,7 @@
 			</tr>
 			<tr>
 				<td class='area_1' style='width:25%;padding:8px;'><strong>New Password</strong></td>
-				<td class='area_2'><input type='password' name='pass'></td>
+				<td class='area_2'><input type='password' name='pass' size='40' onkeyup=\"runPassword(this.value);\"><div style=\"font-size: 10px;\">Password Strength: <span id=\"u_pass_text\" style=\"font-size: 10px;\"></span></div></td>
 			</tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Confirm Password</strong></td>
@@ -400,7 +405,73 @@
     echoTableFooter(SKIN_DIR);
     echo "</form>";
 		}
-	} elseif($_GET["action"] == "delete") {
+	}
+  elseif($_GET['action'] == "changeuser" && isset($_GET["id"])) {
+		$user = $tdb->get("users", $_GET["id"]);
+		if (isset($_POST["a"])) {
+			$tdb->edit("users", $_GET["id"], array("user_name" => $_POST["username"]));
+			$msg = "Your Username was changed by ".$_COOKIE["user_env"]." on the website ".$_CONFIG["homepage"]." to \"".$_POST["pass"]."\"";
+			if (isset($_POST["reason"])) $msg .= "\n\n".$_COOKIE["user_env"]."'s reason was this:\n".$_POST["reason"];
+
+      if(!@mail($user[0]["email"], "Username Change Notification", "Username changed by :".$_COOKIE["user_env"]."\n\n".$msg, "From: ".$_REGISTER["admin_email"]))
+        if(!$_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '0'));
+      else
+        if($_CONFIG['email_mode']) $config_tdb->editVars('config', array('email_mode' => '1'));
+			echoTableHeading("Username changed!", $_CONFIG);
+      echo "
+		<tr>
+			<td class='area_1'><div class='description'><strong>";
+      echo "You successfully changed ".$user[0]["user_name"]."'s password to ".$_POST["newname"]."</strong>";
+			if ($email_status !== true)
+        echo "<p>The automated email was unable to be sent.<p>Please email them at ".$user[0]['email']." to inform them of the change of password";
+      echo "</div></td></tr>";
+      echoTableFooter(SKIN_DIR);
+		} else {
+		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
+			echo "
+			<tr>
+				<th>Admin Panel Navigation</th>
+			</tr>";
+			echo "
+			<tr>
+				<td class='area_2' style='padding:20px;' valign='top'>";
+			require_once("admin_navigation.php");
+			echo "</td>
+			</tr>";
+			echoTableFooter(SKIN_DIR);
+			echo "<form method='POST' action=".$_SERVER['PHP_SELF']."?action=changeuser&id=".$_GET["id"]."><input type='hidden' name='a' value='1'>";
+		echoTableHeading("Setting a new username for: ".$user[0]["user_name"]."", $_CONFIG);
+			echo "
+			<tr>
+				<th colspan='2'>Complete the information below to change the username for this member</th>
+			</tr>
+			<tr>
+				<td class='area_1' style='width:25%;padding:8px;'><strong>New Username:</strong></td>
+				<td class='area_2'><input type='text' size='40' name='username' onblur=\"getUsername(this.value,'changeuser');\"><span class='err' id='namecheck'></span></td>
+			</tr>
+			<tr>
+				<td class='area_1' style='padding:8px;'><strong>Reason</strong></td>
+				<td class='area_2'><textarea name=reason></textarea></td>
+			</tr>";
+			if ($_CONFIG['email_mode'])
+			echo "<tr>
+				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
+			</tr>
+			<tr>
+				<td class='area_2' style='text-align:center;font-weight:bold;padding:12px;line-height:20px;' colspan='2'>An E-mail will be sent, notifying the user about the change of their username by <i>".$_COOKIE["user_env"]."</i></td>
+			</tr>";
+			echo "
+			<tr>
+				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
+			</tr>
+			<tr>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' name='submit' id='submit' value='Change Password' disabled><input type='reset' name='reset' id='reset' value='Reset'></td>
+			</tr>";
+    echoTableFooter(SKIN_DIR);
+    echo "</form>";
+		}
+  }
+  elseif($_GET["action"] == "delete") {
 		if (!isset($_GET["id"])) exitPage("No id selected.");
 		$rec = $tdb->get("users", $_GET["id"]);
 		if ($_POST["verify"] == "Ok") {

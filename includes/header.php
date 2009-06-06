@@ -139,6 +139,7 @@
 <link rel='stylesheet' type='text/css' href='".SKIN_DIR."/css/style.css' />
 <link rel='stylesheet' type='text/css' href='skins/disabled.css' />
 <script type='text/javascript' src='./includes/scripts.js'></script>
+<script type='text/javascript' src='./includes/301a.js'></script>
 </head>
 <body>
 <div id='upb_container'>

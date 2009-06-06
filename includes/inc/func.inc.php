@@ -424,4 +424,13 @@ if ($pRec[0]['upload_id'] != 0)
 			
 				$tdb->edit("forums", $forumid, array("topics" => ((int)$fRec[0]["topics"] - 1), "posts" => ((int)$fRec[0]["posts"] - count($p_ids))));
 				}
+
+function removeRedirect($string) {
+		$pos = strpos($string, "<meta");
+		if ($pos !== FALSE) {
+			$pos2 = strpos($string, ">", ($pos+1));
+			$string = substr($string, 0, $pos).substr($string, ($pos2+1));
+		}
+		return $string;
+	}
 ?>

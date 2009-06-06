@@ -192,15 +192,8 @@ function parse_quote($matches)
 
 function bbcodebuttons($txtarea='message',$type='post') {
     $bb_buttons = "<div id='disabled_msg'>Please enable Javascript to use text formatting<br></div>";
-    $bb_buttons .= "<div id='enabled_msg'><select class='bbselect' onchange=\"bb_dropdown(this.form.colors,'colors','$txtarea')\" name='colors'>";
-    $bb_buttons .= "<option value='' selected='selected'>Choose color</option>";
-    $bb_buttons .= "<option style='color: #ffffff;' value='#FFFFFF'>White</option>";
-    $bb_buttons .= "<option style='color: #ffff00;' value='#FFFF00'>Yellow</option>";
-    $bb_buttons .= "<option style='color: #008000;' value='#008000'>Green</option>";
-    $bb_buttons .= "<option style='color: #800080;' value='#800080'>Purple</option>";
-    $bb_buttons .= "<option style='color: #ff0000;' value='#FF0000'>Red</option>";
-    $bb_buttons .= "<option style='color: #0000ff;' value='#0000FF'>Blue</option>";
-    $bb_buttons .= "</select> ";
+    $bb_buttons .= "<div id='enabled_msg'><div id='colorpicker301' class='colorpicker301'></div>";
+    $bb_buttons .= "<input type='button' value='Choose color' onclick=\"showColorGrid3('$txtarea','none');\">&nbsp;";
     $bb_buttons .= "<select class='bbselect' onchange=\"bb_dropdown(this.form.typeface,'typeface','$txtarea')\" name='typeface'>";
     $bb_buttons .= "<option value='' selected='selected'>Choose font</option>";
     $bb_buttons .= "<option style='font-family : Arial;' value='arial'>Arial</option>";

@@ -92,7 +92,9 @@ $bot_list = array(
 'VoilaBot'        , 'Voila Bot',
 'Sensis'          , 'Sensis Web Crawler',
 'findlinks'       , 'Findlinks Spider',
-'Yahoo-MMCrawler' , 'Yahoo MMCrawler'
+'Yahoo-MMCrawler' , 'Yahoo MMCrawler',
+'GingerCrawler' , 'GingerCrawler',
+'Baiduspider', 'Baiduspider'
 );
 
 foreach($sublog as $entry) {
@@ -109,7 +111,7 @@ foreach($sublog as $entry) {
     <td class='area_1' style='padding:8px;'><strong>{$entry[0]}</strong></td>
 		<td class='area_2'>{$entry[1]}</td>
 		<td class='area_1'>{$entry[2]}</td>
-		<td class='area_2'>".(ctype_digit(($entry[3])) ? date('r', $entry[3]) : $entry[3])."</td>
+		<td class='area_2'>".(ctype_digit(($entry[3])) ? gmdate('r', $entry[3]) : $entry[3])."</td>
 		<td class='area_1'>{$entry[4]}</td>
 	</tr>";
 }

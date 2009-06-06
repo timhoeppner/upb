@@ -124,7 +124,6 @@
 				    $sort = $cat_id;
 				}
                 $config_tdb->editVars('config', array('admin_catagory_sorting' => $sort));
-        echo "\$config_tdb->editVars('config', array('admin_catagory_sorting' => $sort))";
         echo "
 					<div class='alert_confirm'>
 					<div class='alert_confirm_text'>

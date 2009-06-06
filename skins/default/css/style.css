@@ -1595,3 +1595,9 @@ color: #000088;
 color: #CC0033;
 font-weight: bold;
 }
+
+.showhide
+{
+text-decoration: underline;
+cursor: pointer;
+}

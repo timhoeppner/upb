@@ -16,9 +16,18 @@
 }());
 
 //START OF BBCODE SCRIPTS
+var browserType;
+
+if (document.layers) {browserType = "nn4"}
+if (document.all) {browserType = "ie"}
+
 var clientInfo = navigator.userAgent.toLowerCase();
 var isIE = ( clientInfo.indexOf("msie") != -1 );
 var isWin = ( (clientInfo.indexOf("win")!=-1) || (clientInfo.indexOf("16bit") != -1) );
+if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+ browserType= "gecko"
+}
+
 
 // function bb_dropdown creates the bbcode for the value selected from the dropdown
 // field is the document object containing the selected value, selectname is the name of the dropdown box
@@ -1121,6 +1130,37 @@ function trim (str) {
 	return str;
 }
 
+function popDiv()
+{
+  mid = "Is this thing working????";
+  alert(mid);
+  document.getElementById('colorpicker301').innerHTML=mid;
+}
 
-//document.cookie = 'javascript=true'; //sets a cookie if javascript is enabled
+function showhide(divname,linkdiv) {
+  if (browserType == "gecko" )
+     document.poppedLayer =
+         eval('document.getElementById("'+divname+'")');
+  else if (browserType == "ie")
+     document.poppedLayer =
+        eval('document.getElementById("'+divname+'")');
+  else
+     document.poppedLayer =
+        eval('document.layers["'+divname+'"]');
+
+  if (document.poppedLayer.style.display == "none")
+  {
+    document.poppedLayer.style.display = "inline";
+    document.getElementById(linkdiv).innerHTML = "<img src='images/up.gif' alt='Hide Search Box' title='Hide Search Box' onClick=\"showhide('searchbox','showhidebuttons');\">";
+  }
+  else
+  {
+    document.poppedLayer.style.display = "none";
+    document.getElementById(linkdiv).innerHTML = "<img src='images/down.gif' alt='Show Search Box' title='Show Search Box' onClick=\"showhide('searchbox','showhidebuttons');\">";
+  }
+}
+
+
+
+
 //END OF MISCELLANEOUS SCRIPTS
