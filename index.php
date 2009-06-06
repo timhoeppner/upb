@@ -230,13 +230,13 @@
 
 	if(!isset($_SESSION['iplogged']) || ($_SESSION['iplogged']+300) < time()) {
 	    $_SESSION['iplogged'] = time();
-        $user = ((empty($_COOKIE["user_env"])) ? "guest" : $_COOKIE["user_env"]);;
+        $user = RemoveXSS((empty($_COOKIE["user_env"])) ? "guest" : $_COOKIE["user_env"]);
     	$visitor_info = ((!isset($_SERVER['REMOTE_HOST']) || $_SERVER['REMOTE_HOST'] == "") ? $_SERVER['REMOTE_ADDR'] : $_SERVER['REMOTE_HOST']);
     	$base = "http://" . $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'];
         $date = date("r", time());
 
         $fp = fopen(DB_DIR."/ip.log", "a");
-        fputs($fp, $visitor_info."\t".$user."\t".$base."\t".time()."\t".$_SERVER['HTTP_USER_AGENT']."\n");
+        fputs($fp, $visitor_info."\t".$user."\t".$base."\t".time()."\t".RemoveXSS($_SERVER['HTTP_USER_AGENT'])."\n");
         //fputs($fp, "<strong>$visitor_info</strong> -<i>".$_SERVER['HTTP_USER_AGENT']."</i>- <strong>$user</strong>- <br />Accessed \"$base\" on: $date.--------------------------------Next Person<p><br />\r\n");
         fclose($fp);
 

@@ -71,9 +71,11 @@ $_SERVER['REQUEST_URI'] .= "?".$_SERVER['QUERY_STRING'];
 foreach($GLOBALS["_GET"] as $varname => $varvalue) {
     if(isset($$varname)) unset($$varname);
     if (((strpos($varname, 'id') !== FALSE) || $varname == 'page') && (!ctype_digit($varvalue) && !empty($varvalue))) die('Possible XSS attack detected');
+    $_GET[$varname] = RemoveXSS($varvalue);
 }
 reset($GLOBALS["_GET"]);
 foreach($GLOBALS["_POST"] as $varname => $varvalue) {
+	$_POST[$varname] = RemoveXSS($varvalue);
     if(isset($$varname)) unset($$varname);
 }
 reset($GLOBALS["_POST"]);
@@ -210,13 +212,5 @@ if(file_exists(DB_DIR."/main.tdb")) {
 	  if (SKIN_DIR == '' || !defined('SKIN_DIR')) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Fatal Error:', str_replace('__MSG__', 'The SKIN_DIR constant is undefined.<br>This may be an indication UPB was unable to correctly access its configuration.<br>Please go to <a href="http://forum.myupb.com/" target="_blank">forum.myupb.com</a> for support.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
 
     require_once('./includes/whos_online.php');
-    
-    foreach($_POST as $varname => $varvalue) {
-        $_POST[$varname] = RemoveXSS($varvalue);
-    }
-    
-    foreach($_GET as $varname => $varvalue) {
-        $_GET[$varname] = RemoveXSS($varvalue);
-    }
 }
 ?>
