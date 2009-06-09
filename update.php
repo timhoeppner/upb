@@ -4,7 +4,7 @@
     require_once('./config.php');
 	}
 
-$current_update = '2.2.5';
+$current_update = '2.2.6';
 
 if (substr(UPB_VERSION,0,1) == 1)
 {
