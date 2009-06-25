@@ -140,10 +140,7 @@
 		else $reply = "";
 
     $msg = display_msg($pRec['message']);
-    if ($pRec['upload_id'] != "")
-    {
     $msg .= "<div id='{$_GET['id']}-{$_GET['t_id']}-{$pRec['id']}-attach'>".$tdb->getUploads($_GET['id'],$_GET['t_id'],$pRec['id'],$pRec['upload_id'],$_CONFIG['fileupload_location'],$pRec['user_id'])."</div>";
-    }
     echo "
 			<tr>
 				<th><div class='post_name'>";

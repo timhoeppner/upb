@@ -84,6 +84,14 @@ switch ($ajax_type)
       $_COOKIE["id_env"] = 0;
     }
 
+    if($tdb->is_logged_in()) {
+		$email_mode = $_CONFIG['email_mode'];
+		$thisUser = $tdb->get("users", $_COOKIE["id_env"]);
+		$isWatching = in_array($thisUser[0]["email"], explode(',', $tRec[0]['monitor']));
+	} else {
+		$email_mode = false;
+		$isWatching = false;
+	}
     $msg = encode_text(stripslashes($_POST["newentry"]));
     $tdb->edit("forums", $_POST["id"], array("posts" => ((int)$fRec[0]["posts"] + 1)));
 
@@ -141,8 +149,8 @@ switch ($ajax_type)
 
     $p = createPageNumbers($page, $num_pages, $query,true);
     $p = str_replace('ajax.php', 'viewtopic.php', $p);
-    $pagelinks1 = $posts_tdb->d_posting($p,$page,$num_pages);
-    $pagelinks2 = $posts_tdb->d_posting($p,$page,$num_pages,"bottom") . "</div>";
+    $pagelinks1 = $posts_tdb->d_posting($email_mode, $isWatching,$p,$page,$num_pages);
+    $pagelinks2 = $posts_tdb->d_posting($email_mode, $isWatching,$p,$page,$num_pages,"bottom") . "</div>";
 
     //BEGIN NEW REPLY OUTPUT
     $x = +1;

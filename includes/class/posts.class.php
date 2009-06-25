@@ -74,9 +74,9 @@ class posts extends tdb {
     echo "<div class='tabstyle_1'>
         <ul>";
 		if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"]){
-			echo "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=' title='Create a new topic?'><span>Create New Topic</span></a></li><li><a href='search.php'><span>Search Forum</span></a></li>";
+			echo "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=' title='Create a new topic?'><span>Create New Topic</span></a></li>";
 		}else{
-			echo "<li><a href='search.php'><span>Search Forum</span></a></li>";
+			echo "<li></li>";
 		}
 		echo "
         </ul>
@@ -112,10 +112,7 @@ class posts extends tdb {
 		    $output .= "
 				<li><a href='managetopic.php?id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."'><span>Options</span></a></li>";
 	    }
-   	//$bb_buttons = "<div id='disabled_msg'>Please enable Javascript to use text formatting<br></div>";
-    //$bb_buttons .= "<div id='enabled_msg'><div id='colorpicker301' class='colorpicker301'></div>";
-      $output .= "<div id='colorpicker301' class='colorpicker301'></div><div id='enabled_msg'><li><a href=\"javascript:popDiv()\"><span>Search Topic</span></a></li></div>";
-     $output .= "
+   	$output .= "
         </ul>
       </div>";
       }
