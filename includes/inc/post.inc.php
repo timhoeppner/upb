@@ -136,6 +136,8 @@ function UPBcoding($text) {
     $msg = preg_replace("/\[img=(.*?)x(.*?)](.*?)\[\/img\]/si","<img src=\"\\3\" border=\"0\" width=\"\\1\" height=\"\\2\">",$msg);
     $msg = preg_replace("/\[offtopic\](.*?)\[\/offtopic\]/si", "<font color='blue'>Offtopic: \\1</font>", $msg);
     $msg = preg_replace("/\[youtube\](.*?)\[\/youtube\]/si", '<object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/\\1&hl=en&fs=1"></param><param name="allowFullScreen" value="true"></param><embed src="http://www.youtube.com/v/\\1&hl=en&fs=1" type="application/x-shockwave-flash" allowfullscreen="true" width="425" height="344"></embed></object>', $msg);
+    $msg = preg_replace("/\[youtubecp1\](.*?)\[\/youtubecp1\]/si", '<object width="416" height="337"><param name="movie" value="http://www.youtube.com/cp/\\1"></param><embed src="http://www.youtube.com/cp/\\1" type="application/x-shockwave-flash" width="416" height="337"></embed></object>', $msg);
+    $msg = preg_replace("/\[youtubecp2\](.*?)\[\/youtubecp2\]/si", '<object width="746" height="413"><param name="movie" value="http://www.youtube.com/cp/\\1="></param><embed src="http://www.youtube.com/cp/\\1" type="application/x-shockwave-flash" width="746" height="413"></embed></object>', $msg);
     $msg = preg_replace("/\[google\](.*?)\[\/google\]/si", '<embed style="width:425px; height:350px;" id="VideoPlayback" type="application/x-shockwave-flash" src="http://video.google.com/googleplayer.swf?docId=\\1" flashvars=""></embed>',$msg);
 
     while (preg_match("/\[quote(.*?)\](.*?)\[\/quote\]/si", $msg))
