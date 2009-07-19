@@ -22,7 +22,7 @@ function get_updates()
   }
   $d->close();
 
-  
+
 
   $key_alter = array_search('update'.$alter.'.php',$file_list);
 
@@ -128,13 +128,13 @@ if ($_POST['agree'] == 'on')
           $dir_777 = is_readable('./') && is_writable('./');
 					if(!$dir_777) print "You have to chmod upb's root directory to 0777 before you can proceed";
 					else {
-          
+
           echo "<p>You are currently running v".UPB_VERSION." and the current version available is v".$current_update."<br>";
-          echo (count($files) == 1) ? "There is 1 update file that needs to be run.": "There are ".count($_SESSION['files']). " updates which will be run one after the other.";
+          echo (count($files) == 1) ? "There is 1 update file that needs to be run.": "There are ".count($files). " updates which will be run one after the other.";
           echo "<p>Please backup your skin, database and upload directories before proceeding.";
           echo "<p>If you need to input any information you will be prompted.<br>After each section of the upgrade has been completed you will be prompted to proceed to the next step.";
           echo '<p>Click on the "Proceed" to continue<br />';
-          
+
 	} ?><br /><br />
 			<input type='button' name='proceed' onclick="location.href='<?php echo $files[0];?>';" value='Proceed'>
       <?php

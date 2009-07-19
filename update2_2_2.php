@@ -1,4 +1,5 @@
 <?php
+require_once("config.php");
 $from_version = UPB_VERSION;
 $to_version = "2.2.2";
 

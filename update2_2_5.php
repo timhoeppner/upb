@@ -1,7 +1,8 @@
 <?php
+require_once('includes/upb.initialize.php');
 $from_version = UPB_VERSION;
 $to_version = "2.2.5";
-          require_once('includes/upb.initialize.php');
+
 require_once('includes/class/posts.class.php');
 
 $posts_tdb = new posts(DB_DIR."/", "posts.tdb");
