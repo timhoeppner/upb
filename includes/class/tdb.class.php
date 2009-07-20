@@ -6,6 +6,10 @@
   The idea of this version is to offer a quicker and more complex way of dealing with the files
   this version of textdb uses the extension tdb for all its database files.
 
+  4.4.4 update: Fixed MEMO corruption bug:
+				  Fixed an if-then statement that checks if the index link list contained a cycle.
+				  Fixed an if-then statement that updates the last written block's index pointer to the block that is represented by EOF.  This statement only executes if there are no more free blocks in the file.  When writing the EOF index, it might right pad the index with an incorrect number of spaces, which may result in a corrupted index, which may result in data corruption. 
+  
   4.4.3 update: added SELECT columns functionability when retrieving record(s)
                 bug fixed with isTable()
                 renamed sortAndBuild() to sort(); left placeholder for sortAndBuild() for backwards compadibility
@@ -1698,7 +1702,7 @@ class tdb {
             // Make sure the next index hasn't already been read
             if(isset($readIndexes[$next])) die('<b>Fatal Error</b>(line '.__LINE__.'): There is an error in '.$this->fp[$fp].'.memo, this needs to be corrected. The error starts on index <b>'.$index.'</b>');
 
-            if(ftell($f) == $next * $header["blockLength"]) die('<b>Fatal Error</b>(line '.__LINE__.'): Script entered an endless loop in writeMemo("'.$this->fp[$fp].'", "'.$oriData.'", $header) at "'.$next.'" position in the memo file.<br />');
+            if(ftell($f) - 7 == $next * $header["blockLength"]) die('<b>Fatal Error</b>(line '.__LINE__.'): Script entered an endless loop in writeMemo("'.$this->fp[$fp].'", "'.$oriData.'", $header) at "'.$next.'" position in the memo file.<br />');
             if(strlen($data) > ($header["blockLength"] - 8)) { //if it won't fit
                 fwrite($f, substr($data, 0, $header["blockLength"] - 8).chr(3));
                 $data = substr($data, $header["blockLength"] - 8);
@@ -1710,11 +1714,11 @@ class tdb {
         }
         if(!(strlen($data) == 0) && ftell($f) >= $header["blockLength"]) {
             fseek($f, -($header["blockLength"]), SEEK_CUR);
-            $last_blank_memo_block_reference = ftell($f);
+            $last_write_offset = ftell($f);
             fseek($f, 0, SEEK_END);
-            $last_memo_block_reference = ftell($f) / $header["blockLength"];
-            fseek($f, $last_blank_memo_block_reference);
-            fwrite($f, $last_memo_block_reference.str_repeat(' ', 7 - strlen($last_blank_memo_block_reference)));
+            $EOF_index = ftell($f) / $header["blockLength"];
+            fseek($f, $last_write_offset);
+            fwrite($f, $EOF_index.str_repeat(' ', 7 - strlen($EOF_index)));
         }
 
         fseek($f, 0);
@@ -1811,7 +1815,7 @@ class tdb {
      * @return string
      */
     function version() {
-        return "4.4.3";
+        return "4.4.4";
     }
     
     function deXSS($text) {
