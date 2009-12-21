@@ -5,6 +5,8 @@
 // Version: 2.0
 
 //Special Posting Functions
+
+require_once('./includes/inc/geshi.inc.php');
 function message_icons()
 {
   $tdb = new tdb(DB_DIR.'/', 'bbcode.tdb');
@@ -134,6 +136,8 @@ function UPBcoding($text) {
     $msg = preg_replace("/\[img=(.*?)x(.*?)](.*?)\[\/img\]/si","<img src=\"\\3\" border=\"0\" width=\"\\1\" height=\"\\2\">",$msg);
     $msg = preg_replace("/\[offtopic\](.*?)\[\/offtopic\]/si", "<font color='blue'>Offtopic: \\1</font>", $msg);
     $msg = preg_replace("/\[youtube\](.*?)\[\/youtube\]/si", '<object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/\\1&hl=en&fs=1"></param><param name="allowFullScreen" value="true"></param><embed src="http://www.youtube.com/v/\\1&hl=en&fs=1" type="application/x-shockwave-flash" allowfullscreen="true" width="425" height="344"></embed></object>', $msg);
+    $msg = preg_replace("/\[youtubecp1\](.*?)\[\/youtubecp1\]/si", '<object width="416" height="337"><param name="movie" value="http://www.youtube.com/cp/\\1"></param><embed src="http://www.youtube.com/cp/\\1" type="application/x-shockwave-flash" width="416" height="337"></embed></object>', $msg);
+    $msg = preg_replace("/\[youtubecp2\](.*?)\[\/youtubecp2\]/si", '<object width="746" height="413"><param name="movie" value="http://www.youtube.com/cp/\\1"></param><embed src="http://www.youtube.com/cp/\\1" type="application/x-shockwave-flash" width="746" height="413"></embed></object>', $msg);
     $msg = preg_replace("/\[google\](.*?)\[\/google\]/si", '<embed style="width:425px; height:350px;" id="VideoPlayback" type="application/x-shockwave-flash" src="http://video.google.com/googleplayer.swf?docId=\\1" flashvars=""></embed>',$msg);
 
     while (preg_match("/\[quote(.*?)\](.*?)\[\/quote\]/si", $msg))
@@ -142,17 +146,8 @@ function UPBcoding($text) {
     }
     //$msg = preg_replace("/\[code\](.*?)\[\/code\]/si", "<font color='red'>Code:<hr><pre>\\1<hr></pre></font>", $msg);
 
-    $code_matches = array();
-    preg_match_all("/\[code\](.*?)\[\/code\]/si", $msg, $code_matches);
-    
-    foreach($code_matches[1] as $thecode) {
-    	$newcode = "<?php\n".$thecode."\n?>";
-    	$newcode = str_replace(array('&lt;','&gt;','&quot;'),array('<','>', '"'),$newcode);
-    	$newcode = highlight_string($newcode, true);
-    	$newcode = str_replace("<font color=\"#0000BB\">&lt;?php", "<font>", $newcode);
-    	$newcode = str_replace("<font color=\"#0000BB\">?&gt;", "<font>", $newcode);
-    	$msg = str_replace("[code]{$thecode}[/code]", "<div class=\"code_block\">{$newcode}</div>", $msg);
-    }
+    $msg = preg_replace_callback("!\[code=([\w\-]+)](.*)\[/code]!Us","geshify", $msg);
+    $msg = preg_replace_callback("!\[code\](.*)\[/code]!Us","geshify", $msg);
     
     $msg = preg_replace("/\[center\](.*?)\[\/center\]/si", "<span style='text-align:center';>\\1</span>", $msg);
     $msg = preg_replace("/\[left\](.*?)\[\/left\]/si", "<span style='text-align:left;'>\\1</span>", $msg);
@@ -274,7 +269,7 @@ function getSmilies($field = 'message')
   $output .= "</tr><tr><td colspan='10' class='more_smilie'><a href=\"javascript: window.open('more_smilies.php','Smilies','width=750,height=350,resizable=yes,scrollbars=yes'); void('');\">show more smilies</a></td></tr></table></div>";
   return $output;
 }
-?><?
+
 function status($user)
 {
 $_STATUS = $GLOBALS['_STATUS'];
