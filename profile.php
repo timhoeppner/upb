@@ -139,20 +139,6 @@ echo "<div class='alert'>
     if (trim($custom[0]['value']) != "")
       $customs[] = array($custom[0]['value'],$rec[0]["custom_profile$i"]);
     }
-
-    echoTableHeading("Viewing profile for ".$rec[0]["user_name"]."", $_CONFIG);
-    echo "<tr><td><span style='color:#".$statuscolor.";font-size:14px;'>".$rec[0]["user_name"]."</span>
-						<br />
-						<br />
-						";
-if (@$rec[0]["avatar"] != "")
-  {
-    $resize = resize_img($rec[0]['avatar'],$_REGIST["avatarupload_dim"]);
-    echo "<img src='".$rec[0]["avatar"]."' $resize border='0' alt='' title='' /><br />";
-  }
-						echo "<br />
-						<img src='$statusrank'></td><td></td><td></td><td></td></tr>";
-    echoTableFooter(SKIN_DIR);
     
     echoTableHeading("Viewing profile for ".$rec[0]["user_name"]."", $_CONFIG);
 		echo "
@@ -184,76 +170,57 @@ if (@$rec[0]["avatar"] != "")
 		} else {
 			echo "<a href='newpm.php?to=".$_GET["id"]."' target='_blank'>Send private message?</a>";
 		}
-		echo "</div></td></tr><tr><td id='leftcontent'>
+		echo "</div></td></tr>";
+		echo "<tr><td id='leftcontent' valign='top'>
+					<div class='pro_sig_name'>General</div>
 					<div class='pro_container'>
 						<div class='pro_area_1'><div class='pro_area_2'><strong>Joined: </strong></div>".gmdate("Y-m-d", user_date($rec[0]["date_added"]))."</div>
 						<div class='pro_area_1'><div class='pro_area_2'><strong>Posts made: </strong></div>".$rec[0]["posts"]."</div>";
 
 
-  echo "
+  		echo "
 			<div class='pro_area_1'><div class='pro_area_2'><strong>Homepage: </strong></div>";
 		if (strlen($rec[0]['url']) != 0)
-    echo "<a href='".$rec[0]["url"]."' target='_blank'>".$rec[0]["url"]."</a>";
-		echo "&nbsp;</div>";
-  echo "</div>
-			</td><td id='rightcontent'>
-			<div class='pro_container'>
+   			echo "<a href='".$rec[0]["url"]."' target='_blank'>".$rec[0]["url"]."</a>";
+		echo "&nbsp;</div>
 						<div class='pro_area_1' style='white-space:nowrap;'><div class='pro_area_2'><strong>Status: </strong></div>
-							<span style='color:#".$statuscolor."'><strong>$status &nbsp;&nbsp;&nbsp;</strong></span></div>
+							<span style='color:#".$statuscolor."'><strong>".str_replace("<br />", " / ", $status)." &nbsp;&nbsp;&nbsp;</strong></span></div>
 						<div class='pro_area_1'><div class='pro_area_2'><strong>Email: </strong></div>";
 		if ((bool)$rec[0]["view_email"]) echo "<a href='mailto:".$rec[0]["email"]."'>".$rec[0]["email"]."</a>";
 		else echo "not public";
 		echo "</div>";
-  echo "<div class='pro_area_1'><div class='pro_area_2'><strong>Location: </strong></div>".$rec[0]["location"]."&nbsp;</div>";
-		echo "</div>";
+  		echo "<div class='pro_area_1'><div class='pro_area_2'><strong>Location: </strong></div>".$rec[0]["location"]."&nbsp;</div>";
+		echo "</div></td>";
+		echo "<td id='rightcontent' valign='top'>
+			<div class='pro_sig_name'>Contact</div>
+			<div class='pro_container'>";
+echo "<div class='pro_area_1'><div class='pro_area_2'><img src='images/icq.gif' border='0' align='absmiddle'>&nbsp;<strong>ICQ:</strong></div>".$rec[0]["icq"]."&nbsp;</div>";
+echo "<div class='pro_area_1'><div class='pro_area_2'><img src='images/aol.gif' border='0' align='absmiddle'>&nbsp;<strong>AIM:</strong></div>".$rec[0]["aim"]."&nbsp;</div>";
+echo "<div class='pro_area_1'><div class='pro_area_2'><img src='images/yahoo.gif' border='0' align='absmiddle'>&nbsp;<strong>Yahoo!:</strong></div>".$rec[0]["yahoo"]."&nbsp;</div>";
+echo "<div class='pro_area_1'><div class='pro_area_2'><img src='images/msn.gif' border='0' align='absmiddle'>&nbsp;<strong>MSN:</strong></div>".$rec[0]["msn"]."&nbsp;</div>";
+echo "<div class='pro_area_1'><div class='pro_area_2'><img src='images/skype.gif' border='0' align='absmiddle'>&nbsp;<strong>Skype:</strong></div>".$rec[0]["skype"]."&nbsp;</div>";
+echo "<div class='pro_area_1'>&nbsp;</div>";
+echo "</div></td></tr>
 
-  echo " <tr>
-				<td class='pro_area_1' valign='top'>
-<fieldset><legend>Contact Details</legend>
-
-<table>
-			<tr><td class='pro_area_1' valign='top'>
-        <div class='pro_area_2'><strong><img src='images/icq.gif' border='0' align='absmiddle'>&nbsp;<strong>ICQ:</strong></div>".$rec[0]["icq"]."</td></tr>
-<tr>
-				<td class='pro_area_1' valign='top'><div class='pro_area_2'><img src='images/aol.gif' border='0' align='absmiddle'>&nbsp;<strong>AIM:</strong></div>".$rec[0]["aim"]."</td>
-			</tr>
-			<tr>
-				<td class='pro_area_1' valign='top'><div class='pro_area_2'><strong><img src='images/yahoo.gif' border='0' align='absmiddle'>&nbsp;<strong>Yahoo!:</strong></div>".$rec[0]["yahoo"]."</td>
-			</tr>
-			<tr>
-				<td class='pro_area_1' valign='top'><div class='pro_area_2'><strong><img src='images/msn.gif' border='0' align='absmiddle'>&nbsp;<strong>MSN:</strong></div>".$rec[0]["msn"]."</td>
-			</tr>
-			<tr>
-				<td class='pro_area_1' valign='top'><div class='pro_area_2'><strong><img src='images/skype.gif' border='0' align='absmiddle'>&nbsp;<strong>Skype:</strong>".$rec[0]["skype"]."</div></td>
-			</tr>
-
-</table>
-
-        </fieldset></td>
-        
-        
-			<td class='pro_area_1' valign='top'><fieldset><legend>Other Information</legend><table>";
-
-    foreach ($customs as $key => $value)
-		{
+				<tr>
+					<td id='bottomcontent' colspan='2'>";
+if(is_array($customs) && !empty($customs)) {
+echo "<div class='pro_sig_name'>More</div>";
+    foreach ($customs as $key => $value) {
         echo "
-			<tr><td class='pro_area_1' valign='top'><div class='pro_area_2'><strong>".$value[0].":</strong></div>".$value[1]."</td></tr>\n";
+			<div class='pro_area_1'<div class='pro_area_2'><strong>".$value[0].":</strong></div>".$value[1]."&nbsp;</div>\n";
     }
-    
-    echo "</table></fieldset>";
-    echo "</td></tr>
-			";
-		echo "</td>
-				</tr>";
-				
+}				
 
 		if (@$rec[0]["sig"] != "") echo "
-				<tr>
-					<td id='bottomcontent' colspan='2'>
 						<div class='pro_sig_name'>".$rec[0]["user_name"]."'s Signature:</div>
 						<div class='pro_sig_area'>
 							<div class='pro_signature'>".format_text(UPBcoding(filterLanguage($rec[0]["sig"], $_CONFIG)))."</div>
-						</div></td>
+						</div>";
+		echo "
+						<div class='pro_sig_name'>View Previous Posts:</div>
+							<div class='pro_area_1'>".format_text(UPBcoding(filterLanguage($rec[0]["sig"], $_CONFIG)))."</div>
+						</td>
 				</tr>";
 		echoTableFooter(SKIN_DIR);
 		require_once('./includes/footer.php');
