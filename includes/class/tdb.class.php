@@ -726,7 +726,7 @@ class tdb {
                     } elseif($header[$i]["fType"] == "string") {
                         $field = substr($field, 0, $header[$i]["fLength"]);
                     } elseif($header[$i]["fType"] == "number") {
-                        $field = eregi_replace("[^0-9.-]", "", $field);
+                        $field = preg_replace("/[^0-9.-]/i", "", $field);
                         $field = substr($field, 0, $header[$i]["fLength"]);
                     } elseif($header[$i]["fType"] == "id") {
                         $field = $header["curId"];
@@ -879,10 +879,10 @@ class tdb {
                     fseek($f, $offset);
                     $field = $this->writeMemo($fp, $field, $header);
                 } elseif($header[$i]["fType"] == "string") {
-                    //$field = eregi_replace("[^a-z0-9 ,.:?/#]", "", $field);
+                    //$field = preg_replace("/[^a-z0-9 ,.:?/#]/i", "", $field);
                     $field = substr($field, 0, $header[$i]["fLength"]);
                 } elseif($header[$i]["fType"] == "number") {
-                    $field = eregi_replace("[^0-9.-]", "", $field);
+                    $field = preg_replace("/[^0-9.-]/i", "", $field);
                     $field = substr($field, 0, $header[$i]["fLength"]);
                 } elseif($header[$i]["fType"] == "id") {
                     $theId = trim(fread($f, $header[$i]["fLength"]));
@@ -1091,10 +1091,10 @@ class tdb {
             if($header[$i]["fType"] == "memo") {
                 $field = $this->writeMemo($fp, $field, $header);
             } elseif($header[$i]["fType"] == "string") {
-                //$field = eregi_replace("[^a-z0-9 ,.:?/#]", "", $field);
+                //$field = preg_replace("/[^a-z0-9 ,.:?/#]/i", "", $field);
                 //$field = substr($field, 0, $header[$i]["fLength"]);
             } elseif($header[$i]["fType"] == "number") {
-                $field = eregi_replace("[^0-9.-]", "", $field);
+                $field = preg_replace("/[^0-9.-]/i", "", $field);
                 //$field = substr($field, 0, $header[$i]["fLength"]);
             } elseif($header[$i]["fType"] == "id") {
                 $field = $header["curId"];

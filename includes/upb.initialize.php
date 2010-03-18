@@ -103,6 +103,17 @@ if(!empty($GLOBALS['_ENV'])) {
     reset($GLOBALS["_REQUEST"]);
 }
 
+// PHP5.1.0 new timezone req's
+// This has to be here, because some date() functions are called before user is verified
+// This makes UPB's timezone functions obsolete (but we need them for backwards compadibility with PHP4)
+if(function_exists("date_default_timezone_set")) {
+	$timezone = "Europe/London";
+	if(isset($_COOKIE["timezone"]) && $_COOKIE["timezone"] != "")
+		$timezone = timezone_name_from_abbr("", (int)$_COOKIE["timezone"]*3600, 0);
+	date_default_timezone_set($timezone);
+	
+}
+
 define("ALERT_MSG", "
 	<div class='alert'>
 		<div class='alert_text'><strong>__TITLE__</strong></div>
@@ -153,7 +164,7 @@ if (file_exists("config.php")) {
 //Verify that a database exists, otherwise prompt the admin to run the installer
 if (!defined('DB_DIR')) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'The installer has not been run it.  Please <a href="install.php">run this</a> to continue.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
 if(!is_dir(DB_DIR)) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Fatal:', str_replace('__MSG__', 'The data directory is missing.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
-if (UPB_VERSION != "2.2.5" && (FALSE === strpos($_SERVER['PHP_SELF'], 'update'))) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Update Available:', str_replace('__MSG__', 'An update has not been run yet.  Please follow the directions in the readme file to run it to continue.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
+if (UPB_VERSION != "2.2.6" && (FALSE === strpos($_SERVER['PHP_SELF'], 'update'))) die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'zzzUpdate Available:', str_replace('__MSG__', 'An update has not been run yet.  Please follow the directions in the readme file to run it to continue.', ALERT_MSG)).MINIMAL_BODY_FOOTER);
 
 //Check to see if User is banned
 if(file_exists(DB_DIR.'/banneduser.dat')) {

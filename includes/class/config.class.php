@@ -165,7 +165,7 @@ class configSettings extends tdb {
         return true;
     }
 
-    function delete($varName) {
+    function deleteVar($varName) {
         $query = $this->query('config', "name='$varName'", 1, 1);
         if(!empty($query[0])) {
             parent::delete('config', $query[0]['id']);
@@ -174,7 +174,7 @@ class configSettings extends tdb {
         return false;
     }
 
-    function add($varName, $initialValue, $type, $dataOjbect, $formObject,  $category, $sort, $pageTitle, $pageDescription, $dataList='') {
+    function addVar($varName, $initialValue, $type, $dataOjbect, $formObject,  $category, $sort, $pageTitle, $pageDescription, $dataList='') {
         $query = $this->query('config', "name='$varName'", 1, 1);
         if(!empty($query[0])) return false;
         $query = $this->query('ext_config', "minicat='$category'&&sort='$sort'");

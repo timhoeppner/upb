@@ -130,8 +130,7 @@
 	}
 	
  //Start Header
-  echo "
-<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+  echo "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
 <title>".((!isset($where) || $where == '') ? stripslashes($_CONFIG['title']) : (strip_tags(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], stripslashes($where)))))."</title>
