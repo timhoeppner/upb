@@ -184,7 +184,7 @@ if (@$rec[0]["avatar"] != "")
    			echo "<a href='".$rec[0]["url"]."' target='_blank'>".$rec[0]["url"]."</a>";
 		echo "&nbsp;</div>
 						<div class='pro_area_1' style='white-space:nowrap;'><div class='pro_area_2'><strong>Status: </strong></div>
-							<span style='color:#".$statuscolor."'><strong>".str_replace("<br />", " / ", $status)." &nbsp;&nbsp;&nbsp;</strong></span></div>
+        <span style='color:#".$statuscolor."'><strong>".preg_replace("/<br\s*\/?>/i", " / ", $status)." &nbsp;&nbsp;&nbsp;</strong></span></div>
 						<div class='pro_area_1'><div class='pro_area_2'><strong>Email: </strong></div>";
 		if ((bool)$rec[0]["view_email"]) echo "<a href='mailto:".$rec[0]["email"]."'>".$rec[0]["email"]."</a>";
 		else echo "not public";
@@ -208,7 +208,7 @@ if(is_array($customs) && !empty($customs)) {
 echo "<div class='pro_sig_name'>More</div>";
     foreach ($customs as $key => $value) {
         echo "
-			<div class='pro_area_1'<div class='pro_area_2'><strong>".$value[0].":</strong></div>".$value[1]."&nbsp;</div>\n";
+			<div class='pro_area_1'><div class='pro_area_2'><strong>".$value[0].":</strong></div>".$value[1]."&nbsp;</div>\n";
     }
 }				
 
@@ -216,13 +216,76 @@ echo "<div class='pro_sig_name'>More</div>";
 						<div class='pro_sig_name'>".$rec[0]["user_name"]."'s Signature:</div>
 						<div class='pro_sig_area'>
 							<div class='pro_signature'>".format_text(UPBcoding(filterLanguage($rec[0]["sig"], $_CONFIG)))."</div>
-						</div>";
-		echo "
-						<div class='pro_sig_name'>View Previous Posts:</div>
-							<div class='pro_area_1'>".format_text(UPBcoding(filterLanguage($rec[0]["sig"], $_CONFIG)))."</div>
-						</td>
-				</tr>";
+						</div>"; #
+        echo "              </div>
+                        </td>
+                    </tr>";
 		echoTableFooter(SKIN_DIR);
+        
+        if(!isset($_GET["showPrevPosts"])) {
+            echoTableHeading("View Previous Posts", $_CONFIG);
+            echo "<tr><td><div class='pro_area_1' align='center'><a href='./profile.php?action=get&id={$_GET["id"]}&showPrevPosts=1'>Show all posts</a>";
+            echoTableFooter(SKIN_DIR);
+        } else {
+            $fRecs = $tdb->listRec("forums", 1);
+            if(!empty($fRecs[0])) {
+                $posts_tdb = new tdb(DB_DIR, "posts");
+                foreach($fRecs as $fRec) {
+                    if ((int)$_COOKIE["power_env"] < $fRec["view"]) {
+                        continue;
+                    }
+                    $posts_tdb->setFp("p", $fRec["id"]);
+                    $posts_tdb->setFp("t", $fRec["id"] . "_topics");
+                    
+                    $pRecs = $posts_tdb->query("p", "user_id='{$_GET["id"]}'");
+                    if(!empty($pRecs[0])) {
+                        $posts = array();
+                        foreach($pRecs as $pRec) {
+                            $i = $pRec["t_id"];
+                            if(!isset($posts[$i]))
+                                $posts[$i] = array();
+                            $posts[$i][] = $pRec;
+                        }
+                        unset($pRecs);
+                        echoTableHeading("In forum \"{$fRec["forum"]}\"", $_CONFIG);
+                        foreach($posts as $pRecs) {
+                            $tRec = $posts_tdb->get("t", $pRecs[0]["t_id"]);
+                            $tRec[0]["p_ids"] = ',' . $tRec[0]["p_ids"] . ',';
+                            echo "<tr><th><div style='float:left;'>In topic \"{$tRec[0]["subject"]}\"</div>";
+                            foreach($pRecs as $pRec) {
+                                // display each post in the current topic
+                                if ($x == 0) {
+                                    $table_color = 'area_1';
+                                    
+                                    $x++;
+                                } else {
+                                    $table_color = 'area_2';
+                                    
+                                    $x--;
+                                }                            
+                                
+                                $pos = strpos($tRec[0]["p_ids"], ','.$pRec["id"].',');
+                                if($pos == 0) $page = 1;
+                                else {
+                                    $countpost = substr_count($tRec[0]["p_ids"], ',', 0, $pos) + 1;
+                                    $page = ceil($countpost / $_CONFIG["posts_per_page"]);
+                                }
+                                
+                                $msg = display_msg($pRec['message']);
+                                $msg .= $tdb->getUploads($_GET['id'],$_GET['t_id'],$pRec['id'],$pRec['upload_id'],$_CONFIG['fileupload_location'],$pRec['user_id']);
+                                echo "
+                                <tr>
+                                <td class='$table_color' valign='top'>
+                                <div style='float:right;'><div class='button_pro2'><a href='viewtopic.php?id={$fRec["id"]}&t_id={$pRec["t_id"]}&page=$page#{$pRec["id"]}'>View Post</a></div></div>
+                                $msg";
+                                echo "</td></tr>";
+                            }
+                        }
+                        echoTableFooter(SKIN_DIR);
+                    }
+                }
+            } else echo "<div align='center'>No Posts</div>";
+        }
 		require_once('./includes/footer.php');
 	}
 } elseif($_GET['action'] == 'edit') {
