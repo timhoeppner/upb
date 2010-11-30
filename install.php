@@ -633,11 +633,14 @@ if ($_POST["add"] == "0") {
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='hidden' name='add' value='2auth'><input type='submit' value='Submit' name='B1'><input type='reset' value='Reset' name='B2'></td>";
 } else if ($_POST["add"]{0} == "3") {
+	require_once("./includes/inc/defines.inc.php");
+	
 	if($_POST["add"] == "3adduser") {
 		//add admin to the db
 		require_once("./includes/class/tdb.class.php");
 		require_once("./includes/inc/encode.inc.php");
 		require_once("./includes/inc/date.inc.php");
+		
 		$admin = array("user_name" => $_POST["username"], "password" => generateHash($_POST["pass1"]), "level" => 9, "email" => $_POST["email"], "view_email" => $_POST["view_email"], "location" => $_POST["location"], "homepage" => $_POST["homepage"], "icq" => $_POST["icq"], "aim" => $_POST["aim"], "msn" => $_POST["msn"], "sig" => $_POST["sig"], "posts" => 0, "date_added" => mkdate(),"lastvisit" => mkdate(), 'timezone' => '0');
 		$tdb = new tdb(DB_DIR, "main");
 		$tdb->setFp("users", "members");
