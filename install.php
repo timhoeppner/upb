@@ -15,8 +15,24 @@ if ($_POST["add"] == "2auth") {
 	if ($_POST["pass1"] != $_POST["pass2"]) $error .= "<div style='text-align:center;font-weight:bold;'>your password and password confirmation do not match!</div><br /><br />";
 	if (strlen($_POST["pass1"]) < 5) $error .= "<div style='text-align:center;font-weight:bold;'>your password has to be longer then 4 characters!</div><br /><br />";
 	if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$/i", $_POST["email"])) $error .= "<div style='text-align:center;font-weight:bold;'>Not a real e-mail address (ex. admin@host.com)</div><br /><br />";
-	if ($_POST["view_email"] == "1") $view_email_checked = "CHECKED";
-	else $_POST["view_email"] = "0";
+	
+	// The "view_email" element only is set if the user selects the checkbox
+	if (isset($_POST["view_email"]))
+	{
+		if($_POST["view_email"] == "1") 
+		{
+			$view_email_checked = "CHECKED";
+		}
+		else
+		{
+			$_POST["view_email"] = "0";
+		}
+	}
+	else
+	{
+		$_POST["view_email"] = "0";
+	}
+	
 	if (strlen($_POST["sig"]) > 200) $error .= "<div style='text-align:center;font-weight:bold;'>Your signature is too long (max 200 chars)</div><br /><br />";
 	if ($error != "") {
 		$_POST["add"] = '2';
