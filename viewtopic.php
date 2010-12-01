@@ -1,12 +1,16 @@
 <?php
-	// Ultimate PHP Board
-	// Author: Tim Hoeppner aka RR_Pilot, FixITguy
-	// Website: http://www.myupb.com
-	// Version: 2.0
-	// Using textdb Version: 4.3.2
-	// Ultimate PHP Board Topic display
-	require_once('./includes/upb.initialize.php');
-	require_once('./includes/class/posts.class.php');
+/**
+ * View Forum Topic
+ * 
+ * @author Tim Hoeppner <timhoeppner@gmail.com>
+ * @author FixITguy
+ * @author Jerroyd Moore
+ * @author Chris Kent
+ */
+
+require_once('./includes/upb.initialize.php');
+require_once('./includes/class/posts.class.php');
+
 	$posts_tdb = new posts(DB_DIR."/", "posts.tdb");
 	$vars['page'] = ((isset($_GET['page'])) ? $_GET['page'] : '');
 	//check if the id exists

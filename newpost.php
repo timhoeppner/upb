@@ -56,7 +56,7 @@
     $uploadText = '';
 		$uploadId = array();
 		$maxsize = $_CONFIG['fileupload_size'] * 1024; //convert KB to bytes
-    $filetypes = explode(",",$_CONFIG['upload_types']);
+    $filetypes = explode(",",$_CONFIG['fileupload_types']);
 
     $names = $_FILES['upload']['name'];
     $enable_upload = false;
@@ -296,7 +296,7 @@
         {
         echo "File $i: <input type=\"file\" name=\"upload[]\" size=\"25\"><br /><br />";
         }
-					echo "Valid file types: ".$_CONFIG['upload_types']."
+					echo "Valid file types: ".$_CONFIG['fileupload_types']."
 					<br />Maximum file size is ".$allowed_size." per file.</td>
 			</tr>";
 		}

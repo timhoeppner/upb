@@ -18,7 +18,7 @@ class upload extends tdb {
      * @param String $dir
      * @return bool, true on success
      */
-    function upload($dir, $maxSize,$uploadLoc) {
+    function upload($dir, $maxSize, $uploadLoc) {
         // Make sure we start fresh
         $this->initialized = false;
         $this->uploadLoc = $uploadLoc;

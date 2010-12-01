@@ -47,8 +47,21 @@ if ($_POST["add"] == "2auth") {
 	if($_POST['register_msg'] != '' && FALSE === strpos($_POST['register_msg'], '<login>')) $error[] = 'You must include the tag &lt;login&gt; in the <b>Register E-mail Message</b> field.';
 	if($_POST['register_msg'] != '' && FALSE === strpos($_POST['register_msg'], '<password>')) $error[] = 'You must include the tag &lt;password&gt; in the <b>Register E-mail Message</b> field.';
 	if($_POST['register_msg'] != '' && FALSE === strpos($_POST['register_msg'], '<url>')) $error[] = 'You must include the tag &lt;url&gt; in the <b>Register E-mail Message</b> field.';
-	if($_POST['fileupload_size'] == '') $error[] = 'You cannot leave the <b>Size limites for file upload</b> field blank.';
+	if($_POST['fileupload_size'] == '') $error[] = 'You cannot leave the <b>Size limits for file upload</b> field blank.';
 	if($_POST['fileupload_size'] != '' && !ctype_digit($_POST['fileupload_size'])) $error[] = 'You must provide a number to the <b>Size limits for file upload</b> field.';
+	
+	// Remove any whitespace between file types, we just want to make it easy for newpost.php to parse the list
+	$_POST["fileupload_types"] = trim($_POST["fileupload_types"]);
+	if($_POST["fileupload_types"] != "")
+	{
+		$upload_types = explode(",", $_POST["fileupload_types"]);
+		foreach($upload_types as $key => $type)
+		{
+			$upload_types[$key] = trim($type);
+		}
+		$_POST["fileupload_types"] = implode(",", $upload_types);
+	}
+	
 	if($_POST['admin_email'] == '') $error[] = 'You cannot leave the <b>Admin E-mail</b> field blank.';
 	if($_POST['admin_email'] != '' && !preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$/i", $_POST["admin_email"])) $error[] = 'You must provide a <i>valid</i> email for the <b>Admin E-mail</b> field.';
 	if($_POST['homepage'] == '') $error[] = 'You cannot leave the <b>Homepage URL</b> field blank.';
@@ -340,7 +353,7 @@ if ($_POST["add"] == "0") {
 	$config_tdb->addVar('admin_catagory_sorting', '', 'config', 'text', 'hidden', '', '', '', '');
 	$config_tdb->addVar('banned_words', 'shit,fuck,cunt,pussy,bitch,arse', 'config', 'text', 'hidden', '','','','');
 	$config_tdb->addVar('fileupload_location', './'.$uploads_dir, 'config', 'text', 'hidden', '', '', '', ''); //Since upload's name are gone, doesn't make much sense to let user pick the uploads location...
-
+	
 	$config_tdb->addVar('title', 'Discussion Forums', 'config', 'text', 'text', '1', '1', 'Title', 'Title of the forum.');
 	$config_tdb->addVar('logo', 'skins/default/images/logo.png', 'config', 'text', 'text', '1', '2', 'Logo Location', 'Can be relative or a URL.');
 	$config_tdb->addVar('homepage', 'http://www.myupb.com/', 'config', 'text', 'text', '1', '3', 'Homepage URL', 'Can be relative or a URL.');
@@ -350,9 +363,10 @@ if ($_POST["add"] == "0") {
 	$config_tdb->addVar('posts_per_page', '20', 'config', 'number', 'text', '9', '1', 'Posts Per Page', 'this is how many posts will be displays on each page for topics.');
 	$config_tdb->addVar('topics_per_page', '40', 'config', 'number', 'text', '9', '2', 'Topics Per Page', 'this is how many topics will be displays on each page for forums.');
 	$config_tdb->addVar('fileupload_size', '50', 'config', 'number', 'text', '9', '3', 'Size Limits For File Uploads', 'In kilobytes, type in the maximum size allowed for file uploads<br><i>Note: Setting to 0 will <b>disable</b> uploads</i>');
-	$config_tdb->addVar('censor', '*censor*', 'config', 'text', 'text', '9', '4', 'Word to replace bad words', 'Words that will replace bad words in a post');
-	$config_tdb->addVar('sticky_note', '[Stick Note]', 'config', 'text', 'text', '9', '5', 'Sticky Note Text', 'Text that appends the title indicating it is a \"Stickied Topic\" (HTML Tags Allowed)');
-	$config_tdb->addVar('sticky_after', '0', 'config', 'bool', 'checkbox', '9', '6', 'Sticky Note Before or After Title', 'If this is checked, the \"sticky note\" text will appear after the title.  Unchecking this will display it before the title.');
+	$config_tdb->addVar('fileupload_types', '', 'config', 'text', 'text', '9', '4', 'File upload allowed types', 'List the allowable file extensions seperated by a comma');
+	$config_tdb->addVar('censor', '*censor*', 'config', 'text', 'text', '9', '5', 'Word to replace bad words', 'Words that will replace bad words in a post');
+	$config_tdb->addVar('sticky_note', '[Stick Note]', 'config', 'text', 'text', '9', '6', 'Sticky Note Text', 'Text that appends the title indicating it is a \"Stickied Topic\" (HTML Tags Allowed)');
+	$config_tdb->addVar('sticky_after', '0', 'config', 'bool', 'checkbox', '9', '7', 'Sticky Note Before or After Title', 'If this is checked, the \"sticky note\" text will appear after the title.  Unchecking this will display it before the title.');
 
 	//$_REGISTER
 	$config_tdb->addVar('admin_email', '', 'regist', 'text', 'text', '7', '1', 'Admin E-mail', 'This is the return address for confirmation of registration.');
@@ -666,6 +680,7 @@ if ($_POST["add"] == "0") {
 	if(!isset($_POST['register_sbj'])) $_POST['register_sbj'] = 'Welcome to the UPB Forums!';
 	if(!isset($_POST['register_msg'])) $_POST['register_msg'] = "Hello <login>!\n\nWelcome to the UPB Forums!  Your password is <password>.  You can change your password and other settings by visiting the user:cp portal after you log in.\nBut before you do that, you must verify your e-mail address by visiting this link: <url>\nSee you on the forums!\n\n--The UPB Team";
 	if(!isset($_POST['fileupload_size'])) $_POST['fileupload_size'] = '50';
+	if(!isset($_POST['fileupload_types'])) $_POST['fileupload_types'] = 'txt,pdf,zip';
 	if(!isset($_POST['admin_email'])) $_POST['admin_email'] = '';
 	if(!isset($_POST["homepage"])) $_POST["homepage"] = 'http://www.myupb.com';
 
@@ -707,17 +722,22 @@ if ($_POST["add"] == "0") {
 				<td class='area_2'><input type='text' name='fileupload_size' size='40' value='".$_POST["fileupload_size"]."' tabindex='5'></td>
 			</tr>
 			<tr>
+				<td class='area_1'><strong>File upload allowed types</strong><br />
+					List the allowed filetype extensions seperated by a comma.</td>
+				<td class='area_2'><input type='text' name='fileupload_types' size='40' value='".$_POST["fileupload_types"]."' tabindex='6'></td>
+			</tr>
+			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Admin E-mail</strong><br />
 					this is the return address for confirmation of registration</td>
-				<td class='area_2'><input type='text' name='admin_email' size='40' value='".$_POST["admin_email"]."' tabindex='6'></td>
+				<td class='area_2'><input type='text' name='admin_email' size='40' value='".$_POST["admin_email"]."' tabindex='7'></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Homepage URL</strong><br />
 					can be relative or a url</td>
-				<td class='area_2'><input type='text' name='homepage' size='40' value='".$_POST["homepage"]."' tabindex='7'></td>
+				<td class='area_2'><input type='text' name='homepage' size='40' value='".$_POST["homepage"]."' tabindex='8'></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
@@ -734,7 +754,7 @@ if ($_POST["add"] == "0") {
 	require_once("./includes/class/tdb.class.php");
 	require_once("./includes/class/config.class.php");
 	$config_tdb = new configSettings();
-	$edit_config = array("title" => $_POST["title"], "fileupload_size" => $_POST["fileupload_size"], "homepage" => $_POST["homepage"]);
+	$edit_config = array("title" => $_POST["title"], "fileupload_size" => $_POST["fileupload_size"], "fileupload_types" => $_POST["fileupload_types"], "homepage" => $_POST["homepage"]);
 	$edit_regist = array("register_sbj" => $_POST["register_sbj"], "register_msg" => $_POST["register_msg"], "admin_email" => $_POST["admin_email"]);
 	if ($config_tdb->editVars("config", $edit_config) && $config_tdb->editVars("regist", $edit_regist)) {
 

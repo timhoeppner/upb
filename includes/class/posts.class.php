@@ -106,7 +106,7 @@ class posts extends tdb {
 				if($is_watching) $msg = "Un-Watch";
 				$output .= "<li><a href='managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='$msg This Topic?'><span>$msg Topic</span></a></li>";
 			}
-	        $output .= "<li><a href='managetopic.php?action=favorite&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Favorite this Topic?'><span>Bookmark Topic</span></a></li>";
+	        $output .= "<li><a href='managetopic.php?action=favorite&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Bookmark this Topic?'><span>Bookmark Topic</span></a></li>";
   		}
     	if ((int)$_COOKIE["power_env"] >= 2) {
 		    $output .= "
