@@ -1,15 +1,19 @@
 <?php
-// Ultimate PHP Board
-// Author: Tim Hoeppner aka RR_Pilot, FixITguy
-// Website: http://www.myupb.com
-// Version: 2.0
-// Using textdb Version: 4.3.2
+/**
+ * User Control Panel / Profile
+ * 
+ * @author Tim Hoeppner <timhoeppner@gmail.com>
+ * @author FixITguy
+ * @author Jerroyd Moore
+ * @author Chris Kent
+ */
+
 require_once('./includes/upb.initialize.php');
 require_once('./includes/class/upload.class.php');
 
 if(!isset($_GET['action']) || $_GET['action'] == '') $_GET['action'] = 'edit';
 if ($_GET['action'] == "get" || $_GET['action'] == 'view') $where = "Member Profile";
-elseif ($_GET['action'] == "bookmarks") $where = "Favorited Topics";
+elseif ($_GET['action'] == "bookmarks") $where = "Bookmarked Topics";
 elseif($_GET['action'] == "edit")$where = "User CP";
 if (isset($_POST["u_edit"])) {
 	if (!($tdb->is_logged_in())) {
