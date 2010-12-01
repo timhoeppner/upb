@@ -1,12 +1,17 @@
 <?php
-	// Ultimate PHP Board
-	// Author: Tim Hoeppner aka RR_Pilot, FixITguy
-	// Website: http://www.myupb.com
-	// Version: 2.0
-	// Using textdb Version: 4.3.2
-	require_once("./includes/upb.initialize.php");
-	require_once("./includes/class/upload.class.php");
-  require_once("./includes/class/posts.class.php");
+/**
+ * Administration Panel - Forums
+ * 
+ * @author Tim Hoeppner <tim.hoeppner@gmail.com>
+ * @author FixITguy
+ * 
+ * 
+ */
+
+require_once("./includes/upb.initialize.php");
+require_once("./includes/class/upload.class.php");
+require_once("./includes/class/posts.class.php");
+
 	$where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin_forums.php'>Manage Forums</a>";
 	require_once('./includes/header.php');
 	$post_tdb = new functions(DB_DIR, "posts.tdb");
@@ -16,7 +21,7 @@
 			//edit categories
 			if (isset($_GET["id"])) {
 				if (isset($_POST["u_cat"])) {
-          $tdb->edit("cats", $_GET["id"], array("name" => $_POST["u_cat"], "view" => $_POST["u_view"]));
+          $tdb->edit("cats", $_GET["id"], array("name" => stripslashes($_POST["u_cat"]), "view" => $_POST["u_view"]));
 					echo "
 						<div class='alert_confirm'>
 						<div class='alert_confirm_text'>
@@ -114,7 +119,7 @@
 		} elseif($_GET["action"] == "add_cat") {
 			//add new category
 			if (isset($_POST['command'])) {
-				$cat_id = $tdb->add("cats", array("name" => $_POST["u_cat"], "view" => $_POST["u_view"]));
+				$cat_id = $tdb->add("cats", array("name" => stripslashes($_POST["u_cat"]), "view" => $_POST["u_view"]));
 				if($_CONFIG['admin_catagory_sorting'] != '') {
                     $sort = $_CONFIG['admin_catagory_sorting'];
                     $sort = explode(",",$sort);
@@ -175,7 +180,13 @@
 						else $cRec[0]["sort"] = $fRec[0]["id"];
 						$tdb->edit("cats", $_POST["cat"], array("sort" => $cRec[0]["sort"]));
 					}
-					$tdb->edit("forums", $_GET["id"], array("forum" => $_POST["u_forum"], "cat" => $_POST["cat"], "des" => $_POST["des"], "view" => $_POST["u_view"], "post" => $_POST["u_post"], "reply" => $_POST["u_reply"]));
+					$tdb->edit("forums", $_GET["id"], array(
+						"forum" => stripslashes($_POST["u_forum"]), 
+						"cat" => $_POST["cat"], 
+						"des" => stripslashes($_POST["des"]), 
+						"view" => $_POST["u_view"], 
+						"post" => $_POST["u_post"], 
+						"reply" => $_POST["u_reply"]));
 					echo "
 						<div class='alert_confirm'>
 						<div class='alert_confirm_text'>
@@ -300,12 +311,12 @@
 			//add new forum
 			if (isset($_POST["u_forum"])) {
 				$record = array(
-				"forum" => $_POST["u_forum"],
+				"forum" => stripslashes($_POST["u_forum"]),
 					"cat" => $_POST["cat"],
 					"view" => $_POST["u_view"],
 					"post" => $_POST["u_post"],
 					"reply" => $_POST["u_reply"],
-					"des" => $_POST["des"],
+					"des" => stripslashes($_POST["des"]),
 					"topics" => 0,
 					"posts" => 0 );
 				$_GET["id"] = $tdb->add("forums", $record);
