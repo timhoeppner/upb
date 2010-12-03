@@ -149,10 +149,10 @@ function UPBcoding($text) {
     $msg = preg_replace_callback("!\[code=([\w\-]+)](.*)\[/code]!Us","geshify", $msg);
     $msg = preg_replace_callback("!\[code\](.*)\[/code]!Us","geshify", $msg);
     
-    $msg = preg_replace("/\[center\](.*?)\[\/center\]/si", "<span style='text-align:center';>\\1</span>", $msg);
-    $msg = preg_replace("/\[left\](.*?)\[\/left\]/si", "<span style='text-align:left;'>\\1</span>", $msg);
-    $msg = preg_replace("/\[right\](.*?)\[\/right\]/si", "<span style='text-align:right;'>\\1</span>", $msg);
-    $msg = preg_replace("/\[justify\](.*?)\[\/justify\]/si", "<span style='text-align:justify;'>\\1</span>", $msg);
+    $msg = preg_replace("/\[center\](.*?)\[\/center\]/si", "<div style='text-align:center';>\\1</div>", $msg);
+    $msg = preg_replace("/\[left\](.*?)\[\/left\]/si", "<div style='text-align:left;'>\\1</div>", $msg);
+    $msg = preg_replace("/\[right\](.*?)\[\/right\]/si", "<div style='text-align:right;'>\\1</div>", $msg);
+    $msg = preg_replace("/\[justify\](.*?)\[\/justify\]/si", "<div style='text-align:justify;'>\\1</div>", $msg);
     
     //loop to combine multiple span tags into a single span tag
     while (true)
@@ -166,12 +166,6 @@ function UPBcoding($text) {
         break;
     }
     
-    if (substr_count($msg,'text-align') > 0)
-    {
-      $search = array('#<span(\s[^>]*)>#i','#</span>#i');
-      $replace = array('<div\\1>','</div>');
-      $msg = preg_replace($search,$replace,$msg);
-    }
     return $msg;
     //end upb code
 }
