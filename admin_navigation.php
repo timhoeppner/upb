@@ -1,8 +1,8 @@
 <?php
-	//if(!defined(DB_DIR)) exit('This page must be run under a script wrapper'.DB_DIR);
-	if (isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_COOKIE["power_env"]) && isset($_COOKIE["id_env"])) {
-		if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
-			echo "
+//if(!defined(DB_DIR)) exit('This page must be run under a script wrapper'.DB_DIR);
+if (isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_COOKIE["power_env"]) && isset($_COOKIE["id_env"])) {
+	if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
+		echo "
 				<div style='width:50%;float:left;line-height:20px;text-align:center;'><span class='link_1'>
 				<a href='admin_forums.php#skip_nav' target = '_parent'>Manage Forums</a><br />
 				<a href='admin_config.php#skip_nav' target = '_parent'>Manage Settings</a><br />
@@ -15,6 +15,6 @@
 				<a href='admin_badwords.php#skip_nav' target = '_parent'>Manage Filtered Lanuage</a><br />
 				<a href='admin_iplog.php#skip_nav' target = '_parent'>View the IP Address Log</a><br />
 				<a href='admin_restore.php#skip_nav' target = '_parent'>Backup/Restore the database</a><br /></span></div>";
-		}
 	}
+}
 ?>

@@ -31,26 +31,26 @@ print '<a name="skip_nav">&nbsp;</a>';
 //create page numbers and retrieve the raw IP log data
 if(!isset($_GET['page']) || $_GET['page'] == '') $_GET['page'] = 1;
 if(!file_exists(DB_DIR.'/ip.log') || filesize(DB_DIR.'/ip.log') == 0) {
-    $pageStr = '';
-    $log = "cut\toff\tdata\n---\t---\t---\t---\t---\nsome\tmore\tcut\toff\tdata";
+	$pageStr = '';
+	$log = "cut\toff\tdata\n---\t---\t---\t---\t---\nsome\tmore\tcut\toff\tdata";
 } else {
-    $pageStr = createPageNumbers($_GET['page'], (filesize(DB_DIR.'/ip.log')/(1024*20)));
-	
-  $pageStr =  "<table class='pagenum_container' cellspacing='1'>
+	$pageStr = createPageNumbers($_GET['page'], (filesize(DB_DIR.'/ip.log')/(1024*20)));
+
+	$pageStr =  "<table class='pagenum_container' cellspacing='1'>
 			<tr>
 				<td style='text-align:left;height:23px;'><span class='pagination_current'>Pages: </span>".$pageStr."</td>
 			</tr>
 		</table>";
-    $f = fopen(DB_DIR."/ip.log", "r");
-    fseek($f, filesize(DB_DIR.'/ip.log') - (1024 * 20 * $_GET['page']));
-    $log = fread($f, (1024 * 20));
-    fclose($f);
+	$f = fopen(DB_DIR."/ip.log", "r");
+	fseek($f, filesize(DB_DIR.'/ip.log') - (1024 * 20 * $_GET['page']));
+	$log = fread($f, (1024 * 20));
+	fclose($f);
 }
 
 $pos1 = strpos($log, "\n");
 $pos2 = strrpos($log, "\n") - 1;
 $log = array_reverse(explode("\n", substr($log, $pos1+1, $pos2 - $pos1)));
-$sublog = array_slice($log,($_GET['page']*$_CONFIG["posts_per_page"])-$_CONFIG["posts_per_page"],$_CONFIG["posts_per_page"]); 
+$sublog = array_slice($log,($_GET['page']*$_CONFIG["posts_per_page"])-$_CONFIG["posts_per_page"],$_CONFIG["posts_per_page"]);
 $num_pages = ceil((count($log) + 1) / $_CONFIG["posts_per_page"]);
 
 $p = createPageNumbers($_GET['page'], $num_pages, $_SERVER['QUERY_STRING']);
@@ -98,14 +98,14 @@ $bot_list = array(
 );
 
 foreach($sublog as $entry) {
-    $entry = explode("\t", $entry, 5);
-    //bot detection
-    for($i=0,$c=count($bot_list);$i<$c;$i+=2) {
-        if(FALSE !== strpos($entry[4], $bot_list[$i])) {
-            $entry[1] = "<i>".$bot_list[$i+1]."</i>";
-            break 1;
-        }
-    }
+	$entry = explode("\t", $entry, 5);
+	//bot detection
+	for($i=0,$c=count($bot_list);$i<$c;$i+=2) {
+		if(FALSE !== strpos($entry[4], $bot_list[$i])) {
+			$entry[1] = "<i>".$bot_list[$i+1]."</i>";
+			break 1;
+		}
+	}
 	echo "
 	<tr>
     <td class='area_1' style='padding:8px;'><strong>{$entry[0]}</strong></td>

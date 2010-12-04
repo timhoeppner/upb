@@ -8,7 +8,7 @@ $xml .= "<rss version=\"2.0\"><channel>";
 
 if (!isset($_GET["id"]) || !ctype_digit($_GET["id"])) die("Invalid Forum ID");
 //if (!isset($_GET["t_id"]) || !ctype_digit($_GET["t_id"])) die("Invalid Topic ID");
-	
+
 $fRec = $tdb->get("forums", $_GET["id"]);
 //if ((int)$_COOKIE["power_env"] < $fRec[0]["view"]) die("You do not have enough Power to view this topic");
 
@@ -32,12 +32,12 @@ if (!isset($_GET['t_id'])) {
 		$first_post_id = substr($tRec['p_ids'], 0, $first_comma);
 
 		$post = $posts_tdb->get('posts', $first_post_id);
-		if($post === false) 
-			$post = array('message'=>array('Unavailable'));
+		if($post === false)
+		$post = array('message'=>array('Unavailable'));
 		$url= "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
 		$replace = "viewtopic.php?id=".$_GET['id']."&t_id=".$tRec['id'];
 		$newurl = str_replace('xml.php',$replace,$url);
-  $xml .= "<item>
+		$xml .= "<item>
 		<title>".xml_clean($tRec['subject'])."</title>
 		<link>".xml_clean($newurl)."</link>
 		<description>".xml_clean(format_text(filterLanguage($post[0]['message'])))."</description>
@@ -62,9 +62,9 @@ if (!isset($_GET['t_id'])) {
 	<language>en-us</language>";
 
 	foreach ($pRecs as $key => $pRec) {
-	  $newurl = str_replace('xml.php',$replace,$url);
-	  $newurl .= '&page='.$pRec['page']."#".$pRec['id'];
-   $xml .= "<item>
+		$newurl = str_replace('xml.php',$replace,$url);
+		$newurl .= '&page='.$pRec['page']."#".$pRec['id'];
+		$xml .= "<item>
 	  <title>Post by ".xml_clean($pRec['user_name'])." on ".xml_clean(gmdate("M d, Y @ g:i:s a", user_date($pRec["date"])))."</title>
 	  <link>".xml_clean($newurl)."</link>
 	  <description>".xml_clean(format_text(filterLanguage($pRec['message'])))."</description>
@@ -76,7 +76,7 @@ if (!isset($_GET['t_id'])) {
 }
 
 if(!headers_sent()) {
-  	         header("Content-type:application/rss+xml;charset=utf-8");
-echo $xml;
+	header("Content-type:application/rss+xml;charset=utf-8");
+	echo $xml;
 }
 ?>

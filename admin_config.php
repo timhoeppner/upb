@@ -15,9 +15,9 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 	if($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 		if(isset($_POST['action']) && $_POST["action"] != "") {
 			if(file_exists('./includes/admin/'.$_POST['action'].'.config.php')) include('./includes/admin/'.$_POST['action'].'.config.php');
-      if($result = $config_tdb->editVars($_POST["action"], $_POST))
-      {
-        echo "
+			if($result = $config_tdb->editVars($_POST["action"], $_POST))
+			{
+				echo "
 	<div class='alert_confirm'>
 		<div class='alert_confirm_text'>
 		<strong>Redirecting:</div><div style='padding:4px;'>
@@ -25,13 +25,13 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 		</div>
 	</div>";
 
-      }
-      else echo "
+			}
+			else echo "
 <div class='alert'><div class='alert_text'>
 <strong>Error!</strong></div><div style='padding:4px;'>Edit Failed.</div></div>";
 			require_once("./includes/footer.php");
 			redirect($PHP_SELF."?action=".$_POST["action"], 2);
-      die();
+			die();
 		}
 
 		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
@@ -40,14 +40,14 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 			<tr>
 				<th>Admin Panel Navigation</th>
 			</tr>";
-	echo "
+		echo "
 			<tr>
 				<td class='area_2' style='padding:20px;' valign='top'>";
 
 		require_once("admin_navigation.php");
 		echo "</td>
 			</tr>";
-    echoTableFooter(SKIN_DIR);
+		echoTableFooter(SKIN_DIR);
 
 		echo "<a name='skip_nav'>&nbsp;</a>
 			<div id='tabstyle_2'>
@@ -64,9 +64,9 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 
 		$minicats = $config_tdb->fetchMiniCategories($_GET['action']);
 		$configVars = $config_tdb->getVars($_GET["action"], true);
-//dump($configVars);
+		//dump($configVars);
 		echo "<form action=\"admin_config.php?action=".$_GET["action"]."\" method='POST' name='form'><input type='hidden' name='action' value='".$_GET["action"]."'>";
-	 
+
 		echoTableHeading("&nbsp;", $_CONFIG);
 		while(list($minicat_id, $minicat_title) = each($minicats)) {
 			echo "
@@ -110,7 +110,7 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 						case "dropdownlist":
 						case "dropdown":
 						case "list":
-              if(FALSE !== ($arr = unserialize($configVars[$i]['data_list']))) {
+							if(FALSE !== ($arr = unserialize($configVars[$i]['data_list']))) {
 								print "<select name=\"{$configVars[$i]['name']}\">\n";
 								$glb_var = '_'.strtoupper($_GET['action']);
 								$glb_var =& $$glb_var;
@@ -121,29 +121,29 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 							} else print "<i>Unable to display dropdown list</i>";
 							break 1;
 						case "skin":
-              $skins = array();
-              if (is_dir('./skins')) {
-                if ($dh = opendir('./skins')) {
-                  while (($file = readdir($dh)) !== false) {
-               if (substr($file,0,1) != "." and is_dir('./skins/'.$file))
-               $skins[] = $file;
-              }
-              closedir($dh);
-              }
-              }
-              echo "<select name=\"{$configVars[$i]['name']}\">\n";
-              foreach ($skins as $skin)
-              {
-                $selected = "";
-                $value = "./skins/".$skin;
-                if ($value == $configVars[$i]["value"])
-                  $selected = "selected";
-                echo "<option value=\"./skins/$skin\" $selected>".stripslashes($skin)."</option>";
-              }
-              echo "</select>";
+							$skins = array();
+							if (is_dir('./skins')) {
+								if ($dh = opendir('./skins')) {
+									while (($file = readdir($dh)) !== false) {
+										if (substr($file,0,1) != "." and is_dir('./skins/'.$file))
+										$skins[] = $file;
+									}
+									closedir($dh);
+								}
+							}
+							echo "<select name=\"{$configVars[$i]['name']}\">\n";
+							foreach ($skins as $skin)
+							{
+								$selected = "";
+								$value = "./skins/".$skin;
+								if ($value == $configVars[$i]["value"])
+								$selected = "selected";
+								echo "<option value=\"./skins/$skin\" $selected>".stripslashes($skin)."</option>";
+							}
+							echo "</select>";
 							break 1;
 
-              case "hidden":
+						case "hidden":
 							break 1;
 					}
 					echo "</td>
@@ -160,37 +160,37 @@ if(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'>";
 
-        echo "<input type=submit value='Edit'>";
-        echo "</td>
+		echo "<input type=submit value='Edit'>";
+		echo "</td>
 			</tr>";
 		echoTableFooter(SKIN_DIR);
 		echo "</form>";
 
-/*
-print '<pre>'; print_r($configVars);
-$all_config = $config_tdb->query("config", "type='".$_GET['action']."'");
-echo '
+		/*
+		 print '<pre>'; print_r($configVars);
+		 $all_config = $config_tdb->query("config", "type='".$_GET['action']."'");
+		 echo '
 
-<b>Basic</b>:
+		 <b>Basic</b>:
 
-';
-print_r($all_config);
-$all_config = $config_tdb->query("ext_config", "type='".$_GET['action']."'");
-echo '
+		 ';
+		 print_r($all_config);
+		 $all_config = $config_tdb->query("ext_config", "type='".$_GET['action']."'");
+		 echo '
 
-<b>Extensive</b>:
+		 <b>Extensive</b>:
 
-';
-print_r($all_config);
-$all_config = $config_tdb->listRec("ext_config", 1, -1);
-echo '
+		 ';
+		 print_r($all_config);
+		 $all_config = $config_tdb->listRec("ext_config", 1, -1);
+		 echo '
 
-<b>All Ext</b>:
+		 <b>All Ext</b>:
 
-';
-print_r($all_config);
-print '</pre>';
-*/
+		 ';
+		 print_r($all_config);
+		 print '</pre>';
+		 */
 	} else {
 		echo "
 <div class='alert'><div class='alert_text'>

@@ -39,9 +39,9 @@ switch($_GET['action'])
 	case 'download':
 		// User wants to download a copy of the IP Log - force a download operation
 		header("Content-type: application/octet-stream");
-        header('Content-Length: ' . filesize(DB_DIR.'/ip.log'));
-        header("Content-disposition: attachment; filename=\"ip.log\"");
-        readfile(DB_DIR.'/ip.log');
+		header('Content-Length: ' . filesize(DB_DIR.'/ip.log'));
+		header("Content-disposition: attachment; filename=\"ip.log\"");
+		readfile(DB_DIR.'/ip.log');
 		break;
 
 	case 'clear':

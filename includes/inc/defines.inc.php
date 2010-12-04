@@ -2,9 +2,9 @@
 
 /**
  * This include file contains special define's used around the forums.
- * 
+ *
  * Moved from upb.initialize.php
- * 
+ *
  * @author Original author unknown
  */
 

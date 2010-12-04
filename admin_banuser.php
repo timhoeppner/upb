@@ -30,26 +30,26 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 						redirect("admin_banuser.php", 1);
 					} else {
 
-		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
+						echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 
-		echo "
+						echo "
 			<tr>
 				<th>Admin Panel Navigation</th>
 			</tr>";
-	echo "
+						echo "
 			<tr>
 				<td class='area_2' style='padding:20px;' valign='top'>";
 
-		require_once("admin_navigation.php");
-		echo "</td>
+						require_once("admin_navigation.php");
+						echo "</td>
 			</tr>";
-		echoTableFooter(SKIN_DIR);
+						echoTableFooter(SKIN_DIR);
 
-		echo "<form action='admin_banuser.php?action=edit&word=".((isset($_POST["word"])) ? $_POST['word'] : $_GET['word'])."' method=POST>";
+						echo "<form action='admin_banuser.php?action=edit&word=".((isset($_POST["word"])) ? $_POST['word'] : $_GET['word'])."' method=POST>";
 
-		echoTableHeading("Changing banned username", $_CONFIG);
+						echoTableHeading("Changing banned username", $_CONFIG);
 
-		echo "
+						echo "
 			<tr>
 				<th colspan='2'>&nbsp;</th>
 			</tr>
@@ -63,8 +63,8 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Edit'></td>
 			</tr>";
-			echoTableFooter(SKIN_DIR);
-	echo "</form>";
+						echoTableFooter(SKIN_DIR);
+						echo "</form>";
 					}
 				} else {
 					echo $_GET["word"]." was not found in the banned users list.";
@@ -82,7 +82,7 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 					$f = fopen(DB_DIR."/banneduser.dat", 'w');
 					fwrite($f, implode("\n", $words));
 					fclose($f);
-						echo "Done!</div>
+					echo "Done!</div>
 	</div>";
 					if($_POST["ref"] != "") redirect($_POST["ref"], 1);
 					else redirect("admin_banuser.php", 1);
@@ -95,9 +95,9 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 			} elseif($_GET["action"] == "addnew") {
 				//add new user
 				if($_POST["word"] != "") {
-					
-          
-          echo "
+						
+
+					echo "
 	<div class='alert_confirm'>
 		<div class='alert_confirm_text'>
 		<strong>Adding banned user: ".$_POST['word']."!</div><div style='padding:4px;'>";
@@ -117,26 +117,26 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 					else redirect("admin_banuser.php", 1);
 				} else {
 
-		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
+					echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 
-		echo "
+					echo "
 			<tr>
 				<th>Admin Panel Navigation</th>
 			</tr>";
-	echo "
+					echo "
 			<tr>
 				<td class='area_2' style='padding:20px;' valign='top'>";
 
-		require_once("admin_navigation.php");
-		echo "</td>
+					require_once("admin_navigation.php");
+					echo "</td>
 			</tr>";
-			echoTableFooter(SKIN_DIR);
+					echoTableFooter(SKIN_DIR);
 
-		echo "<form action='admin_banuser.php?action=addnew' method=POST><input type='hidden' name='ref' value='".$_GET["ref"]."'>";
+					echo "<form action='admin_banuser.php?action=addnew' method=POST><input type='hidden' name='ref' value='".$_GET["ref"]."'>";
 
-		echoTableHeading("Banning a member", $_CONFIG);
+					echoTableHeading("Banning a member", $_CONFIG);
 
-		echo "
+					echo "
 			<tr>
 				<th colspan='2'>&nbsp;</th>
 			</tr>
@@ -150,29 +150,29 @@ if(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_CO
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Add to ban list'></td>
 			</tr>";
-			echoTableFooter(SKIN_DIR);
-	echo "</form>";
+					echoTableFooter(SKIN_DIR);
+					echo "</form>";
 				}
 			}
 		} else {
 			$list = explode("\n", file_get_contents(DB_DIR."/banneduser.dat"));
 
-		echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
+			echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 
-		echo "
+			echo "
 			<tr>
 				<th>Admin Panel Navigation</th>
 			</tr>";
-	echo "
+			echo "
 			<tr>
 				<td class='area_2' style='padding:20px;' valign='top'>";
 
-		require_once("admin_navigation.php");
-		echo "</td>
+			require_once("admin_navigation.php");
+			echo "</td>
 			</tr>";
 			echoTableFooter(SKIN_DIR);
 
-echo "
+			echo "
 	<div id='tabstyle_2'>
 		<ul>
 			<li><a href='admin_banuser.php?action=addnew' title='Add a banned user?'><span>Add a banned user?</span></a></li>
@@ -180,9 +180,9 @@ echo "
 	</div>
 	<div style='clear:both;'></div>";
 
-		echoTableHeading("Manage banned users", $_CONFIG);
+			echoTableHeading("Manage banned users", $_CONFIG);
 
-		echo "
+			echo "
 			<tr>
 				<th colspan='3'>Managing your banned members.</th>
 			</tr>";
