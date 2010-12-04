@@ -151,7 +151,7 @@
 				echo '</p>';
 			}
 			else echo 'Unable to retrieve backup list: Could not open the directory.';
-		} elseif($_GET['file'] != '' and file_exists(DB_DIR.'/backup/'.$_GET['file'])) {
+		} elseif($_GET['file'] != '' and file_exists(DB_DIR.'/backup/'.$_GET['file']) && check_file(DB_DIR.'/backup/'.$_GET['file'])) {
 			header("Pragma: public");
 			header("Expires: 0");
 			header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
