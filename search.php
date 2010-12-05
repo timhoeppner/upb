@@ -27,7 +27,7 @@ foreach($form_cats as $form_c) {
 	}
 }
 //form
-echo "<form action='oldsearch.php' method='get'>";
+echo "<form action='search.php' method='get'>";
 echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 echo "
 		<tr>
@@ -131,7 +131,7 @@ echo "
 							}
 						}
 						unset($r);
-						dump($sPosts);
+						//dump($sPosts);
 						if ($intopic) {
 							$posts_tdb->setFp("posts", $fRec["id"]);
 							if (FALSE !== ($r = $posts_tdb->query("posts", $sPosts, 1, $MAX_POSTS_RESULTS))) {
