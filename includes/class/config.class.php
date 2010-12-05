@@ -129,7 +129,7 @@ class configSettings extends tdb {
 				else $data_type =& $oriVar['data_type'];
 				switch ($data_type) {
 					case 'number':
-						if($editOptionalData) {  //$field = eregi_replace("[^0-9.-]", "", $field);
+						if($editOptionalData) {
 							$nameRef[$oriVar["name"]]["value"] = eregi_replace("[^0-9.-]", "", $nameRef[$oriVar["name"]]["value"]);
 						} else $varArr[$oriVar["name"]] = eregi_replace("[^0-9.-]", "", $varArr[$oriVar["name"]]);
 						break;

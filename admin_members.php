@@ -260,7 +260,7 @@ if($_GET['action'] == 'confirm') {
 			</tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Website:</td>
-				<td class='area_2'><input type='text' name='website' size='20' value='".$rec[0]["url"]."' /></td>
+				<td class='area_2'><input type='text' name='url' size='20' value='".$rec[0]["url"]."' /></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
@@ -323,7 +323,7 @@ if($_GET['action'] == 'confirm') {
 			</tr>
 			<tr>
 				<td class='area_1' style='padding:8px;'><strong>Time zone:</strong></td>
-				<td class='area_2'>".timezonelist($rec[0]['timezone'])."</td>
+				<td class='area_2'>".timezonelist($rec[0]['timezone'], "timezone")."</td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>

@@ -276,7 +276,7 @@ function echoTableFooter($skin_dir)
 	<br />";
 }
 
-function timezonelist($current=0)
+function timezonelist($current=0, $timezone_field_string="u_timezone")
 {
 	$timezones = array();
 	$timezones["-12"] = "(GMT -12:00) Eniwetok, Kwajalein";
@@ -309,7 +309,7 @@ function timezonelist($current=0)
 	$timezones["11"] = "(GMT +11:00) Magadan, Solomon Islands, New Caledonia";
 	$timezones["12"] = "(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka";
 
-	$output = "\n<select name='u_timezone' id='u_timezone'>\n";
+	$output = "\n<select name='".$timezone_field_string."' id='u_timezone'>\n";
 	$set = (float) $current; //convert to a float for comparison with keys
 	foreach ($timezones as $key => $places)
 	{
