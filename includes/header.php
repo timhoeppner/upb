@@ -101,8 +101,19 @@ flock($h_f, 3);
 fclose($h_f);
 $login = "";
 if (!$tdb->is_logged_in()) {
+	$login_ref = "";
+	
+	if( preg_match("/viewforum.php/", $_SERVER["PHP_SELF"]) )
+	{
+		$login_ref = "viewforum.php?id=". $_GET["id"];
+	}
+	elseif( preg_match("/viewtopic.php/", $_SERVER["PHP_SELF"]) )
+	{
+		$login_ref = "viewtopic.php?id=". $_GET["id"] ."&t_id=". $_GET["t_id"];
+	}
+	
 	$login = "You are not logged in.";
-	$loginlink = "login.php?ref=";
+	$loginlink = "login.php?ref=". urlencode($login_ref);
 	$pm_display = "login.php?ref=pmsystem.php";
 } else {
 	$login = "Welcome, ".$_COOKIE["user_env"]."!";

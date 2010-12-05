@@ -60,7 +60,7 @@ if (isset($_POST["u_name"]) && isset($_POST["u_pass"])) {
 					".$r["user_name"]."
 					</div>
 					</div>
-					<meta http-equiv='refresh' content='2;URL=".$_GET["ref"]."'>";
+					<meta http-equiv='refresh' content='2;URL=".urldecode($_GET["ref"])."'>";
 		}
 		$e = 1;
 	}
@@ -74,7 +74,7 @@ if (!$tdb->is_logged_in() != "") {
 	if ($_COOKIE["remember"] != "") $remember = "checked";
 	else $remember = "";
 	echo "
-	<form action='login.php?ref=".$_GET["ref"]."' method='post'>";
+	<form action='login.php?ref=".urlencode($_GET["ref"])."' method='post'>";
 	echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 	echo "
 			<tr>

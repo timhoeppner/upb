@@ -107,10 +107,19 @@ class posts extends tdb {
 			{
 				$output .= "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=' title='Create a new topic?'><span>Create New Topic</span></a></li>";
 			}
+			elseif((int)$this->user["power"] == 0)
+			{
+				$output .= "<li><a href='login.php?ref=".urlencode("newpost.php?id=".$this->fRec[0]["id"]."&t=1&t_id=")."' title='Create a new topic?'><span>Create New Topic</span></a></li>";
+			}
 				
 			if((int)$this->user["power"] >= (int)$this->fRec[0]["reply"])
 			{
 				if(!(bool)$this->tRec[0]["locked"]) $output .= "<li><a href='newpost.php?id=".$this->fRec[0]["id"]."&t=0&t_id=".$this->tRec[0]["id"]."&page=".$page."' title='Add a reply?'><span>Add Reply</span></a></li>";
+				else $output .= "<li><a href='#' title='Topic Is Locked'><span>Topic Is Locked</span></a></li>";
+			}
+			elseif((int)$this->user["power"] == 0)
+			{
+				if(!(bool)$this->tRec[0]["locked"]) $output .= "<li><a href='login.php?ref=".urlencode("newpost.php?id=".$this->fRec[0]["id"]."&t=0&t_id=".$this->tRec[0]["id"]."&page=".$page)."' title='Add a reply?'><span>Add Reply</span></a></li>";
 				else $output .= "<li><a href='#' title='Topic Is Locked'><span>Topic Is Locked</span></a></li>";
 			}
 				
@@ -123,6 +132,17 @@ class posts extends tdb {
 
 				$output .= "<li><a href='managetopic.php?action=favorite&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"]."' title='Bookmark this Topic?'><span>Bookmark Topic</span></a></li>";
 			}
+			else
+			{
+				if ($email_mode)
+				{
+					$msg = "Watch";
+					$output .= "<li><a href='login.php?ref=".urlencode("managetopic.php?action=watch&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"])."' title='$msg This Topic?'><span>$msg Topic</span></a></li>";
+				}
+				
+				$output .= "<li><a href='login.php?ref=".urlencode("managetopic.php?action=favorite&id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."&page=".$_GET["page"])."' title='Bookmark this Topic?'><span>Bookmark Topic</span></a></li>";
+			}
+			
 			if ((int)$_COOKIE["power_env"] >= 2) {
 				$output .= "
 				<li><a href='managetopic.php?id=".$this->fRec[0]["id"]."&t_id=".$this->tRec[0]["id"]."'><span>Options</span></a></li>";
