@@ -333,12 +333,12 @@ function xml_clean($string)
 }
 
 function returnimages($dirname = "images/avatars/") {
-	$pattern = "\.(jpg|jpeg|png|gif|bmp)$";
+	$pattern = "/\.(jpg|jpeg|png|gif|bmp)$/i";
 	$files = array();
 	$curimage = 0;
 	if ($handle = opendir($dirname)) {
 		while (false !== ($file = readdir($handle))) {
-			if (eregi($pattern, $file)) {
+			if (preg_match($pattern, $file)) {
 				echo "<option value ='images/avatars/".$file."'>".$file."</option>";
 				$curimage++;
 			}

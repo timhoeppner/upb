@@ -22,7 +22,7 @@ if (isset($_POST["u_edit"])) {
 	} else {
 		$rec = array();
 		if (!isset($_POST["u_email"])) exitPage("please enter your email!", true);
-		if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["u_email"])) exitPage("please enter a valid email!", true);
+		if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$/i", $_POST["u_email"])) exitPage("please enter a valid email!", true);
 		$_POST['u_sig'] = stripslashes($_POST['u_sig']);
 		if (strlen($_POST["u_sig"]) > 500) exitPage("You cannot have more than 500 characters in your signature.", true);
 		$user = $tdb->get("users", $_COOKIE["id_env"]);
@@ -62,7 +62,16 @@ if (isset($_POST["u_edit"])) {
 		if ($user[0]["view_email"] != $_POST["show_email"]) $rec["view_email"] = $_POST["show_email"];
 		if ($user[0]["mail_list"] != $_POST["email_list"]) $rec["mail_list"] = $_POST["email_list"];
 		if ($user[0]["location"] != $_POST["u_loca"]) $rec["location"] = $_POST["u_loca"];
-		$dim = getimagesize($_FILES['avatar2file']['tmp_name']);
+		
+		if (isset($_FILES['avatar2file']['tmp_name']))
+		{
+			$dim = getimagesize($_FILES['avatar2file']['tmp_name']);
+		}
+		else
+		{
+			$dim = array(0, 0);
+		}
+		
 		if (isset($_FILES["avatar2file"]["name"]) && trim($_FILES["avatar2file"]["name"]) != "") {
 			if($_FILES['avatar2file']['size'] > $_REGIST['avatarupload_size']*1024)
 			{

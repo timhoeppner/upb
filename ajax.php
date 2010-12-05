@@ -521,7 +521,7 @@ switch ($ajax_type)
 			$reply .= "<br><img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'>Email Address Required";
 			$valid = "false";
 		}
-		else if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[_a-z0-9-]+(\.[_a-z0-9-]+)*)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["email"]))
+		else if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[_a-z0-9-]+(\.[_a-z0-9-]+)*)*@[a-z0-9-]+(\.[a-z0-9-]+)*$/i", $_POST["email"]))
 		{
 			$reply = "<br><img src='images/cross.gif' alt='' title='' style='vertical-align: middle;'>Invalid Email Address";
 			$valid = "false";

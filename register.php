@@ -101,7 +101,7 @@ if (isset($_POST['submit']) && $_POST["submit"] == "Submit") {
 	if($_POST['u_email'] != $_POST['u_email2'])
 	exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'Your e-mails do not match.', ALERT_MSG)), true);
 
-	if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[_a-z0-9-]+(\.[_a-z0-9-]+)*)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["u_email"]))
+	if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[_a-z0-9-]+(\.[_a-z0-9-]+)*)*@[a-z0-9-]+(\.[a-z0-9-]+)*$/i", $_POST["u_email"]))
 	exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'Please enter a valid e-mail (ex: you@host.com).', ALERT_MSG)), true);
 
 	$q = $tdb->query("users", "user_name='".strtolower($_POST["u_login"])."'", 1, 1);

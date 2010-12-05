@@ -170,7 +170,7 @@ if($_GET['action'] == 'confirm') {
 		if (!isset($_POST["email"])) exitPage("
 				<div class='alert'><div class='alert_text'>
 				<strong>Error!</strong></div><div style='padding:4px;'>Please enter a valid email!</div></div>");
-		if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", $_POST["email"])) exitPage("
+		if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$/i", $_POST["email"])) exitPage("
 				<div class='alert'><div class='alert_text'>
 				<strong>Error!</strong></div><div style='padding:4px;'>Please enter a valid email!</div></div>");
 		if (strlen(chop($_POST["sig"])) > 200) exitPage("

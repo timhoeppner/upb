@@ -57,7 +57,6 @@ function filterLanguage($text) {
 	for($pp=0;$pp<count($words);$pp++) {
 		$words[$pp] = html_entity_decode($words[$pp]);
 		$msg = preg_replace('/\b'.$words[$pp].'\b/i', $_CONFIG["censor"], $msg);
-		//$msg = eregi_replace($words[$pp]." ", $censor." ", $msg);
 	}
 	//end bad words filter
 	return $msg;
