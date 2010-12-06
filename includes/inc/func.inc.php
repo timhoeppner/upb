@@ -439,7 +439,7 @@ function check_file($file)
 	//EXAMPLE OF HACK FILE
 	//http://localhost/upb/admin_restore.php?action=download&file=../../../../../../../etc/passwd
 	//echo $file;
-	if (file_exists($file) && substr_count($file,'../') == 0)
+	if (file_exists($file) && substr_count($file,'..') == 0)
 	return true;
 	else
 	return false;

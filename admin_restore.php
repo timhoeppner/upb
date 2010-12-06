@@ -183,13 +183,20 @@ if ($_GET['action'] == 'backup') {
 		else echo 'Unable to retrieve backup list: Could not open the directory.';
 		echo '<p><i>Note: to import a backedup database, put the file in the backup folder in the upb root directory.  The "backup" folder must be readable and writable (CHMOD to 0777).</p>';
 	} elseif($_GET['file'] != '') {
-		if (!isset($_POST['verify'])) ok_cancel('admin_restore.php?action=import&file='.$_GET['file'], 'Are you sure you wish to import <strong>'.$_GET['file'].'</strong>?');
+		if (!isset($_POST['verify']) && check_file('./backup/'.$_GET['file'])) ok_cancel('admin_restore.php?action=import&file='.$_GET['file'], 'Are you sure you wish to import <strong>'.$_GET['file'].'</strong>?');
 		elseif($_POST['verify'] == 'Cancel') redirect('admin_restore.php', 0);
 		elseif($_POST['verify'] == 'Ok') {
-			if (rename('./backup/'.$_GET['file'], DB_DIR.'/backup/'.$_GET['file']))
-			echo 'Successfully imported <strong>'.$_GET['file'].'</strong><br>
-        Note this backed up database was not "restored" or loaded.<br>To restore this backup, click <a href="admin_restore.php?action=restore&file='.$_GET['file'].'">here</a>';
-			else echo 'Importing failed.';
+			if(!preg_match("/../", $_GET['file']))
+			{
+				if (rename('./backup/'.$_GET['file'], DB_DIR.'/backup/'.$_GET['file']))
+				echo 'Successfully imported <strong>'.$_GET['file'].'</strong><br>
+        			Note this backed up database was not "restored" or loaded.<br>To restore this backup, click <a href="admin_restore.php?action=restore&file='.$_GET['file'].'">here</a>';
+				else echo 'Importing failed.';
+			}
+			else 
+			{
+				echo "Unable to process request: Invalid path";
+			}
 		}
 		else echo 'Unable to process request: Invalid verify';
 	}
