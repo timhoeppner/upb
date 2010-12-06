@@ -14,7 +14,7 @@ if (!(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($
 			<strong>Access Denied!</strong></div><div style='padding:4px;'>you are not logged in!</div></div>";
 	redirect("login.php?ref=admin_badwords.php", 2);
 }
-if (!($tdb->is_logged_in() || $_COOKIE["power_env"] < 3)) exitPage("
+if (!$tdb->is_logged_in() || $_COOKIE["power_env"] < 3) exitPage("
 		<div class='alert'><div class='alert_text'>
 		<strong>Access Denied!</strong></div><div style='padding:4px;'>you are not authorized to be here.</div></div>");
 if ($_GET["action"] == "delete" && $_GET["word"] != "") {

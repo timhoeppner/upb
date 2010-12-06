@@ -17,6 +17,12 @@ if(!(isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_
 	redirect("login.php?ref=admin_smilies.php", 2);
 }
 
+if(!($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3)) 
+{
+	exitPage("<div class='alert'><div class='alert_text'>
+		<strong>Access Denied!</strong></div><div style='padding:4px;'>you are not authorized to be here.</div></div>");
+}
+
 echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 echo "
 			<tr>
@@ -30,7 +36,8 @@ echo "</td>
 			</tr>";
 echoTableFooter(SKIN_DIR);
 //REMOVE ALL TRACES OF $_GET['word']
-if(!($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3)) exitPage("you are not authorized to be here.");
+
+		
 if($_GET["action"] == "addnew")
 {
 	$error = $success = array();

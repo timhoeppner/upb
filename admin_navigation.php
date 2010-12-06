@@ -1,5 +1,6 @@
 <?php
-//if(!defined(DB_DIR)) exit('This page must be run under a script wrapper'.DB_DIR);
+if(!defined("DB_DIR")) exit('This page must be run under a script wrapper');
+
 if (isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_COOKIE["power_env"]) && isset($_COOKIE["id_env"])) {
 	if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 		echo "

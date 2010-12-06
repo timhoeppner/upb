@@ -11,7 +11,12 @@ $where = "<a href='admin.php'>Admin</a> ".$_CONFIG["where_sep"]." <a href='admin
 $bdb = new tdb(DB_DIR.'/','bbcode.tdb');
 $bdb->setFP('smilies','smilies');
 if(!(isset($_COOKIE["power_env"]) && isset($_COOKIE["user_env"]) && isset($_COOKIE["uniquekey_env"]) && isset($_COOKIE["id_env"]))) redirect("login.php?ref=admin_smilies.php", 2);
-if(!($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3)) exitPage("you are not authorized to be here.", true);
+if(!($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3)) 
+{
+	exitPage('
+		<div class="alert"><div class="alert_text">
+		<strong>Access Denied!</strong></div><div style="padding:4px;">you are not authorized to be here.</div></div>', true);
+}
 require_once('./includes/header.php');
 
 //REMOVE ALL TRACES OF $_GET['word']
