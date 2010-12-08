@@ -46,9 +46,9 @@ confirmed. You can now log into the bulletin board.</div>
 	// get the user's email address, NOTE: password is not available as it has already been encrypted.
 	$details = $tdb->query("users","id='{$_GET['id']}'",1,1,array('user_name','email'));
 	$register_msg = str_replace(
-	array('<login>', '<password>', '<url>'),
+	array('<login>', '<password>', '<url>','<x>'),
 	array($details[0]['user_name'], 'UNAVAILABLE', "http://{$_SERVER['SERVER_NAME']}{$_SERVER['PHP_SELF']}?action=validate&id={$_GET['id']}&code={$reg_code}"),
-	$_REGISTER['register_msg']);
+	$_REGISTER['register_msg'],'');
 	if (!@mail($details[0]['email'], $_REGISTER["register_sbj"], $register_msg, "From: ".$_REGISTER["admin_email"])) {
 		$email_status = false;
 		if($_CONFIG['email_mode']) {
