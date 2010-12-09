@@ -27,4 +27,12 @@ class UPB_Authentication //extends the other user db class?
 	function access($accessType = "r", $itemType, $itemId = 0)
 	{
 	}
+
+	function displayLoginForm($defaultValues)
+	{
+	}
+
+	function validateLoginForm()
+	{
+	}
 }
