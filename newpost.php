@@ -85,10 +85,11 @@ if ($_POST["a"] == "1") {
 				$error[$type_key] = 'type';
 				continue;
 			}
-			if ($files[$i]['size'] > $maxsize)
+			if ($_FILES['upload']['size'][$i] > $maxsize)
 			{
 				$error[$_FILES['upload']['name'][$i]] ='size';
-				continue;
+				echo "file is too big";
+        continue;
 			}
 			$files[$i]['name'] = $_FILES['upload']['name'][$i];
 			$files[$i]['type'] = $_FILES['upload']['type'][$i];
@@ -98,19 +99,20 @@ if ($_POST["a"] == "1") {
 		}
 
 		//dump($error);
-
-
+    
+    $error_msg = "";
+    
 		if (!empty($error))
 		{
-			echo "The following files will not be uploaded: ";
+			$error_msg = "The following files will not be uploaded:<p> ";
 			foreach ($error as $key => $err)
 			{
 				if ($err == 'size')
-				echo $key." is too big<br>";
+				$error_msg .= $key." is too big<p>";
 				if ($err == 'type')
 				{
 					list($err_file,$file_type) = explode("|",$key);
-					echo "$err_file - $file_type is not an allowed filetype";
+					$error_msg .= "$err_file - $file_type is not an allowed filetype<p>";
 				}
 			}
 		}
@@ -132,8 +134,10 @@ if ($_POST["a"] == "1") {
 			}
 		}
 	}
-	//END
-	if ($_GET["t"] == 1) {
+	
+	//FILE UPLOAD END
+	
+  if ($_GET["t"] == 1) {
 		if (!isset($_POST["sticky"])) $_POST["sticky"] = "0";
 		if (!isset($_POST["locked"])) $_POST["locked"] = "0";
 		$_POST["subject"] = trim($_POST["subject"], $_CONFIG['stick_note']);
@@ -204,7 +208,14 @@ if ($_POST["a"] == "1") {
 	}
 	$_SESSION['newTopics']['f'.$_GET['id']]['t'.$_GET['t_id']] = 0;
 	$_SESSION['view_'.$_GET['id'].'_'.$_GET['t_id']] = time();
-	redirect($redirect.'#'.$p_id, 1);
+	
+  if ($error_msg == "")
+    redirect($redirect.'#'.$p_id, 1);
+  else
+    {
+    $error_msg .= "<br><a href='viewtopic.php?id=".$_GET['id']."&t_id=".$_GET['t_id']."&page=".$vars['page']."'>Click here to continue</a>";
+    echo "<div class='alert'><div class='alert_text'><strong>Warning!</strong></div><div style='padding:4px;'>$error_msg</div></div>";
+    }
 } else {
 
 	if (!isset($_GET["page"]) or $_GET['page'] == "") $vars['page'] = 1;
