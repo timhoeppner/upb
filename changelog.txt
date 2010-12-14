@@ -1,5 +1,22 @@
 This is the changelog for this product's working copy.
 
+v2.2.7 Changelog - XX/XX/XXXX
+
+== BUG FIXES ==
+# Strip slashes bug in forum and category titles
+# Admin configuration of file upload types was missing
+# PHP notices for undefined variables in the installer
+# Fixed BBcode bug related to [left], [center] and [right] tags
+# Fixed bug which prevented an admin from changing a users email address or timezone
+# Subscribe to this post feature has been fixed
+# Corrected several login links so they redirect back to the appropriate post
+# An error message is now displayed if a upload does not meet the size restriction
+# Fixed exploit allowing unintentional admin accounts
+# Fixed a bug in monitor topics that was caused if a user changed their email address
+# Fixed a bug that was causing our anti-XSS to be applied in place it shouldn't
+
+-------------------------
+
 v2.2.6 Changelog - 25/05/2009
 
 == BUG FIXES ==
@@ -28,6 +45,7 @@ v2.2.6 Changelog - 25/05/2009
 # Administrators can change usernames
 # Extended colors available for bbcode to 40 using color swatch
 
+------------------------
 
 v2.2.5 Changelog - 16/05/2009
 
