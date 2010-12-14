@@ -87,7 +87,7 @@ switch ($ajax_type)
 		if($tdb->is_logged_in()) {
 			$email_mode = $_CONFIG['email_mode'];
 			$thisUser = $tdb->get("users", $_COOKIE["id_env"]);
-			$isWatching = in_array($thisUser[0]["email"], explode(',', $tRec[0]['monitor']));
+			$isWatching = in_array($thisUser[0]["id"], explode(',', $tRec[0]['monitor']));
 		} else {
 			$email_mode = false;
 			$isWatching = false;
@@ -105,8 +105,27 @@ switch ($ajax_type)
         "upload_id" => 0
 		));
 
+    if ($tRec[0]["monitor"] != "") {
+			//CONVERT IDS TO EMAIL ADDRESSES
+			$monitor_ids = explode(",",$tRec[0]['monitor']);
+			$monitor_emails = array();
+      foreach ($monitor_ids as $monitor_id)
+			{
+        $user_details = $tdb->basicQuery('users','id',$monitor_id); 
+        $monitor_emails[] = $user_details[0]['email'];    
+      }
+      $monitors = implode(",",$monitor_emails);
+      $msg2 = str_replace(array("<x>","&lt;x&gt;"),"",$msg); // strip <x> from email
+      $local_dir = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']);
+			$e_sbj = "New Reply in \"".$tRec[0]["subject"]."\"";
+			$e_msg = "You, or someone else using this e-mail address has requested to watch this topic: ".$tRec[0]["subject"]." at ".$local_dir."/index.php\n\n".$_COOKIE["user_env"]." wrote:\n".$msg2."\n\n- - - - -\nTo read the rest of this topic, visit ".$local_dir."/viewtopic.php?id=".$_POST["id"]."&t_id=".$_POST["t_id"]."&page=".$_POST["page"]."\nOr you can reply immediately if you forum cookies are valid by visiting ".$local_dir."/newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$vars['page'];
+			$e_hed = "From: ".$_REGISTER["admin_email"]."\r\n";
+			$e_hed .= "Bcc: ".$monitors."\r\n"; //More efficient to send one e-mail with everyone on a BLANK CARBON COPY (see php.net's mail())
+			@mail("", $e_sbj, $e_msg, $e_hed);
+		}
+
 		$rec = $posts_tdb->get("topics", $_POST["t_id"]);
-		$posts_tdb->edit("topics", $_POST["t_id"], array("replies" => ((int)$rec[0]["replies"] + 1), "last_post" => mkdate(), "user_name" => $_COOKIE["user_env"], "user_id" => $_COOKIE["id_env"], "monitor" => "", "p_ids" => $rec[0]["p_ids"].",".$p_id));
+		$posts_tdb->edit("topics", $_POST["t_id"], array("replies" => ((int)$rec[0]["replies"] + 1), "last_post" => mkdate(), "user_name" => $_COOKIE["user_env"], "user_id" => $_COOKIE["id_env"], "p_ids" => $rec[0]["p_ids"].",".$p_id));
 		clearstatcache();
 		$posts_tdb->sort("topics", "last_post", "DESC");
 		clearstatcache();
@@ -319,9 +338,7 @@ switch ($ajax_type)
 	<br />";
 		}
 		$output .= "<!--divider-->$pagelinks1<!--divider-->$pagelinks2<!--divider-->$qrform";
-
 		echo $output;
-
 		break 1;
 
 	case "sort" :

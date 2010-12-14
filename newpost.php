@@ -14,7 +14,8 @@ $message = "";
 if (!empty($_POST))
 {
 	$message = stripslashes(format_text(encode_text($_POST['newentry']),'edit'));
-	foreach ($_POST as $key => $value)
+	$message = str_replace(array("<x>","&lt;x&gt;"),"",$message);
+  foreach ($_POST as $key => $value)
 	{
 		$_GET[$key] = $value;
 	}
@@ -175,15 +176,26 @@ if ($_POST["a"] == "1") {
 		$tdb->edit("forums", $_GET["id"], array("posts" => ((int)$fRec[0]["posts"] + 1)));
 		$rec = $posts_tdb->get("topics", $_GET["t_id"]);
 		if (isset($_POST["unstick"])) $rec[0]["sticky"] = "0";
-		if ($rec[0]["monitor"] != "") {
-			$local_dir = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']);
+		
+    if ($rec[0]["monitor"] != "") {
+			//CONVERT IDS TO EMAIL ADDRESSES
+			$monitor_ids = explode(",",$rec[0]['monitor']);
+			$monitor_emails = array();
+      foreach ($monitor_ids as $monitor_id)
+			{
+        $user_details = $tdb->basicQuery('users','id',$monitor_id);
+        $monitor_emails[] = $user_details[0]['email'];
+      }
+      $monitors = implode(",",$monitor_emails);
+      $msg = str_replace(array("<x>","&lt;x&gt;"),"",$_POST['message']); //strip <x> from message
+      $local_dir = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']);
 			$e_sbj = "New Reply in \"".$rec[0]["subject"]."\"";
-			$e_msg = "You, or someone else using this e-mail address has requested to watch this topic: ".$rec[0]["subject"]." at ".$local_dir."/index.php\n\n".$_COOKIE["user_env"]." wrote:\n".$_POST["message"]."\n\n- - - - -\nSince this user has replied, you have been taken off the monitor list.  There may have been other users who have replied since then.  To read the rest of this topic, visit ".$local_dir."/viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."\nOr you can reply immediately if you forum cookies are valid by visiting ".$local_dir."/newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$vars['page'];
+			$e_msg = "You, or someone else using this e-mail address has requested to watch this topic: ".$rec[0]["subject"]." at ".$local_dir."/index.php\n\n".$_COOKIE["user_env"]." wrote:\n".$msg."\n\n- - - - -\nTo read the rest of this topic, visit ".$local_dir."/viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."\nOr you can reply immediately if you forum cookies are valid by visiting ".$local_dir."/newpost.php?id=".$_GET["id"]."&t=0&t_id=".$_GET["t_id"]."&page=".$vars['page'];
 			$e_hed = "From: ".$_REGISTER["admin_email"]."\r\n";
-			$e_hed .= "Bcc: ".$rec[0]['monitor']."\r\n"; //More efficient to send one e-mail with everyone on a BLANK CARBON COPY (see php.net's mail())
+			$e_hed .= "Bcc: ".$monitors."\r\n"; //More efficient to send one e-mail with everyone on a BLANK CARBON COPY (see php.net's mail())
 			@mail("", $e_sbj, $e_msg, $e_hed);
 		}
-		$posts_tdb->edit("topics", $_GET["t_id"], array("replies" => ((int)$rec[0]["replies"] + 1), "last_post" => mkdate(), "user_name" => $_COOKIE["user_env"], "sticky" => $rec[0]["sticky"], "user_id" => $_COOKIE["id_env"], "monitor" => ""));
+		$posts_tdb->edit("topics", $_GET["t_id"], array("replies" => ((int)$rec[0]["replies"] + 1), "last_post" => mkdate(), "user_name" => $_COOKIE["user_env"], "sticky" => $rec[0]["sticky"], "user_id" => $_COOKIE["id_env"]));
 		if ($_GET["page"] == "") $vars['page'] = 1;
 		$redirect = "viewtopic.php?id=".$_GET["id"]."&t_id=".$_GET["t_id"]."&page=".$vars['page'];
 		$pre = $rec[0]["p_ids"].",";

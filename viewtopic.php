@@ -65,7 +65,7 @@ $p = createPageNumbers($vars["page"], $num_pages, $_SERVER['QUERY_STRING']);
 if($tdb->is_logged_in()) {
 	$email_mode = $_CONFIG['email_mode'];
 	$thisUser = $tdb->get("users", $_COOKIE["id_env"]);
-	$isWatching = in_array($thisUser[0]["email"], explode(',', $tRec[0]['monitor']));
+	$isWatching = in_array($thisUser[0]["id"], explode(',', $tRec[0]['monitor']));
 } else {
 	$email_mode = false;
 	$isWatching = false;
