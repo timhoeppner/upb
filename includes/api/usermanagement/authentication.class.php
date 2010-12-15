@@ -28,10 +28,10 @@ class UPB_Authentication //extends the other user db class?
 	/**
 	 *
 	 * @param char $accessType - r: read, w: write, m: moderate, a: administrate
-	 * @param string $itemType - "config??", "category", "forum", "topic", "post"
+	 * @param string $itemType - "loggedin", "upgrade", "config", "category", "forum", "topic", "post"
 	 *
 	 */
-	function access($accessType = "r", $itemType, $itemId = 0)
+	function access($itemType, $accessType = "r", $itemId = 0)
 	{
 	}
 

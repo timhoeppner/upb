@@ -31,10 +31,17 @@ include_once("./upgrade_tools.php");
 $auth = new UPB_Authentication;
 
 // Only proceed if we have access to
-if( $auth->access('a', "upgrade") == false )
+if( $auth->access("upgrade", 'a') == false )
 {
-	exitPage("..."); // We could alternatively display the login page using the API
-	exit;
+	if( $auth->access("loggedin") == false )
+	{
+		// Display login page
+	}
+	else
+	{
+		exitPage("...");
+		exit;
+	}
 }
 
 // Register our AJAX calls with Xajax, all these functions can be found in upgrade_tools.php
@@ -47,6 +54,15 @@ $xajax->registerFunction("AJAX_validateDbCategories");
 $xajax->registerFunction("AJAX_validateDbForums");
 $xajax->registerFunction("AJAX_validateDbTopics");
 $xajax->registerFunction("AJAX_validateDbPosts");
+
+// TODO: These need some more thought... may not want these directly accessable via AJAX
+$xajax->registerFunction("AJAX_addTableField");
+$xajax->registerFunction("AJAX_editTableField");
+$xajax->registerFunction("AJAX_removeTableField");
+$xajax->registerFunction("AJAX_populateTableField");
+$xajax->registerFunction("AJAX_addRootConfigField");
+$xajax->registerFunction("AJAX_editRootConfigField");
+$xajax->registerFunction("AJAX_removeRootConfigField");
 
 // Let Xajax handle the AJAX requests, anything after this statement will only be run
 // when the page is first loaded.
