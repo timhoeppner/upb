@@ -31,10 +31,10 @@ if($_GET['action'] == 'favorite') {
 	require_once('./includes/header.php');
 	$user = $tdb->get("users", $_COOKIE["id_env"]);
 	if ($tRec[0]["monitor"] == "") {
-		$posts_tdb->edit("topics", $_GET["t_id"], array("monitor" => $user[0]["email"]));
+		$posts_tdb->edit("topics", $_GET["t_id"], array("monitor" => $user[0]["id"]));
 		print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', "You are now monitoring this topic.", CONFIRM_MSG));
 	} elseif(FALSE === (strpos($tRec[0]["monitor"], ','))) {
-		if ($tRec[0]["monitor"] == $user[0]["email"]) {
+		if ($tRec[0]["monitor"] == $user[0]["id"]) {
 			if ($_POST["verify"] == "Ok") {
 				$posts_tdb->edit("topics", $_GET["t_id"], array("monitor" => ""));
 				//echo "You are no longer monitoring this topic.";
@@ -44,14 +44,14 @@ if($_GET['action'] == 'favorite') {
 				exitPage('', false, true);
 			}
 		} else {
-			$posts_tdb->edit("topics", $_GET["t_id"], array("monitor" => $tRec[0]["monitor"].",".$user[0]["email"]));
+			$posts_tdb->edit("topics", $_GET["t_id"], array("monitor" => $tRec[0]["monitor"].",".$user[0]["id"]));
 			print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You are now monitoring this topic..', CONFIRM_MSG));
 		}
 	} else {
 		$monitor_list = explode(',', $tRec[0]["monitor"]);
-		if (in_array($user[0]["email"], $monitor_list)) {
+		if (in_array($user[0]["id"], $monitor_list)) {
 			if ($_POST["verify"] == "Ok") {
-				$id_index = array_search($user[0]["email"], $monitor_list);
+				$id_index = array_search($user[0]["id"], $monitor_list);
 				unset($monitor_list[$id_index]);
 				$monitor_list = implode(",", $monitor_list);
 				$posts_tdb->edit("topics", $_GET["t_id"], array("monitor" => $monitor_list));
@@ -61,7 +61,7 @@ if($_GET['action'] == 'favorite') {
 				exitPage('', false, true);
 			}
 		} else {
-			$posts_tdb->edit("topics", $_GET["t_id"], array("monitor" => $tRec[0]["monitor"].",".$user[0]["email"]));
+			$posts_tdb->edit("topics", $_GET["t_id"], array("monitor" => $tRec[0]["monitor"].",".$user[0]["id"]));
 			print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', "You are now monitoring this topic.", CONFIRM_MSG));
 		}
 	}

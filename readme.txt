@@ -1,11 +1,10 @@
 **************************
-UPB 2.2.5 RELEASE NOTES
+UPB 2.2.7 RELEASE NOTES
 **************************
-
-Testing by pete917 and new images by Nightmare
 
 PLEASE READ THE LICENSE.TXT FILE BEFORE CONTINUING
 
+Change log for UPB version 2.2.7 can be found in changelog.txt
 
 Getting Started:
 
@@ -15,11 +14,11 @@ Details can be found in the license.txt file.
 
 == INSTALLATION==
 
-Upload all the files from upb2.2.5.php
+Upload all the files from upb2.2.7.zip or upb2.2.7.tar.gz
   CHMOD the root UPB directory to 0777
-  CHMOD the config.php to 0666
   Execute the install.php
-  
+  Follow the directions in the installer
+
 
 == UPGRADE ==
 Upload all the
