@@ -1,5 +1,12 @@
 <?php
-// TODO: insert proper header block
+/**
+ * 
+ * The UPB_Registration class is apart of the UPB API and allows
+ * easy and simple access to registering new users in the database.
+ * 
+ * @author Tim Hoeppner <timhoeppner@gmail.com>
+ *
+ */
 
 class UPB_Registration
 {
@@ -12,7 +19,7 @@ class UPB_Registration
 	 * first user an Admin. This should solve the issue of quitting
 	 * the installer early and not inserting an admin account.
 	 *
-	 * @param $userdata - UPB_User
+	 * @param UPB_User $userdata - user class containing the user data
 	 *
 	 * @return TRUE on success, FALSE on failure.
 	 */
@@ -20,12 +27,41 @@ class UPB_Registration
 	{
 	}
 
-	function displayRegisterForm($defaultUserData)
+	/**
+	 * Dumps the user register form or store it in $formData if it
+	 * is set to anything.
+	 * 
+	 * @param UPB_User $defaultUserData - Default user data (if any)
+	 * @param string &$formData - If set, output will be stored here
+	 * 		instead of dumped to stdout
+	 */
+	function displayRegisterForm($defaultUserData, &$formData = null)
 	{
+		$msg = $defaultUserData."<br />";
+		
+		if($formData != null)
+		{
+			$formData = $msg;
+		}
+		else
+		{
+			echo $msg;
+		}
 	}
 
 	function validateRegisterForm()
 	{
 	}
 }
+
+/*$register = new UPB_Registration();
+
+echo "using regular dump:<br />";
+$register->displayRegisterForm("test");
+
+$data = "";
+echo "<br />usin reference dump:<br />";
+$register->displayRegisterForm("reference", $data);
+echo $data;*/
+
 ?>
