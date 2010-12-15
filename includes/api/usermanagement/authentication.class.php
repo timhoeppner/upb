@@ -1,5 +1,12 @@
 <?php
-// TODO: insert proper header block
+/**
+ * UPB_Authentication is apart of the UPB user API and provides easy access to
+ * the forum's user authentication functions.
+ *
+ * @author Tim Hoeppner <timhoeppner@gmail.com> (Design work and implementation)
+ * @author ???
+ *
+ */
 
 class UPB_Authentication //extends the other user db class?
 {
@@ -28,10 +35,23 @@ class UPB_Authentication //extends the other user db class?
 	{
 	}
 
-	function displayLoginForm($defaultValues)
+	/**
+	 * Displays the login form
+	 *
+	 * @param string* $formData - If this is not null then the form data will be
+	 * 	dumped here instead of stdout.
+	 *
+	 * @return void
+	 */
+	function displayLoginForm(&$formData = null)
 	{
 	}
 
+	/**
+	 * Validates the login form fields.
+	 *
+	 * @return bool true on success, false on failure.
+	 */
 	function validateLoginForm()
 	{
 	}

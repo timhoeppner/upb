@@ -1,10 +1,11 @@
 <?php
 /**
  * 
- * The UPB_Registration class is apart of the UPB API and allows
- * easy and simple access to registering new users in the database.
+ * The UPB_Registration class is apart of the UPB API and allows easy
+ * and simple access to registering new users in the database.
  * 
- * @author Tim Hoeppner <timhoeppner@gmail.com>
+ * @author Tim Hoeppner <timhoeppner@gmail.com> (Design work and implementation)
+ * @author ???
  *
  */
 
@@ -34,6 +35,8 @@ class UPB_Registration
 	 * @param UPB_User $defaultUserData - Default user data (if any)
 	 * @param string &$formData - If set, output will be stored here
 	 * 		instead of dumped to stdout
+ 	 *
+	 * @return void
 	 */
 	function displayRegisterForm($defaultUserData, &$formData = null)
 	{
@@ -49,6 +52,11 @@ class UPB_Registration
 		}
 	}
 
+	/**
+	 * Validates the register form data.
+	 *
+	 * @return bool true on success, false on failure.
+	 */
 	function validateRegisterForm()
 	{
 	}

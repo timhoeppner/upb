@@ -1,13 +1,13 @@
 <?php
 /**
  * 
- * UPB_User is a class that contains a single user table row
- * along with several support functions that are performed on
- * a specific user. Generally this class will be returned from
- * the UPB_Authentication class and used to represent the actual
- * user on the forums.
+ * UPB_User is a class that contains a single user table row along with several
+ * support functions that are performed on a specific user. Generally this class
+ * will be returned from the UPB_Authentication class and used to represent the
+ * actual user on the forums.
  * 
- * @author Tim Hoeppner <timhoeppner@gmail.com>
+ * @author Tim Hoeppner <timhoeppner@gmail.com> (Design work and implementation)
+ * @author ???
  *
  */
 
