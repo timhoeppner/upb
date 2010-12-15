@@ -4,79 +4,56 @@
  *
  * This script will first backup and then attempt to install/update the UPB database
  * to the latest version. The aim of this script is to be as versatile as possible and
- * not rely on figuring out the current version installed.
+ * not rely on figuring out the current version installed. This will hopefully be an
+ * appropriate foundation for fully automatic updating in the future.
  *
  * @author Tim Hoeppner <timhoeppner@gmail.com>
  * @author ???
  *
  */
 
-// TODO: Find an appropriate AJAX framework so we can keep this code nice and clean
 
+/*! Once the upgrade is completed this will be the new version */
+define("UPB_NEW_VERSION", "2.2.7");
+
+
+// User API includes
 include_once("./includes/api/usermanagement/authentication.class.php");
 include_once("./includes/api/administration/backup.class.php");
 
-// Once the upgrade is completed this will be the new version
-define("UPB_NEW_VERSION", "2.2.7");
+// Third party includes
+include_once("./includes/thirdparty/xajax-0.5rc1/xajax_core/xajax.inc.php");
+
+// Helper functions
+include_once("./upgrade_tools.php");
+
 
 $auth = new UPB_Authentication;
 
 // Only proceed if we have access to
 if( $auth->access('a', "upgrade") == false )
 {
-	exitPage("...");
+	exitPage("..."); // We could alternatively display the login page using the API
 	exit;
 }
 
-// What should we do?
-$action = $_GET["action"]; // TODO: perform any security checks on the query
-switch($action)
-{
-	case "AJAX_backupDatabase":
-		AJAX_backupDatabase();
-		break;
+// Register our AJAX calls with Xajax, all these functions can be found in upgrade_tools.php
+$xajax = new xajax;
 
-	default:
-		// TODO: Use Smarty template and display the upgrader HTML
-		break;
-}
+$xajax->registerFunction("AJAX_backupDatabase");
+$xajax->registerFunction("AJAX_validateRootConfig");
+$xajax->registerFunction("AJAX_validateDbConfig");
+$xajax->registerFunction("AJAX_validateDbCategories");
+$xajax->registerFunction("AJAX_validateDbForums");
+$xajax->registerFunction("AJAX_validateDbTopics");
+$xajax->registerFunction("AJAX_validateDbPosts");
 
-// TODO: Create API's for all of the AJAX calls, this upgrader should be very
-// 	simple in terms of implementation.
+// Let Xajax handle the AJAX requests, anything after this statement will only be run
+// when the page is first loaded.
+$xajax->processRequest();
 
-/**
- * Uses the user API to perform a backup
- */
-function AJAX_backupDatabase()
-{
-	$backup = new UPB_DatabaseBackup;
-}
+// Spit out the javascript, this should be placed between the <head></head> HTML tags
+//$xajax->printJavascript();
 
-/**
- * Checks over the config.php configuration file and verifies everything is in order
- */
-function AJAX_validateRootConfig()
-{
-}
-
-function AJAX_validateDbConfig()
-{
-}
-
-function AJAX_validateDbCategories()
-{
-}
-
-function AJAX_validateDbForums()
-{
-}
-
-function AJAX_validateDbTopics()
-{
-}
-
-function AJAX_validateDbPosts()
-{
-}
 
 ?>
