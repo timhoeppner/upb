@@ -3,7 +3,7 @@
 // designed for Ultimate PHP Board
 // Author: Clark
 // Website: http://www.myupb.com
-// Version: 2.2.5
+// Version: 2.2.7
 // Using textdb Version: 4.4.1
 
 ignore_user_abort();
@@ -573,6 +573,7 @@ switch($_POST["add"]{0}) {
 		</form>
 		<?php
 			} else if ($_POST["add"] == "2") {
+				require_once("includes/inc/func.inc.php");
 				//Set up admin acccount
 				$required = "#ff0000";
 				if (!isset($_POST["username"])) $_POST["username"] = "";
@@ -654,6 +655,10 @@ switch($_POST["add"]{0}) {
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
+				<td class='area_1'><strong>Timezone Setting:</strong></td>
+				<td class='area_2'>".timezonelist($_POST["timezone"], "timezone")."</td>
+			</tr>
+			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='hidden' name='add' value='2auth'><input type='submit' value='Submit' name='B1'><input type='reset' value='Reset' name='B2'></td>";
 			} else if ($_POST["add"]{0} == "3") {
 				require_once("./includes/inc/defines.inc.php");
@@ -664,7 +669,22 @@ switch($_POST["add"]{0}) {
 					require_once("./includes/inc/encode.inc.php");
 					require_once("./includes/inc/date.inc.php");
 
-					$admin = array("user_name" => $_POST["username"], "password" => generateHash($_POST["pass1"]), "level" => 9, "email" => $_POST["email"], "view_email" => $_POST["view_email"], "location" => $_POST["location"], "homepage" => $_POST["homepage"], "icq" => $_POST["icq"], "aim" => $_POST["aim"], "msn" => $_POST["msn"], "sig" => $_POST["sig"], "posts" => 0, "date_added" => mkdate(),"lastvisit" => mkdate(), 'timezone' => '0');
+					$admin = array(
+						"user_name" => $_POST["username"], 
+						"password" => generateHash($_POST["pass1"]), 
+						"level" => 9, 
+						"email" => $_POST["email"], 
+						"view_email" => $_POST["view_email"], 
+						"location" => $_POST["location"], 
+						"homepage" => $_POST["homepage"], 
+						"icq" => $_POST["icq"], 
+						"aim" => $_POST["aim"], 
+						"msn" => $_POST["msn"], 
+						"sig" => $_POST["sig"], 
+						"posts" => 0, 
+						"date_added" => mkdate(),
+						"lastvisit" => mkdate(), 
+						"timezone" => $_POST["timezone"]);
 					$tdb = new tdb(DB_DIR, "main");
 					$tdb->setFp("users", "members");
 					$tdb->add("users", $admin);
