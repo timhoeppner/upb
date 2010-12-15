@@ -315,7 +315,7 @@ if (isset($_POST["u_edit"])) {
         <div id='tabstyle_2'>
         	<ul>
         		<li><a href='profile.php?action=edit'><span>User CP</span></a></li>
-        		<li><a href='profile.php?action=bookmarks'><span>View Bookmarks</span></a></li>
+        		<!--<li><a href='profile.php?action=bookmarks'><span>View Bookmarks</span></a></li>-->
         	</ul>
         </div>
         <div style='clear:both;'></div>";
