@@ -278,9 +278,17 @@ function add_link_nav(type,areaId)
 {
 	var link = url = text = '';
   var txtArea = document.getElementById( areaId );
-	if (txtArea.selectionEnd && (txtArea.selectionEnd - txtArea.selectionStart > 0) ) {
+	
+	var closerTag = "[/"+type+"]";
+
+  var openerTag = "["+type+"]";
+  
+  if (txtArea.selectionEnd && (txtArea.selectionEnd - txtArea.selectionStart > 0) ) {
     var preString = (txtArea.value).substring(0,txtArea.selectionStart);
 		url = (txtArea.value).substring(txtArea.selectionStart,txtArea.selectionEnd)
+    
+    
+    
     if (type == 'url' || type == 'img')
 		{
       found = url.indexOf("http://")
@@ -293,7 +301,7 @@ function add_link_nav(type,areaId)
     }
     else
     link = url;
-    var newString = '['+type+']' + link + '[/'+type+']';
+    var newString = openerTag + link + closerTag;
 		var postString = (txtArea.value).substring(txtArea.selectionEnd);
 		txtArea.value = preString + newString + postString;
 		txtArea.focus();

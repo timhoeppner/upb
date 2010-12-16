@@ -111,6 +111,8 @@ switch ($ajax_type)
 			$monitor_emails = array();
       foreach ($monitor_ids as $monitor_id)
 			{
+        if ($monitor_id == $_COOKIE["id_env"])
+          continue;
         $user_details = $tdb->basicQuery('users','id',$monitor_id); 
         $monitor_emails[] = $user_details[0]['email'];    
       }
