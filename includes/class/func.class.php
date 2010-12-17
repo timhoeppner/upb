@@ -56,7 +56,7 @@ class functions extends tdb {
 			&& $_COOKIE["power_env"] == $this->_cache["is_logged_in"][$_COOKIE["id_env"]]["power"])
 			return true;
 		}
-		if($this->fp['users'] != 'members') $this->setFp("users", "members");
+		if(!isset($this->fp['users'])) $this->setFp("users", "members");
 		$rec = $this->get("users", $_COOKIE["id_env"]);
 		/*        if(strlen($_COOKIE["password_env"]) != HASH_LENGTH && basename($_SERVER['PHP_SELF']) != "login.php") {
 		 redirect("logoff.php?ref=login.php", 0);

@@ -7,7 +7,7 @@
 // Ultimate PHP Board Functions
 
 function exitPage($text, $include_header=false, $include_footer=true, $footer_simple=false) {
-	$_CONFIG = &$GLOBALS['_CONFIG'];;
+	$_CONFIG = &$GLOBALS['_CONFIG'];
 	$tdb = &$GLOBALS['tdb'];
 	//$tdb->define_error_handler(array(&$errorHandler, 'add_error'));
 

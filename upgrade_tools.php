@@ -11,7 +11,6 @@
  * @author Tim Hoeppner <timhoeppner@gmail.com>
  */
 
-
 // TODO: need to figure out an effective way to validate the previous action has
 //	 actually taken place. We can use the $response->call() to call the next
 //	 function but how can we confirm forsure someone isn't faking the call.
@@ -19,11 +18,31 @@
 /**
  * Uses the user API to perform a backup before proceeding
  */
-function AJAX_backupDatabase()
+function AJAX_backupDatabase($go = "no")
 {
 	$response = new xajaxResponse;
 
-	$backup = new UPB_DatabaseBackup;
+	//$backup = new UPB_DatabaseBackup;
+	
+	if($go == "no")
+	{
+		$response->append("progress", "innerHTML", "Performing backup...");
+		$response->call("xajax_AJAX_backupDatabase", "yes");
+	}
+	else 
+	{
+	
+		for($i=0;$i<60000;$i++)
+		{
+			for($j=0;$j<200;$j++)
+			{
+				$c = $i+1;
+			}
+		}
+		
+		$response->append("progress", "innerHTML", "Done");
+	
+	}
 
 	return $response;
 }
