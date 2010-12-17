@@ -6,10 +6,31 @@
 // Using textdb Version: 4.3.2
 require_once('./includes/upb.initialize.php');
 if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) exitPage(str_replace('__TITLE__', "Invalid Forum", str_replace('__MSG__', ALERT_GENERIC_MSG, ALERT_MSG)), true);
-if ($_COOKIE["power_env"] < $fRec[0]["view"]) exitPage(str_replace('__TITLE__', "Permission Denied", str_replace('__MSG__', "You do not have enough Power to view this forum.<br>".ALERT_GENERIC_MSG, ALERT_MSG)), true);
 
 $fRec = $tdb->get("forums", $_GET["id"]);
 if(empty($fRec[0])) exitPage(str_replace('__TITLE__', "Forum Does Not Exist", str_replace('__MSG__', ALERT_GENERIC_MSG, ALERT_MSG)), true);
+
+$access = false;
+if($tdb->is_logged_in() == false)
+{
+    if($fRec[0]["view"] <= 0)
+    {
+        $access = true;
+    }
+}
+else
+{
+    if($fRec[0]["view"] <= $_COOKIE["power_env"])
+    {
+        $access = true;
+    }
+}
+
+if($access == false)
+{
+    exitPage(str_replace('__TITLE__', "Permission Denied", str_replace('__MSG__', "You do not have enough Power to view this forum.<br>".ALERT_GENERIC_MSG, ALERT_MSG)), true);
+}
+
 require_once('./includes/class/posts.class.php');
 $posts_tdb = new posts(DB_DIR."/", "posts.tdb");
 $posts_tdb->setFp("topics", $_GET["id"]."_topics");
