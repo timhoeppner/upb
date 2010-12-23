@@ -34,12 +34,13 @@ if( $auth->access("upgrade", 'a') == false )
 {
 	if( $auth->access("loggedin") == false )
 	{
-		echo "You must be logged in to perform an upgrade. Proceed to <a href=\"login.php\">login</a>.";
+		//echo "You must be logged in to perform an upgrade. Proceed to <a href=\"login.php\">login</a>.";
+		exitPage("You must be logged in to perform an upgrade. Proceed to <a href=\"login.php?ref=upgrade.php\">login</a>.", true);
 		exit;
 	}
 	else
 	{
-		echo "You do not have sufficient permission to perform an upgrade.";
+		//echo "You do not have sufficient permission to perform an upgrade.";
 		exit;
 	}
 }
@@ -71,21 +72,17 @@ $xajax->registerFunction("AJAX_removeRootConfigField");*/
 // when the page is first loaded.
 $xajax->processRequest();
 
+$where = "Forum Upgrader";
+include_once(dirname( __FILE__ )."/includes/header.php");
 ?>
-<!DOCTYPE unspecified PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-	
-	<head>
-		<title>MyUPB Forum Upgrader</title>
-		<?php echo $xajax->printJavascript(); ?>
-	</head>
 
-	<body>
-		<div>
-			Welcome to the UPB upgrader! Press the start button to begin the upgrade process.<br />
-			<input type="button" name="start" value="Start" onclick="<?php $AJAX_start->printScript(); ?>">
-		</div>
-		
-		<div name="progress" id="progress"></div>
-	</body>
-</html>
+<div style="text-align: center">
+	Welcome to the UPB upgrader! Press the start button to begin the upgrade process.<br /><br />
+	<input type="button" name="start" value="Start" onclick="<?php $AJAX_start->printScript(); ?>">
+</div>
+
+<div style="margin-left: auto; margin-right: auto; margin-top: 20px; width: 60%">
+	<div style="text-align: left" name="progress" id="progress"></div>
+</div>
+
+<?php include_once(dirname( __FILE__ )."/includes/footer.php"); ?>

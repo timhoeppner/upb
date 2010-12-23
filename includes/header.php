@@ -149,8 +149,18 @@ echo "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.or
 <link rel='stylesheet' type='text/css' href='".SKIN_DIR."/css/style.css' />
 <link rel='stylesheet' type='text/css' href='skins/disabled.css' />
 <script type='text/javascript' src='./includes/scripts.js'></script>
-<script type='text/javascript' src='./includes/301a.js'></script>
-</head>
+<script type='text/javascript' src='./includes/301a.js'></script>";
+
+// Check if an xajax object exists
+if(isset($xajax))
+{
+	$xajax->printJavascript();
+	
+	// TJH: Uncomment this line for xajax debugging
+	//echo "<script type=\"text/javascript\" src=\"includes/thirdparty/xajax-0.6beta1/xajax_js/xajax_debug.js\" charset=\"UTF-8\"></script>";
+}
+
+echo "</head>
 <body>
 <div id='upb_container'>
 	<div class='main_cat_wrapper2'>

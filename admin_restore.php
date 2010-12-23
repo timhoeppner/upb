@@ -57,7 +57,7 @@ if ($_GET['action'] == 'backup') {
 	$dir = opendir(DB_DIR);
 	$list = "";
 	while (false !== ($file = readdir($dir))) {
-		if (!is_dir($file)) $list .= ",".DB_DIR."/".$file;
+		if (!is_dir(DB_DIR."/".$file)) $list .= ",".DB_DIR."/".$file;
 	}
 	$list = substr($list, 1);
 	closedir($dir);

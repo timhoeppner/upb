@@ -117,7 +117,7 @@ class UPB_Authentication extends UPB_AuthenticationBase
 	 * Displays the login form
 	 *
 	 * @param string* $formData - If this is not null then the form data will be
-	 * 	dumped here instead of stdout.
+	 * 	dumped here instead of displayed.
 	 *
 	 * @return void
 	 */

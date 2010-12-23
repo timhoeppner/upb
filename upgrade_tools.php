@@ -15,6 +15,27 @@
 //	 actually taken place. We can use the $response->call() to call the next
 //	 function but how can we confirm forsure someone isn't faking the call.
 
+function successResponse($msg)
+{
+	return "<span style=\"color: green\">".$msg."</span>";
+}
+
+function failureResponse($msg)
+{
+	$outputMsg = "<span style=\"color: red\">".$msg."</span>";
+	$outputMsg .= "<br /><br />\n\nPlease consult the <a href=\"http://forum.myupb.com\">MyUPB team</a> for further instruction. ";
+	$outputMsg .= "Copy and paste the transcript above into another forum post so the team can aid you in the most efficient manner.";
+	
+	return $outputMsg;
+}
+
+function fixedResponse($msg)
+{
+	$outputMsg = "<span style=\"color: yellow\">".$msg."</span>";
+	
+	return $outputMsg;
+}
+
 /**
  * Uses the user API to perform a backup before proceeding
  */
@@ -22,10 +43,6 @@ function AJAX_backupDatabase($go = "no")
 {
 	$response = new xajaxResponse;
 
-	//$backup = new UPB_DatabaseBackup;
-	
-	//$response->alert("AAAAAHHHHHH");
-	
 	if($go == "no")
 	{
 		$response->append("progress", "innerHTML", "Performing backup...");
@@ -33,17 +50,22 @@ function AJAX_backupDatabase($go = "no")
 	}
 	else 
 	{
-	
-		for($i=0;$i<60000;$i++)
+		$filename = "";
+		$backup = new UPB_DatabaseBackup;
+		
+		if($backup->backup($filename) == true)
 		{
-			for($j=0;$j<200;$j++)
-			{
-				$c = $i+1;
-			}
+			$downloadLink = "No Link";
+			$backup->displayDownloadLink($filename, $downloadLink);
+			$response->append("progress", "innerHTML", successResponse("Success")."&nbsp;&nbsp;&nbsp;[". $downloadLink ."]");
+			$response->call("xajax_AJAX_validateRootConfig");
+		}
+		else 
+		{
+			$response->append("progress", "innerHTML", failureResponse("Failure", true));
 		}
 		
-		$response->append("progress", "innerHTML", "Done");
-	
+		$response->append("progress", "innerHTML", "<br />");
 	}
 
 	return $response;
@@ -52,9 +74,63 @@ function AJAX_backupDatabase($go = "no")
 /**
  * Checks over the config.php configuration file and verifies everything is in order
  */
-function AJAX_validateRootConfig()
+function AJAX_validateRootConfig($go = "no")
 {
 	$response = new xajaxResponse;
+	
+	if($go == "no")
+	{
+		$response->append("progress", "innerHTML", "Validating root config.php...<br />");
+		$response->call("xajax_AJAX_validateRootConfig", "yes");
+	}
+	else 
+	{
+		// UPB requires the root config.php contains 3 constants; UPB_VERSION,
+		// DB_DIR, and ADMIN_EMAIL. Make sure they all exist and are valid.
+		$failure = false;
+		
+		if(defined("UPB_VERSION"))
+		{
+			$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Found <span style=\"font-style: italic\">UPB_VERSION</span><br />");
+		}
+		else
+		{
+			// TODO: add constant to config.php
+			$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing <span style=\"font-style: italic\">UPB_VERSION</span>".fixedResponse("Fixed")."<br />");
+		}
+		
+		// No validation is needed here since the backup would have failed if this was invalid
+		if(defined("DB_DIR"))
+		{
+			$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Found <span style=\"font-style: italic\">DB_DIR</span><br />");
+		}
+		else
+		{
+			// TODO: add constant to config.php
+			$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing <span style=\"font-style: italic\">DB_DIR</span>".fixedResponse("Fixed")."<br />");
+		}
+		
+		if(defined("ADMIN_EMAIL"))
+		{
+			$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Found <span style=\"font-style: italic\">ADMIN_EMAIL</span><br />");
+		}
+		else
+		{
+			// TODO: add constant to config.php
+			$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing <span style=\"font-style: italic\">ADMIN_EMAIL</span>".fixedResponse("Fixed")."<br />");
+		}
+		
+		$response->append("progress", "innerHTML", "config.php validation result: ");
+		
+		if($failure == false)
+		{
+			$response->append("progress", "innerHTML", successResponse("Success")."<br />");
+		}
+		else 
+		{
+			$response->append("progress", "innerHTML", failureResponse("Failure")."<br />");
+		}
+	}
 
 	return $response;
 }
