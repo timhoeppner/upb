@@ -12,7 +12,6 @@
  *
  */
 
-
 /*! Once the upgrade is completed this will be the new version */
 define("UPB_NEW_VERSION", "2.2.7");
 
@@ -22,14 +21,13 @@ include_once(dirname( __FILE__ )."/includes/api/usermanagement/authentication.cl
 include_once(dirname( __FILE__ )."/includes/api/administration/backup.class.php");
 
 // Third party includes
-include_once(dirname( __FILE__ )."/includes/thirdparty/xajax-0.5rc1/xajax_core/xajax.inc.php");
+include_once(dirname( __FILE__ )."/includes/thirdparty/xajax-0.6beta1/xajax_core/xajax.inc.php");
 
 // Helper functions
 include_once(dirname( __FILE__ )."/upgrade_tools.php");
 include_once(dirname( __FILE__ )."/includes/inc/func.inc.php");
 
-
-$auth = new UPB_Authentication;
+$auth = new UPB_Authentication($tdb);
 
 // Only proceed if we have access to
 if( $auth->access("upgrade", 'a') == false )
@@ -49,13 +47,16 @@ if( $auth->access("upgrade", 'a') == false )
 // Register our AJAX calls with Xajax, all these functions can be found in upgrade_tools.php
 $xajax = new xajax;
 
-$xajax->registerFunction("AJAX_backupDatabase");
-$xajax->registerFunction("AJAX_validateRootConfig");
-$xajax->registerFunction("AJAX_validateDbConfig");
-$xajax->registerFunction("AJAX_validateDbCategories");
-$xajax->registerFunction("AJAX_validateDbForums");
-$xajax->registerFunction("AJAX_validateDbTopics");
-$xajax->registerFunction("AJAX_validateDbPosts");
+//$xajax->configure("logFile", dirname( __FILE__ )."/requestlog.log");
+$xajax->configure("javascript URI", "includes/thirdparty/xajax-0.6beta1/");
+
+$AJAX_start = $xajax->register(XAJAX_FUNCTION, "AJAX_backupDatabase");
+$xajax->register(XAJAX_FUNCTION, "AJAX_validateRootConfig");
+$xajax->register(XAJAX_FUNCTION, "AJAX_validateDbConfig");
+$xajax->register(XAJAX_FUNCTION, "AJAX_validateDbCategories");
+$xajax->register(XAJAX_FUNCTION, "AJAX_validateDbForums");
+$xajax->register(XAJAX_FUNCTION, "AJAX_validateDbTopics");
+$xajax->register(XAJAX_FUNCTION, "AJAX_validateDbPosts");
 
 // TODO: These need some more thought... may not want these directly accessable via AJAX
 /*$xajax->registerFunction("AJAX_addTableField");
@@ -70,25 +71,21 @@ $xajax->registerFunction("AJAX_removeRootConfigField");*/
 // when the page is first loaded.
 $xajax->processRequest();
 
-// Spit out the javascript, this should be placed between the <head></head> HTML tags
-//$xajax->printJavascript();
-
-
 ?>
 <!DOCTYPE unspecified PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	
 	<head>
 		<title>MyUPB Forum Upgrader</title>
-		<?php $xajax->printJavascript("includes/thirdparty/xajax-0.5rc1"); ?>
+		<?php echo $xajax->printJavascript(); ?>
 	</head>
 
 	<body>
-	<div>
-	Welcome to the UPB upgrader! Press the start button to begin the upgrade process.<br />
-	<input type="button" name="start" value="Start" onclick="xajax_AJAX_backupDatabase();">
-	</div>
-	
-	<div name="progress" id="progress"></div>
+		<div>
+			Welcome to the UPB upgrader! Press the start button to begin the upgrade process.<br />
+			<input type="button" name="start" value="Start" onclick="<?php $AJAX_start->printScript(); ?>">
+		</div>
+		
+		<div name="progress" id="progress"></div>
 	</body>
 </html>

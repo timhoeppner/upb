@@ -24,6 +24,8 @@ function AJAX_backupDatabase($go = "no")
 
 	//$backup = new UPB_DatabaseBackup;
 	
+	//$response->alert("AAAAAHHHHHH");
+	
 	if($go == "no")
 	{
 		$response->append("progress", "innerHTML", "Performing backup...");

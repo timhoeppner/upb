@@ -134,3 +134,4 @@ class UPB_Authentication extends UPB_AuthenticationBase
 	{
 	}
 }
+?>

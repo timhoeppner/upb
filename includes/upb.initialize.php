@@ -1,5 +1,7 @@
 <?php
 function RemoveXSS($val) {
+	$before_val = $val;
+	
 	// remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed
 	// this prevents some character re-spacing such as <java\0script>
 	// note that you have to handle splits with \n, \r, and \t later since they *are* allowed in some inputs
@@ -42,7 +44,9 @@ function RemoveXSS($val) {
 				$pattern .= $ra[$i][$j];
 			}
 			$pattern .= '/i';
-			$replacement = substr($ra[$i], 0, 2).'<x>'.substr($ra[$i], 2); // add in <> to nerf the tag
+			// TJH: Removing <x> insertion, this isn't actually needed to protect against XSS attacks
+			// and it just creates headaches...
+			$replacement = substr($ra[$i], 0, 2).''.substr($ra[$i], 2); // add in <> to nerf the tag
 			$val = preg_replace($pattern, $replacement, $val); // filter out the hex tags
 			if ($val_before == $val) {
 				// no replacements were made, so exit the loop
@@ -50,6 +54,14 @@ function RemoveXSS($val) {
 			}
 		}
 	}
+	
+	$after_val = $val;
+	
+	// TJH: DEBUGING
+	//$f = fopen(dirname( __FILE__ )."/../requestlog.log", "a");
+	//fwrite($f, "\nbefore: \"$before_val\", after: \"$after_val\"");
+	//fclose($f);
+	
 	return $val;
 }
 
