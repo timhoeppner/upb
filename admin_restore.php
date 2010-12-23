@@ -50,6 +50,8 @@ if (!($_GET['action'] == 'download' && isset($_GET['file'])) && $_POST['verify']
 				<td class="area_1" style="text-align:center;padding:12px;line-height:20px;" valign="top">';
 }
 if ($_GET['action'] == 'backup') {
+	// TODO: replace this code with the UPB_BackupDatabase::backup() call
+	
 	$filename = 'upbdatabackup_v'.UPB_VERSION.'_'.date("m").'.'.date("d").'.'.date("Y").'.'.time().'.zip';
 	require_once('./includes/lib/pclzip.lib.php');
 	$zip = new PclZip(DB_DIR.'/backup/'.$filename);

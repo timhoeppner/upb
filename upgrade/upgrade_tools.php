@@ -15,6 +15,9 @@
 //	 actually taken place. We can use the $response->call() to call the next
 //	 function but how can we confirm forsure someone isn't faking the call.
 
+// Grab all the hot fixes
+include_once(dirname( __FILE__ )."/upgrade_fixes_2_2_7.php");
+
 function successResponse($msg)
 {
 	return "<span style=\"color: green\">".$msg."</span>";
@@ -45,6 +48,7 @@ function AJAX_backupDatabase($go = "no")
 
 	if($go == "no")
 	{
+		$response->assign("start", "disabled", "true");
 		$response->append("progress", "innerHTML", "Performing backup...");
 		$response->call("xajax_AJAX_backupDatabase", "yes");
 	}
@@ -85,8 +89,11 @@ function AJAX_validateRootConfig($go = "no")
 	}
 	else 
 	{
-		// UPB requires the root config.php contains 3 constants; UPB_VERSION,
+		// UPB requires the root config.php contain 3 constants; UPB_VERSION,
 		// DB_DIR, and ADMIN_EMAIL. Make sure they all exist and are valid.
+		// Since we have already included config.php we can just use PHP's defined()
+		// function to verify their existance.
+		
 		$failure = false;
 		
 		if(defined("UPB_VERSION"))
@@ -120,11 +127,12 @@ function AJAX_validateRootConfig($go = "no")
 			$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing <span style=\"font-style: italic\">ADMIN_EMAIL</span>".fixedResponse("Fixed")."<br />");
 		}
 		
-		$response->append("progress", "innerHTML", "config.php validation result: ");
+		$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;config.php validation result: ");
 		
 		if($failure == false)
 		{
 			$response->append("progress", "innerHTML", successResponse("Success")."<br />");
+			$response->call("xajax_AJAX_validateDbConfig");
 		}
 		else 
 		{
@@ -139,9 +147,18 @@ function AJAX_validateRootConfig($go = "no")
  * Checks to make sure all the correct table fields are present and checks to make
  * sure all expected table rows exist.
  */
-function AJAX_validateDbConfig()
+function AJAX_validateDbConfig($go = "no")
 {
 	$response = new xajaxResponse;
+	
+	if($go == "no")
+	{
+		$response->append("progress", "innerHTML", "Validating database configuration...<br />");
+		$response->call("xajax_AJAX_validateDbConfig", "yes");
+	}
+	else 
+	{
+	}
 
 	return $response;
 }
@@ -149,9 +166,18 @@ function AJAX_validateDbConfig()
 /**
  * Checks to make sure all table fields are present in the categories table.
  */
-function AJAX_validateDbCategories()
+function AJAX_validateDbCategories($go = "no")
 {
 	$response = new xajaxResponse;
+	
+	if($go == "no")
+	{
+		$response->append("progress", "innerHTML", "Validating forum categories table...<br />");
+		$response->call("xajax_AJAX_validateDbCategories", "yes");
+	}
+	else 
+	{
+	}
 
 	return $response;
 }
@@ -159,9 +185,18 @@ function AJAX_validateDbCategories()
 /**
  * Checks to make sure all table fields are present in the forums table.
  */
-function AJAX_validateDbForums()
+function AJAX_validateDbForums($go = "no")
 {
 	$response = new xajaxResponse;
+	
+	if($go == "no")
+	{
+		$response->append("progress", "innerHTML", "Validating forums table...<br />");
+		$response->call("xajax_AJAX_validateDbForums", "yes");
+	}
+	else 
+	{
+	}
 
 	return $response;
 }
@@ -169,9 +204,18 @@ function AJAX_validateDbForums()
 /**
  * Checks to make sure all table fields are present in the topics table.
  */
-function AJAX_validateDbTopics()
+function AJAX_validateDbTopics($go = "no")
 {
 	$response = new xajaxResponse;
+	
+	if($go == "no")
+	{
+		$response->append("progress", "innerHTML", "Validating forum topics table...<br />");
+		$response->call("xajax_AJAX_validateDbTopics", "yes");
+	}
+	else 
+	{
+	}
 
 	return $response;
 }
@@ -179,9 +223,18 @@ function AJAX_validateDbTopics()
 /**
  * Checks to make sure all table fields are present in the posts table.
  */
-function AJAX_validateDbPosts()
+function AJAX_validateDbPosts($go = "no")
 {
 	$response = new xajaxResponse;
+	
+	if($go == "no")
+	{
+		$response->append("progress", "innerHTML", "Validating forum posts table...<br />");
+		$response->call("xajax_AJAX_validateDbPosts", "yes");
+	}
+	else 
+	{
+	}
 
 	return $response;
 }
