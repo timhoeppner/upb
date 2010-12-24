@@ -1,6 +1,6 @@
 This is the changelog for this product's working copy.
 
-v2.2.7 Changelog - XX/XX/XXXX
+v2.2.7 Changelog - 23/12/2010
 
 == BUG FIXES ==
 # Strip slashes bug in forum and category titles
@@ -14,6 +14,12 @@ v2.2.7 Changelog - XX/XX/XXXX
 # Fixed exploit allowing unintentional admin accounts
 # Fixed a bug in monitor topics that was caused if a user changed their email address
 # Fixed a bug that was causing our anti-XSS to be applied in place it shouldn't
+# Fixed a security hole allowing any user to download attachements
+
+== NEW FEATURES ==
+# UPB API has begun to form, several classes have been added in the includes/api folder
+
+
 
 -------------------------
 

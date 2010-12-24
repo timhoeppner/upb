@@ -21,10 +21,17 @@ Upload all the files from upb2.2.7.zip or upb2.2.7.tar.gz
 
 
 == UPGRADE ==
-Upload all the
+Upload all the files from upb2.2.7.zip and overwrite your current forum directory
 CHMOD the root UPB directory to 0777
   CHMOD the config.php to 0666
-Execute the update.php - it will automatically detect which version you are using and perform the necessary upgrades
+
+If current version is older than 2.2.6 
+  Execute update.php
+  Execute upgrade.php
+
+If current version is 2.2.6
+  Execute upgrade.php
+
   
 
 ==IMPORTANT: AFTER INSTALLATION OR UPGRADE==
