@@ -26,11 +26,11 @@ CHMOD the root UPB directory to 0777
   CHMOD the config.php to 0666
 
 If current version is older than 2.2.6 
-  Execute update.php
-  Execute upgrade.php
+  Execute http://yourwebsite.com/forum/update.php
+  Execute http://yourwebsite.com/forum/upgrade.php
 
 If current version is 2.2.6
-  Execute upgrade.php
+  Execute http://yourwebsite.com/forum/upgrade.php
 
   
 
