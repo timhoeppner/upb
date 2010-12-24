@@ -74,6 +74,8 @@ $xajax->register(XAJAX_FUNCTION, "AJAX_validateDbCategories");
 $xajax->register(XAJAX_FUNCTION, "AJAX_validateDbForums");
 $xajax->register(XAJAX_FUNCTION, "AJAX_validateDbTopics");
 $xajax->register(XAJAX_FUNCTION, "AJAX_validateDbPosts");
+$xajax->register(XAJAX_FUNCTION, "AJAX_validateDbUploads");
+$xajax->register(XAJAX_FUNCTION, "AJAX_updateUPBVersion");
 
 
 // Let Xajax handle the AJAX requests, anything after this statement will only be run

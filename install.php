@@ -333,7 +333,9 @@ switch($_POST["add"]{0}) {
 				array("size", "number", 9),
 				array("downloads", "number", 10),
 				array("file_loca", 'string', 80),
-				array("id", "id")
+				array("id", "id"),
+				array('forum_id', 'number', 7),
+				array('topic_id', 'number', 7)
 				), 2048);
 				$tdb->setFp("config", "config");
 				$tdb->setFp("ext_config", "ext_config");

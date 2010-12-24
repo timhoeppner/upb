@@ -45,7 +45,7 @@ class upload extends tdb {
 	 * @param String[] $file - just send $_FILES["file_field"]
 	 * @return bool
 	 */
-	function storeFile($file) {
+	function storeFile($file, $forum_id = "", $topic_id = "") {
 		if(!$this->initialized) { $this->notInitialized(); return false; }
 		if($file["error"] != UPLOAD_ERR_OK) return false;
 
@@ -63,6 +63,8 @@ class upload extends tdb {
                     "size" => $file["size"],
                     "downloads" => 0,
                     "file_loca" => $file_name,
+					"forum_id" 	=> $forum_id,
+					"topic_id"	=> $topic_id
 			));
 
 			return (int)$id;

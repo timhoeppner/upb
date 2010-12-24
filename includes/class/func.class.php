@@ -120,7 +120,7 @@ class functions extends tdb {
 					$attachSize = floor(filesize($location."/".$q[0]['file_loca'])/1024)."KB";
 
 					//echo $attachSize;
-					$downloads .= "<a href='downloadattachment.php?upload_id=$id&id=$fid&tid=$tid'>{$attachName}</a> ({$attachSize} / $attachDownloads Downloads)";
+					$downloads .= "<a href='downloadattachment.php?upload_id=$id'>{$attachName}</a> ({$attachSize} / $attachDownloads Downloads)";
 					if ((int)$_COOKIE['power_env'] >= 3 or $userid == (int)$_COOKIE['id_env'])
 					$downloads .= " <a href=\"javascript:deleteFile($fid,$tid,$pid,$id,'$attachName',".(int)$_COOKIE['id_env'].",'$fid-$tid-$pid-attach')\" onMouseOver=\"window.status='Delete $attachName';\">Delete</a>";
 					$downloads .= "<p>";

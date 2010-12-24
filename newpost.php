@@ -125,7 +125,7 @@ if ($_POST["a"] == "1") {
 				if($_file['upload']['error'][$i] == UPLOAD_ERR_OK) {
 					$upload = new upload(DB_DIR, $_CONFIG["fileupload_size"],$_CONFIG["fileupload_location"]);
 						
-					$result = $upload->storeFile($file);
+					$result = $upload->storeFile($file, $_GET["id"], $_GET["t_id"]);
 					if (!is_int($result))
 					echo $result;
 					else

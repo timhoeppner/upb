@@ -11,9 +11,8 @@
  * @author Tim Hoeppner <timhoeppner@gmail.com>
  */
 
-// TODO: need to figure out an effective way to validate the previous action has
-//	 actually taken place. We can use the $response->call() to call the next
-//	 function but how can we confirm forsure someone isn't faking the call.
+// TODO: Move each validate function to a seperate files since each one could
+// get fairly large.
 
 // Grab all the hot fixes
 include_once(dirname( __FILE__ )."/upgrade_fixes_2_2_7.php");
@@ -34,7 +33,7 @@ function failureResponse($msg)
 
 function fixedResponse($msg)
 {
-	$outputMsg = "<span style=\"color: yellow\">".$msg."</span>";
+	$outputMsg = "<span style=\"color: #d2691e\">".$msg."</span>";
 	
 	return $outputMsg;
 }
@@ -103,7 +102,9 @@ function AJAX_validateRootConfig($go = "no")
 		else
 		{
 			// TODO: add constant to config.php
-			$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing <span style=\"font-style: italic\">UPB_VERSION</span>".fixedResponse("Fixed")."<br />");
+			//$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing <span style=\"font-style: italic\">UPB_VERSION</span>".fixedResponse("Fixed")."<br />");
+			$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing <span style=\"font-style: italic\">UPB_VERSION</span>... ".fixedResponse("Failure")."<br />");
+			$failure = true;
 		}
 		
 		// No validation is needed here since the backup would have failed if this was invalid
@@ -114,7 +115,9 @@ function AJAX_validateRootConfig($go = "no")
 		else
 		{
 			// TODO: add constant to config.php
-			$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing <span style=\"font-style: italic\">DB_DIR</span>".fixedResponse("Fixed")."<br />");
+			//$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing <span style=\"font-style: italic\">DB_DIR</span>".fixedResponse("Fixed")."<br />");
+			$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing <span style=\"font-style: italic\">DB_DIR</span>... ".fixedResponse("Failure")."<br />");
+			$failure = true;
 		}
 		
 		if(defined("ADMIN_EMAIL"))
@@ -124,7 +127,9 @@ function AJAX_validateRootConfig($go = "no")
 		else
 		{
 			// TODO: add constant to config.php
-			$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing <span style=\"font-style: italic\">ADMIN_EMAIL</span>".fixedResponse("Fixed")."<br />");
+			///$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing <span style=\"font-style: italic\">ADMIN_EMAIL</span>".fixedResponse("Fixed")."<br />");
+			$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing <span style=\"font-style: italic\">ADMIN_EMAIL</span>... ".fixedResponse("Failure")."<br />");
+			$failure = true;
 		}
 		
 		$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;config.php validation result: ");
@@ -149,6 +154,8 @@ function AJAX_validateRootConfig($go = "no")
  */
 function AJAX_validateDbConfig($go = "no")
 {
+	global $_CONFIG;
+	
 	$response = new xajaxResponse;
 	
 	if($go == "no")
@@ -158,6 +165,40 @@ function AJAX_validateDbConfig($go = "no")
 	}
 	else 
 	{
+		$failure = false;
+		
+		// TODO: Fully validate database configuration, for now we will just make sure the fixes
+		// have been installed for 2.2.7
+		
+		// Check if the necessary configuration variables exist
+		if(!isset($_CONFIG["fileupload_types"]))
+		{
+			$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing <span style=\"font-style: italic\">fileupload_types</span>...");
+			
+			$result = updateFileUploadTypes_v2_2_7();
+			
+			if($result == true)
+			{
+				$response->append("progress", "innerHTML", fixedResponse("Fixed").". Configure the valid upload types via Admin Panel -> Manage Settings<br />");
+			}
+			else
+			{
+				$response->append("progress", "innerHTML", fixedResponse("Failure")."<br />");
+				$failure = true;
+			}
+		}
+		
+		$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Database configuation validation result: ");
+		
+		if($failure == false)
+		{
+			$response->append("progress", "innerHTML", successResponse("Success")."<br />");
+			$response->call("xajax_AJAX_validateDbCategories");
+		}
+		else 
+		{
+			$response->append("progress", "innerHTML", failureResponse("Failure")."<br />");
+		}
 	}
 
 	return $response;
@@ -170,10 +211,15 @@ function AJAX_validateDbCategories($go = "no")
 {
 	$response = new xajaxResponse;
 	
+	// TODO: validate category database
+	
 	if($go == "no")
 	{
-		$response->append("progress", "innerHTML", "Validating forum categories table...<br />");
-		$response->call("xajax_AJAX_validateDbCategories", "yes");
+		$response->append("progress", "innerHTML", "Validating forum categories table... ");
+		//$response->call("xajax_AJAX_validateDbCategories", "yes");
+		
+		$response->append("progress", "innerHTML", successResponse("Success")."<br />");
+		$response->call("xajax_AJAX_validateDbForums");
 	}
 	else 
 	{
@@ -189,10 +235,15 @@ function AJAX_validateDbForums($go = "no")
 {
 	$response = new xajaxResponse;
 	
+	// TODO: validate forum database
+	
 	if($go == "no")
 	{
-		$response->append("progress", "innerHTML", "Validating forums table...<br />");
-		$response->call("xajax_AJAX_validateDbForums", "yes");
+		$response->append("progress", "innerHTML", "Validating forums table... ");
+		//$response->call("xajax_AJAX_validateDbForums", "yes");
+		
+		$response->append("progress", "innerHTML", successResponse("Success")."<br />");
+		$response->call("xajax_AJAX_validateDbTopics");
 	}
 	else 
 	{
@@ -208,10 +259,15 @@ function AJAX_validateDbTopics($go = "no")
 {
 	$response = new xajaxResponse;
 	
+	// TODO: validate topic database
+	
 	if($go == "no")
 	{
-		$response->append("progress", "innerHTML", "Validating forum topics table...<br />");
-		$response->call("xajax_AJAX_validateDbTopics", "yes");
+		$response->append("progress", "innerHTML", "Validating forum topics table... ");
+		//$response->call("xajax_AJAX_validateDbTopics", "yes");
+		
+		$response->append("progress", "innerHTML", successResponse("Success")."<br />");
+		$response->call("xajax_AJAX_validateDbPosts");
 	}
 	else 
 	{
@@ -227,13 +283,153 @@ function AJAX_validateDbPosts($go = "no")
 {
 	$response = new xajaxResponse;
 	
+	// TODO: validate posts database
+	
 	if($go == "no")
 	{
-		$response->append("progress", "innerHTML", "Validating forum posts table...<br />");
-		$response->call("xajax_AJAX_validateDbPosts", "yes");
+		$response->append("progress", "innerHTML", "Validating forum posts table... ");
+		//$response->call("xajax_AJAX_validateDbPosts", "yes");
+		
+		$response->append("progress", "innerHTML", successResponse("Success")."<br />");
+		$response->call("xajax_AJAX_validateDbUploads");
 	}
 	else 
 	{
+	}
+
+	return $response;
+}
+
+/**
+ * Checks to make sure all the upload database table fields are in order
+ */
+function AJAX_validateDbUploads($go = "no")
+{
+	global $tdb;
+	
+	$response = new xajaxResponse;
+	
+	if($go == "no")
+	{
+		$response->append("progress", "innerHTML", "Validating forum uploads table...<br />");
+		$response->call("xajax_AJAX_validateDbUploads", "yes");
+	}
+	else 
+	{
+		$failure = false;
+		
+		// TODO: validate the entire upload table
+		
+		// Check if the forum_id and topic_id fields exist in the upload database
+		$uploadFieldList = $tdb->getFieldList("uploads");
+		$foundTopicId = false;
+		$foundForumId = false;
+		
+		if($uploadFieldList !== false)
+		{
+			foreach($uploadFieldList as $field)
+			{
+				if($field["fName"] == "forum_id")
+				{
+					$foundForumId = true;
+				}
+				elseif($field["fName"] == "topic_id")
+				{
+					$foundTopicId = true;
+				}
+			}
+			
+			// Add the new fields if either of them didn't exist
+			if($foundForumId == false || $foundTopicId == false)
+			{
+				$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Missing forum_id or topic_id fields... ");
+				
+				$result = updateUploadDb_v2_2_7();
+				
+				if($result == true)
+				{
+					$response->append("progress", "innerHTML", fixedResponse("Fixed")."<br />");
+					$foundForumId = true;
+					$foundTopicId = true;
+				}
+				else
+				{
+					$response->append("progress", "innerHTML", fixedResponse("Failure")."<br />");
+					$failure = true;
+				}
+			}
+		}
+		
+		if($foundForumId == true && $foundTopicId == true)
+		{
+			// Check if we have populated the topic_id and forum_id fields for the upload database
+			$uploadList = $tdb->listRec("uploads", 1, 1);
+			
+			if($uploadList !== false)
+			{
+				if($uploadList[0]["topic_id"] == "" || $uploadList[0]["forum_id"] == "")
+				{
+					$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Populating forum_id and topic_id fields... ");
+						
+					// Populate the forum_id and topic_id fields
+					$populateResult = populateUploadDbFileOrigin_v2_2_7();
+					
+					if($populateResult == true)
+					{
+						$response->append("progress", "innerHTML", fixedResponse("Done")."<br />");
+					}
+					else 
+					{
+						$response->append("progress", "innerHTML", fixedResponse("Failure")."<br />");
+						$failure = true;
+					}
+				}
+			}
+		}
+		
+		$response->append("progress", "innerHTML", "&nbsp;&nbsp;&nbsp;Database upload validation result: ");
+		
+		if($failure == false)
+		{
+			$response->append("progress", "innerHTML", successResponse("Success")."<br />");
+			$response->call("xajax_AJAX_updateUPBVersion");
+		}
+		else 
+		{
+			$response->append("progress", "innerHTML", failureResponse("Failure")."<br />");
+		}
+	}
+
+	return $response;
+}
+
+/**
+ * Updates config.php with the new version number
+ */
+function AJAX_updateUPBVersion($go = "no")
+{
+	$response = new xajaxResponse;
+	
+	if($go == "no")
+	{
+		$response->append("progress", "innerHTML", "Updating UPB Version number to 2.2.7...");
+		$response->call("xajax_AJAX_updateUPBVersion", "yes");
+	}
+	else 
+	{
+		$failure = false;
+		
+		
+		
+		if($failure == false)
+		{
+			$response->append("progress", "innerHTML", successResponse("Success")."<br />");
+			$response->append("progress", "innerHTML", "<br />Upgrade is complete! Enjoy UPB v".UPB_NEW_VERSION);
+		}
+		else 
+		{
+			$response->append("progress", "innerHTML", failureResponse("Failure")."<br />");
+		}
 	}
 
 	return $response;
