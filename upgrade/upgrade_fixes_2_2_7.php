@@ -168,8 +168,9 @@ function populateUploadDbFileOrigin_v2_2_7()
 				$posts_tdb->set_topic(array($tRec));
 				$posts_tdb->set_forum(array($fRec));
 	
+				ob_start();
 				$pRecs = $posts_tdb->getPosts("posts");
-				
+				ob_end_clean();
 				//echo "topicid:".$tRec["id"];
 				//dump($pRecs);
 				//$posts_tdb->varDump();
