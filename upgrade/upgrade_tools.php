@@ -419,7 +419,45 @@ function AJAX_updateUPBVersion($go = "no")
 	{
 		$failure = false;
 		
+		// Find the line that contains the UPB version
+		$f = fopen(dirname( __FILE__ )."/../config.php", "r+");
 		
+		if($f !== false)
+		{
+			$foundVersionLine = false;
+			$versionLine = "";
+			$buffer = "";
+			
+			while( ($line = fgets($f, 1024)) !== false )
+			{
+				if(strpos($line, UPB_VERSION) !== false)
+				{
+					$foundVersionLine = true;
+					$buffer .= str_replace(UPB_VERSION, UPB_NEW_VERSION, $line);
+				}
+				else
+				{
+					$buffer .= $line;
+				}
+			}
+			
+			if($foundVersionLine == true)
+			{
+				fseek($f, 0);
+				ftruncate($f, 0);
+				fwrite($f, $buffer);
+			}
+			else
+			{
+				$failure = true;
+			}
+		}
+		else
+		{
+			$failure = true;
+		}
+		
+		fclose($f);
 		
 		if($failure == false)
 		{

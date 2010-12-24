@@ -191,7 +191,7 @@ switch($_POST["add"]{0}) {
 				if (!defined('DB_DIR')) {
 					define('DB_DIR', './'.uniqid('data_', true), true);
 					$f = fopen('./config.php', 'w');
-					fwrite($f, "<?php\ndefine('UPB_VERSION', '2.2.6', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
+					fwrite($f, "<?php\ndefine('UPB_VERSION', '2.2.7', true);\ndefine('DB_DIR', '".DB_DIR."', true);\n?>");
 					fclose($f);
 				}
 
