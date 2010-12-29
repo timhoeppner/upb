@@ -183,7 +183,7 @@ switch($_POST["add"]{0}) {
 
 				//Set the errorHandler
 				require_once('./includes/class/error.class.php');
-				$errorHandler = &new errorhandler();
+				$errorHandler = new errorhandler();
 				set_error_handler(array(&$errorHandler, 'add_error'));
 				error_reporting(E_ALL ^ E_NOTICE);
 
@@ -658,7 +658,7 @@ switch($_POST["add"]{0}) {
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Timezone Setting:</strong></td>
-				<td class='area_2'>".timezonelist($_POST["timezone"], "timezone")."</td>
+				<td class='area_2'>".timezonelist(0, "timezone")."</td>
 			</tr>
 			<tr>
 				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='hidden' name='add' value='2auth'><input type='submit' value='Submit' name='B1'><input type='reset' value='Reset' name='B2'></td>";
@@ -818,7 +818,7 @@ switch($_POST["add"]{0}) {
 		</td>
 	</tr>
 	<tr>
-		<td class='footer_3'><img src='./skins/default/images/spacer.gif'
+		<td colspan=2 class='footer_3'><img src='./skins/default/images/spacer.gif'
 			alt='' title='' /></td>
 	</tr>
 </table>

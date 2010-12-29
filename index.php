@@ -31,6 +31,7 @@ if($_GET['action'] == 'markallread') {
 
 if ($_COOKIE["power_env"] == "" || empty($_COOKIE["power_env"]) || trim($_COOKIE["power_env"]) == "") $_COOKIE["power_env"] = "0";
 require_once("./includes/header.php");
+
 //print '<pre>'; print_r($_SESSION['newTopics']); print "\n".mkdate(); print '</pre>';
 if($_COOKIE['power_env'] == '0' && $_REGIST['disable_reg']) {
 	print str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'Public Registration has been disabled.  This may be a private bulletin board.<br /> Please contact an Administrator if you would like to register.', ALERT_MSG));
@@ -38,6 +39,11 @@ if($_COOKIE['power_env'] == '0' && $_REGIST['disable_reg']) {
 $posts = new tdb(DB_DIR, "posts.tdb");
 $cRecs = $tdb->listRec("cats", 1);
 //$cRecs = $tdb->query("cats", "view<'".($_COOKIE["power_env"] + 1)."'");
+
+if(!$tdb->is_logged_in()) {
+	$_COOKIE["power_env"] = 0;
+}
+
 if ($cRecs[0]["id"] == "") {
 	echo "
 			<div class='alert'><div class='alert_text'>

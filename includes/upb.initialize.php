@@ -128,7 +128,7 @@ if(function_exists("date_default_timezone_set")) {
 
 require_once("./includes/inc/defines.inc.php");
 require_once("./includes/class/error.class.php");
-$errorHandler = &new errorhandler();
+$errorHandler = new errorhandler();
 //set_error_handler(array(&$errorHandler, 'add_error'));
 error_reporting(E_ALL ^ E_NOTICE);
 
@@ -147,6 +147,11 @@ if(file_exists(DB_DIR.'/banneduser.dat')) {
 	$banned_addresses = explode("\n", file_get_contents(DB_DIR.'/banneduser.dat'));
 	if((isset($_COOKIE["user_env"]) && in_array($_COOKIE["user_env"], $banned_addresses)) || in_array($_SERVER['REMOTE_ADDR'], $banned_addresses))
 	die(MINIMAL_BODY_HEADER.str_replace('__TITLE__', 'Notice:', str_replace('__MSG__', 'You have been banned from this bulletin board.<br>'.ALERT_GENERIC_MSG, ALERT_MSG)).MINIMAL_BODY_FOOTER);
+}
+
+//PHP5 ≥ 5.1 throws a E_WARNING if this isn't called
+if(function_exists("date_default_timezone_set")) {
+	date_default_timezone_set("Europe/London");
 }
 
 require_once("./includes/class/tdb.class.php");
