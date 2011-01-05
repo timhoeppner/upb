@@ -166,27 +166,32 @@ function createPageNumbers($current_page, $total_number_of_pages, $url_string=''
 	// look at current page number. If more than three on either side display ...
 
 	$pageStr = '';
-	if($num_pages == 1) $pageStr = "<td class='pagination_current'>$num_pages</td>";
+	if($num_pages == 1) 
+    $pageStr = "<td class='pagination_current'>$num_pages</td>";
 	else {
-		if ($current_page != 1)
-		$pageStr = "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=".($current_page-1)."'><</a></td>";
+		if ($current_page != 1 and $num_pages > 6)
+      $pageStr = "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=".($current_page-1)."'><</a></td>"; //show link to first page
 		if ($current_page-2 != 1 and $current_page-2 > 1)
-		$pageStr .= "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=1'>1</a></td><td>...</td>";
+      $pageStr .= "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=1'>1</a></td>";
+    if ($current_page-2 != 1 and $current_page-2 > 1 and $num_pages > 6 and $current_page-3 > 1)
+      $pageStr .= "<td>...</td>";
 		for($i=($current_page-2);$i<=($current_page+2);$i++) {
 			if ($i < 1)
-			continue;
+			  continue;
 			if ($i > $num_pages)
-			continue;
+			  continue;
 			if($current_page == $i)
-			$pageStr .= "<td class='pagination_current'>".$i."</td>";
+			  $pageStr .= "<td class='pagination_current'>".$i."</td>"; //page number for current page
 			else
-			$pageStr .= "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=".$i."'>".$i."</a></td> ";
+        $pageStr .= "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=".$i."'>".$i."</a></td> "; //page number for non-current page
 		}
-		if ($current_page+2 < $num_pages)
-		$pageStr .= "<td>...</td><td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=$num_pages'>$num_pages</a></td>";
+		if ($current_page+2 < $num_pages and $num_pages > 6 and $current_page+3 < $num_pages)
+      $pageStr .= "<td>...</td>";
+    if ($current_page+2 < $num_pages)
+      $pageStr .= "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=$num_pages'>$num_pages</a></td>";
 
-		if ($current_page != $num_pages)
-		$pageStr .= "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=".($current_page+1)."'>></a></td>";
+		if ($current_page != $num_pages and $num_pages > 6)
+      $pageStr .= "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=".($current_page+1)."'>></a></td>"; //show link to last page
 	}
 
 	return $pageStr;
