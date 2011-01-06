@@ -24,13 +24,16 @@ $posts_tdb->set_topic($tRec);
 $posts_tdb->set_forum($fRec);
 if (!($tdb->is_logged_in())) {
 	$posts_tdb->set_user_info("guest", "password", "0", "0");
-	$_COOKIE["power_env"] = 0;
+	$_COOKIE["power_env"] = -1;
 }
 else $posts_tdb->set_user_info($_COOKIE["user_env"], $_COOKIE["uniquekey_env"], $_COOKIE["power_env"], $_COOKIE["id_env"]);
+
 $where = "<a href='viewforum.php?id=".$_GET["id"]."'>".$fRec[0]["forum"]."</a> ".$_CONFIG["where_sep"]." ".$tRec[0]["subject"];
 require_once('./includes/header.php');
 
-if ((int)$_COOKIE["power_env"] < $fRec[0]["view"]) exitPage("You do not have enough Power to view this topic");
+if ((int)$_COOKIE["power_env"] < $fRec[0]["view"]) 
+  exitPage(str_replace('__TITLE__', "Permission Denied", str_replace('__MSG__', "You do not have enough Power to view this topic.<br>".ALERT_GENERIC_MSG, ALERT_MSG)), true);
+
 if (!isset($_GET["id"]) || !ctype_digit($_GET["id"])) exitPage("Invalid Forum ID");
 if (!isset($_GET["t_id"]) || !ctype_digit($_GET["t_id"])) exitPage("Invalid Topic ID");
 
