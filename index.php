@@ -93,7 +93,7 @@ if ($cRecs[0]["id"] == "") {
 		$t_t = 0;
 		$t_p = 0;
 		foreach($cRecs as $cRec) {
-			if ($_COOKIE["power_env"] >= $cRec["view"]) {
+        if ($_COOKIE["power_env"] >= $cRec["view"]) {
 				echoTableHeading($cRec["name"], $_CONFIG);
 				echo "
     			<tr>
@@ -118,7 +118,6 @@ if ($cRecs[0]["id"] == "") {
 					$sort = explode(",", $cRec["sort"]);
 					while (!empty($sort)) {
 						$fRec = $tdb->get("forums", $sort[0]);
-
 						$fRec = $fRec[0];
 						if ((int)$fRec["view"] <= (int)($_COOKIE["power_env"])) {
 							//if($fRec["cat"] == $cRec["id"]) {

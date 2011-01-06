@@ -531,6 +531,27 @@ function validate_topic()
   document.newentry.submit.disabled = true;
   return true;
 }
+
+function validate_cat()
+{
+  if (trim(document.add.u_cat.value) == "")
+  {
+    document.getElementById('err_msg').innerHTML = "<- You need to enter a title";
+    return false;
+  }
+  return true;
+}
+
+function validate_forum()
+{  
+  if (trim(document.add.u_forum.value) == "")
+  {
+    document.getElementById('err_msg').innerHTML = "<- You need to enter a title";
+    return false;
+  }
+  return true;
+}
+
 //END OF FORM SCRIPTS
 
 //START OF AJAX SCRIPTS
@@ -1128,7 +1149,7 @@ function replaceSubstring(inputString, fromString, toString) {
 } 
 
 function trim (str) {
-	str = str.replace(/^\s+/, '');
+  str = str.replace(/^\s+/, '');
 	for (var i = str.length - 1; i >= 0; i--) {
 		if (/\S/.test(str.charAt(i))) {
 			str = str.substring(0, i + 1);

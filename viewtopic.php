@@ -15,21 +15,32 @@ $posts_tdb = new posts(DB_DIR."/", "posts.tdb");
 $vars['page'] = ((isset($_GET['page'])) ? $_GET['page'] : '');
 //check if the id exists
 if (!(is_numeric($_GET["id"]) && $posts_tdb->isTable($_GET["id"]))) exitPage("Forum does not exist.", true);
-if (FALSE === ($fRec = $tdb->get("forums", $_GET["id"]))) exitPage("Forum does not exist.", true);
+if (FALSE === ($fRec = $tdb->get("forums", $_GET["id"])) or empty($fRec[0])) 
+  exitPage("Forum does not exist.", true);
 $posts_tdb->setFp("topics", $_GET["id"]."_topics");
 $posts_tdb->setFp("posts", $_GET["id"]);
 if (FALSE === ($tRec = $posts_tdb->get("topics", $_GET["t_id"]))) exitPage("Invalid Topic.", true);
+
+if (FALSE === ($cRec = $tdb->get("cats",$fRec[0]['cat'])))
+  exitPage(str_replace('__TITLE__', "Forum category Does Not Exist", str_replace('__MSG__', ALERT_GENERIC_MSG, ALERT_MSG)), true);
+  
+if ((int)$_COOKIE["power_env"] < $cRec[0]["view"])
+  exitPage(str_replace('__TITLE__', "Permission Denied", str_replace('__MSG__', "You do not have enough Power to view this topic.<br>".ALERT_GENERIC_MSG, ALERT_MSG)), true);
 
 $posts_tdb->set_topic($tRec);
 $posts_tdb->set_forum($fRec);
 if (!($tdb->is_logged_in())) {
 	$posts_tdb->set_user_info("guest", "password", "0", "0");
-	$_COOKIE["power_env"] = -1;
+	$_COOKIE["power_env"] = 0;
 }
 else $posts_tdb->set_user_info($_COOKIE["user_env"], $_COOKIE["uniquekey_env"], $_COOKIE["power_env"], $_COOKIE["id_env"]);
 
 $where = "<a href='viewforum.php?id=".$_GET["id"]."'>".$fRec[0]["forum"]."</a> ".$_CONFIG["where_sep"]." ".$tRec[0]["subject"];
 require_once('./includes/header.php');
+
+dump($fRec);
+
+echo "{$_COOKIE["power_env"]} < {$fRec[0]["view"]}";
 
 if ((int)$_COOKIE["power_env"] < $fRec[0]["view"]) 
   exitPage(str_replace('__TITLE__', "Permission Denied", str_replace('__MSG__', "You do not have enough Power to view this topic.<br>".ALERT_GENERIC_MSG, ALERT_MSG)), true);

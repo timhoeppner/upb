@@ -79,9 +79,10 @@ if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 						$posts_tdb->set_forum($fRec);
 
 						$topic_list = $posts_tdb->listRec('topics',1);
-						//dump($topic_list);
-						$topics = explode(',',$fRec);
+						//dump($fRec);
+						$topics = explode(',',$fRec[0]['topics']);
 						//dump($topics);
+						//die();
 						if (count($topics) > 0)
 						{
 							foreach ($topic_list as $topic)
@@ -119,7 +120,7 @@ if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 	} elseif($_GET["action"] == "add_cat") {
 		//add new category
 		if (isset($_POST['command'])) {
-			$cat_id = $tdb->add("cats", array("name" => stripslashes($_POST["u_cat"]), "view" => $_POST["u_view"]));
+      $cat_id = $tdb->add("cats", array("name" => stripslashes($_POST["u_cat"]), "view" => $_POST["u_view"]));
 			if($_CONFIG['admin_catagory_sorting'] != '') {
 				$sort = $_CONFIG['admin_catagory_sorting'];
 				$sort = explode(",",$sort);
@@ -140,7 +141,7 @@ if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 			elseif ($_POST['command'] == 'Add and Add forums to this category') redirect('admin_forums.php?action=add_forum&cat_id='.$cat_id, 2);
 			else redirect($_SERVER['PHP_SELF'], 2);
 		} else {
-			echo "<form action='admin_forums.php?action=add_cat' method=POST>";
+			echo "<form action='admin_forums.php?action=add_cat' onSubmit='return validate_cat();' name='add' method='POST'>";
 			echoTableHeading("Creating a new category", $_CONFIG);
 			echo "
 			<tr>
@@ -148,7 +149,7 @@ if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 			</tr>
 			<tr>
 				<td class='area_1' style='width:20%'><strong>Name of new category</strong></td>
-				<td class='area_2'><input type=text name=u_cat size='40'></td>
+				<td class='area_2'><input type=text name='u_cat' id='title' size='40'>&nbsp;<span id='err_msg' class='err'></span></td>
 			</tr>
 			<tr>
 				<td class='area_1'><strong>Who can see the category?</strong></td>
@@ -215,7 +216,7 @@ if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 		  echo "
 			<tr>
 				<td class='area_1' style='width:20%'><strong>Name of forum</strong></td>
-				<td class='area_2'><input type=text name=u_forum size='40' maxlength=50 value='".$fRec[0]["forum"]."'></td>
+				<td class='area_2'><input type='text' name='u_forum' size='40' maxlength=50 value='".$fRec[0]["forum"]."'></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
@@ -247,7 +248,7 @@ if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Edit'></td>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' value='Edit'></td>
 			</tr>
 		";
 		  echoTableFooter(SKIN_DIR);
@@ -308,7 +309,6 @@ if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 			echo "No id selected.";
 		}
 	} elseif($_GET["action"] == "add_forum") {
-		//add new forum
 		if (isset($_POST["u_forum"])) {
 			$record = array(
 				"forum" => stripslashes($_POST["u_forum"]),
@@ -380,7 +380,7 @@ if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 			$whoView = "<select size='1' name='u_view'>".createUserPowerMisc(0, 1)."</select>";
 			$whoPost = "<select size='1' name='u_post'>".createUserPowerMisc(1, 1)."</select>";
 			$whoReply = "<select size='1' name='u_reply'>".createUserPowerMisc(1, 1)."</select>";
-			echo "<form action='admin_forums.php?action=add_forum' method=POST>";
+      echo "<form action='admin_forums.php?action=add_forum' onSubmit='return validate_forum();' name='add' method='POST'>";
 			echoTableHeading("Creating a new forum", $_CONFIG);
 			echo "
 			<tr>
@@ -389,7 +389,8 @@ if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 			echo "
 			<tr>
 				<td class='area_1' style='width:20%'><strong>Name of new forum</strong></td>
-				<td class='area_2'><input type=text name=u_forum maxlength=50 size='40'></td>
+				<td class='area_2'><input type=text name='u_forum' maxlength='50' size='40'>&nbsp;
+					<span id='err_msg' class='err'></td>
 			</tr>
 			<tr>
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
@@ -421,7 +422,7 @@ if ($tdb->is_logged_in() && $_COOKIE["power_env"] >= 3) {
 				<td class='footer_3' colspan='2'><img src='./skins/default/images/spacer.gif' alt='' title='' /></td>
 			</tr>
 			<tr>
-				<td class='footer_3a' colspan='2' style='text-align:center;'><input type=submit value='Add'> <input type=submit name='command' value='Add and Add another forum' size='10'> <input type=submit name='command' value='Add and Add another forum to the selected Category' size='15'></td>
+				<td class='footer_3a' colspan='2' style='text-align:center;'><input type='submit' name='add' value='Add'> <input type=submit name='command' value='Add and Add another forum' size='10'> <input type='submit' name='command' value='Add and Add another forum to the selected Category' size='15'></td>
 			</tr>
 		";
 			echoTableFooter(SKIN_DIR);
