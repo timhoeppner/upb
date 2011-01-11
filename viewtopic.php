@@ -38,10 +38,6 @@ else $posts_tdb->set_user_info($_COOKIE["user_env"], $_COOKIE["uniquekey_env"], 
 $where = "<a href='viewforum.php?id=".$_GET["id"]."'>".$fRec[0]["forum"]."</a> ".$_CONFIG["where_sep"]." ".$tRec[0]["subject"];
 require_once('./includes/header.php');
 
-dump($fRec);
-
-echo "{$_COOKIE["power_env"]} < {$fRec[0]["view"]}";
-
 if ((int)$_COOKIE["power_env"] < $fRec[0]["view"]) 
   exitPage(str_replace('__TITLE__', "Permission Denied", str_replace('__MSG__', "You do not have enough Power to view this topic.<br>".ALERT_GENERIC_MSG, ALERT_MSG)), true);
 
