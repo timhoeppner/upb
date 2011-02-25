@@ -575,6 +575,11 @@ vertical-align: middle;
 	text-decoration : none;
 }
 
+/* style for the dots in the pagination */
+.pagination_dots { 
+color: #000;
+}
+
 /* -------------------------------------------- */
 /* ----Page Number and Text Button Area End---- */
 /* -------------------------------------------- */

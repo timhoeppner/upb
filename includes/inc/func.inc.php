@@ -174,7 +174,7 @@ function createPageNumbers($current_page, $total_number_of_pages, $url_string=''
 		if ($current_page-2 != 1 and $current_page-2 > 1)
       $pageStr .= "<td class='pagination_link'><a href='".basename($_SERVER['PHP_SELF']).$url_string."page=1'>1</a></td>";
     if ($current_page-2 != 1 and $current_page-2 > 1 and $num_pages > 6 and $current_page-3 > 1)
-      $pageStr .= "<td>...</td>";
+      $pageStr .= "<td class='pagination_dots'>...</td>";
 		for($i=($current_page-2);$i<=($current_page+2);$i++) {
 			if ($i < 1)
 			  continue;
