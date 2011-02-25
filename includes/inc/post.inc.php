@@ -271,7 +271,7 @@ function status($user)
 
 		//$status = "Member";
 		$statuscolor = $_STATUS["userColor"];
-		$status_rank = "./skins/default/images/rank/member.png";
+		$status_rank = SKIN_DIR."/images/rank/member.png";
 
 		if ($user[0]["posts"] >= $_STATUS["member_post1"])
 		$status = $_STATUS["member_status1"];
@@ -290,7 +290,7 @@ function status($user)
 
 	} elseif($user[0]["level"] == "2") {
 		$statuscolor = $_STATUS["modColor"];
-		$status_rank = "./skins/default/images/rank/mod.png";
+		$status_rank = SKIN_DIR."/images/rank/mod.png";
 
 		if ($user[0]["posts"] >= $_STATUS["mod_post1"])
 		$status = $_STATUS["mod_status1"];
@@ -310,7 +310,7 @@ function status($user)
 	} elseif($user[0]["level"] >= 3) {
 
 		$statuscolor = $_STATUS["adminColor"];
-		$status_rank = "./skins/default/images/rank/admin.png";
+		$status_rank = SKIN_DIR."/images/rank/admin.png";
 
 		if ($user[0]["posts"] >= $_STATUS["admin_post1"])
 		$status = $_STATUS["admin_status1"];
@@ -333,7 +333,7 @@ function status($user)
 	} else {
 		//$status = "Member";
 		$statuscolor = $_STATUS["membercolor"];
-		$status_rank = "./images/rank/member.png";
+		$status_rank = SKIN_DIR."/images/rank/member.png";
 	}
 	$statconf = array('status' => $status,'statuscolor'=>$statuscolor,'rank' => $status_rank);
 	return $statconf;
