@@ -346,7 +346,7 @@ if($_GET['action'] == 'favorite') {
 	</form>";
 		echoTableFooter(SKIN_DIR);
 		echoTableHeading("Topic Options", $_CONFIG);
-		if ($_COOKIE["power_env"] >= 3) {
+		if ($_COOKIE["power_env"] >= 2) {
 			echo "
 			<tr>
 				<td class='area_1'><strong>Delete Topic?</strong></td>
