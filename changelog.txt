@@ -1,5 +1,16 @@
 This is the changelog for this product's working copy.
 
+v2.2.8 - 17/01/2012
+
+== BUG FIXES ==
+Removed redundant RemoveXSS function and improved security elsewhere
+
+== NEW FEATURES ==
+
+== MISC CHANGES ==
+Removed Geshi highlighting - bloated download and probably not used by many. Might return as a plugin.
+
+
 v2.2.7 Changelog - 23/12/2010
 
 == BUG FIXES ==

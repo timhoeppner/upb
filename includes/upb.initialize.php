@@ -17,11 +17,9 @@ if (!isset($_SERVER['REQUEST_URI'])) {
 foreach($GLOBALS["_GET"] as $varname => $varvalue) {
 	if(isset($$varname)) unset($$varname);
 	if (((strpos($varname, 'id') !== FALSE) || $varname == 'page') && (!ctype_digit($varvalue) && !empty($varvalue))) die('Possible XSS attack detected');
-	$_GET[$varname] = RemoveXSS($varvalue);
 }
 reset($GLOBALS["_GET"]);
 foreach($GLOBALS["_POST"] as $varname => $varvalue) {
-	$_POST[$varname] = RemoveXSS($varvalue);
 	if(isset($$varname)) unset($$varname);
 }
 reset($GLOBALS["_POST"]);

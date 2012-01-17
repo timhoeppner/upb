@@ -42,7 +42,7 @@ function format_text($text,$type='') {
 
 function encode_text($text)
 {
-	return xml_clean($string);
+	return xml_clean($text);
 }
 
 function filterLanguage($text) {
