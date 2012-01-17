@@ -44,8 +44,7 @@ function format_text($text,$type='') {
 
 function encode_text($text)
 {
-	$string = str_replace(array('<','>','<x>'),array('&lt;','&gt;',''),$text);
-	return $string;
+	return xml_clean($string);
 }
 
 function filterLanguage($text) {
