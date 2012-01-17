@@ -107,6 +107,7 @@ if (isset($_POST["u_edit"])) {
 		if ($user[0]["yahoo"] != $_POST["u_yahoo"]) $rec["yahoo"] = xml_clean($_POST["u_yahoo"]);
 		if ($user[0]["msn"] != $_POST["u_msn"]) $rec["msn"] = xml_clean($_POST["u_msn"]);
 		if ($user[0]["skype"] != $_POST["u_skype"]) $rec["skype"] = xml_clean($_POST["u_skype"]);
+    if ($user[0]["twitter"] != $_POST["u_twitter"]) $rec["twitter"] = xml_clean($_POST["u_twitter"]);
 		if ($user[0]["timezone"] != $_POST["u_timezone"]) {
 			$rec["timezone"] = (int) $_POST["u_timezone"];
 			setcookie("timezone", $rec["timezone"], (time() + (60 * 60 * 24 * 7)));
@@ -211,8 +212,8 @@ if (isset($_POST["u_edit"])) {
 		echo "<div class='pro_area_1'><div class='pro_area_2'><img src='images/aol.gif' border='0' align='absmiddle'>&nbsp;<strong>AIM:</strong></div>".$rec[0]["aim"]."&nbsp;</div>";
 		echo "<div class='pro_area_1'><div class='pro_area_2'><img src='images/yahoo.gif' border='0' align='absmiddle'>&nbsp;<strong>Yahoo!:</strong></div>".$rec[0]["yahoo"]."&nbsp;</div>";
 		echo "<div class='pro_area_1'><div class='pro_area_2'><img src='images/msn.gif' border='0' align='absmiddle'>&nbsp;<strong>MSN:</strong></div>".$rec[0]["msn"]."&nbsp;</div>";
+    echo "<div class='pro_area_1'><div class='pro_area_2'><img src='images/twitter.png' border='0' align='absmiddle'>&nbsp;<strong>Twitter:</strong></div>".$rec[0]["twitter"]."&nbsp;</div>";
 		echo "<div class='pro_area_1'><div class='pro_area_2'><img src='images/skype.gif' border='0' align='absmiddle'>&nbsp;<strong>Skype:</strong></div>".$rec[0]["skype"]."&nbsp;</div>";
-		echo "<div class='pro_area_1'>&nbsp;</div>";
 		echo "</div></td></tr>
 
 				<tr>
@@ -457,6 +458,10 @@ if (isset($_POST["u_edit"])) {
 			<tr>
 				<td class='area_1'><img src='images/msn.gif' border='0' align='absmiddle'>&nbsp;<strong>MSN:</strong></td>
 				<td class='area_2'><input type='text' name='u_msn' size='50' value='".$rec[0]["msn"]."' /></td>
+			</tr>
+      <tr>
+				<td class='area_1'><img src='images/twitter.png' border='0' align='absmiddle'>&nbsp;<strong>Twitter:</strong></td>
+				<td class='area_2'><input type='text' name='u_twitter' size='50' value='".$rec[0]["twitter"]."' /></td>
 			</tr>
 			<tr>
 				<td class='area_1'><img src='images/skype.gif' border='0' align='absmiddle'>&nbsp;<strong>Skype:</strong></td>

@@ -6,6 +6,7 @@ v2.2.8 - 17/01/2012
 Removed redundant RemoveXSS function and improved security elsewhere
 
 == NEW FEATURES ==
+Added Twitter to Profile
 
 == MISC CHANGES ==
 Removed Geshi highlighting - bloated download and probably not used by many. Might return as a plugin.

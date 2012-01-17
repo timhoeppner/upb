@@ -181,18 +181,19 @@ if($_GET['action'] == 'confirm') {
 		$_POST["u_timezone"] = substr($_POST["u_timezone"], 1);
 		$new = array();
 		if ($_POST["level"] != $rec[0]["level"]) $new["level"] = $_POST["level"];
-		if ($_POST["email"] != $rec[0]["email"]) $new["email"] = $_POST["email"];
-		if ($_POST["status"] != $rec[0]["status"]) $new["status"] = $_POST["status"];
-		if ($_POST["location"] != $rec[0]["location"]) $new["location"] = $_POST["location"];
-		if ($_POST["url"] != $rec[0]["url"]) $new["url"] = $_POST["url"];
-		if ($_POST["avatar"] != $rec[0]["avatar"]) $new["avatar"] = $_POST["avatar"];
-		if ($_POST["icq"] != $rec[0]["icq"]) $new["icq"] = $_POST["icq"];
-		if ($_POST["yahoo"] != $rec[0]["yahoo"]) $new["yahoo"] = $_POST["yahoo"];
-		if ($_POST["msn"] != $rec[0]["msn"]) $new["msn"] = $_POST["msn"];
-		if ($_POST["aim"] != $rec[0]["aim"]) $new["aim"] = $_POST["aim"];
-		if ($_POST["skype"] != $rec[0]["skype"]) $new["skype"] = $_POST["skype"];
-		if (chop($_POST["sig"]) != $rec[0]["sig"]) $new["sig"] = chop($_POST["sig"]);
-		if ($_POST["timezone"] != $rec[0]["timezone"]) $new["timezone"] = $_POST["timezone"];
+		if ($_POST["email"] != $rec[0]["email"]) $new["email"] = xml_clean($_POST["email"]);
+		if ($_POST["status"] != $rec[0]["status"]) $new["status"] = xml_clean($_POST["status"]);
+		if ($_POST["location"] != $rec[0]["location"]) $new["location"] = xml_clean($_POST["location"]);
+		if ($_POST["url"] != $rec[0]["url"]) $new["url"] = xml_clean($_POST["url"]);
+		if ($_POST["avatar"] != $rec[0]["avatar"]) $new["avatar"] = xml_clean($_POST["avatar"]);
+		if ($_POST["icq"] != $rec[0]["icq"]) $new["icq"] = xml_clean($_POST["icq"]);
+		if ($_POST["yahoo"] != $rec[0]["yahoo"]) $new["yahoo"] = xml_clean($_POST["yahoo"]);
+		if ($_POST["msn"] != $rec[0]["msn"]) $new["msn"] = xml_clean($_POST["msn"]);
+		if ($_POST["aim"] != $rec[0]["aim"]) $new["aim"] = xml_clean($_POST["aim"]);
+		if ($_POST["skype"] != $rec[0]["skype"]) $new["skype"] = xml_clean($_POST["skype"]);
+    if ($_POST["twitter"] != $rec[0]["twitter"]) $new["twitter"] = xml_clean($_POST["twitter"]);
+		if (chop($_POST["sig"]) != $rec[0]["sig"]) $new["sig"] = xml_clean(chop($_POST["sig"]));
+		if ($_POST["timezone"] != $rec[0]["timezone"]) $new["timezone"] = (int) $_POST["timezone"];
 		if (!empty($new)) $tdb->edit("users", $_GET["id"], $new);
 		echo "
 				<div class='alert_confirm'>
@@ -287,6 +288,10 @@ if($_GET['action'] == 'confirm') {
       <tr>
 				<td class='area_1' style='padding:8px;'><img src='images/aol.gif' border='0' align='absmiddle'>&nbsp;<strong>AOL:</strong></td>
 				<td class='area_2'><input type='text' name='icq' size='20' value='".$rec[0]["aim"]."' /></td>
+			</tr>
+      <tr>
+				<td class='area_1' style='padding:8px;'><img src='images/twitter.png' border='0' align='absmiddle'>&nbsp;<strong>Twitter:</strong></td>
+				<td class='area_2'><input type='text' name='twitter' size='20' value='".$rec[0]["twitter"]."' /></td>
 			</tr>
       <tr>
 				<td class='area_1' style='padding:8px;'><img src='images/skype.gif' border='0' align='absmiddle'>&nbsp;<strong>Skype:</strong></td>

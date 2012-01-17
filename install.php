@@ -277,6 +277,7 @@ switch($_POST["add"]{0}) {
 				array("msn", "memo"),
 				array("skype","memo"),
 				array("sig", "memo"),
+        array("twitter","memo"),
 				array("posts", "number", 7),
 				array("date_added", "number", 14),
 				array("timezone", "string", 3),
