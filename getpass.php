@@ -9,8 +9,13 @@ else $ref = $_GET["ref"];
 require_once("./includes/upb.initialize.php");
 $where = "Lost Password";
 $e = false;
+if (isset($_POST["u_name"]))
+  $u_name = xml_clean($_POST["u_name"]);
+else
+  $u_name = "";
+
 if (isset($_POST["u_name"])) {
-	$user = $tdb->query("users", "user_name='".$_POST['u_name']."'", 1, 1);
+	$user = $tdb->query("users", "user_name='$u_name'", 1, 1);
 	if ($user[0]['id'] != '') {
 		$results = $tdb->basicQuery("getpass", "user_id", $user[0]['id'], 1, 1);
 		if ($results[0]['id'] != '') {

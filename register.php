@@ -92,7 +92,7 @@ if (isset($_POST['submit']) && $_POST["submit"] == "Submit") {
 	exitPage(str_replace('__TITLE__', ALERT_GENERIC_TITLE, str_replace('__MSG__', 'You failed the CAPTCHA check.  Please enter the code <b>exactly</b> as it appears.', ALERT_MSG)), true);
 	unset($_SESSION['u_keycheck']);
 
-	$_POST["u_login"] = strip_tags($_POST["u_login"]);
+	$_POST["u_login"] = xml_clean(strip_tags($_POST["u_login"]));
 	$_POST["u_login"] = trim($_POST["u_login"]);
 
 	if ($_POST["u_login"] == '' || $_POST["u_email"] == '')
@@ -148,19 +148,19 @@ if (isset($_POST['submit']) && $_POST["submit"] == "Submit") {
 		    "level" => 1,
 		    "email" => $_POST["u_email"],
 		    "view_email" => $_POST["show_email"],
-		    "mail_list" => $_POST["email_list"],
-		    "location" => $_POST["u_loca"],
-		    "url" => $_POST["u_site"],
-		    "avatar" => $_POST["avatar"],
-		    "icq" => $_POST["u_icq"],
-		    "aim" => $_POST["u_aim"],
-		    "yahoo" => $_POST["u_yahoo"],
-		    "msn" => $_POST["u_msn"],
-		    "sig" => chop($_POST["u_sig"]),
+		    "mail_list" => xml_clean($_POST["email_list"]),
+		    "location" => xml_clean($_POST["u_loca"]),
+		    "url" => xml_clean($_POST["u_site"]),
+		    "avatar" => '',
+		    "icq" => xml_clean($_POST["u_icq"]),
+		    "aim" => xml_clean($_POST["u_aim"]),
+		    "yahoo" => xml_clean($_POST["u_yahoo"]),
+		    "msn" => xml_clean($_POST["u_msn"]),
+		    "sig" => xml_clean(chop($_POST["u_sig"])),
 		    "posts" => 0,
 		    "date_added" => mkdate(),
 		    "lastvisit" => mkdate(),
-		    "timezone" => $_POST["u_timezone"],
+		    "timezone" => (int) $_POST["u_timezone"],
 		    'newTopicsData' => serialize(array('lastVisitForums' => array()))
 	));
 

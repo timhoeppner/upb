@@ -44,7 +44,7 @@ if (isset($_POST["u_edit"])) {
 		$rec['sig'] = "";
 		if (substr(trim(strtolower($_POST["u_site"])), 0, 7) != "http://") $_POST["u_site"] = "http://".$_POST["u_site"];
 		if ($user[0]["url"] != $_POST["u_site"])
-		$rec["url"] = $_POST["u_site"];
+		$rec["url"] = xml_clean($_POST["u_site"]);
 		if ($_POST['u_site'] == "http://" or $rec['url'] == 'http://')
 		$rec['url'] = "";
 		for ($i = 1;$i <= 5; $i++)
@@ -52,7 +52,7 @@ if (isset($_POST["u_edit"])) {
 			if (array_key_exists("custom_profile$i",$_POST))
 			{
 				if ($user[0]["custom_profile$i"] != $_POST["custom_profile$i"])
-				$rec["custom_profile$i"] = $_POST["custom_profile$i"];
+				$rec["custom_profile$i"] = xml_clean($_POST["custom_profile$i"]);
 			}
 		}
 
@@ -61,7 +61,7 @@ if (isset($_POST["u_edit"])) {
 		if ($_POST["email_list"] != "1") $_POST["email_list"] = "0";
 		if ($user[0]["view_email"] != $_POST["show_email"]) $rec["view_email"] = $_POST["show_email"];
 		if ($user[0]["mail_list"] != $_POST["email_list"]) $rec["mail_list"] = $_POST["email_list"];
-		if ($user[0]["location"] != $_POST["u_loca"]) $rec["location"] = $_POST["u_loca"];
+		if ($user[0]["location"] != $_POST["u_loca"]) $rec["location"] = xml_clean($_POST["u_loca"]);
 		
 		if (isset($_FILES['avatar2file']['tmp_name']))
 		{
@@ -86,10 +86,10 @@ if (isset($_POST["u_edit"])) {
 			}
 		}
 		elseif(isset($_POST['avatar2url']) && $_POST['avatar2url'] != '') {
-			$rec['avatar'] = $_POST['avatar2url'];
+			$rec['avatar'] = xml_clean($_POST['avatar2url']);
 		}
 		elseif(isset($_POST['avatar']) && $_POST['avatar'] != '') {
-			$rec['avatar'] = $_POST['avatar'];
+			$rec['avatar'] = xml_clean($_POST['avatar']);
 		}
 	  
 		if(isset($rec['avatar']) && FALSE !== strpos($user[0]['avatar'], 'downloadattachment.php?id=')) {
@@ -102,14 +102,14 @@ if (isset($_POST["u_edit"])) {
 				$upload->deleteFile($id);
 			}
 		}
-		if ($user[0]["icq"] != $_POST["u_icq"]) $rec["icq"] = $_POST["u_icq"];
-		if ($user[0]["aim"] != $_POST["u_aim"]) $rec["aim"] = $_POST["u_aim"];
-		if ($user[0]["yahoo"] != $_POST["u_yahoo"]) $rec["yahoo"] = $_POST["u_yahoo"];
-		if ($user[0]["msn"] != $_POST["u_msn"]) $rec["msn"] = $_POST["u_msn"];
-		if ($user[0]["skype"] != $_POST["u_skype"]) $rec["skype"] = $_POST["u_skype"];
+		if ($user[0]["icq"] != $_POST["u_icq"]) $rec["icq"] = xml_clean($_POST["u_icq"]);
+		if ($user[0]["aim"] != $_POST["u_aim"]) $rec["aim"] = xml_clean($_POST["u_aim"]);
+		if ($user[0]["yahoo"] != $_POST["u_yahoo"]) $rec["yahoo"] = xml_clean($_POST["u_yahoo"]);
+		if ($user[0]["msn"] != $_POST["u_msn"]) $rec["msn"] = xml_clean($_POST["u_msn"]);
+		if ($user[0]["skype"] != $_POST["u_skype"]) $rec["skype"] = xml_clean($_POST["u_skype"]);
 		if ($user[0]["timezone"] != $_POST["u_timezone"]) {
-			$rec["timezone"] = $_POST["u_timezone"];
-			setcookie("timezone", $_POST["u_timezone"], (time() + (60 * 60 * 24 * 7)));
+			$rec["timezone"] = (int) $_POST["u_timezone"];
+			setcookie("timezone", $rec["timezone"], (time() + (60 * 60 * 24 * 7)));
 		}
 		$tdb->edit("users", $_COOKIE["id_env"], $rec);
 		require_once('./includes/header.php');
@@ -477,7 +477,7 @@ if (isset($_POST["u_edit"])) {
 			</tr>
     <tr>
 				<td class='area_1' valign='top'><strong>Signature:</strong></td>
-				<td class='area_2'>".bbcodebuttons('u_sig','sig')."<textarea id='u_sig' name='u_sig' cols='45' rows='10'>".format_text(encode_text($rec[0]["sig"]),'edit')."</textarea><br /><input type='button' onclick=\"javascript:sigPreview(document.getElementById('u_sig'),'".$_COOKIE['id_env']."','set');\" value='Preview Signature' /></td></tr>
+				<td class='area_2'>".bbcodebuttons('u_sig','sig')."<textarea id='u_sig' name='u_sig' cols='45' rows='10'>".format_text($rec[0]["sig"],'edit')."</textarea><br /><input type='button' onclick=\"javascript:sigPreview(document.getElementById('u_sig'),'".$_COOKIE['id_env']."','set');\" value='Preview Signature' /></td></tr>
       <tr>
 				<td class='area_1' valign='top'><div id='sig_title'><strong>Current Signature:</strong></div></td>
 				<td class='area_2'><div style='display:inline;' id='sig_preview'>".display_msg($rec[0]["sig"])."</div></td>

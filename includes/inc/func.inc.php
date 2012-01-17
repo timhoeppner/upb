@@ -20,7 +20,10 @@ function exitPage($text, $include_header=false, $include_footer=true, $footer_si
 }
 
 function redirect($where, $time) {
-	echo "<meta http-equiv='refresh' content='$time;URL=$where'>";
+	if (stristr($where, 'http') !== false) {
+		$where = 'index.php';
+	}
+	echo "<meta http-equiv='refresh' content='". (int) $time .";URL=". xml_clean($where) ."'>";
 	exit;
 }
 
@@ -331,7 +334,7 @@ function timezonelist($current=0, $timezone_field_string="u_timezone")
 //replaces characters in strings to make xml compatible
 function xml_clean($string)
 {
-	$original = array("&","\"","\'",">","<");
+	$original = array("&","\"","'",">","<");
 	$replace = array("&amp;","&quot;","&apos;","&gt;","&lt;");
 	$new = str_replace($original,$replace,$string);
 	return $new;

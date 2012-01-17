@@ -5,8 +5,6 @@
 // Version: 2.0
 
 //Special Posting Functions
-
-require_once('./includes/inc/geshi.inc.php');
 function message_icons()
 {
 	$tdb = new tdb(DB_DIR.'/', 'bbcode.tdb');
@@ -144,8 +142,8 @@ function UPBcoding($text) {
 	}
 	//$msg = preg_replace("/\[code\](.*?)\[\/code\]/si", "<font color='red'>Code:<hr><pre>\\1<hr></pre></font>", $msg);
 
-	$msg = preg_replace_callback("!\[code=([\w\-]+)](.*)\[/code]!Us","geshify", $msg);
-	$msg = preg_replace_callback("!\[code\](.*)\[/code]!Us","geshify", $msg);
+	$msg = preg_replace("!\[code=([\w\-]+)](.*)\[/code]!Us","<div class='code_block'>\\1</div>", $msg);
+	$msg = preg_replace("!\[code\](.*)\[/code]!Us","<div class='code_block'>\\1</div>", $msg);
 
 	$msg = preg_replace("/\[center\](.*?)\[\/center\]/si", "<div style='text-align:center';>\\1</div>", $msg);
 	$msg = preg_replace("/\[left\](.*?)\[\/left\]/si", "<div style='text-align:left;'>\\1</div>", $msg);

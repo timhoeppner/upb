@@ -9,9 +9,15 @@ require_once("./includes/upb.initialize.php");
 $where = "Login";
 $show = 0;
 $e = 0;
+
+if (isset($_POST["u_name"]))
+  $u_name = xml_clean($_POST["u_name"]);
+else
+  $u_name = "";
+
 if (isset($_POST["u_name"]) && isset($_POST["u_pass"])) {
 	// Attempt to login
-	if (($r = $tdb->login_user($_POST["u_name"], $_POST["u_pass"], $key, $error)) === FALSE) {
+	if (($r = $tdb->login_user($u_name, $_POST["u_pass"], $key, $error)) === FALSE) {
 		$error = "
 		<div class='alert'>
 			<div class='alert_text'>
@@ -51,7 +57,8 @@ if (isset($_POST["u_name"]) && isset($_POST["u_pass"])) {
 				setcookie("id_env", $r["id"]);
 			}
 			setcookie("timezone", $r["timezone"], (time() + (60 * 60 * 24 * 7)));
-			if ($_GET["ref"] == "") $_GET["ref"] = "index.php";
+			if ($_GET["ref"] == "" || stristr($_GET["ref"], 'http') !== false) 
+        $_GET["ref"] = "index.php";
 			$error = "
 					<div class='alert_confirm'>
 					<div class='alert_confirm_text'>
@@ -79,7 +86,7 @@ if (!$tdb->is_logged_in() != "") {
 	echo "
 			<tr>
 				<td class='area_1' style='width:40%;text-align:right;'><strong>User Name:</strong></td>
-				<td class='area_2'><input class='txtBox' type='text' name='u_name' size='30' value='".$_POST["u_name"]."' /></td>
+				<td class='area_2'><input class='txtBox' type='text' name='u_name' size='30' value='".$u_name."' /></td>
 			</tr>
 			<tr>
 				<td class='area_1' style='text-align:right;'><strong>Password:</strong></td>

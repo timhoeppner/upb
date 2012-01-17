@@ -277,7 +277,7 @@ if ($_POST["a"] == "1") {
 	$icons = message_icons();
 
 	echo "
-			<form action='newpost.php?id=".$_GET["id"]."&t=".$_GET["t"]."&quote=".$_GET["quote"]."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."' method='POST' name='newentry' enctype='multipart/form-data' onSubmit='return validate_$check();'>
+			<form action='newpost.php?id=".$_GET["id"]."&t=".$_GET["t"]."&quote=". urlencode($_GET["quote"]) ."&t_id=".$_GET["t_id"]."&page=".$_GET["page"]."' method='POST' name='newentry' enctype='multipart/form-data' onSubmit='return validate_$check();'>
 			<input type='hidden' name='a' value='1'>";
 	echoTableHeading(str_replace($_CONFIG["where_sep"], $_CONFIG["table_sep"], $where), $_CONFIG);
 	echo "
